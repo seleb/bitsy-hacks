@@ -48,3 +48,46 @@ TextEffects["my-effect"] = new(function () {
 		char.color.r = 255 * Math.cos(time / 100 + char.col / 3);
 	}
 });
+
+
+
+///////////////////////
+// some fun examples //
+///////////////////////
+TextEffects["droop"] = new(function () {
+	this.DoEffect = function (char, time) {
+		char.start = char.start || time;
+		char.offset.y += (time - char.start) / 100 * Math.abs(Math.sin(char.col));
+	}
+});
+TextEffects["scramble"] = new(function () {
+	this.DoEffect = function (char, time) {
+		char.original = char.original !== undefined ? char.original : char.char;
+		char.char = String.fromCharCode(char.original.codePointAt(0) + 5 * Math.sin(char.col + time / 200));
+	}
+});
+TextEffects["rot13"] = new(function () {
+	this.DoEffect = function (char, time) {
+		char.original = char.original !== undefined ? char.original : char.char;
+		char.char = char.original.replace(/[a-z]/, function (c) {
+			return String.fromCharCode((c.codePointAt(0) - 97 + 13) % 26 + 97);
+		}).replace(/[A-Z]/, function (c) {
+			return String.fromCharCode((c.codePointAt(0) - 65 + 13) % 26 + 65);
+		});
+	}
+});
+TextEffects["sponge"] = new(function () {
+	function posmod(a, b) {
+		return ((a % b) + b) % b;
+	};
+	this.DoEffect = function (char, time) {
+		char.original = char.original !== undefined ? char.original : char.char;
+		char.char = char.original[['toUpperCase', 'toLowerCase'][Math.round(posmod(time / 1000 - (char.col + char.row) / 2, 1))]]();
+	}
+});
+TextEffects["fadeout"] = new(function () {
+	this.DoEffect = function (char, time) {
+		char.start = char.start || time;
+		char.color.a = Math.max(0, 255 - (time - char.start) / 2);
+	}
+});
