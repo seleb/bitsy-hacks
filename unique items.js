@@ -5,7 +5,7 @@ Adds support for items which, when picked up,
 remove all other instances of that item from the game.
 
 HOW TO USE:
-1. Copy-paste into a script tag after the bitsy source
+1. Copy-paste this script into a script tag after the bitsy source
 2. Update the `itemIsUnique` function to match your needs
 */
 (function () {
