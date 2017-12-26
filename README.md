@@ -3,6 +3,7 @@ A collection of re-usable scripts for [Adam LeDoux](https://twitter.com/adamledo
 
 ## contents
 - 🔈 [basic sfx](./basic%20sfx.js): "walk" and "talk" sound effect support
+- 😴 [canvas replacement](./canvas%20replacement.js): WebGLazy bitsy integration (this one's mostly just for me)
 - 🅰️ [custom text effect](./custom%20text%20effect.js): make {custom}text effects{custom}
 - 🎨 [edit sprite at runtime](./edit%20sprite%20at%20runtime.js): tool for other hacks
 - 💕 [follower](./follower.js): makes a single sprite follow the player
