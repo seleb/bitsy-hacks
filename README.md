@@ -14,3 +14,46 @@ A collection of re-usable scripts for [Adam LeDoux](https://twitter.com/adamledo
 - ❄️ [unique items](./unique%20items.js): items which, when picked up, remove all other instances of that item from the game
 
 ![Imgur](https://i.imgur.com/peRLLHn.gif)![Imgur](https://i.imgur.com/yg81aH2.gif)![Imgur](https://i.imgur.com/r7AUHX4.gif)
+
+
+
+
+## how to use
+Each script has a short "HOW TO USE" section included in the comments. For steps which say to `Copy-paste this script into a script tag after the bitsy source`, open your exported bitsy game and scroll to the bottom of the file (at the time of writing, it looks like this):
+```html
+</script>
+
+</head>
+
+
+<!-- DOCUMENT BODY -->
+<body onload='startExportedGame()'>
+  <!-- GAME CANVAS -->
+  <canvas id='game'></canvas>
+</body>
+
+
+</html>
+```
+
+then edit it to look like this:
+
+```html
+</script>
+
+<script>
+  // and then paste your code here!
+</script>
+
+</head>
+
+
+<!-- DOCUMENT BODY -->
+<body onload='startExportedGame()'>
+  <!-- GAME CANVAS -->
+  <canvas id='game'></canvas>
+</body>
+
+
+</html>
+```
