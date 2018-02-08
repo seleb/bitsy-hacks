@@ -37,7 +37,6 @@ The first argument is `char`, an individual character, which has the following p
 `color`, `char`, and any custom properties are reset when the dialog page is changed
 
 The second argument is `time`, which is the time in milliseconds
-This is the value of `Date.now()` for a given frame
 
 A number of example effects are included
 */
