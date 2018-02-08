@@ -11,6 +11,7 @@ A collection of re-usable scripts for [Adam LeDoux](https://twitter.com/adamledo
 - 💕 [follower](./follower.js): makes a single sprite follow the player
 - 🎮 [gamepad input](./gamepad%20input.js): HTML5 gamepad support
 - 📎 [noclip](./noclip.js): walk through wall tiles, sprites, exits, and endings
+- 🏰 [tracery processing](./tracery%20processing.js): process all dialog text with a tracery grammar
 - 🏁 [transparent sprites](./transparent%20sprites.js): makes all sprites have transparent backgrounds
 - ❄ [unique items](./unique%20items.js): items which, when picked up, remove all other instances of that item from the game
 
