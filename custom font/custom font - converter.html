@@ -1,0 +1,155 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>custom font - converter</title>
+<style>
+	textarea{
+		width:95%;
+		height:30em;
+	}
+</style>
+
+<script>
+// included so the output script template has something to execute against
+var dialogRenderer = new(function () {
+	var font = new(function () {})();
+})();
+</script>
+
+<script id="outputScriptTemplate">/*
+bitsy hack - custom font importer
+
+Overrides bitsy's font with custom data.
+
+Font data in bitsy is stored in a big 1-bit array called `fontdata`.
+Individual letters are 6x8 slices of the array in stored according to ascii order.
+e.g. the letter "A" is 65th, and looks like:
+
+	0,0,1,1,1,0,
+	0,1,0,0,0,1,
+	0,1,0,0,0,1,
+	0,1,0,0,0,1,
+	0,1,1,1,1,1,
+	0,1,0,0,0,1,
+	0,1,0,0,0,1,
+	0,0,0,0,0,0,
+
+HOW TO USE
+Copy-paste into a script tag after the bitsy source
+*/
+(function () {
+	// helper used to expose getter/setter for private vars
+	var expose = function (target) {
+		var code = target.toString();
+		code = code.substring(0, code.lastIndexOf("}"));
+		code += "this.get = function(name) {return eval(name);};";
+		code += "this.set = function(name, value) {eval(name+'=value');};";
+		return eval("[" + code + "}]")[0];
+	};
+
+	var fontdata = [
+		'FONT_DATA_PLACEHOLDER'
+	];
+
+	// apply fontdata
+	dialogRenderer = new(expose(dialogRenderer.constructor))();
+	var font = dialogRenderer.get('font');
+	font = new(expose(font.constructor))();
+	font.set('fontdata', fontdata);
+	dialogRenderer.set('font', font);
+}());</script>
+
+<script>
+function onImageLoaded() {
+	var fontsize = {
+		x: 6,
+		y: 8
+	}; // bitsy font size
+	var characters = {
+		x: 16,
+		y: 16
+	}; // x * y must equal 256
+	var padding = 1;
+
+	// canvas context
+	var canvas = document.createElement('canvas');
+	canvas.width = (fontsize.x + padding) * characters.x + padding;
+	canvas.height = (fontsize.y + padding) * characters.y + padding;
+	var ctx = canvas.getContext('2d');
+
+	var fontdata = [];
+	ctx.drawImage(this, 0, 0);
+	// read data from canvas
+	for (var y = 0; y < characters.y; ++y) {
+		for (var x = 0; x < characters.x; ++x) {
+			var chardata = ctx.getImageData(x * (fontsize.x + padding) + padding, y * (fontsize.y + padding) + padding, fontsize.x, fontsize.y);
+			fontdata.push(chardata.data);
+		}
+	}
+	// simplify pixels to 1-bit
+	for (var i = 0; i < fontdata.length; ++i) {
+		var c = [];
+		for (var j = 0; j < fontdata[i].length; j += 4) {
+			c.push(fontdata[i][j] > 255 / 2 ? 1 : 0);
+		}
+		fontdata[i] = c;
+	}
+
+	// flatten characters into fontdata
+	fontdata = [].concat.apply([], fontdata);
+	console.log(fontdata.toString());
+
+	// display output
+	document.getElementById('output').innerText = document.getElementById('outputScriptTemplate').innerHTML.replace('\'FONT_DATA_PLACEHOLDER\'', fontdata.toString());
+}
+
+function onFileRead(e) {
+	var src = e.target.result;
+
+	// load image
+	var img = new Image();
+	img.onload = onImageLoaded;
+	img.src = src;
+}
+
+function loadImage(input) {
+	if (!input.files || !input.files[0]) {
+		// clear output
+		document.getElementById('output').innerText = '';
+		return;
+	}
+
+	// read image
+	var reader = new FileReader();
+	reader.onload = onFileRead;
+	reader.readAsDataURL(input.files[0]);
+}
+</script>
+</head>
+
+<body>
+	<h1>Bitsy - Custom Font Converter</h1>
+	<ol>
+		<li>
+			<p>Right click on the font template below and select "Save image as..."</p>
+			<img alt="font template" src="./font template.png"/>
+		</li>
+		<li>
+			<p>Edit the template to create your custom font</p>
+			<ul>
+				<li>Red borders are added for convenience; these pixels will be ignored in the actual font data</li>
+				<li>Font data is 1-bit (i.e. black and white)</li>
+				<li>Character dimensions must match the original font</li>
+			</ul>
+		</li>
+		<li>
+			<p>Upload your custom font image below</p>
+			<input type="file" accept="image/*" onchange="loadImage(this);"/>
+		</li>
+		<li>
+			<p>Copy the output below and paste into a script tag after the bitsy source</p>
+			<textarea id="output" readonly=true placeholder="Generated script will go here after uploading image..."></textarea>
+		</li>
+	</ol>
+</body>
+</html>
