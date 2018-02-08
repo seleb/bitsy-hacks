@@ -96,7 +96,23 @@ A number of example effects are included
 				char.original = char.original !== undefined ? char.original : char.char;
 				char.char = char.original[['toUpperCase', 'toLowerCase'][Math.round(posmod(time / 1000 - (char.col + char.row) / 2, 1))]]();
 			}
-		}
+		},
+		flag: function () {
+			// applies a wave effect that's more intense towards the ends of words
+			// note that it's using function scope variables to track state across
+			// multiple letters in order to figure out where words begin
+			var lastSpace = 0;
+			var lastCol = -Infinity;
+			this.DoEffect = function (char, time) {
+				if (char.char == ' ') {
+					return;
+				} else if (Math.abs(char.col - lastCol) > 1) {
+					lastSpace = char.col - 1;
+				}
+				lastCol = char.col;
+				char.offset.y -= Math.pow(char.col - lastSpace, 1.5) * (Math.sin(time / 120 + char.col / 2));
+			}
+		},
 	};
 
 	// helper used to inject code into script tags based on a search string
