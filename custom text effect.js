@@ -9,85 +9,150 @@ Without the hack, the game will still run normally since
 bitsy just ignores text tags that aren't supported.
 
 Because the dialog system uses private variables,
-this one can't work as a simple drop-in script;
-instead it is broken into two parts that have to be
-inserted into specific parts of the bitsy source
+this one does some silly things with code injection.
 
 HOW TO USE:
-1. Search for `var functionMap = new Map();`
-2. Copy-paste part 1 after it
-3. Search for `var TextEffects = new Map();`
-4. Copy-paste part 2 after it
-5. Update "my-effect" and body of part 2 to be your custom effect
-*/
+1. Copy-paste this script into a script tag after the bitsy source
+2. Update the `customTextEffects` object at the top of the script with your custom effects
 
-/*
-part 1
-adds {my-effect} to the list of supported text effects
-*/
-functionMap.set("my-effect", function (environment, parameters, onReturn) {
-	addOrRemoveTextEffect(environment, "my-effect");
-	onReturn(null);
-});
+TEXT EFFECT NOTES:
+Each effect looks like:
+    key: function() {
+        this.DoEffect = function (char, time) {
+            // effect code
+        }
+    }
 
+The key is the text you'll write inside {} in bitsy to trigger the effect
 
-/*
-part 2
-defines the behaviour for {my-effect}
+`this.DoEffect` is called every frame for the characters the effect is applied to
 
-char properties:
+The first argument is `char`, an individual character, which has the following properties:
 	offset: offset from actual position in pixels. starts at {x:0, y:0}
 	color: color of rendered text in [0-255]. starts at {r:255, g:255, b:255, a:255}
-	char: character string (reset per dialog, not per frame)
+	char: character string
 	row: vertical position in rows (doesn't affect rendering)
 	col: horizontal position in characters (doesn't affect rendering)
+`row` and `col` are reset every frame
+`offset`, `color`, `char`, and any custom properties are reset when the dialog page is changed
+
+The second argument is `time`, which is the time in milliseconds
+This is the value of `Date.now()` for a given frame
+
+A number of example effects are included
 */
-TextEffects["my-effect"] = new(function () {
-	this.DoEffect = function (char, time) {
-		char.offset.x += 5 * Math.sin(time / 100 + char.col / 3);
-		char.color.r = 255 * Math.cos(time / 100 + char.col / 3);
-	}
-});
-
-
-
-///////////////////////
-// some fun examples //
-///////////////////////
-TextEffects["droop"] = new(function () {
-	this.DoEffect = function (char, time) {
-		char.start = char.start || time;
-		char.offset.y += (time - char.start) / 100 * Math.abs(Math.sin(char.col));
-	}
-});
-TextEffects["scramble"] = new(function () {
-	this.DoEffect = function (char, time) {
-		char.original = char.original !== undefined ? char.original : char.char;
-		char.char = String.fromCharCode(char.original.codePointAt(0) + 5 * Math.sin(char.col + time / 200));
-	}
-});
-TextEffects["rot13"] = new(function () {
-	this.DoEffect = function (char, time) {
-		char.original = char.original !== undefined ? char.original : char.char;
-		char.char = char.original.replace(/[a-z]/, function (c) {
-			return String.fromCharCode((c.codePointAt(0) - 97 + 13) % 26 + 97);
-		}).replace(/[A-Z]/, function (c) {
-			return String.fromCharCode((c.codePointAt(0) - 65 + 13) % 26 + 65);
-		});
-	}
-});
-TextEffects["sponge"] = new(function () {
-	function posmod(a, b) {
-		return ((a % b) + b) % b;
+(function () {
+	var customTextEffects = {
+		"my-effect": function () {
+			// a horizontal wavy effect with a blue tint 
+			this.DoEffect = function (char, time) {
+				char.offset.x += 5 * Math.sin(time / 100 + char.col / 3);
+				char.color.r = 255 * Math.cos(time / 100 + char.col / 3);
+			}
+		},
+		droop: function () {
+			// causes text to droop down slowly over time
+			// note that it's adding a custom property to the character if it doesn't already exist
+			this.DoEffect = function (char, time) {
+				char.start = char.start || time;
+				char.offset.y += (time - char.start) / 100 * Math.abs(Math.sin(char.col));
+			}
+		},
+		fadeout: function () {
+			// fades text to invisible after appearing
+			this.DoEffect = function (char, time) {
+				char.start = char.start || time;
+				char.color.a = Math.max(0, 255 - (time - char.start) / 2);
+			}
+		},
+		scramble: function () {
+			// animated text scrambling
+			// note that it's saving the original character so it can be referenced every frame
+			this.DoEffect = function (char, time) {
+				char.original = char.original !== undefined ? char.original : char.char;
+				if (char.original == ' ') {
+					return;
+				}
+				char.char = String.fromCharCode(char.original.codePointAt(0) + (char.col + time / 40) % 10);
+			}
+		},
+		rot13: function () {
+			// puts letters through the rot13 cipher (see www.rot13.com)
+			this.DoEffect = function (char, time) {
+				char.original = char.original !== undefined ? char.original : char.char;
+				char.char = char.original.replace(/[a-z]/, function (c) {
+					return String.fromCharCode((c.codePointAt(0) - 97 + 13) % 26 + 97);
+				}).replace(/[A-Z]/, function (c) {
+					return String.fromCharCode((c.codePointAt(0) - 65 + 13) % 26 + 65);
+				});
+			}
+		},
+		sponge: function () {
+			// animated alternating letter case
+			// note that it's using a locally defined function
+			function posmod(a, b) {
+				return ((a % b) + b) % b;
+			};
+			this.DoEffect = function (char, time) {
+				char.original = char.original !== undefined ? char.original : char.char;
+				char.char = char.original[['toUpperCase', 'toLowerCase'][Math.round(posmod(time / 1000 - (char.col + char.row) / 2, 1))]]();
+			}
+		}
 	};
-	this.DoEffect = function (char, time) {
-		char.original = char.original !== undefined ? char.original : char.char;
-		char.char = char.original[['toUpperCase', 'toLowerCase'][Math.round(posmod(time / 1000 - (char.col + char.row) / 2, 1))]]();
+
+	// helper used to inject code into script tags based on a search string
+	var inject = function (searchString, codeToInject) {
+		// find the relevant script tag
+		var scriptTags = document.getElementsByTagName('script');
+		var scriptTag;
+		var code;
+		for (var i = 0; i < scriptTags.length; ++i) {
+			scriptTag = scriptTags[i];
+			if (
+				scriptTag.textContent.indexOf(searchString) >= 0 // script contains the search string
+				&&
+				scriptTag != document.currentScript // script isn't the one doing the injecting (which also contains the search string)
+			) {
+				code = scriptTag.textContent;
+				break;
+			}
+		}
+
+		// error-handling
+		if (!code) {
+			throw 'Couldn\'t find "' + searchString + '" in script tags';
+		}
+
+		// modify the content
+		code = code.replace(searchString, searchString + codeToInject);
+
+		// replace the old script tag with a new one using our modified code
+		scriptTag.remove();
+		scriptTag = document.createElement('script');
+		scriptTag.textContent = code;
+		document.head.appendChild(scriptTag);
+	};
+
+	// generate code for each text effect
+	var functionMapCode = '';
+	var textEffectCode = '';
+	for (var i in customTextEffects) {
+		if (customTextEffects.hasOwnProperty(i)) {
+			functionMapCode += 'functionMap.set("' + i + '", function (environment, parameters, onReturn) {addOrRemoveTextEffect(environment, "' + i + '");onReturn(null);});';
+			textEffectCode += 'TextEffects["' + i + '"] = new (' + customTextEffects[i].toString() + ')();';
+		}
 	}
-});
-TextEffects["fadeout"] = new(function () {
-	this.DoEffect = function (char, time) {
-		char.start = char.start || time;
-		char.color.a = Math.max(0, 255 - (time - char.start) / 2);
-	}
-});
+
+	// inject custom text effect code
+	inject('var functionMap = new Map();', functionMapCode);
+	inject('var TextEffects = new Map();', textEffectCode);
+
+	// recreate the script and dialog objects so that they'll be
+	// referencing the code with injections instead of the original
+	scriptModule = new Script();
+	scriptInterpreter = scriptModule.CreateInterpreter();
+
+	dialogModule = new Dialog();
+	dialogRenderer = dialogModule.CreateRenderer();
+	dialogBuffer = dialogModule.CreateBuffer();
+}());
