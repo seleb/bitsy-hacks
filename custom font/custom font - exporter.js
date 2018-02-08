@@ -17,6 +17,9 @@ e.g. the letter "A" is 65th, and looks like:
 	0,1,0,0,0,1,
 	0,0,0,0,0,0,
 
+Because the dialog system uses private variables,
+this one does some silly things with `eval`.
+
 HOW TO USE
 1. Copy-paste into a script tag after the bitsy source
 2. Run game
