@@ -33,8 +33,8 @@ The first argument is `char`, an individual character, which has the following p
 	char: character string
 	row: vertical position in rows (doesn't affect rendering)
 	col: horizontal position in characters (doesn't affect rendering)
-`row` and `col` are reset every frame
-`offset`, `color`, `char`, and any custom properties are reset when the dialog page is changed
+`row`, `col`, and `offset` are reset every frame
+`color`, `char`, and any custom properties are reset when the dialog page is changed
 
 The second argument is `time`, which is the time in milliseconds
 This is the value of `Date.now()` for a given frame
