@@ -6,6 +6,7 @@ A collection of re-usable scripts for [Adam LeDoux](https://twitter.com/adamledo
 - 😴 [canvas replacement](./canvas%20replacement.js): WebGLazy bitsy integration (this one's mostly just for me)
 - 🅰 [custom font](https://seleb.github.io/bitsy-hacks/custom%20font/custom%20font%20-%20converter.html): change the bitsy font
 - 🅰 [custom text effect](./custom%20text%20effect.js): make {custom}text effects{custom}
+- ↔ [directional avatar](./directional%20avatar.js): flips the player's sprite based on directional movement
 - 🖼 [dynamic background](./dynamic%20background.js): HTML background matching bitsy background
 - 🎨 [edit sprite at runtime](./edit%20sprite%20at%20runtime.js): tool for other hacks
 - 💕 [follower](./follower.js): makes a single sprite follow the player
