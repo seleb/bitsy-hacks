@@ -8,10 +8,14 @@ HOW TO USE:
 Copy-paste this script into a script tag after the bitsy source
 */
 (function () {
+	// if true, overrides scaling behaviour to reduce the setup time + memory use,
+	// but the game will be blurry unless you've added pixelated image CSS
+	var scaling = false;
+
 	// give ourselves a little canvas + context to work with
 	var spriteCanvas = document.createElement("canvas");
-	spriteCanvas.width = tilesize * scale;
-	spriteCanvas.height = tilesize * scale;
+	spriteCanvas.width = tilesize * (scaling ? 1 : scale);
+	spriteCanvas.height = tilesize * (scaling ? 1 : scale);
 	var spriteContext = spriteCanvas.getContext("2d");
 
 	// override imageDataFromImageSource to use transparency for background pixels
@@ -23,6 +27,19 @@ Copy-paste this script into a script tag after the bitsy source
 
 		// make background pixels transparent
 		var bg = getPal(pal)[0];
+
+		// discard unnecessary pixels
+		if (scaling) {
+			for (var i = 0; i < img.data.length / scale; i += 4) {
+				img.data[i + 0] = img.data[i * scale + 0];
+				img.data[i + 1] = img.data[i * scale + 1];
+				img.data[i + 2] = img.data[i * scale + 2];
+				img.data[i + 3] = img.data[i * scale + 3];
+			}
+			img.data.length = img.data.length / 4;
+		}
+
+		// set background pixels to transparent
 		for (var i = 0; i < img.data.length; i += 4) {
 			if (
 				img.data[i + 0] === bg[0],
@@ -34,8 +51,12 @@ Copy-paste this script into a script tag after the bitsy source
 		}
 
 		// put bitsy data to our canvas
-		spriteContext.clearRect(0, 0, tilesize * scale, tilesize * scale);
-		spriteContext.putImageData(img, 0, 0);
+		spriteContext.clearRect(0, 0, tilesize, tilesize);
+		if (scaling) {
+			spriteContext.putImageData(img, 0, 0, 0, 0, tilesize, tilesize);
+		} else {
+			spriteContext.putImageData(img, 0, 0);
+		}
 
 		// create a new image from the data and save it in our cache
 		img = new Image();
@@ -57,6 +78,10 @@ Copy-paste this script into a script tag after the bitsy source
 			context = ctx;
 		}
 
-		context.drawImage(img, x * tilesize * scale, y * tilesize * scale);
+		if (scaling) {
+			context.drawImage(img, x * tilesize * scale, y * tilesize * scale, tilesize * scale, tilesize * scale);
+		} else {
+			context.drawImage(img, x * tilesize * scale, y * tilesize * scale);
+		}
 	};
 }());
