@@ -10,8 +10,8 @@ Copy-paste this script into a script tag after the bitsy source
 (function () {
 	// give ourselves a little canvas + context to work with
 	var spriteCanvas = document.createElement("canvas");
-	spriteCanvas.width = 8 * tilesize * scale;
-	spriteCanvas.height = 8 * tilesize * scale;
+	spriteCanvas.width = tilesize * scale;
+	spriteCanvas.height = tilesize * scale;
 	var spriteContext = spriteCanvas.getContext("2d");
 
 	// override imageDataFromImageSource to use transparency for background pixels
@@ -34,7 +34,7 @@ Copy-paste this script into a script tag after the bitsy source
 		}
 
 		// put bitsy data to our canvas
-		spriteContext.clearRect(0, 0, 8 * tilesize * scale, 8 * tilesize * scale);
+		spriteContext.clearRect(0, 0, tilesize * scale, tilesize * scale);
 		spriteContext.putImageData(img, 0, 0);
 
 		// create a new image from the data and save it in our cache
