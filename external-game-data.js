@@ -1,0 +1,92 @@
+/*
+  ==================================
+  EXTERNAL GAME DATA MOD (@mildmojo)
+  ==================================
+
+  Load your Bitsy game data from an external file or URL, separating it from your
+  (modified) Bitsy HTML.
+
+  Usage: IMPORT <file or URL>
+
+  Examples: IMPORT frontier.bitsydata
+            IMPORT http://my-cool-website.nz/frontier/frontier.txt
+            IMPORT /games/frontier/data/frontier.txt
+
+  Installation:
+    1. Paste this code in new script tags right after the last /script> tag
+       in your exported game HTML file.
+    2. Copy all your Bitsy game data out of the script tag at the top of your
+       HTML into another file (I recommend `game-name.bitsydata`). In the HTML
+       file, replace all game data with a single IMPORT statement that refers to
+       your new data file.
+
+  NOTE: Chrome can only fetch external files when they're served from a
+        web server, so it won't work if you just open your HTML file from disk.
+        You could use Firefox, install a web server, or, if you have development
+        tools like NodeJS, Ruby, Python, Perl, PHP, or others installed, here's
+        a big list of how to use them to serve a folder as a local web server:
+        https://gist.github.com/willurd/5720255
+
+        If this mod finds an IMPORT statement anywhere in the Bitsy data
+        contained in the HTML file, it will replace all game data with the
+        IMPORTed data. It will not execute nested IMPORT statements in
+        external files.
+
+  Version: 1.0
+  Bitsy Version: 4.5, 4.6
+  License: WTFPL (do WTF you want)
+*/
+
+// Give a hoot, don't pollute; encapsulate in an IIFE for isolation.
+(function(globals) {
+  'use strict';
+
+  var _load_game = load_game;
+  globals.load_game = function(game_data, startWithTitle) {
+    tryImportGameData(game_data, function withGameData(err, importedData) {
+      if (err) {
+        console.warn('Make sure game data IMPORT statement refers to a valid file or URL.');
+        throw err;
+      } else {
+        _load_game(importedData, startWithTitle);
+      }
+    });
+  };
+
+  function tryImportGameData(gameData, done) {
+    var rejectBlanks = function(line) { return !line.match(/^\s*$/); };
+    var lines = gameData.split("\n")
+    lines = lines.filter(rejectBlanks);
+
+    for (var i = 0; i < lines.length; i++) {
+      if (getType(lines[i]) === "IMPORT") {
+        var src = lines[i].split(/\s+/)[1];
+        if (!src) return done('IMPORT requires a URL or path to a Bitsy data file!');
+        return fetchData(src, done);
+      } else {
+        return done(null, gameData);
+      }
+    }
+  }
+
+  function fetchData(url, done) {
+    var request = new XMLHttpRequest();
+    request.open('GET', url, true);
+
+    request.onload = function() {
+      if (this.status >= 200 && this.status < 400) {
+        // Success!
+        return done(null, this.response);
+      } else {
+        return done('Failed to load game data: ' + request.statusText + ' (' + this.status + ')');
+      }
+    };
+
+    request.onerror = function() {
+      return done('Failed to load game data: ' + request.statusText);
+    };
+
+    request.send();
+  }
+
+})(window);
