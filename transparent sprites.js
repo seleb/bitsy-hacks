@@ -42,8 +42,8 @@ Copy-paste this script into a script tag after the bitsy source
 		// set background pixels to transparent
 		for (var i = 0; i < img.data.length; i += 4) {
 			if (
-				img.data[i + 0] === bg[0],
-				img.data[i + 1] === bg[1],
+				img.data[i + 0] === bg[0] &&
+				img.data[i + 1] === bg[1] &&
 				img.data[i + 2] === bg[2]
 			) {
 				img.data[i + 3] = 0;
