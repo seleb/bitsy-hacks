@@ -116,6 +116,14 @@
     };
   }
 
+  // dest === {room: Room, x: Int, y: Int}
+  function doPlayerExit(dest) {
+    player().room = dest.room;
+    player().x = dest.x;
+    player().y = dest.y;
+    curRoom = dest.room;
+  }
+
   // From https://gist.github.com/seleb/27798c1022e14aba82b9b77b97ad8002
   // helper used to inject code into script tags based on a search string
   function _inject(searchString, codeToInject) {
