@@ -48,7 +48,7 @@
         console.warn('Make sure game data IMPORT statement refers to a valid file or URL.');
         throw err;
       } else {
-        _load_game(importedData, startWithTitle);
+        _load_game(dos2unix(importedData), startWithTitle);
       }
     });
   };
@@ -87,6 +87,10 @@
     };
 
     request.send();
+  }
+
+  function dos2unix(text) {
+    return text.replace(/\r\n/g, "\n");
   }
 
 })(window);
