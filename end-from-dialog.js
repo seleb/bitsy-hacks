@@ -75,6 +75,7 @@
   // and restarts the game right damn now.
   globals.endNowFunc = function(environment, parameters, onReturn) {
     endFunc.call(this, environment, parameters, function(){});
+    dialogBuffer.EndDialog();
     onExitDialog();
   }
 
