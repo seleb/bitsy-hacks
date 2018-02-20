@@ -9,31 +9,30 @@
   lets you in once you're disguised, use it to require payment before the
   ferryman will take you across the river.
 
-  Using the {exitAfter} function in any part of a series of dialog will make the
+  Using the {exit} function in any part of a series of dialog will make the
   game exit to the new room after the dialog is finished. Using {exitNow} will
   cut off the dialog text and immediately warp to the new room.
 
-  Usage: {exitAfter "<room name>,<x>,<y>"}
-         {exitAfter "<room name>,<x>,<y>,sprite"}
+  WARNING: In exit coordinates, the TOP LEFT tile is (0,0). In sprite coordinates,
+           the BOTTOM LEFT tile is (0,0). If you'd like to use sprite coordinates,
+           add the word "sprite" as the fourth parameter to the exit function.
+
+  Usage: {exit "<room name>,<x>,<y>"}
+         {exit "<room name>,<x>,<y>,sprite"}
          {exitNow "<room name>,<x>,<y>"}
          {exitNow "<room name>,<x>,<y>,sprite"}
 
-  Example: {exitAfter "FinalRoom,8,4"}
+  Example: {exit "FinalRoom,8,4"}
            {exitNow "FinalRoom,8,11,sprite"}
 
-  WARNING: In exit coordinates, the TOP left tile is (0,0). In sprite coordinates,
-           the BOTTOM left tile is (0,0). If you'd like to use sprite coordinates,
-           add the word "sprite" as the fourth parameter to the exit function.
-
-  Installation:
-    1. Paste all this code into new script tags at the bottom of your exported
-       game's HTML file, right after the last /script> tag.
+  HOW TO USE:
+    1. Copy-paste this script into a new script tag after the Bitsy source code.
 
   NOTE: DON'T EDIT DIALOG FOR SPRITES/ITEMS WITH {exit} CALLS IN THE DIALOG WINDOW.
-        Always edit them in the dialog textbox of the sprite/item window.
-        Editing a sprite or item's dialog in the dialog window will replace your
-        `{exitAfter "room,5,6"}` with `{}` and you probably won't notice that your
-        exits are busted.
+        Always edit them in the dialog textbox of the sprite/item paint window.
+        Editing any part of a sprite or item's dialog in the dialog window will
+        cause the editor replace that sprite/item's `{exit "room,5,6"}` with `{}`
+        and you probably won't notice that your exits are busted.
 
         For full editor integration, you'd *probably* also need to paste this
         code at the end of the editor's `bitsy.js` file. Untested.
