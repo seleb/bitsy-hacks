@@ -11,7 +11,7 @@
 
   Using the {exit} function in any part of a series of dialog will make the
   game exit to the new room after the dialog is finished. Using {exitNow} will
-  cut off the dialog text and immediately warp to the new room.
+  immediately warp to the new room, but the current dialog will continue.
 
   WARNING: In exit coordinates, the TOP LEFT tile is (0,0). In sprite coordinates,
            the BOTTOM LEFT tile is (0,0). If you'd like to use sprite coordinates,
@@ -37,7 +37,7 @@
         For full editor integration, you'd *probably* also need to paste this
         code at the end of the editor's `bitsy.js` file. Untested.
 
-  Version: 2.0
+  Version: 2.1
   Bitsy Version: 4.5, 4.6
   License: WTFPL (do WTF you want) except the `_inject` function by @seleb
 */
@@ -76,12 +76,13 @@
   // Implement the {exitNow} dialog function. It exits to the destination room
   // and X/Y coordinates right damn now.
   globals.exitNowFunc = function(environment, parameters, onReturn) {
-    queuedDialogExit = _getExitParams('exitNow', parameters);
-    if (!queuedDialogExit) {
+    var exitParams = _getExitParams('exitNow', parameters);
+    if (!exitParams) {
       return;
     }
 
-    onExitDialog.call(this, environment, parameters, function(){});
+    doPlayerExit(exitParams);
+    onReturn(null);
   }
 
   // Rewrite the Bitsy script tag, making these new functions callable from dialog.
