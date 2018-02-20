@@ -54,18 +54,23 @@
   };
 
   function tryImportGameData(gameData, done) {
-    var rejectBlanks = function(line) { return !line.match(/^\s*$/); };
-    var lines = gameData.split("\n")
-    lines = lines.filter(rejectBlanks);
+    // Make sure this game data even uses an IMPORT statement.
+    if (gameData.indexOf('IMPORT') === -1) {
+      return done(null, gameData);
+    }
 
-    for (var i = 0; i < lines.length; i++) {
-      if (getType(lines[i]) === "IMPORT") {
-        var src = lines[i].split(/\s+/)[1];
-        if (!src) return done('IMPORT requires a URL or path to a Bitsy data file!');
-        return fetchData(src, done);
-      } else {
-        return done(null, gameData);
-      }
+    var trim = function(line) { return line.trim(); };
+    var isImport = function(line) { return getType(line) === 'IMPORT'; };
+    var importCmd = gameData
+      .split("\n")
+      .map(trim)
+      .find(isImport);
+    var src = (importCmd || '').split(/\s+/)[1];
+
+    if (src) {
+      return fetchData(src, done);
+    } else {
+      return done('IMPORT missing a URL or path to a Bitsy data file!');
     }
   }
 
