@@ -76,12 +76,12 @@
   // Implement the {exitNow} dialog function. It exits to the destination room
   // and X/Y coordinates right damn now.
   globals.exitNowFunc = function(environment, parameters, onReturn) {
-    var exitParams = _getExitParams('exitNow', parameters);
-    if (!exitParams) {
+    queuedDialogExit = _getExitParams('exitNow', parameters);
+    if (!queuedDialogExit) {
       return;
     }
 
-    doPlayerExit(exitParams);
+    onExitDialog.call(this, environment, parameters, function(){});
   }
 
   // Rewrite the Bitsy script tag, making these new functions callable from dialog.
