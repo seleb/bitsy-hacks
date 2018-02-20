@@ -56,7 +56,7 @@
   function tryImportGameData(gameData, done) {
     // Make sure this game data even uses an IMPORT statement.
     if (gameData.indexOf('IMPORT') === -1) {
-      return done(null, gameData);
+      return done('No IMPORT found in Bitsy data. See instructions for external game data mod.', gameData);
     }
 
     var trim = function(line) { return line.trim(); };
