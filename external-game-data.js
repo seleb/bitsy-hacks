@@ -9,22 +9,22 @@
   Usage: IMPORT <file or URL>
 
   Examples: IMPORT frontier.bitsydata
-            IMPORT http://my-cool-website.nz/frontier/frontier.txt
-            IMPORT /games/frontier/data/frontier.txt
+            IMPORT http://my-cool-website.nz/frontier/frontier.bitsydata
+            IMPORT /games/frontier/data/frontier.bitsydata
 
-  Installation:
-    1. Paste this code in new script tags right after the last /script> tag
-       in your exported game HTML file.
+  HOW TO USE:
+    1. Copy-paste this script into a new script tag after the Bitsy source code.
     2. Copy all your Bitsy game data out of the script tag at the top of your
        HTML into another file (I recommend `game-name.bitsydata`). In the HTML
        file, replace all game data with a single IMPORT statement that refers to
        your new data file.
 
   NOTE: Chrome can only fetch external files when they're served from a
-        web server, so it won't work if you just open your HTML file from disk.
-        You could use Firefox, install a web server, or, if you have development
-        tools like NodeJS, Ruby, Python, Perl, PHP, or others installed, here's
-        a big list of how to use them to serve a folder as a local web server:
+        web server, so your game won't work if you just open your HTML file from
+        disk. You could use Firefox, install a web server, or, if you have
+        development tools like NodeJS, Ruby, Python, Perl, PHP, or others
+        installed, here's a big list of how to use them to serve a folder as a
+        local web server:
         https://gist.github.com/willurd/5720255
 
         If this mod finds an IMPORT statement anywhere in the Bitsy data
