@@ -66,10 +66,10 @@
     }
   };
 
-  // Implement the {exitAfter} dialog function. It saves the room name and
+  // Implement the {exit} dialog function. It saves the room name and
   // destination X/Y coordinates so we can travel there after the dialog is over.
-  globals.exitAfterFunc = function(environment, parameters, onReturn) {
-    queuedDialogExit = _getExitParams(parameters);
+  globals.exitFunc = function(environment, parameters, onReturn) {
+    queuedDialogExit = _getExitParams('exit', parameters);
 
     onReturn(null);
   }
@@ -77,8 +77,10 @@
   // Implement the {exitNow} dialog function. It exits to the destination room
   // and X/Y coordinates right damn now.
   globals.exitNowFunc = function(environment, parameters, onReturn) {
-    var exitParams = _getExitParams(parameters);
-    if (!exitParams) return;
+    var exitParams = _getExitParams('exitNow', parameters);
+    if (!exitParams) {
+      return;
+    }
 
     doPlayerExit(exitParams);
   }
@@ -86,11 +88,11 @@
   // Rewrite the Bitsy script tag, making these new functions callable from dialog.
   _inject(
     'var functionMap = new Map();',
-    'functionMap.set("exitAfter", exitAfterFunc);',
+    'functionMap.set("exit", exitFunc);',
     'functionMap.set("exitNow", exitNowFunc);'
   );
 
-  function _getExitParams(parameters) {
+  function _getExitParams(exitFuncName, parameters) {
     var params = parameters[0].split(',');
     var roomName = params[0];
     var x = params[1];
@@ -100,12 +102,13 @@
     var roomId = names.room.get(roomName);
 
     if (!roomName || x === undefined || y === undefined) {
-      console.warn('{exit} was missing parameters! Usage: {exit "roomname,x,y"}');
+      console.warn('{' + exitFuncName + '} was missing parameters! Usage: {' +
+        exitFuncName + ' "roomname,x,y"}');
       return null;
     }
 
     if (roomId === undefined) {
-      console.warn("Bad {exit} parameter: Room '" + roomName + "' not found!");
+      console.warn("Bad {" + exitFuncName + "} parameter: Room '" + roomName + "' not found!");
       return null;
     }
 
