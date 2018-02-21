@@ -43,8 +43,15 @@
 (function(globals) {
   'use strict';
 
+  var isFirstLoad = true;
+
   var _load_game = load_game;
   globals.load_game = function(game_data, startWithTitle) {
+    // Bitsy caches the game data on first load & recycles it on soft restarts.
+    if (game_data && !isFirstLoad) {
+      return _load_game.apply(this, arguments);
+    }
+
     tryImportGameData(game_data, function withGameData(err, importedData) {
       if (err) {
         console.warn('Make sure game data IMPORT statement refers to a valid file or URL.');
@@ -52,6 +59,8 @@
       } else {
         _load_game(dos2unix(importedData), startWithTitle);
       }
+
+      isFirstLoad = false;
     });
   };
 
