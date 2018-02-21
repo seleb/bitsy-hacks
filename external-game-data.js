@@ -14,6 +14,8 @@
 
   HOW TO USE:
     1. Copy-paste this script into a new script tag after the Bitsy source code.
+       Make sure this script comes *after* any other mods to guarantee that it
+       executes first.
     2. Copy all your Bitsy game data out of the script tag at the top of your
        HTML into another file (I recommend `game-name.bitsydata`). In the HTML
        file, replace all game data with a single IMPORT statement that refers to
