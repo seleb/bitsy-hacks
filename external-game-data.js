@@ -14,6 +14,8 @@
 
   HOW TO USE:
     1. Copy-paste this script into a new script tag after the Bitsy source code.
+       Make sure this script comes *after* any other mods to guarantee that it
+       executes first.
     2. Copy all your Bitsy game data out of the script tag at the top of your
        HTML into another file (I recommend `game-name.bitsydata`). In the HTML
        file, replace all game data with a single IMPORT statement that refers to
@@ -41,8 +43,15 @@
 (function(globals) {
   'use strict';
 
+  var isFirstLoad = true;
+
   var _load_game = load_game;
   globals.load_game = function(game_data, startWithTitle) {
+    // Bitsy caches the game data on first load & recycles it on soft restarts.
+    if (game_data && !isFirstLoad) {
+      return _load_game.apply(this, arguments);
+    }
+
     tryImportGameData(game_data, function withGameData(err, importedData) {
       if (err) {
         console.warn('Make sure game data IMPORT statement refers to a valid file or URL.');
@@ -50,6 +59,8 @@
       } else {
         _load_game(dos2unix(importedData), startWithTitle);
       }
+
+      isFirstLoad = false;
     });
   };
 

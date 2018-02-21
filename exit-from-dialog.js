@@ -9,35 +9,36 @@
   lets you in once you're disguised, use it to require payment before the
   ferryman will take you across the river.
 
-  Using the {exit} function in any part of a series of dialog will make the
-  game exit to the new room after the dialog is finished. Using {exitNow} will
+  Using the (exit) function in any part of a series of dialog will make the
+  game exit to the new room after the dialog is finished. Using (exitNow) will
   immediately warp to the new room, but the current dialog will continue.
 
   WARNING: In exit coordinates, the TOP LEFT tile is (0,0). In sprite coordinates,
            the BOTTOM LEFT tile is (0,0). If you'd like to use sprite coordinates,
            add the word "sprite" as the fourth parameter to the exit function.
 
-  Usage: {exit "<room name>,<x>,<y>"}
-         {exit "<room name>,<x>,<y>,sprite"}
-         {exitNow "<room name>,<x>,<y>"}
-         {exitNow "<room name>,<x>,<y>,sprite"}
+  Usage: (exit "<room name>,<x>,<y>")
+         (exit "<room name>,<x>,<y>,sprite")
+         (exitNow "<room name>,<x>,<y>")
+         (exitNow "<room name>,<x>,<y>,sprite")
 
-  Example: {exit "FinalRoom,8,4"}
-           {exitNow "FinalRoom,8,11,sprite"}
+  Example: (exit "FinalRoom,8,4")
+           (exitNow "FinalRoom,8,11,sprite")
 
   HOW TO USE:
     1. Copy-paste this script into a new script tag after the Bitsy source code.
+       It should appear *before* any other mods that handle loading your game
+       data so it executes *after* them (last-in first-out).
 
-  NOTE: DON'T EDIT DIALOG FOR SPRITES/ITEMS WITH {exit} CALLS IN THE DIALOG WINDOW.
-        Always edit them in the dialog textbox of the sprite/item paint window.
-        Editing any part of a sprite or item's dialog in the dialog window will
-        cause the editor replace that sprite/item's `{exit "room,5,6"}` with `{}`
-        and you probably won't notice that your exits are busted.
+  NOTE: This uses parentheses "()" instead of curly braces "{}" around function
+        calls because the Bitsy editor's fancy dialog window strips unrecognized
+        curly-brace functions from dialog text. To keep from losing data, write
+        these function calls with parentheses like the examples above.
 
         For full editor integration, you'd *probably* also need to paste this
         code at the end of the editor's `bitsy.js` file. Untested.
 
-  Version: 2.1
+  Version: 2.2
   Bitsy Version: 4.5, 4.6
   License: WTFPL (do WTF you want) except the `_inject` function by @seleb
 */
@@ -47,6 +48,18 @@
   'use strict';
 
   var queuedDialogExit = null;
+
+  // Hook into game load and rewrite custom functions in game data to Bitsy format.
+  var _load_game = load_game;
+  globals.load_game = function(game_data, startWithTitle) {
+     // Rewrite custom functions' parentheses to curly braces for Bitsy's
+     // interpreter. Unescape escaped parentheticals, too. Use regexper.com to
+     // visualize these regexes.
+    var fixedGameData = game_data
+      .replace(/(^|[^\\])\((exit(Now)? ".+?")\)/g, "$1{$2}") // Rewrite (exit...) to {exit...}
+      .replace(/\\\((exit(Now)? ".+")\\?\)/g, "($1)");       // Rewrite \(exit...\) to (exit...)
+    _load_game.call(this, fixedGameData, startWithTitle);
+  };
 
   // Hook into the game reset and make sure exit data gets cleared.
   var _clearGameData = clearGameData;
@@ -174,3 +187,4 @@
   };
 
 })(window);
+// End of (exit) dialog function mod
