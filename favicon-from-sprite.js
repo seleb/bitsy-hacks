@@ -122,8 +122,8 @@
     faviconLinkElem.href = dataURL;
   }
 
-  function getFrames(name) {
-    var spriteId = names.sprite.get(name) || playerId;
+  function getFrames(spriteName) {
+    var spriteId = names.sprite.get(spriteName) || playerId;
     var spriteData = sprite[spriteId];
     var frames = imageStore.source[spriteData.drw];
     return frames;
@@ -135,11 +135,11 @@
     if (Number.isNaN(Number(palId))) {
       // Search palettes by name. `palette` is an object with numbers as keys. Yuck.
       palId = Object.keys(palette).find(function(i) {
-        palette[i].name === PALETTE_ID;
+        return palette[i].name === palId;
       });
     }
 
-    return getPal(palId).colors;
+    return getPal(palId);
   }
 
   // Expects values = [r, g, b]
