@@ -31,8 +31,8 @@
   var BG_COLOR_NUM = 0;
   // Favicon sprite color in palette. 0 = BG, 1 = Tile, 2 = Sprite.
   var FG_COLOR_NUM = 2;
-  // Padding in pixels around sprite.
-  var PIXEL_PADDING = 2;
+  // Padding around sprite, in Bitsy pixel units.
+  var PIXEL_PADDING = 1;
   // Should the favicon have rounded corners? (Suggest margin 2px if rounding.)
   var ROUNDED_CORNERS = true;
   // Frame change interval if sprite is animated. Use `Infinity` to disable.
@@ -44,17 +44,17 @@
   var ONE_PIXEL_SCALED = FAVICON_SIZE / tilesize;
   PIXEL_PADDING *= ONE_PIXEL_SCALED;
   var canvas = document.createElement('canvas');
-  canvas.width = FAVICON_SIZE + PIXEL_PADDING;
-  canvas.height = FAVICON_SIZE + PIXEL_PADDING;
+  canvas.width = FAVICON_SIZE + 2*PIXEL_PADDING;
+  canvas.height = FAVICON_SIZE + 2*PIXEL_PADDING;
   var ctx = canvas.getContext('2d');
   var faviconLinkElem;
   var faviconFrameURLs = [];
 
   var _startExportedGame = startExportedGame;
   globals.startExportedGame = function() {
-    startFaviconLoop();
     _startExportedGame.apply(this, arguments);
-  };
+    startFaviconLoop();
+  }
 
   function startFaviconLoop() {
     var frameNum = 0;
@@ -62,12 +62,13 @@
 
     faviconFrameURLs = frames.map(drawFrame);
 
+    // Only one frame? Don't even bother with the loop, just paint the icon once.
     if (frames.length === 1) {
       return updateBrowserFavicon(faviconFrameURLs[0]);
     }
 
     setInterval(function() {
-      frameNum = frameNum % frameCount;
+      frameNum = ++frameNum % frames.length;
       updateBrowserFavicon(faviconFrameURLs[frameNum]);
     }, FRAME_DELAY);
   }
@@ -80,7 +81,7 @@
 
     // Approximate a squircle-shaped background by drawing a fat plus sign with
     // two overlapping rects, leaving some empty pixels in the corners.
-    var longSide = FAVICON_SIZE + PIXEL_PADDING;
+    var longSide = FAVICON_SIZE + 2*PIXEL_PADDING;
     var shortSide = longSide - rounding_offset*ONE_PIXEL_SCALED;
     ctx.fillStyle = rgb(bgColor);
     ctx.fillRect(rounding_offset,
@@ -129,22 +130,16 @@
   }
 
   function getPalette(id) {
-    var pal = [];
+    var palId = id;
 
-    if (Number.isNaN(Number(id))) {
-      // `palette` is an object with numbers as keys. Yuck. Search by name.
-      for (var i = 0; i < Object.keys(palette).length; i++) {
-        if (palette[i].name === PALETTE_ID) {
-          pal = palette[i];
-          break;
-        }
-      }
-    } else {
-      // Find palette by number.
-      pal = getPal(id);
+    if (Number.isNaN(Number(palId))) {
+      // Search palettes by name. `palette` is an object with numbers as keys. Yuck.
+      palId = Object.keys(palette).find(function(i) {
+        palette[i].name === PALETTE_ID;
+      });
     }
 
-    return pal.colors;
+    return getPal(palId).colors;
   }
 
   // Expects values = [r, g, b]
