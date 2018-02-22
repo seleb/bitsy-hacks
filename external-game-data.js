@@ -45,8 +45,7 @@
 
   var ERR_MISSING_IMPORT = 1;
 
-  var _startExportedGame = startExportedGame;
-  globals.startExportedGame = function() {
+  hook('startExportedGame', function beforeStart(superFn, superArgs) {
     var gameDataElem = document.scripts.namedItem('exportedGameData');
 
     tryImportGameData(gameDataElem.text, function withGameData(err, importedData) {
@@ -58,9 +57,9 @@
       }
 
       gameDataElem.text = "\n" + dos2unix(importedData);
-      _startExportedGame.apply(this, arguments);
+      superFn.apply(null, superArgs);
     });
-  };
+  });
 
   function tryImportGameData(gameData, done) {
     // Make sure this game data even uses the word "IMPORT".
@@ -113,6 +112,15 @@
     };
 
     request.send();
+  }
+
+  function hook(nameToHook, wrapperFn) {
+    var superFn = globals[nameToHook].bind(globals);
+
+    globals[nameToHook] = function() {
+      var superArgs = [].slice.call(arguments);
+      wrapperFn.apply(this, [superFn, superArgs]);
+    };
   }
 
   function dos2unix(text) {
