@@ -9,6 +9,10 @@ A collection of re-usable scripts for [Adam LeDoux](https://twitter.com/adamledo
 - ↔ [directional avatar](./directional%20avatar.js): flips the player's sprite based on directional movement
 - 🖼 [dynamic background](./dynamic%20background.js): HTML background matching bitsy background
 - 🎨 [edit sprite at runtime](./edit%20sprite%20at%20runtime.js): tool for other hacks
+- 🔚 [end game from dialog](./end-from-dialog.js): trigger an ending from dialog, including narration text
+- 🚪 [exit from dialog](./exit-from-dialog.js): exit to another room from dialog, including conditionals
+- 🛰 [external game data](./external-game-data.js): separate Bitsy game data from your (modded) HTML for easier development
+- 🌐 [favicon from sprite](./favicon-from-sprite.js): generate a browser favicon (tab icon) from a Bitsy sprite, including animation!
 - 💕 [follower](./follower.js): makes a single sprite follow the player
 - 🎮 [gamepad input](./gamepad%20input.js): HTML5 gamepad support
 - 📎 [noclip](./noclip.js): walk through wall tiles, sprites, exits, and endings
