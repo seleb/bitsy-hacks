@@ -34,7 +34,7 @@
         IMPORTed data. It will not execute nested IMPORT statements in
         external files.
 
-  Version: 1.0
+  Version: 1.1
   Bitsy Version: 4.5, 4.6
   License: WTFPL (do WTF you want)
 */
@@ -43,31 +43,31 @@
 (function(globals) {
   'use strict';
 
-  var isFirstLoad = true;
+  var ERR_MISSING_IMPORT = 1;
 
-  var _load_game = load_game;
-  globals.load_game = function(game_data, startWithTitle) {
-    // Bitsy caches the game data on first load & recycles it on soft restarts.
-    if (game_data && !isFirstLoad) {
-      return _load_game.apply(this, arguments);
-    }
+  before('startExportedGame', function run(done) {
+    var gameDataElem = document.getElementById('exportedGameData');
 
-    tryImportGameData(game_data, function withGameData(err, importedData) {
-      if (err) {
+    tryImportGameData(gameDataElem.text, function withGameData(err, importedData) {
+      if (err && err.error === ERR_MISSING_IMPORT) {
+        console.warn(err.message);
+      } else if (err) {
         console.warn('Make sure game data IMPORT statement refers to a valid file or URL.');
         throw err;
-      } else {
-        _load_game(dos2unix(importedData), startWithTitle);
       }
 
-      isFirstLoad = false;
+      gameDataElem.text = "\n" + dos2unix(importedData);
+      done();
     });
-  };
+  });
 
   function tryImportGameData(gameData, done) {
-    // Make sure this game data even uses an IMPORT statement.
+    // Make sure this game data even uses the word "IMPORT".
     if (gameData.indexOf('IMPORT') === -1) {
-      return done('No IMPORT found in Bitsy data. See instructions for external game data mod.', gameData);
+      return done({
+        error: ERR_MISSING_IMPORT,
+        message: 'No IMPORT found in Bitsy data. See instructions for external game data mod.'
+      }, gameData);
     }
 
     var trim = function(line) { return line.trim(); };
@@ -76,6 +76,15 @@
       .split("\n")
       .map(trim)
       .find(isImport);
+
+    // Make sure we found an actual IMPORT command.
+    if (!importCmd) {
+      return done({
+        error: ERR_MISSING_IMPORT,
+        message: 'No IMPORT found in Bitsy data. See instructions for external game data mod.'
+      });
+    }
+
     var src = (importCmd || '').split(/\s+/)[1];
 
     if (src) {
@@ -103,6 +112,26 @@
     };
 
     request.send();
+  }
+
+  function before(functionName, beforeFn) {
+    var superFn = globals[functionName];
+
+    globals[functionName] = function() {
+      var self = this;
+      var args = [].slice.call(arguments);
+
+      if (beforeFn.length > superFn.length) {
+        beforeFn.apply(self, args.concat(asyncDone));
+      } else {
+        args = beforeFn.apply(self, args) || args;
+        asyncDone.apply(self, args);
+      }
+
+      function asyncDone(newArgs) {
+        superFn.apply(self, newArgs || args);
+      }
+    };
   }
 
   function dos2unix(text) {
