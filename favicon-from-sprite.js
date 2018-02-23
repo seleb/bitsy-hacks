@@ -49,10 +49,14 @@
   var ctx = canvas.getContext('2d');
   var faviconLinkElem;
   var faviconFrameURLs = [];
+  var isStarted = false;
 
   after('load_game', startFaviconLoop);
 
   function startFaviconLoop() {
+    if (isStarted) return;
+    isStarted = true;
+    
     var frameNum = 0;
     var frames = getFrames(SPRITE_NAME);
 
