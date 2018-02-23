@@ -50,11 +50,7 @@
   var faviconLinkElem;
   var faviconFrameURLs = [];
 
-  var _startExportedGame = startExportedGame;
-  globals.startExportedGame = function() {
-    _startExportedGame.apply(this, arguments);
-    startFaviconLoop();
-  };
+  after('load_game', startFaviconLoop);
 
   function startFaviconLoop() {
     var frameNum = 0;
@@ -150,4 +146,14 @@
   function rgb(values) {
     return 'rgb(' + values.join(',') + ')';
   }
+
+  function after(functionName, afterFn) {
+    var superFn = globals[functionName];
+
+    globals[functionName] = function() {
+      superFn.apply(this, arguments);
+      afterFn.apply(this, arguments);
+    };
+  }
+
 })(window);
