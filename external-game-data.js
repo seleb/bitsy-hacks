@@ -45,8 +45,8 @@
 
   var ERR_MISSING_IMPORT = 1;
 
-  hook('startExportedGame', function beforeStart(superFn, superArgs) {
-    var gameDataElem = document.scripts.namedItem('exportedGameData');
+  before('startExportedGame', function run(done) {
+    var gameDataElem = document.getElementById('exportedGameData');
 
     tryImportGameData(gameDataElem.text, function withGameData(err, importedData) {
       if (err && err.error === ERR_MISSING_IMPORT) {
@@ -57,14 +57,14 @@
       }
 
       gameDataElem.text = "\n" + dos2unix(importedData);
-      superFn.apply(null, superArgs);
+      done();
     });
   });
 
   function tryImportGameData(gameData, done) {
     // Make sure this game data even uses the word "IMPORT".
     if (gameData.indexOf('IMPORT') === -1) {
-      return done(null, {
+      return done({
         error: ERR_MISSING_IMPORT,
         message: 'No IMPORT found in Bitsy data. See instructions for external game data mod.'
       }, gameData);
@@ -114,12 +114,23 @@
     request.send();
   }
 
-  function hook(nameToHook, wrapperFn) {
-    var superFn = globals[nameToHook].bind(globals);
+  function before(functionName, beforeFn) {
+    var superFn = globals[functionName];
 
-    globals[nameToHook] = function() {
-      var superArgs = [].slice.call(arguments);
-      wrapperFn.apply(this, [superFn, superArgs]);
+    globals[functionName] = function() {
+      var self = this;
+      var args = [].slice.call(arguments);
+
+      if (beforeFn.length > superFn.length) {
+        beforeFn.apply(self, args.concat(asyncDone));
+      } else {
+        args = beforeFn.apply(self, args) || args;
+        asyncDone.apply(self, args);
+      }
+
+      function asyncDone(newArgs) {
+        superFn.apply(self, newArgs || args);
+      }
     };
   }
 
