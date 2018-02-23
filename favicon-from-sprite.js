@@ -125,7 +125,7 @@
   function getFrames(spriteName) {
     // `spriteName` is case insensitive to avoid Bitsydev headaches.
     var spriteKey = Object.keys(sprite).find(function(key) {
-      return (sprite[key].name || '').toLowerCase() === spriteName.toLowerCase();
+      return sprite[key].name && sprite[key].name.toLowerCase() === spriteName.toLowerCase();
     });
     var spriteData = sprite[spriteKey || playerId];
     var frames = imageStore.source[spriteData.drw];
@@ -139,7 +139,7 @@
       // Search palettes by name. `palette` is an object with numbers as keys. Yuck.
       // Palette names are case-insensitive to avoid Bitsydev headaches.
       palId = Object.keys(palette).find(function(i) {
-        return (palette[i].name || '').toLowerCase() === palId.toLowerCase();
+        return palette[i].name && palette[i].name.toLowerCase() === palId.toLowerCase();
       });
     }
 
