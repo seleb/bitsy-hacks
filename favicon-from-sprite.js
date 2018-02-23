@@ -54,7 +54,9 @@
   after('load_game', startFaviconLoop);
 
   function startFaviconLoop() {
-    if (isStarted) return;
+    if (isStarted) {
+      return;
+    }
     isStarted = true;
     
     var frameNum = 0;
