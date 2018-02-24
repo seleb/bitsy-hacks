@@ -1,10 +1,10 @@
 /*
-bitsy hack - edit sprite at runtime
+bitsy hack - edit image at runtime
 
-Adds API for updating sprite image data at runtime.
+Adds API for updating sprite, tile, and image data at runtime.
 On its own, this doesn't do anything; it just provides tools for other hacks.
 
-Individual frames of sprite image data in bitsy are 8x8 1-bit 2D arrays in yx order
+Individual frames of image data in bitsy are 8x8 1-bit 2D arrays in yx order
 e.g. the default player is:
 [
 	[0,0,0,1,1,0,0,0],
@@ -19,7 +19,7 @@ e.g. the default player is:
 
 HOW TO USE
 1. Copy-paste API section into a script tag after the bitsy source
-2. Integrate with your game using `getSpriteData` and `updateSprite` as needed
+2. Integrate with your game using `getSpriteData`, `getTileData`, `getItemData`, `setSpriteData`, `setTileData`, and `setItemData` as needed
 */
 
 
@@ -28,26 +28,35 @@ HOW TO USE
 /////////////////
 /*
 Args:
-	   id: string id of sprite in `sprite` object
+	   id: string id
 	frame: animation frame (0 or 1)
 
-Returns: a single frame of a sprite's image data
+Returns: a single frame of a image data
 */
+function getImageData(id, frame, map) {
+	return imageStore.source[map[id].drw][frame];
+}
 function getSpriteData(id, frame) {
-	return imageStore.source[sprite[id].drw][frame];
+	return getImageData(id, frame, sprite);
+}
+function getTileData(id, frame) {
+	return getImageData(id, frame, tile);
+}
+function getItemData(id, frame) {
+	return getImageData(id, frame, item);
 }
 
 
 /*
-Updates a single frame of a sprite's image data
+Updates a single frame of image data
 
 Args:
-	     id: string id of sprite in `sprite` object
+	     id: string id
 	  frame: animation frame (0 or 1)
-	newData: new data to write to the sprite's image data
+	newData: new data to write to the image data
 */
-function updateSprite(id, frame, newData) {
-	var drawing = sprite[id];
+function setImageData(id, frame, map, newData) {
+	var drawing = map[id];
 	var drw = drawing.drw;
 	imageStore.source[drw][frame] = newData;
 	if (drawing.animation.isAnimated) {
@@ -60,6 +69,15 @@ function updateSprite(id, frame, newData) {
 			imageStore.render[pal][colStr][drw] = imageDataFromImageSource(newData, pal, col);
 		}
 	}
+}
+function setSpriteData(id, frame, newData) {
+	setImageData(id, frame, sprite, newData);
+}
+function setTileData(id, frame, newData) {
+	setImageData(id, frame, tile, newData);
+}
+function setItemData(id, frame, newData) {
+	setImageData(id, frame, item, newData);
 }
 
 /////////////////
@@ -76,7 +94,7 @@ function updateSprite(id, frame, newData) {
 		var A = getSpriteData('A', 0); // get the player sprite data
 		var a = getSpriteData('a', 0); // get the first npc sprite data
 		// swap the sprites' data
-		updateSprite('A', 0, a);
-		updateSprite('a', 0, A);
+		setSpriteData('A', 0, a);
+		setSpriteData('a', 0, A);
 	}
 }());

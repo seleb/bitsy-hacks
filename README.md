@@ -8,7 +8,7 @@ A collection of re-usable scripts for [Adam LeDoux](https://twitter.com/adamledo
 - 🅰 [custom text effect](./custom%20text%20effect.js): make {custom}text effects{custom}
 - ↔ [directional avatar](./directional%20avatar.js): flips the player's sprite based on directional movement
 - 🖼 [dynamic background](./dynamic%20background.js): HTML background matching bitsy background
-- 🎨 [edit sprite at runtime](./edit%20sprite%20at%20runtime.js): tool for other hacks
+- 🎨 [edit image at runtime](./edit%20image%20at%20runtime.js): tool for other hacks
 - 🔚 [end game from dialog](./end-from-dialog.js): trigger an ending from dialog, including narration text
 - 🚪 [exit from dialog](./exit-from-dialog.js): exit to another room from dialog, including conditionals
 - 🛰 [external game data](./external-game-data.js): separate Bitsy game data from your (modded) HTML for easier development
