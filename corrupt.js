@@ -187,7 +187,7 @@ e.g.
 		return array[rndIndex(array)];
 	}
 
-	// image data helpers from https://github.com/mildmojo/bitsy-hacks/blob/master/edit%20sprite%20at%20runtime.js
+	// image data helpers from https://github.com/seleb/bitsy-hacks/blob/master/edit%20image%20at%20runtime.js
 	function getImageData(id, frame, map) {
 		return imageStore.source[getImage(id, map).drw][frame];
 	}
