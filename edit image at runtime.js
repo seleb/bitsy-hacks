@@ -37,12 +37,15 @@ Returns: a single frame of a image data
 function getImageData(id, frame, map) {
 	return imageStore.source[getImage(id, map).drw][frame];
 }
+
 function getSpriteData(id, frame) {
 	return getImageData(id, frame, sprite);
 }
+
 function getTileData(id, frame) {
 	return getImageData(id, frame, tile);
 }
+
 function getItemData(id, frame) {
 	return getImageData(id, frame, item);
 }
@@ -72,12 +75,15 @@ function setImageData(id, frame, map, newData) {
 		}
 	}
 }
+
 function setSpriteData(id, frame, newData) {
 	setImageData(id, frame, sprite, newData);
 }
+
 function setTileData(id, frame, newData) {
 	setImageData(id, frame, tile, newData);
 }
+
 function setItemData(id, frame, newData) {
 	setImageData(id, frame, item, newData);
 }
