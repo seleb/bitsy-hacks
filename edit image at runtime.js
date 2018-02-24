@@ -1,7 +1,7 @@
 /*
 bitsy hack - edit image at runtime
 
-Adds API for updating sprite, tile, and image data at runtime.
+Adds API for updating sprite, tile, and item data at runtime.
 On its own, this doesn't do anything; it just provides tools for other hacks.
 
 Individual frames of image data in bitsy are 8x8 1-bit 2D arrays in yx order
