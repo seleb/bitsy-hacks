@@ -50,13 +50,13 @@ function updateSprite(id, frame, newData) {
 	var drawing = sprite[id];
 	var drw = drawing.drw;
 	imageStore.source[drw][frame] = newData;
+	if (drawing.animation.isAnimated) {
+		drw += "_" + frame;
+	}
 	for (pal in palette) {
 		if (palette.hasOwnProperty(pal)) {
 			var col = drawing.col;
 			var colStr = "" + col;
-			if (drawing.animation.isAnimated) {
-				drw += "_" + frame;
-			}
 			imageStore.render[pal][colStr][drw] = imageDataFromImageSource(newData, pal, col);
 		}
 	}
