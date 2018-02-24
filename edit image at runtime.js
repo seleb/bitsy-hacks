@@ -30,6 +30,7 @@ HOW TO USE
 Args:
 	   id: string id
 	frame: animation frame (0 or 1)
+	  map: map of images (e.g. `sprite`, `tile`, `item`)
 
 Returns: a single frame of a image data
 */
@@ -53,6 +54,7 @@ Updates a single frame of image data
 Args:
 	     id: string id
 	  frame: animation frame (0 or 1)
+	    map: map of images (e.g. `sprite`, `tile`, `item`)
 	newData: new data to write to the image data
 */
 function setImageData(id, frame, map, newData) {
