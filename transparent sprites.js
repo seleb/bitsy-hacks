@@ -12,27 +12,18 @@ Copy-paste this script into a script tag after the bitsy source
 	// but the game will be blurry unless you've added pixelated image CSS
 	var scaling = false;
 
-	// give ourselves a little canvas + context to work with
-	var spriteCanvas = document.createElement("canvas");
-	spriteCanvas.width = tilesize * (scaling ? 1 : scale);
-	spriteCanvas.height = tilesize * (scaling ? 1 : scale);
-	var spriteContext = spriteCanvas.getContext("2d");
-
 	// override imageDataFromImageSource to use transparency for background pixels
-	// since this is much slower than just using the pixels directly,
-	// a getter with an internal cache is returned to delay image creation
-	// until first use
+	// and save the results to a custom image cache
 	var _imageDataFromImageSource = imageDataFromImageSource;
 	imageDataFromImageSource = function (imageSource, pal, col) {
-		var args = arguments;
-		var img;
-		return function () {
-			if (img) {
-				// return cached image
-				return img;
+		var cache;
+		return function (args) {
+			if (cache) {
+				return cache;
 			}
+
 			// get the bitsy image data
-			img = _imageDataFromImageSource.apply(undefined, args);
+			var img = _imageDataFromImageSource.apply(undefined, args);
 
 			// make background pixels transparent
 			var bg = getPal(pal)[0];
@@ -59,6 +50,12 @@ Copy-paste this script into a script tag after the bitsy source
 				}
 			}
 
+			// give ourselves a little canvas + context to work with
+			var spriteCanvas = document.createElement("canvas");
+			spriteCanvas.width = tilesize * (scaling ? 1 : scale);
+			spriteCanvas.height = tilesize * (scaling ? 1 : scale);
+			var spriteContext = spriteCanvas.getContext("2d");
+
 			// put bitsy data to our canvas
 			spriteContext.clearRect(0, 0, tilesize, tilesize);
 			if (scaling) {
@@ -67,14 +64,13 @@ Copy-paste this script into a script tag after the bitsy source
 				spriteContext.putImageData(img, 0, 0);
 			}
 
-			// create a new image from the data and save it in our cache
-			img = new Image();
-			img.src = spriteCanvas.toDataURL("image/png");
+			// save it in our cache
+			cache = spriteCanvas;
 
 			// return our image	
-			return img;
-		}
-	}
+			return cache;
+		}.bind(undefined, arguments)
+	};
 
 	// override drawTile to draw from our custom image cache
 	// instead of putting image data directly
