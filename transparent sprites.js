@@ -19,51 +19,61 @@ Copy-paste this script into a script tag after the bitsy source
 	var spriteContext = spriteCanvas.getContext("2d");
 
 	// override imageDataFromImageSource to use transparency for background pixels
-	// and save the results to a custom image cache
+	// since this is much slower than just using the pixels directly,
+	// a getter with an internal cache is returned to delay image creation
+	// until first use
 	var _imageDataFromImageSource = imageDataFromImageSource;
 	imageDataFromImageSource = function (imageSource, pal, col) {
-		// get the bitsy image data
-		var img = _imageDataFromImageSource.apply(undefined, arguments);
-
-		// make background pixels transparent
-		var bg = getPal(pal)[0];
-
-		// discard unnecessary pixels
-		if (scaling) {
-			for (var i = 0; i < img.data.length / scale; i += 4) {
-				img.data[i + 0] = img.data[i * scale + 0];
-				img.data[i + 1] = img.data[i * scale + 1];
-				img.data[i + 2] = img.data[i * scale + 2];
-				img.data[i + 3] = img.data[i * scale + 3];
+		var args = arguments;
+		var img;
+		return function () {
+			if (img) {
+				// return cached image
+				return img;
 			}
-			img.data.length = img.data.length / 4;
-		}
+			// get the bitsy image data
+			img = _imageDataFromImageSource.apply(undefined, args);
 
-		// set background pixels to transparent
-		for (var i = 0; i < img.data.length; i += 4) {
-			if (
-				img.data[i + 0] === bg[0] &&
-				img.data[i + 1] === bg[1] &&
-				img.data[i + 2] === bg[2]
-			) {
-				img.data[i + 3] = 0;
+			// make background pixels transparent
+			var bg = getPal(pal)[0];
+
+			// discard unnecessary pixels
+			if (scaling) {
+				for (var i = 0; i < img.data.length / scale; i += 4) {
+					img.data[i + 0] = img.data[i * scale + 0];
+					img.data[i + 1] = img.data[i * scale + 1];
+					img.data[i + 2] = img.data[i * scale + 2];
+					img.data[i + 3] = img.data[i * scale + 3];
+				}
+				img.data.length = img.data.length / 4;
 			}
+
+			// set background pixels to transparent
+			for (var i = 0; i < img.data.length; i += 4) {
+				if (
+					img.data[i + 0] === bg[0] &&
+					img.data[i + 1] === bg[1] &&
+					img.data[i + 2] === bg[2]
+				) {
+					img.data[i + 3] = 0;
+				}
+			}
+
+			// put bitsy data to our canvas
+			spriteContext.clearRect(0, 0, tilesize, tilesize);
+			if (scaling) {
+				spriteContext.putImageData(img, 0, 0, 0, 0, tilesize, tilesize);
+			} else {
+				spriteContext.putImageData(img, 0, 0);
+			}
+
+			// create a new image from the data and save it in our cache
+			img = new Image();
+			img.src = spriteCanvas.toDataURL("image/png");
+
+			// return our image	
+			return img;
 		}
-
-		// put bitsy data to our canvas
-		spriteContext.clearRect(0, 0, tilesize, tilesize);
-		if (scaling) {
-			spriteContext.putImageData(img, 0, 0, 0, 0, tilesize, tilesize);
-		} else {
-			spriteContext.putImageData(img, 0, 0);
-		}
-
-		// create a new image from the data and save it in our cache
-		img = new Image();
-		img.src = spriteCanvas.toDataURL("image/png");
-
-		// return our image	
-		return img;
 	}
 
 	// override drawTile to draw from our custom image cache
@@ -75,9 +85,9 @@ Copy-paste this script into a script tag after the bitsy source
 		}
 
 		if (scaling) {
-			context.drawImage(img, x * tilesize * scale, y * tilesize * scale, tilesize * scale, tilesize * scale);
+			context.drawImage(img(), x * tilesize * scale, y * tilesize * scale, tilesize * scale, tilesize * scale);
 		} else {
-			context.drawImage(img, x * tilesize * scale, y * tilesize * scale);
+			context.drawImage(img(), x * tilesize * scale, y * tilesize * scale);
 		}
 	};
 }());
