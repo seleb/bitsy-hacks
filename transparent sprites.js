@@ -66,10 +66,6 @@ Copy-paste this script into a script tag after the bitsy source
 		return img;
 	}
 
-	var getImage = function (data) {
-		return img;
-	};
-
 	// override drawTile to draw from our custom image cache
 	// instead of putting image data directly
 	var _drawTile = drawTile;
