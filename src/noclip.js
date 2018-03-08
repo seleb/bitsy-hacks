@@ -4,6 +4,8 @@ bitsy hack - noclip
 Adds a "noclip" command, which allows player to walk through wall tiles, sprites, exits, and endings.
 Also adds a room cycle command for use with noclip.
 
+Known issue: player still picks up items while noclip is active
+
 HOW TO USE:
 1. Copy-paste this script into a script tag after the bitsy source
 2. Press 'space' to toggle noclip
