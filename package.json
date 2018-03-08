@@ -15,5 +15,6 @@
 		"rollup-plugin-commonjs": "^9.0.0",
 		"rollup-plugin-eslint": "^4.0.0",
 		"rollup-plugin-node-resolve": "^3.2.0",
+		"tracery-grammar": "^2.7.2"
 	}
 }
