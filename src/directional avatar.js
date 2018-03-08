@@ -9,6 +9,11 @@ HOW TO USE
 1. Copy-paste into a script tag after the bitsy source
 2. Edit `horizontalFlipAllowed` and `verticalFlipAllowed` below as needed
 */
+import {
+	getSpriteData,
+	setSpriteData
+} from "./edit image at runtime.js";
+
 // If `horizontalFlipAllowed` is true:
 // 	pressing left will make the player's sprite face backwards
 // 	pressing right will make the player's sprite face forwards
@@ -21,7 +26,7 @@ var verticalFlipAllowed = false;
 
 // helper function to flip sprite data
 function flip(spriteData, v, h) {
-	var x, y, x2, y2, tmp;
+	var x, y, x2, y2, col, tmp;
 	var s = spriteData.slice();
 	if (v && verticalFlipAllowed) {
 		for (y = 0; y < s.length / 2; ++y) {
@@ -83,29 +88,6 @@ onPlayerMoved = function () {
 
 	// update sprite with flipped frames
 	for (var i = 0; i < originalAnimation.length; ++i) {
-		updateSprite(playerId, i, flip(originalAnimation[i], vflip, hflip));
+		setSpriteData(playerId, i, flip(originalAnimation[i], vflip, hflip));
 	}
 };
-
-//////////////////////////////////
-// "edit sprite at runtime" API //
-//////////////////////////////////
-function getSpriteData(id, frame) {
-	return imageStore.source[sprite[id].drw][frame];
-}
-
-function updateSprite(id, frame, newData) {
-	var drawing = sprite[id];
-	var drw = drawing.drw;
-	imageStore.source[drw][frame] = newData;
-	for (pal in palette) {
-		if (palette.hasOwnProperty(pal)) {
-			var col = drawing.col;
-			var colStr = "" + col;
-			if (drawing.animation.isAnimated) {
-				drw += "_" + frame;
-			}
-			imageStore.render[pal][colStr][drw] = imageDataFromImageSource(newData, pal, col);
-		}
-	}
-}
