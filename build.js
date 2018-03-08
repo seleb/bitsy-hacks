@@ -1,5 +1,6 @@
 const rollup = require("rollup");
 const clear = require("rollup-plugin-clear");
+const eslint = require("rollup-plugin-eslint");
 
 const headerComment = require("./HeaderCommentPlugin");
 
@@ -16,7 +17,8 @@ function build(src) {
 			clear({
 				targets: [outputDir]
 			}),
-			headerComment()
+			headerComment(),
+			eslint({})
 		]
 	};
 
