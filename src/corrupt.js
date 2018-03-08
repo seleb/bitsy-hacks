@@ -27,6 +27,8 @@ e.g.
 	2.0 = will corrupt twice
 	3.5 = will corrupt thrice, and corrupt a fourth time with a probability of one in two
 */
+import {expose} from "./utils.js";
+
 ///////////
 // setup //
 ///////////
@@ -237,12 +239,3 @@ function getImage(name, map) {
 	});
 	return map[id];
 }
-
-// helper used to expose getter/setter for private vars from https://gist.github.com/seleb/c7f5a25c40742287b34bf9587df0786d
-function expose(target) {
-	var code = target.toString();
-	code = code.substring(0, code.lastIndexOf("}"));
-	code += "this.get = function(name) {return eval(name);};";
-	code += "this.set = function(name, value) {eval(name+'=value');};";
-	return eval("[" + code + "}]")[0];
-};
