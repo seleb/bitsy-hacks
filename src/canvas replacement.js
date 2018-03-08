@@ -7,14 +7,12 @@ This isn't a self-contained hack; it relies on https://github.com/seleb/WebGLazy
 to replace the canvas, and this is simply the code needed to integrate for bitsy.
 
 HOW TO USE:
-1. Copy https://github.com/seleb/WebGLazy/blob/master/WebGLazy.min.js into your game. You can either:
-	- copy the contents into a script tag in the head
-	- copy the file next to your html file and add a script tag with `src="WebGLazy.min.js"` to the head
-2. Copy-paste this script into a script tag after the bitsy source
-3. For better scaling, edit `var text_scale = 2` and `var scale = 4` in the bitsy source to `var text_scale = 1` and `var scale = 2`
+1. Copy-paste this script into a script tag after the bitsy source
+2. For finer scaling, edit `var text_scale = 2` and `var scale = 4` in the bitsy source to `var text_scale = 1` and `var scale = 2`
+3. Edit the options object passed to the `new WebGLazy` call as needed
 
-The shaders used to render the canvas can be overriden by including script tags
-with `type='x-shader/x-fragment' and `id='shader-vert'` or `id='shader-frag'`
+The shader used to render the canvas can be overriden by including script tags
+with `id='shader-frag'` and `type='x-shader/x-fragment'
 e.g.
 <script id='shader-frag' type='x-shader/x-fragment'>
 	// uv-wave fragment shader
@@ -32,11 +30,14 @@ e.g.
 		vec3 col = texture2D(tex0,uv).rgb;
 		gl_FragColor = vec4(col, 1.0);
 	}
-</script>
+(closing script tag omitted in comment to avoid confusing browser)
 */
+import bitsy from "bitsy";
+import {WebGLazy} from "webglazy";
+
 var glazy;
-var _startExportedGame = startExportedGame;
-startExportedGame = function () {
+var _startExportedGame = bitsy.startExportedGame;
+bitsy.startExportedGame = function () {
 	if (_startExportedGame) {
 		_startExportedGame();
 	}
@@ -49,8 +50,8 @@ startExportedGame = function () {
 	// you can set up any custom uniforms you have here if needed
 	// e.g. glazy.glLocations.myUniform = glazy.gl.getUniformLocation(glazy.shader.program, 'myUniform');
 }
-var _update = update;
-update = function () {
+var _update = bitsy.update;
+bitsy.update = function () {
 	if (_update) {
 		_update();
 	}
