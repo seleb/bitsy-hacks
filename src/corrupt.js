@@ -27,7 +27,17 @@ e.g.
 	2.0 = will corrupt twice
 	3.5 = will corrupt thrice, and corrupt a fourth time with a probability of one in two
 */
-import {expose} from "./utils.js";
+import {
+	expose
+} from "./utils.js";
+import {
+	getSpriteData,
+	getTileData,
+	getItemData,
+	setSpriteData,
+	setTileData,
+	setItemData
+} from "./edit image at runtime.js";
 
 ///////////
 // setup //
@@ -60,7 +70,7 @@ onPlayerMoved = function () {
 
 // get a reference to the fontdata
 dialogRenderer = new(expose(dialogRenderer.constructor))();
-font = new(expose(dialogRenderer.get('font').constructor))();
+var font = new(expose(dialogRenderer.get('font').constructor))();
 var fontdata = font.get('fontdata');
 dialogRenderer.set('font', font);
 
@@ -186,56 +196,4 @@ function rndIndex(array) {
 
 function rndItem(array) {
 	return array[rndIndex(array)];
-}
-
-// image data helpers from https://github.com/seleb/bitsy-hacks/blob/master/edit%20image%20at%20runtime.js
-function getImageData(id, frame, map) {
-	return imageStore.source[getImage(id, map).drw][frame];
-}
-
-function getSpriteData(id, frame) {
-	return getImageData(id, frame, sprite);
-}
-
-function getTileData(id, frame) {
-	return getImageData(id, frame, tile);
-}
-
-function getItemData(id, frame) {
-	return getImageData(id, frame, item);
-}
-
-function setImageData(id, frame, map, newData) {
-	var drawing = getImage(id, map);
-	var drw = drawing.drw;
-	imageStore.source[drw][frame] = newData;
-	if (drawing.animation.isAnimated) {
-		drw += "_" + frame;
-	}
-	for (pal in palette) {
-		if (palette.hasOwnProperty(pal)) {
-			var col = drawing.col;
-			var colStr = "" + col;
-			imageStore.render[pal][colStr][drw] = imageDataFromImageSource(newData, pal, col);
-		}
-	}
-}
-
-function setSpriteData(id, frame, newData) {
-	setImageData(id, frame, sprite, newData);
-}
-
-function setTileData(id, frame, newData) {
-	setImageData(id, frame, tile, newData);
-}
-
-function setItemData(id, frame, newData) {
-	setImageData(id, frame, item, newData);
-}
-
-function getImage(name, map) {
-	var id = map.hasOwnProperty(name) ? name : Object.keys(map).find(function (e) {
-		return map[e].name == name;
-	});
-	return map[id];
 }
