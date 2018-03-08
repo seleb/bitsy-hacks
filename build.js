@@ -35,7 +35,6 @@ function build(src) {
 	"custom text effect",
 	"directional avatar",
 	"dynamic background",
-	"edit image at runtime",
 	"end-from-dialog",
 	"exit-from-dialog",
 	"external-game-data",
