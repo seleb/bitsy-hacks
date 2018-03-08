@@ -9,6 +9,9 @@ const outputDir = "./dist/";
 function build(src) {
 	const inputOptions = {
 		input: `${inputDir}${src}.js`,
+		external: [
+			'bitsy'
+		],
 		plugins: [
 			clear({
 				targets: [outputDir]
@@ -19,7 +22,10 @@ function build(src) {
 
 	const outputOptions = {
 		file: `${outputDir}${src}.js`,
-		format: "iife"
+		format: "iife",
+		globals: {
+			bitsy: 'window'
+		}
 	};
 
 	rollup.rollup(inputOptions)
