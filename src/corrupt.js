@@ -27,6 +27,7 @@ e.g.
 	2.0 = will corrupt twice
 	3.5 = will corrupt thrice, and corrupt a fourth time with a probability of one in two
 */
+import bitsy from "bitsy";
 import {
 	expose
 } from "./utils.js";
@@ -56,8 +57,8 @@ var options = {
 };
 
 // hook corruption to player movement
-var _onPlayerMoved = onPlayerMoved;
-onPlayerMoved = function () {
+var _onPlayerMoved = bitsy.onPlayerMoved;
+bitsy.onPlayerMoved = function () {
 	if (_onPlayerMoved) {
 		_onPlayerMoved.apply(this, arguments);
 	}
@@ -69,16 +70,16 @@ onPlayerMoved = function () {
 //////////////////
 
 // get a reference to the fontdata
-dialogRenderer = new(expose(dialogRenderer.constructor))();
-var font = new(expose(dialogRenderer.get('font').constructor))();
+bitsy.dialogRenderer = new(expose(bitsy.dialogRenderer.constructor))();
+var font = new(expose(bitsy.dialogRenderer.get('font').constructor))();
 var fontdata = font.get('fontdata');
-dialogRenderer.set('font', font);
+bitsy.dialogRenderer.set('font', font);
 
 // reset font and options when the game resets
 var originalFontData = fontdata.slice();
 var originalOptions = JSON.parse(JSON.stringify(options));
-var _reset_cur_game = reset_cur_game;
-reset_cur_game = function () {
+var _reset_cur_game = bitsy.reset_cur_game;
+bitsy.reset_cur_game = function () {
 	if (_reset_cur_game) {
 		_reset_cur_game.apply(this, arguments);
 	}
@@ -90,11 +91,12 @@ reset_cur_game = function () {
 
 
 function corrupt() {
-	var currentRoom = room[curRoom];
+	var i;
+	var currentRoom = bitsy.room[bitsy.curRoom];
 	// corrupt pixels of visible tiles
 	var visibleTiles = {};
-	for (var y = 0; y < mapsize; ++y) {
-		for (var x = 0; x < mapsize; ++x) {
+	for (var y = 0; y < bitsy.mapsize; ++y) {
+		for (var x = 0; x < bitsy.mapsize; ++x) {
 			visibleTiles[currentRoom.tilemap[y][x]] = true;
 		}
 	}
@@ -103,10 +105,10 @@ function corrupt() {
 	if (visibleTiles.length > 0) {
 		iterate(options.tilePixelsFreq * options.globalFreq, function () {
 			var t = rndItem(visibleTiles);
-			var frame = Math.floor(Math.random() * tile[t].animation.frameCount);
+			var frame = Math.floor(Math.random() * bitsy.tile[t].animation.frameCount);
 			var tdata = getTileData(t, frame);
-			var y = Math.floor(Math.random() * tilesize);
-			var x = Math.floor(Math.random() * tilesize);
+			var y = Math.floor(Math.random() * bitsy.tilesize);
+			var x = Math.floor(Math.random() * bitsy.tilesize);
 			tdata[y][x] = Math.abs(tdata[y][x] - 1);
 			setTileData(t, frame, tdata);
 		});
@@ -114,9 +116,9 @@ function corrupt() {
 
 	// corrupt pixels of visible sprites
 	var visibleSprites = {};
-	for (var i in sprite) {
-		if (sprite.hasOwnProperty(i)) {
-			if (sprite[i].room === curRoom) {
+	for (i in bitsy.sprite) {
+		if (bitsy.sprite.hasOwnProperty(i)) {
+			if (bitsy.sprite[i].room === bitsy.curRoom) {
 				visibleSprites[i] = true;
 			}
 		}
@@ -124,51 +126,51 @@ function corrupt() {
 	visibleSprites = Object.keys(visibleSprites);
 	iterate(options.spritePixelsFreq * options.globalFreq, function () {
 		var t = rndItem(visibleSprites);
-		var frame = Math.floor(Math.random() * sprite[t].animation.frameCount);
+		var frame = Math.floor(Math.random() * bitsy.sprite[t].animation.frameCount);
 		var tdata = getSpriteData(t, frame);
-		var y = Math.floor(Math.random() * tilesize);
-		var x = Math.floor(Math.random() * tilesize);
+		var y = Math.floor(Math.random() * bitsy.tilesize);
+		var x = Math.floor(Math.random() * bitsy.tilesize);
 		tdata[y][x] = Math.abs(tdata[y][x] - 1);
 		setSpriteData(t, frame, tdata);
 	});
 
 	// corrupt pixels of visible items
 	var visibleItems = {};
-	for (var i = 0; i < currentRoom.items.length; ++i) {
+	for (i = 0; i < currentRoom.items.length; ++i) {
 		visibleItems[currentRoom.items[i].id] = true;
 	}
 	visibleItems = Object.keys(visibleItems);
 	if (visibleItems.length > 0) {
 		iterate(options.itemPixelsFreq * options.globalFreq, function () {
 			var t = rndItem(visibleItems);
-			var frame = Math.floor(Math.random() * item[t].animation.frameCount);
+			var frame = Math.floor(Math.random() * bitsy.item[t].animation.frameCount);
 			var tdata = getItemData(t, frame);
-			var y = Math.floor(Math.random() * tilesize);
-			var x = Math.floor(Math.random() * tilesize);
+			var y = Math.floor(Math.random() * bitsy.tilesize);
+			var x = Math.floor(Math.random() * bitsy.tilesize);
 			tdata[y][x] = Math.abs(tdata[y][x] - 1);
 			setItemData(t, frame, tdata);
 		});
 	}
 
 	// corrupt current room's tilemap
-	var possibleTiles = Object.keys(tile);
+	var possibleTiles = Object.keys(bitsy.tile);
 	possibleTiles.push("0"); // empty tile
 	iterate(options.tilemapFreq * options.globalFreq, function () {
 		// pick a tile at random in the current room and assign it a random tile
-		y = Math.floor(Math.random() * mapsize);
-		x = Math.floor(Math.random() * mapsize);
+		y = Math.floor(Math.random() * bitsy.mapsize);
+		x = Math.floor(Math.random() * bitsy.mapsize);
 		currentRoom.tilemap[y][x] = rndItem(possibleTiles);
 	});
 
 	// corrupt visible palette colours
-	var visibleColors = palette[curPal()].colors;
+	var visibleColors = bitsy.getPal(bitsy.curPal());
 	iterate(options.paletteFreq * options.globalFreq, function () {
 		var c = rndItem(visibleColors);
 		var i = rndIndex(c);
 		c[i] = Math.round((c[i] + (Math.random() * 2 - 1) * options.paletteAmplitude) % 256);
 	});
 	if (options.paletteImmediate) {
-		renderImages();
+		bitsy.renderImages();
 	}
 
 	// corrupt pixels of font data

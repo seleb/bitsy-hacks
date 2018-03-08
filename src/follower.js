@@ -15,54 +15,56 @@ HOW TO USE:
 1. Copy-paste this script into a script tag after the bitsy source
 2. Edit `follower = sprite.a` to your intended sprite
 */
+import bitsy from "bitsy";
+
 var follower;
 var allowFollowerCollision = false; // if true, the player can walk into the follower and talk to them (possible to get stuck this way)
-var _startExportedGame = startExportedGame;
-startExportedGame = function () {
+var _startExportedGame = bitsy.startExportedGame;
+bitsy.startExportedGame = function () {
 	if (_startExportedGame) {
 		_startExportedGame();
 	}
 
-	follower = sprite.a;
+	follower = bitsy.sprite.a;
 
 	// remove + add player to sprite list to force rendering them on top of follower
-	var p = sprite[playerId];
-	delete sprite[playerId];
-	sprite[playerId] = p;
+	var p = bitsy.sprite[bitsy.playerId];
+	delete bitsy.sprite[bitsy.playerId];
+	bitsy.sprite[bitsy.playerId] = p;
 
-	lastRoom = player().room;
+	lastRoom = bitsy.player().room;
 }
 
 var lastRoom;
-var _onPlayerMoved = onPlayerMoved;
-onPlayerMoved = function () {
+var _onPlayerMoved = bitsy.onPlayerMoved;
+bitsy.onPlayerMoved = function () {
 	if (_onPlayerMoved) {
 		_onPlayerMoved();
 	}
 
 	// detect room change
-	if (lastRoom !== player().room) {
+	if (lastRoom !== bitsy.player().room) {
 		// on room change, warp to player
-		lastRoom = follower.room = player().room;
-		follower.x = player().x;
-		follower.y = player().y;
+		lastRoom = follower.room = bitsy.player().room;
+		follower.x = bitsy.player().x;
+		follower.y = bitsy.player().y;
 		follower.walkingPath.length = 0;
 	} else {
 		var step = {
-			x: player().x,
-			y: player().y
+			x: bitsy.player().x,
+			y: bitsy.player().y
 		};
-		switch (curPlayerDirection) {
-		case Direction.Up:
+		switch (bitsy.curPlayerDirection) {
+		case bitsy.Direction.Up:
 			step.y += 1;
 			break;
-		case Direction.Down:
+		case bitsy.Direction.Down:
 			step.y -= 1;
 			break;
-		case Direction.Left:
+		case bitsy.Direction.Left:
 			step.x += 1;
 			break;
-		case Direction.Right:
+		case bitsy.Direction.Right:
 			step.x -= 1;
 			break;
 		default:
@@ -72,25 +74,25 @@ onPlayerMoved = function () {
 	}
 };
 
+function filterFollowing(id) {
+	return follower === bitsy.sprite[id] ? null : id;
+}
 if (!allowFollowerCollision) {
 	// filter follower out of collisions
-	function filterFollowing(id) {
-		return follower === sprite[id] ? null : id;
-	}
-	var _getSpriteLeft = getSpriteLeft;
-	getSpriteLeft = function () {
+	var _getSpriteLeft = bitsy.getSpriteLeft;
+	bitsy.getSpriteLeft = function () {
 		return filterFollowing(_getSpriteLeft());
 	}
-	var _getSpriteRight = getSpriteRight;
-	getSpriteRight = function () {
+	var _getSpriteRight = bitsy.getSpriteRight;
+	bitsy.getSpriteRight = function () {
 		return filterFollowing(_getSpriteRight());
 	}
-	var _getSpriteUp = getSpriteUp;
-	getSpriteUp = function () {
+	var _getSpriteUp = bitsy.getSpriteUp;
+	bitsy.getSpriteUp = function () {
 		return filterFollowing(_getSpriteUp());
 	}
-	var _getSpriteDown = getSpriteDown;
-	getSpriteDown = function () {
+	var _getSpriteDown = bitsy.getSpriteDown;
+	bitsy.getSpriteDown = function () {
 		return filterFollowing(_getSpriteDown());
 	}
 }

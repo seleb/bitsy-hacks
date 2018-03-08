@@ -40,7 +40,10 @@ The second argument is `time`, which is the time in milliseconds
 
 A number of example effects are included
 */
-import {inject} from "./utils.js";
+import bitsy from "bitsy";
+import {
+	inject
+} from "./utils.js";
 
 var customTextEffects = {
 	"my-effect": function () {
@@ -78,7 +81,7 @@ var customTextEffects = {
 	},
 	rot13: function () {
 		// puts letters through the rot13 cipher (see www.rot13.com)
-		this.DoEffect = function (char, time) {
+		this.DoEffect = function (char) {
 			char.original = char.original !== undefined ? char.original : char.char;
 			char.char = char.original.replace(/[a-z]/, function (c) {
 				return String.fromCharCode((c.codePointAt(0) - 97 + 13) % 26 + 97);
@@ -92,7 +95,7 @@ var customTextEffects = {
 		// note that it's using a locally defined function
 		function posmod(a, b) {
 			return ((a % b) + b) % b;
-		};
+		}
 		this.DoEffect = function (char, time) {
 			char.original = char.original !== undefined ? char.original : char.char;
 			char.char = char.original[['toUpperCase', 'toLowerCase'][Math.round(posmod(time / 1000 - (char.col + char.row) / 2, 1))]]();
@@ -132,9 +135,9 @@ inject('var TextEffects = new Map();', textEffectCode);
 
 // recreate the script and dialog objects so that they'll be
 // referencing the code with injections instead of the original
-scriptModule = new Script();
-scriptInterpreter = scriptModule.CreateInterpreter();
+bitsy.scriptModule = new bitsy.Script();
+bitsy.scriptInterpreter = bitsy.scriptModule.CreateInterpreter();
 
-dialogModule = new Dialog();
-dialogRenderer = dialogModule.CreateRenderer();
-dialogBuffer = dialogModule.CreateBuffer();
+bitsy.dialogModule = new bitsy.Dialog();
+bitsy.dialogRenderer = bitsy.dialogModule.CreateRenderer();
+bitsy.dialogBuffer = bitsy.dialogModule.CreateBuffer();

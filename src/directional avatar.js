@@ -9,6 +9,7 @@ HOW TO USE
 1. Copy-paste into a script tag after the bitsy source
 2. Edit `horizontalFlipAllowed` and `verticalFlipAllowed` below as needed
 */
+import bitsy from "bitsy";
 import {
 	getSpriteData,
 	setSpriteData
@@ -53,8 +54,9 @@ function flip(spriteData, v, h) {
 var hflip = false;
 var vflip = false;
 var originalAnimation;
-var _onPlayerMoved = onPlayerMoved;
-onPlayerMoved = function () {
+var _onPlayerMoved = bitsy.onPlayerMoved;
+bitsy.onPlayerMoved = function () {
+	var i;
 	// future-proofing
 	if (_onPlayerMoved) {
 		_onPlayerMoved();
@@ -63,23 +65,23 @@ onPlayerMoved = function () {
 	// save the original frames
 	if (!originalAnimation) {
 		originalAnimation = [];
-		for (var i = 0; i < player().animation.frameCount; ++i) {
-			originalAnimation.push(getSpriteData(playerId, i));
+		for (i = 0; i < bitsy.player().animation.frameCount; ++i) {
+			originalAnimation.push(getSpriteData(bitsy.playerId, i));
 		}
 	}
 
 	// determine which directions need flipping
-	switch (curPlayerDirection) {
-	case Direction.Up:
+	switch (bitsy.curPlayerDirection) {
+	case bitsy.Direction.Up:
 		vflip = false;
 		break;
-	case Direction.Down:
+	case bitsy.Direction.Down:
 		vflip = true;
 		break;
-	case Direction.Left:
+	case bitsy.Direction.Left:
 		hflip = true;
 		break;
-	case Direction.Right:
+	case bitsy.Direction.Right:
 		hflip = false;
 		break;
 	default:
@@ -87,7 +89,7 @@ onPlayerMoved = function () {
 	}
 
 	// update sprite with flipped frames
-	for (var i = 0; i < originalAnimation.length; ++i) {
-		setSpriteData(playerId, i, flip(originalAnimation[i], vflip, hflip));
+	for (i = 0; i < originalAnimation.length; ++i) {
+		setSpriteData(bitsy.playerId, i, flip(originalAnimation[i], vflip, hflip));
 	}
 };

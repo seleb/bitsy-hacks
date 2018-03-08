@@ -16,6 +16,7 @@ e.g. the default player is:
 	[0,0,1,0,0,1,0,0]
 ]
 */
+import bitsy from "bitsy";
 
 /*
 Args:
@@ -26,19 +27,19 @@ Args:
 Returns: a single frame of a image data
 */
 export function getImageData(id, frame, map) {
-	return imageStore.source[getImage(id, map).drw][frame];
+	return bitsy.imageStore.source[getImage(id, map).drw][frame];
 }
 
 export function getSpriteData(id, frame) {
-	return getImageData(id, frame, sprite);
+	return getImageData(id, frame, bitsy.sprite);
 }
 
 export function getTileData(id, frame) {
-	return getImageData(id, frame, tile);
+	return getImageData(id, frame, bitsy.tile);
 }
 
 export function getItemData(id, frame) {
-	return getImageData(id, frame, item);
+	return getImageData(id, frame, bitsy.item);
 }
 
 /*
@@ -53,29 +54,29 @@ Args:
 export function setImageData(id, frame, map, newData) {
 	var drawing = getImage(id, map);
 	var drw = drawing.drw;
-	imageStore.source[drw][frame] = newData;
+	bitsy.imageStore.source[drw][frame] = newData;
 	if (drawing.animation.isAnimated) {
 		drw += "_" + frame;
 	}
-	for (pal in palette) {
-		if (palette.hasOwnProperty(pal)) {
+	for (var pal in bitsy.palette) {
+		if (bitsy.palette.hasOwnProperty(pal)) {
 			var col = drawing.col;
 			var colStr = "" + col;
-			imageStore.render[pal][colStr][drw] = imageDataFromImageSource(newData, pal, col);
+			bitsy.imageStore.render[pal][colStr][drw] = bitsy.imageDataFromImageSource(newData, pal, col);
 		}
 	}
 }
 
 export function setSpriteData(id, frame, newData) {
-	setImageData(id, frame, sprite, newData);
+	setImageData(id, frame, bitsy.sprite, newData);
 }
 
 export function setTileData(id, frame, newData) {
-	setImageData(id, frame, tile, newData);
+	setImageData(id, frame, bitsy.tile, newData);
 }
 
 export function setItemData(id, frame, newData) {
-	setImageData(id, frame, item, newData);
+	setImageData(id, frame, bitsy.item, newData);
 }
 
 /*

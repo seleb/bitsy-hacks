@@ -9,8 +9,10 @@ HOW TO USE
 1. Copy-paste into a script tag after the bitsy source
 2. Edit `horizontalFlipAllowed` and `verticalFlipAllowed` below as needed
 */
-(function () {
+(function (bitsy) {
 'use strict';
+
+bitsy = bitsy && bitsy.hasOwnProperty('default') ? bitsy['default'] : bitsy;
 
 /*
 bitsy hack helper - edit image at runtime
@@ -40,11 +42,11 @@ Args:
 Returns: a single frame of a image data
 */
 function getImageData(id, frame, map) {
-	return imageStore.source[getImage(id, map).drw][frame];
+	return bitsy.imageStore.source[getImage(id, map).drw][frame];
 }
 
 function getSpriteData(id, frame) {
-	return getImageData(id, frame, sprite);
+	return getImageData(id, frame, bitsy.sprite);
 }
 
 /*
@@ -59,21 +61,21 @@ Args:
 function setImageData(id, frame, map, newData) {
 	var drawing = getImage(id, map);
 	var drw = drawing.drw;
-	imageStore.source[drw][frame] = newData;
+	bitsy.imageStore.source[drw][frame] = newData;
 	if (drawing.animation.isAnimated) {
 		drw += "_" + frame;
 	}
-	for (pal in palette) {
-		if (palette.hasOwnProperty(pal)) {
+	for (var pal in bitsy.palette) {
+		if (bitsy.palette.hasOwnProperty(pal)) {
 			var col = drawing.col;
 			var colStr = "" + col;
-			imageStore.render[pal][colStr][drw] = imageDataFromImageSource(newData, pal, col);
+			bitsy.imageStore.render[pal][colStr][drw] = bitsy.imageDataFromImageSource(newData, pal, col);
 		}
 	}
 }
 
 function setSpriteData(id, frame, newData) {
-	setImageData(id, frame, sprite, newData);
+	setImageData(id, frame, bitsy.sprite, newData);
 }
 
 /*
@@ -133,8 +135,9 @@ function flip(spriteData, v, h) {
 var hflip = false;
 var vflip = false;
 var originalAnimation;
-var _onPlayerMoved = onPlayerMoved;
-onPlayerMoved = function () {
+var _onPlayerMoved = bitsy.onPlayerMoved;
+bitsy.onPlayerMoved = function () {
+	var i;
 	// future-proofing
 	if (_onPlayerMoved) {
 		_onPlayerMoved();
@@ -143,23 +146,23 @@ onPlayerMoved = function () {
 	// save the original frames
 	if (!originalAnimation) {
 		originalAnimation = [];
-		for (var i = 0; i < player().animation.frameCount; ++i) {
-			originalAnimation.push(getSpriteData(playerId, i));
+		for (i = 0; i < bitsy.player().animation.frameCount; ++i) {
+			originalAnimation.push(getSpriteData(bitsy.playerId, i));
 		}
 	}
 
 	// determine which directions need flipping
-	switch (curPlayerDirection) {
-	case Direction.Up:
+	switch (bitsy.curPlayerDirection) {
+	case bitsy.Direction.Up:
 		vflip = false;
 		break;
-	case Direction.Down:
+	case bitsy.Direction.Down:
 		vflip = true;
 		break;
-	case Direction.Left:
+	case bitsy.Direction.Left:
 		hflip = true;
 		break;
-	case Direction.Right:
+	case bitsy.Direction.Right:
 		hflip = false;
 		break;
 	default:
@@ -167,9 +170,9 @@ onPlayerMoved = function () {
 	}
 
 	// update sprite with flipped frames
-	for (var i = 0; i < originalAnimation.length; ++i) {
-		setSpriteData(playerId, i, flip(originalAnimation[i], vflip, hflip));
+	for (i = 0; i < originalAnimation.length; ++i) {
+		setSpriteData(bitsy.playerId, i, flip(originalAnimation[i], vflip, hflip));
 	}
 };
 
-}());
+}(window));

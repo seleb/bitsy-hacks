@@ -6,23 +6,26 @@ Updates the background of the html body to match the background colour of the bi
 HOW TO USE:
 Copy-paste this script into a script tag after the bitsy source
 */
-(function () {
+(function (bitsy) {
 'use strict';
+
+bitsy = bitsy && bitsy.hasOwnProperty('default') ? bitsy['default'] : bitsy;
+
 
 
 // helper function which detects when the palette has changed,
 // and updates the background to match
-var _palWrap = function (f) {
+function palWrap(f) {
 	// get the original function
-	var _f = window[f];
+	var _f = bitsy[f];
 
 	// create the wrapper function
-	window[f] = function () {
+	bitsy[f] = function () {
 		var p1, p2;
 
 		// get current palette
 		try {
-			p1 = curPal();
+			p1 = bitsy.curPal();
 		} catch (e) {
 			p1 = null;
 		}
@@ -32,19 +35,19 @@ var _palWrap = function (f) {
 			_f.apply(undefined, arguments);
 
 			// get the new palette
-			p2 = curPal();
+			p2 = bitsy.curPal();
 
 			// if the palette changed, update background
 			if (p1 !== p2) {
-				document.body.style.background = "rgb(" + palette[curPal()].colors[0].toString() + ")";
+				document.body.style.background = "rgb(" + bitsy.getPal(bitsy.curPal())[0].toString() + ")";
 			}
 		}
 	};
-};
+}
 
 // wrap every function which involves changing the palette
-_palWrap('moveSprites');
-_palWrap('movePlayer');
-_palWrap('parseWorld');
+palWrap('moveSprites');
+palWrap('movePlayer');
+palWrap('parseWorld');
 
-}());
+}(window));

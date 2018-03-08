@@ -29,7 +29,7 @@ export function inject(searchString, codeToInject) {
 	scriptTag = document.createElement('script');
 	scriptTag.textContent = code;
 	document.head.appendChild(scriptTag);
-};
+}
 
 /*helper for exposing getter/setter for private vars*/
 export function expose(target) {
@@ -38,4 +38,4 @@ export function expose(target) {
 	code += "this.get = function(name) {return eval(name);};";
 	code += "this.set = function(name, value) {eval(name+'=value');};";
 	return eval("[" + code + "}]")[0];
-};
+}
