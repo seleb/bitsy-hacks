@@ -109,16 +109,14 @@ function getImage(name, map) {
 /////////////////
 
 // swap the player and the first npc sprite each time the player moves
-(function () {
-	var _onPlayerMoved = onPlayerMoved;
-	onPlayerMoved = function () {
-		if (_onPlayerMoved) {
-			_onPlayerMoved();
-		}
-		var A = getSpriteData('A', 0); // get the player sprite data
-		var a = getSpriteData('a', 0); // get the first npc sprite data
-		// swap the sprites' data
-		setSpriteData('A', 0, a);
-		setSpriteData('a', 0, A);
+var _onPlayerMoved = onPlayerMoved;
+onPlayerMoved = function () {
+	if (_onPlayerMoved) {
+		_onPlayerMoved();
 	}
-}());
+	var A = getSpriteData('A', 0); // get the player sprite data
+	var a = getSpriteData('a', 0); // get the first npc sprite data
+	// swap the sprites' data
+	setSpriteData('A', 0, a);
+	setSpriteData('a', 0, A);
+}

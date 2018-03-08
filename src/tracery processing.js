@@ -38,15 +38,13 @@ can create
 
 See http://www.crystalcodepalace.com/traceryTut.html for more on how to use tracery
 */
-(function(){
-	var grammar = tracery.createGrammar({
-		// put your grammar entries here
-	});
-	var _startDialog = startDialog;
-	startDialog = function(dialogStr) {
-		dialogStr = grammar.flatten(dialogStr);
-		if(_startDialog){
-			_startDialog(dialogStr);
-		}
-	};
-}());
+var grammar = tracery.createGrammar({
+	// put your grammar entries here
+});
+var _startDialog = startDialog;
+startDialog = function(dialogStr) {
+	dialogStr = grammar.flatten(dialogStr);
+	if(_startDialog){
+		_startDialog(dialogStr);
+	}
+};

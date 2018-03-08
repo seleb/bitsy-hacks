@@ -34,28 +34,26 @@ e.g.
 	}
 </script>
 */
-(function () {
-	var glazy;
-	var _startExportedGame = startExportedGame;
-	startExportedGame = function () {
-		if (_startExportedGame) {
-			_startExportedGame();
-		}
-		glazy = new WebGLazy({
-			background: 'black',
-			scaleMode: WebGLazy.SCALE_MODES.MULTIPLES, // use WebGLazy.SCALE_MODES.FIT if you prefer size to pixel accuracy
-			allowDownscaling: true,
-			disableFeedbackTexture: true // set this to false if you want to use the feedback texture
-		});
-		// you can set up any custom uniforms you have here if needed
-		// e.g. glazy.glLocations.myUniform = glazy.gl.getUniformLocation(glazy.shader.program, 'myUniform');
+var glazy;
+var _startExportedGame = startExportedGame;
+startExportedGame = function () {
+	if (_startExportedGame) {
+		_startExportedGame();
 	}
-	var _update = update;
-	update = function () {
-		if (_update) {
-			_update();
-		}
-		// you can update any custom uniforms you have here if needed
-		// e.g. glazy.gl.uniform1f(glazy.glLocations.myUniform, 0);
+	glazy = new WebGLazy({
+		background: 'black',
+		scaleMode: WebGLazy.SCALE_MODES.MULTIPLES, // use WebGLazy.SCALE_MODES.FIT if you prefer size to pixel accuracy
+		allowDownscaling: true,
+		disableFeedbackTexture: true // set this to false if you want to use the feedback texture
+	});
+	// you can set up any custom uniforms you have here if needed
+	// e.g. glazy.glLocations.myUniform = glazy.gl.getUniformLocation(glazy.shader.program, 'myUniform');
+}
+var _update = update;
+update = function () {
+	if (_update) {
+		_update();
 	}
-}());
+	// you can update any custom uniforms you have here if needed
+	// e.g. glazy.gl.uniform1f(glazy.glLocations.myUniform, 0);
+}

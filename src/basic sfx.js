@@ -15,66 +15,64 @@ HOW TO USE:
 
 Additional sounds can be added by by including more <audio> tags with different ids and calling `sounds.<sound id>()` as needed.
 */
-(function () {
-	var beNiceToEars = true;
-	var sounds = {};
-	var _startExportedGame = startExportedGame;
-	startExportedGame = function () {
-		var playSound = function (sound) {
-			if (beNiceToEars) {
-				// reduce volume if played recently
-				sound.volume = Math.min(1.0, Math.max(0.25, Math.pow((prevTime - sound.lastPlayed) * .002, .5)));
-				sound.lastPlayed = prevTime;
-			}
-
-			// play sound
-			if (sound.paused) {
-				sound.play();
-			} else {
-				sound.currentTime = 0;
-			}
-		};
-
-		// get sound elements
-		var s = document.getElementsByTagName("audio");
-		for (var i in s) {
-			if (s.hasOwnProperty(i)) {
-				i = s[i];
-				i.lastPlayed = -Infinity;
-				i.volume = 1;
-				sounds[i.id] = playSound.bind(undefined, i);
-			}
+var beNiceToEars = true;
+var sounds = {};
+var _startExportedGame = startExportedGame;
+startExportedGame = function () {
+	var playSound = function (sound) {
+		if (beNiceToEars) {
+			// reduce volume if played recently
+			sound.volume = Math.min(1.0, Math.max(0.25, Math.pow((prevTime - sound.lastPlayed) * .002, .5)));
+			sound.lastPlayed = prevTime;
 		}
 
-		// start game after sound setup
-		// so that title text can use it too
-		if (_startExportedGame) {
-			_startExportedGame();
+		// play sound
+		if (sound.paused) {
+			sound.play();
+		} else {
+			sound.currentTime = 0;
+		}
+	};
+
+	// get sound elements
+	var s = document.getElementsByTagName("audio");
+	for (var i in s) {
+		if (s.hasOwnProperty(i)) {
+			i = s[i];
+			i.lastPlayed = -Infinity;
+			i.volume = 1;
+			sounds[i.id] = playSound.bind(undefined, i);
 		}
 	}
 
-	// walk hook
-	var _onPlayerMoved = onPlayerMoved;
-	onPlayerMoved = function () {
-		if (_onPlayerMoved) {
-			_onPlayerMoved();
-		}
-		sounds.walk();
+	// start game after sound setup
+	// so that title text can use it too
+	if (_startExportedGame) {
+		_startExportedGame();
 	}
+}
 
-	// talk hooks
-	var _startDialog = startDialog;
-	startDialog = function () {
-		if (_startDialog) {
-			_startDialog.apply(this, arguments);
-		}
-		sounds.talk();
+// walk hook
+var _onPlayerMoved = onPlayerMoved;
+onPlayerMoved = function () {
+	if (_onPlayerMoved) {
+		_onPlayerMoved();
 	}
-	var _FlipPage = dialogBuffer.FlipPage;
-	dialogBuffer.FlipPage = function () {
-		if (_FlipPage) {
-			_FlipPage.call(this);
-		}
-		sounds.talk();
+	sounds.walk();
+}
+
+// talk hooks
+var _startDialog = startDialog;
+startDialog = function () {
+	if (_startDialog) {
+		_startDialog.apply(this, arguments);
 	}
-}());
+	sounds.talk();
+}
+var _FlipPage = dialogBuffer.FlipPage;
+dialogBuffer.FlipPage = function () {
+	if (_FlipPage) {
+		_FlipPage.call(this);
+	}
+	sounds.talk();
+}

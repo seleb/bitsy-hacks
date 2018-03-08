@@ -15,84 +15,82 @@ HOW TO USE:
 1. Copy-paste this script into a script tag after the bitsy source
 2. Edit `follower = sprite.a` to your intended sprite
 */
-(function () {
-	var follower;
-	var allowFollowerCollision = false; // if true, the player can walk into the follower and talk to them (possible to get stuck this way)
-	var _startExportedGame = startExportedGame;
-	startExportedGame = function () {
-		if (_startExportedGame) {
-			_startExportedGame();
-		}
-
-		follower = sprite.a;
-
-		// remove + add player to sprite list to force rendering them on top of follower
-		var p = sprite[playerId];
-		delete sprite[playerId];
-		sprite[playerId] = p;
-
-		lastRoom = player().room;
+var follower;
+var allowFollowerCollision = false; // if true, the player can walk into the follower and talk to them (possible to get stuck this way)
+var _startExportedGame = startExportedGame;
+startExportedGame = function () {
+	if (_startExportedGame) {
+		_startExportedGame();
 	}
 
-	var lastRoom;
-	var _onPlayerMoved = onPlayerMoved;
-	onPlayerMoved = function () {
-		if (_onPlayerMoved) {
-			_onPlayerMoved();
-		}
+	follower = sprite.a;
 
-		// detect room change
-		if (lastRoom !== player().room) {
-			// on room change, warp to player
-			lastRoom = follower.room = player().room;
-			follower.x = player().x;
-			follower.y = player().y;
-			follower.walkingPath.length = 0;
-		} else {
-			var step = {
-				x: player().x,
-				y: player().y
-			};
-			switch (curPlayerDirection) {
-			case Direction.Up:
-				step.y += 1;
-				break;
-			case Direction.Down:
-				step.y -= 1;
-				break;
-			case Direction.Left:
-				step.x += 1;
-				break;
-			case Direction.Right:
-				step.x -= 1;
-				break;
-			default:
-				break;
-			}
-			follower.walkingPath.push(step);
-		}
-	};
+	// remove + add player to sprite list to force rendering them on top of follower
+	var p = sprite[playerId];
+	delete sprite[playerId];
+	sprite[playerId] = p;
 
-	if (!allowFollowerCollision) {
-		// filter follower out of collisions
-		function filterFollowing(id) {
-			return follower === sprite[id] ? null : id;
-		}
-		var _getSpriteLeft = getSpriteLeft;
-		getSpriteLeft = function () {
-			return filterFollowing(_getSpriteLeft());
-		}
-		var _getSpriteRight = getSpriteRight;
-		getSpriteRight = function () {
-			return filterFollowing(_getSpriteRight());
-		}
-		var _getSpriteUp = getSpriteUp;
-		getSpriteUp = function () {
-			return filterFollowing(_getSpriteUp());
-		}
-		var _getSpriteDown = getSpriteDown;
-		getSpriteDown = function () {
-			return filterFollowing(_getSpriteDown());
-		}
+	lastRoom = player().room;
+}
+
+var lastRoom;
+var _onPlayerMoved = onPlayerMoved;
+onPlayerMoved = function () {
+	if (_onPlayerMoved) {
+		_onPlayerMoved();
 	}
-}());
+
+	// detect room change
+	if (lastRoom !== player().room) {
+		// on room change, warp to player
+		lastRoom = follower.room = player().room;
+		follower.x = player().x;
+		follower.y = player().y;
+		follower.walkingPath.length = 0;
+	} else {
+		var step = {
+			x: player().x,
+			y: player().y
+		};
+		switch (curPlayerDirection) {
+		case Direction.Up:
+			step.y += 1;
+			break;
+		case Direction.Down:
+			step.y -= 1;
+			break;
+		case Direction.Left:
+			step.x += 1;
+			break;
+		case Direction.Right:
+			step.x -= 1;
+			break;
+		default:
+			break;
+		}
+		follower.walkingPath.push(step);
+	}
+};
+
+if (!allowFollowerCollision) {
+	// filter follower out of collisions
+	function filterFollowing(id) {
+		return follower === sprite[id] ? null : id;
+	}
+	var _getSpriteLeft = getSpriteLeft;
+	getSpriteLeft = function () {
+		return filterFollowing(_getSpriteLeft());
+	}
+	var _getSpriteRight = getSpriteRight;
+	getSpriteRight = function () {
+		return filterFollowing(_getSpriteRight());
+	}
+	var _getSpriteUp = getSpriteUp;
+	getSpriteUp = function () {
+		return filterFollowing(_getSpriteUp());
+	}
+	var _getSpriteDown = getSpriteDown;
+	getSpriteDown = function () {
+		return filterFollowing(_getSpriteDown());
+	}
+}
