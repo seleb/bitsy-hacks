@@ -1,6 +1,8 @@
 const rollup = require("rollup");
 const clear = require("rollup-plugin-clear");
 const eslint = require("rollup-plugin-eslint");
+const nodeResolve = require("rollup-plugin-node-resolve");
+const commonjs = require("rollup-plugin-commonjs");
 
 const headerComment = require("./HeaderCommentPlugin");
 
@@ -17,6 +19,8 @@ function build(src) {
 			clear({
 				targets: [outputDir]
 			}),
+			nodeResolve(),
+			commonjs(),
 			headerComment(),
 			eslint({})
 		]
