@@ -1,5 +1,5 @@
 'use strict';
-// moves the last /**/ block  to the top of the output
+// moves the last /**/ block to the top of the output
 // assuming the source doesn't have any other /**/ blocks,
 // this will be the header
 // this is hackier than it should be, but gets the job done for now
