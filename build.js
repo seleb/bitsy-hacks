@@ -5,6 +5,7 @@ const nodeResolve = require("rollup-plugin-node-resolve");
 const commonjs = require("rollup-plugin-commonjs");
 
 const headerComment = require("./HeaderCommentPlugin");
+const topLevelOptions = require("./TopLevelOptionsPlugin");
 
 const inputDir = "./src/";
 const outputDir = "./dist/";
@@ -22,6 +23,7 @@ function build(src) {
 			nodeResolve(),
 			commonjs(),
 			headerComment(),
+			topLevelOptions(),
 			eslint({})
 		]
 	};

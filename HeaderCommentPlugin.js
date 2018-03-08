@@ -3,12 +3,17 @@
 // assuming the source doesn't have any other /**/ blocks,
 // this will be the header
 // this is hackier than it should be, but gets the job done for now
-module.exports = function HeaderCommentPlugin(options = {}) {
+module.exports = function (options = {}) {
 	return {
 		transformBundle(code) {
 			const pattern = /^(\/\*[\S\s]*?\*\/)$/gm;
 			const matches = code.match(pattern);
-			const header = matches[matches.length-1];
+			if (!matches) {
+				return {
+					code: code
+				};
+			}
+			const header = matches[matches.length - 1];
 			return {
 				code: `${header}\n${code.replace(header, '')}`
 			};

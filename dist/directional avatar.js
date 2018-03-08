@@ -11,6 +11,16 @@ HOW TO USE
 */
 (function (bitsy) {
 'use strict';
+var hackOptions = {
+	// If `horizontalFlipAllowed` is true:
+	// 	pressing left will make the player's sprite face backwards
+	// 	pressing right will make the player's sprite face forwards
+	horizontalFlipAllowed: true,
+	// If `verticalFlipAllowed` is true:
+	// 	pressing down will make the player's sprite upside-down
+	// 	pressing up will make the player's sprite right-side up
+	verticalFlipAllowed: false
+};
 
 bitsy = bitsy && bitsy.hasOwnProperty('default') ? bitsy['default'] : bitsy;
 
@@ -96,21 +106,13 @@ function getImage(name, map) {
 
 
 
-// If `horizontalFlipAllowed` is true:
-// 	pressing left will make the player's sprite face backwards
-// 	pressing right will make the player's sprite face forwards
-var horizontalFlipAllowed = true;
 
-// If `verticalFlipAllowed` is true:
-// 	pressing down will make the player's sprite upside-down
-// 	pressing up will make the player's sprite right-side up
-var verticalFlipAllowed = false;
 
 // helper function to flip sprite data
 function flip(spriteData, v, h) {
 	var x, y, x2, y2, col, tmp;
 	var s = spriteData.slice();
-	if (v && verticalFlipAllowed) {
+	if (v && hackOptions.verticalFlipAllowed) {
 		for (y = 0; y < s.length / 2; ++y) {
 			y2 = s.length - y - 1;
 			tmp = s[y];
@@ -118,7 +120,7 @@ function flip(spriteData, v, h) {
 			s[y2] = tmp;
 		}
 	}
-	if (h && horizontalFlipAllowed) {
+	if (h && hackOptions.horizontalFlipAllowed) {
 		for (y = 0; y < s.length; ++y) {
 			col = s[y] = s[y].slice();
 			for (x = 0; x < col.length / 2; ++x) {
