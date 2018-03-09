@@ -4,7 +4,7 @@
 module.exports = function(options = {}) {
 	return {
 		transformBundle(code) {
-			const pattern = /^var\s+hackOptions\s?=\s?{[\s\S]*?};$/gm;
+			const pattern = /^var\s+hackOptions\s?=\s?{[\s\S]*?^};$/gm;
 			const matches = code.match(pattern);
 			if (!matches) {
 				return {
