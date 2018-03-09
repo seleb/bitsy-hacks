@@ -1,6 +1,12 @@
-/*
-bitsy hack - noclip
+/**
+📎
+@file noclip
+@summary walk through wall tiles, sprites, exits, and endings
+@license MIT
+@version 1.0.0
+@author Sean S. LeBlanc
 
+@description
 Adds a "noclip" command, which allows player to walk through wall tiles, sprites, exits, and endings.
 Also adds a room cycle command for use with noclip.
 

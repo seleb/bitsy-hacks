@@ -1,6 +1,12 @@
-/*
-bitsy hack - transparent sprites
+/**
+🏁
+@file transparent sprites
+@summary makes all sprites have transparent backgrounds
+@license MIT
+@version 1.0.0
+@author Sean S. LeBlanc
 
+@description
 Makes all sprites have transparent backgrounds.
 i.e. tiles can be seen underneath the player, sprites, and items.
 

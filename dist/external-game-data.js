@@ -1,42 +1,43 @@
-/*
-  ==================================
-  EXTERNAL GAME DATA MOD (@mildmojo)
-  ==================================
+/**
+🛰
+@file external-game-data
+@summary separate Bitsy game data from your (modded) HTML for easier development
+@license WTFPL (do WTF you want)
+@version 1.1.0
+@requires Bitsy Version: 4.5, 4.6
+@author @mildmojo
 
-  Load your Bitsy game data from an external file or URL, separating it from your
-  (modified) Bitsy HTML.
+@description
+Load your Bitsy game data from an external file or URL, separating it from your
+(modified) Bitsy HTML.
 
-  Usage: IMPORT <file or URL>
+Usage: IMPORT <file or URL>
 
-  Examples: IMPORT frontier.bitsydata
-            IMPORT http://my-cool-website.nz/frontier/frontier.bitsydata
-            IMPORT /games/frontier/data/frontier.bitsydata
+Examples: IMPORT frontier.bitsydata
+          IMPORT http://my-cool-website.nz/frontier/frontier.bitsydata
+          IMPORT /games/frontier/data/frontier.bitsydata
 
-  HOW TO USE:
-    1. Copy-paste this script into a new script tag after the Bitsy source code.
-       Make sure this script comes *after* any other mods to guarantee that it
-       executes first.
-    2. Copy all your Bitsy game data out of the script tag at the top of your
-       HTML into another file (I recommend `game-name.bitsydata`). In the HTML
-       file, replace all game data with a single IMPORT statement that refers to
-       your new data file.
+HOW TO USE:
+  1. Copy-paste this script into a new script tag after the Bitsy source code.
+     Make sure this script comes *after* any other mods to guarantee that it
+     executes first.
+  2. Copy all your Bitsy game data out of the script tag at the top of your
+     HTML into another file (I recommend `game-name.bitsydata`). In the HTML
+     file, replace all game data with a single IMPORT statement that refers to
+     your new data file.
 
-  NOTE: Chrome can only fetch external files when they're served from a
-        web server, so your game won't work if you just open your HTML file from
-        disk. You could use Firefox, install a web server, or, if you have
-        development tools like NodeJS, Ruby, Python, Perl, PHP, or others
-        installed, here's a big list of how to use them to serve a folder as a
-        local web server:
-        https://gist.github.com/willurd/5720255
+NOTE: Chrome can only fetch external files when they're served from a
+      web server, so your game won't work if you just open your HTML file from
+      disk. You could use Firefox, install a web server, or, if you have
+      development tools like NodeJS, Ruby, Python, Perl, PHP, or others
+      installed, here's a big list of how to use them to serve a folder as a
+      local web server:
+      https://gist.github.com/willurd/5720255
 
-        If this mod finds an IMPORT statement anywhere in the Bitsy data
-        contained in the HTML file, it will replace all game data with the
-        IMPORTed data. It will not execute nested IMPORT statements in
-        external files.
-
-  Version: 1.1
-  Bitsy Version: 4.5, 4.6
-  License: WTFPL (do WTF you want)
+      If this mod finds an IMPORT statement anywhere in the Bitsy data
+      contained in the HTML file, it will replace all game data with the
+      IMPORTed data. It will not execute nested IMPORT statements in
+      external files.
 */
 (function () {
 'use strict';

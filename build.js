@@ -6,6 +6,7 @@ const commonjs = require("rollup-plugin-commonjs");
 
 const headerComment = require("./HeaderCommentPlugin");
 const topLevelOptions = require("./TopLevelOptionsPlugin");
+const readme = require("./ReadmePlugin");
 
 const inputDir = "./src/";
 const outputDir = "./dist/";
@@ -22,6 +23,7 @@ function build(src) {
 			}),
 			nodeResolve(),
 			commonjs(),
+			readme.plugin(),
 			headerComment(),
 			topLevelOptions(),
 			eslint({})
@@ -36,13 +38,13 @@ function build(src) {
 		}
 	};
 
-	rollup.rollup(inputOptions)
+	return rollup.rollup(inputOptions)
 	.then(bundle => {
-		bundle.write(outputOptions);
+		return bundle.write(outputOptions);
 	});
 }
 
-[
+Promise.all([
 	"basic sfx",
 	"canvas replacement",
 	"corrupt",
@@ -59,4 +61,16 @@ function build(src) {
 	"tracery processing",
 	"transparent sprites",
 	"unique items"
-].forEach(build);
+].map(src => {
+	return build(src);
+})).then(() => {
+	readme.parse();
+	// HACK: custom font isn't in build system right now, so add it directly
+	readme.headers.push({
+		emoji: "🅰",
+		file: "custom font",
+		url: "https://seleb.github.io/bitsy-hacks/custom%20font/custom%20font%20-%20converter.html",
+		summary: "change the bitsy font"
+	});
+	readme.write();
+});

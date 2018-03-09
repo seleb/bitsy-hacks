@@ -1,6 +1,12 @@
-/*
-bitsy hack - unique items
+/**
+❄
+@file unique items
+@summary items which, when picked up, remove all other instances of that item from the game
+@license MIT
+@version 1.0.0
+@author Sean S. LeBlanc
 
+@description
 Adds support for items which, when picked up,
 remove all other instances of that item from the game.
 

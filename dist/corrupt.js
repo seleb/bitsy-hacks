@@ -1,5 +1,13 @@
-/*
-Corrupts gamedata at runtime.
+/**
+➿
+@file corrupt
+@summary corrupts gamedata at runtime
+@license MIT
+@version 1.0.0
+@author Sean S. LeBlanc
+
+@description
+Corrupts gamedata at runtime
 Corruptions include:
 	position of tiles in current room
 	pixels of tiles in current room

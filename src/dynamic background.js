@@ -1,6 +1,12 @@
-/*
-bitsy hack - dynamic background
+/**
+🖼
+@file dynamic background
+@summary HTML background matching bitsy background
+@license MIT
+@version 1.0.0
+@author Sean S. LeBlanc
 
+@description
 Updates the background of the html body to match the background colour of the bitsy palette.
 
 HOW TO USE:

@@ -1,6 +1,12 @@
-/*
-bitsy hack - custom text effect
+/**
+🅰
+@file custom text effect
+@summary make {custom}text effects{custom}
+@license MIT
+@version 1.0.0
+@author Sean S. LeBlanc
 
+@description
 Adds support for a custom text effect
 e.g. "normal text {my-effect}custom wavy text{my-effect}"
 

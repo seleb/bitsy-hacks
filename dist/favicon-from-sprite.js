@@ -1,20 +1,21 @@
-/*
-  ==============================
-  SPRITE FAVICON MOD (@mildmojo)
-  ==============================
+/**
+🌐
+@file favicon-from-sprite
+@summary generate a browser favicon (tab icon) from a Bitsy sprite, including animation!
+@license WTFPL (do WTF you want)
+@version 1.0.0
+@requires Bitsy Version: 4.5, 4.6
+@author @mildmojo
 
-  Use one of your game sprites as the page favicon. It'll even animate if the
-  sprite has multiple frames!
+@description
+Use one of your game sprites as the page favicon. It'll even animate if the
+sprite has multiple frames!
 
-  HOW TO USE:
-    1. Copy-paste this script into a new script tag after the Bitsy source code.
-    2. Edit the configuration below to set which sprite and colors this mod
-       should use for the favicon. By default, it will render the player avatar
-       sprite in the first available palette's colors.
-
-  Version: 1.0
-  Bitsy Version: 4.5, 4.6
-  License: WTFPL (do WTF you want)
+HOW TO USE:
+  1. Copy-paste this script into a new script tag after the Bitsy source code.
+  2. Edit the configuration below to set which sprite and colors this mod
+     should use for the favicon. By default, it will render the player avatar
+     sprite in the first available palette's colors.
 */
 (function () {
 'use strict';

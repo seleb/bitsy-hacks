@@ -1,6 +1,12 @@
-/*
-bitsy hack - gamepad input
+/**
+🎮
+@file gamepad input
+@summary HTML5 gamepad support
+@license MIT
+@version 1.0.0
+@author Sean S. LeBlanc
 
+@description
 Adds support for gamepad input.
 
 Directional input is mapped to the left and right analog sticks, the dpad, and the face buttons (e.g. ABXY).

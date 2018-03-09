@@ -1,6 +1,12 @@
-/*
-bitsy hack - tracery processing
+/**
+🏰
+@file tracery processing
+@summary process all dialog text with a tracery grammar
+@license MIT
+@version 1.0.0
+@author Sean S. LeBlanc
 
+@description
 Adds support for processing all dialog text with a tracery grammar.
 
 Use cases for this mostly overlap with the existing bitsy scripting capabilities now,

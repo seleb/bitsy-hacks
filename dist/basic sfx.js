@@ -1,7 +1,14 @@
-/*
-bitsy hack - basic sfx
+/**
+🔈
+@file basic sfx
+@summary "walk" and "talk" sound effect support
+@license MIT
+@version 1.0.0
+@author Sean S. LeBlanc
 
-Adds a basic sound effect API and hooks up "walk" and "talk" sound effects.
+@description
+Adds a basic sound effect API and hooks up "walk" and "talk" sound effects
+
 The walk sound effect plays every time the player moves.
 The talk sound effect plays every time the dialog box changes "pages" (e.g. when it opens, when the player presses a key to continue).
 

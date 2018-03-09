@@ -1,10 +1,13 @@
-/*
-bitsy hack - canvas replacement
+/**
+😴
+@file canvas replacement
+@summary WebGLazy bitsy integration (this one's mostly just for me)
+@license MIT
+@version 1.0.0
+@author Sean S. LeBlanc
 
-Replaces bitsy canvas with a responsive WebGL canvas (this one's mostly just for me).
-
-This isn't a self-contained hack; it relies on https://github.com/seleb/WebGLazy
-to replace the canvas, and this is simply the code needed to integrate for bitsy.
+@description
+Replaces bitsy canvas with a responsive WebGL canvas (this one's mostly just for me)
 
 HOW TO USE:
 1. Copy-paste this script into a script tag after the bitsy source

@@ -1,11 +1,15 @@
-/*
-bitsy hack - directional avatar
+/**
+↔
+@file directional avatar
+@summary flips the player's sprite based on directional movement
+@license MIT
+@version 1.0.0
+@author Sean S. LeBlanc
 
+@description
 Flips the player's sprite based on directional movement.
 
-Includes the "edit sprite at runtime" API.
-
-HOW TO USE
+HOW TO USE:
 1. Copy-paste into a script tag after the bitsy source
 2. Edit `horizontalFlipAllowed` and `verticalFlipAllowed` below as needed
 */

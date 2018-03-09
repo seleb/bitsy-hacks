@@ -1,6 +1,12 @@
-/*
-bitsy hack - follower
+/**
+💕
+@file follower
+@summary makes a single sprite follow the player
+@license MIT
+@version 1.0.0
+@author Sean S. LeBlanc
 
+@description
 Makes a single sprite follow the player.
 Bitsy has a "walkingPath" built into the sprite system (I think this is a hold-over from the old pathfinding mouse controls).
 Paths can be assigned to any sprite to create different AI behaviours. 
