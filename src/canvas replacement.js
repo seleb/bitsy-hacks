@@ -12,7 +12,7 @@ Replaces bitsy canvas with a responsive WebGL canvas (this one's mostly just for
 HOW TO USE:
 1. Copy-paste this script into a script tag after the bitsy source
 2. For finer scaling, edit `var text_scale = 2` and `var scale = 4` in the bitsy source to `var text_scale = 1` and `var scale = 2`
-3. Edit the options object passed to the `new WebGLazy` call as needed
+3. Edit the hackOptions object passed to the `new WebGLazy` call as needed
 
 The shader used to render the canvas can be overriden by including script tags
 with `id='shader-frag'` and `type='x-shader/x-fragment'
@@ -36,7 +36,16 @@ e.g.
 (closing script tag omitted in comment to avoid confusing browser)
 */
 import bitsy from "bitsy";
-import {WebGLazy} from "webglazy";
+import {
+	WebGLazy
+} from "webglazy";
+
+var hackOptions = {
+	background: "black",
+	scaleMode: "MULTIPLES", // use "FIT" if you prefer size to pixel accuracy
+	allowDownscaling: true,
+	disableFeedbackTexture: true // set this to false if you want to use the feedback texture
+};
 
 var glazy;
 var _startExportedGame = bitsy.startExportedGame;
@@ -44,12 +53,7 @@ bitsy.startExportedGame = function () {
 	if (_startExportedGame) {
 		_startExportedGame();
 	}
-	glazy = new WebGLazy({
-		background: 'black',
-		scaleMode: WebGLazy.SCALE_MODES.MULTIPLES, // use WebGLazy.SCALE_MODES.FIT if you prefer size to pixel accuracy
-		allowDownscaling: true,
-		disableFeedbackTexture: true // set this to false if you want to use the feedback texture
-	});
+	glazy = new WebGLazy(hackOptions);
 	// you can set up any custom uniforms you have here if needed
 	// e.g. glazy.glLocations.myUniform = glazy.gl.getUniformLocation(glazy.shader.program, 'myUniform');
 }

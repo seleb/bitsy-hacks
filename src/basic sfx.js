@@ -24,12 +24,15 @@ Additional sounds can be added by by including more <audio> tags with different 
 */
 import bitsy from "bitsy";
 
-var beNiceToEars = true; // if `true`, reduces volume of recently played sound effects
+var hackOptions = {
+	beNiceToEars: true // if `true`, reduces volume of recently played sound effects
+};
+
 var sounds = {};
 var _startExportedGame = bitsy.startExportedGame;
 bitsy.startExportedGame = function () {
 	var playSound = function (sound) {
-		if (beNiceToEars) {
+		if (hackOptions.beNiceToEars) {
 			// reduce volume if played recently
 			sound.volume = Math.min(1.0, Math.max(0.25, Math.pow((bitsy.prevTime - sound.lastPlayed) * .002, .5)));
 			sound.lastPlayed = bitsy.prevTime;

@@ -15,7 +15,7 @@ and of how to import a third-party dependency into a hack.
 
 HOW TO USE:
 1. Copy-paste this script into a script tag after the bitsy source
-2. Add your entries to the `bitsyGrammar` object near the bottom of the file
+2. Add your entries to the `hackOptions` object below
 
 TRACERY NOTES:
 Tracery will look for symbols wrapped in hashes ("#"), and then use the entries in a provided
@@ -43,13 +43,15 @@ import bitsy from "bitsy";
 
 import tracery from "tracery-grammar";
 
-var bitsyGrammar = tracery.createGrammar({
+var hackOptions = {
 	// put your grammar entries here
-});
+};
+
+var bitsyGrammar = tracery.createGrammar(hackOptions);
 var _startDialog = bitsy.startDialog;
-bitsy.startDialog = function(dialogStr) {
+bitsy.startDialog = function (dialogStr) {
 	dialogStr = bitsyGrammar.flatten(dialogStr);
-	if(_startDialog){
+	if (_startDialog) {
 		_startDialog(dialogStr);
 	}
 };

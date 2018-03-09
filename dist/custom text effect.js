@@ -19,7 +19,7 @@ this one does some silly things with code injection.
 
 HOW TO USE:
 1. Copy-paste this script into a script tag after the bitsy source
-2. Update the `customTextEffects` object at the top of the script with your custom effects
+2. Update the `hackOptions` object at the top of the script with your custom effects
 
 TEXT EFFECT NOTES:
 Each effect looks like:
@@ -48,45 +48,7 @@ A number of example effects are included
 */
 (function (bitsy) {
 'use strict';
-
-bitsy = bitsy && bitsy.hasOwnProperty('default') ? bitsy['default'] : bitsy;
-
-/*helper used to inject code into script tags based on a search string*/
-function inject(searchString, codeToInject) {
-	// find the relevant script tag
-	var scriptTags = document.getElementsByTagName('script');
-	var scriptTag;
-	var code;
-	for (var i = 0; i < scriptTags.length; ++i) {
-		scriptTag = scriptTags[i];
-		if (
-			scriptTag.textContent.indexOf(searchString) >= 0 // script contains the search string
-			&&
-			scriptTag != document.currentScript // script isn't the one doing the injecting (which also contains the search string)
-		) {
-			code = scriptTag.textContent;
-			break;
-		}
-	}
-
-	// error-handling
-	if (!code) {
-		throw 'Couldn\'t find "' + searchString + '" in script tags';
-	}
-
-	// modify the content
-	code = code.replace(searchString, searchString + codeToInject);
-
-	// replace the old script tag with a new one using our modified code
-	scriptTag.remove();
-	scriptTag = document.createElement('script');
-	scriptTag.textContent = code;
-	document.head.appendChild(scriptTag);
-}
-
-
-
-var customTextEffects = {
+var hackOptions = {
 	"my-effect": function () {
 		// a horizontal wavy effect with a blue tint 
 		this.DoEffect = function (char, time) {
@@ -157,16 +119,55 @@ var customTextEffects = {
 			lastCol = char.col;
 			char.offset.y -= Math.pow(char.col - lastSpace, 1.5) * (Math.sin(time / 120 + char.col / 2));
 		};
-	},
+	}
 };
+
+bitsy = bitsy && bitsy.hasOwnProperty('default') ? bitsy['default'] : bitsy;
+
+/*helper used to inject code into script tags based on a search string*/
+function inject(searchString, codeToInject) {
+	// find the relevant script tag
+	var scriptTags = document.getElementsByTagName('script');
+	var scriptTag;
+	var code;
+	for (var i = 0; i < scriptTags.length; ++i) {
+		scriptTag = scriptTags[i];
+		if (
+			scriptTag.textContent.indexOf(searchString) >= 0 // script contains the search string
+			&&
+			scriptTag != document.currentScript // script isn't the one doing the injecting (which also contains the search string)
+		) {
+			code = scriptTag.textContent;
+			break;
+		}
+	}
+
+	// error-handling
+	if (!code) {
+		throw 'Couldn\'t find "' + searchString + '" in script tags';
+	}
+
+	// modify the content
+	code = code.replace(searchString, searchString + codeToInject);
+
+	// replace the old script tag with a new one using our modified code
+	scriptTag.remove();
+	scriptTag = document.createElement('script');
+	scriptTag.textContent = code;
+	document.head.appendChild(scriptTag);
+}
+
+
+
+
 
 // generate code for each text effect
 var functionMapCode = '';
 var textEffectCode = '';
-for (var i in customTextEffects) {
-	if (customTextEffects.hasOwnProperty(i)) {
+for (var i in hackOptions) {
+	if (hackOptions.hasOwnProperty(i)) {
 		functionMapCode += 'functionMap.set("' + i + '", function (environment, parameters, onReturn) {addOrRemoveTextEffect(environment, "' + i + '");onReturn(null);});';
-		textEffectCode += 'TextEffects["' + i + '"] = new (' + customTextEffects[i].toString() + ')();';
+		textEffectCode += 'TextEffects["' + i + '"] = new (' + hackOptions[i].toString() + ')();';
 	}
 }
 

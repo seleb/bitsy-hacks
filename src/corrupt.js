@@ -24,7 +24,7 @@ When the game is reset, the corruptions will be reset as well.
 
 HOW TO USE:
 1. Copy-paste into a script tag after the bitsy source
-2. Edit `options` below as needed
+2. Edit `hackOptions` below as needed
 
 Options ending in `Freq` are a combination of iterations and probabilities:
 Given the value X.Y, it will corrupt X times, and may corrupt once more with a probability of Y
@@ -51,7 +51,7 @@ import {
 ///////////
 // setup //
 ///////////
-var options = {
+var hackOptions = {
 	tilemapFreq: 1,
 	tilePixelsFreq: 1,
 	spritePixelsFreq: 1,
@@ -83,9 +83,9 @@ var font = new(expose(bitsy.dialogRenderer.get('font').constructor))();
 var fontdata = font.get('fontdata');
 bitsy.dialogRenderer.set('font', font);
 
-// reset font and options when the game resets
+// reset font and hackOptions when the game resets
 var originalFontData = fontdata.slice();
-var originalOptions = JSON.parse(JSON.stringify(options));
+var originalhackOptions = JSON.parse(JSON.stringify(hackOptions));
 var _reset_cur_game = bitsy.reset_cur_game;
 bitsy.reset_cur_game = function () {
 	if (_reset_cur_game) {
@@ -94,7 +94,7 @@ bitsy.reset_cur_game = function () {
 	for (var i = 0; i < fontdata.length; ++i) {
 		fontdata[i] = originalFontData[i];
 	}
-	options = JSON.parse(JSON.stringify(originalOptions));
+	hackOptions = JSON.parse(JSON.stringify(originalhackOptions));
 };
 
 
@@ -111,7 +111,7 @@ function corrupt() {
 	delete visibleTiles["0"]; // empty tile doesn't actually exist
 	visibleTiles = Object.keys(visibleTiles);
 	if (visibleTiles.length > 0) {
-		iterate(options.tilePixelsFreq * options.globalFreq, function () {
+		iterate(hackOptions.tilePixelsFreq * hackOptions.globalFreq, function () {
 			var t = rndItem(visibleTiles);
 			var frame = Math.floor(Math.random() * bitsy.tile[t].animation.frameCount);
 			var tdata = getTileData(t, frame);
@@ -132,7 +132,7 @@ function corrupt() {
 		}
 	}
 	visibleSprites = Object.keys(visibleSprites);
-	iterate(options.spritePixelsFreq * options.globalFreq, function () {
+	iterate(hackOptions.spritePixelsFreq * hackOptions.globalFreq, function () {
 		var t = rndItem(visibleSprites);
 		var frame = Math.floor(Math.random() * bitsy.sprite[t].animation.frameCount);
 		var tdata = getSpriteData(t, frame);
@@ -149,7 +149,7 @@ function corrupt() {
 	}
 	visibleItems = Object.keys(visibleItems);
 	if (visibleItems.length > 0) {
-		iterate(options.itemPixelsFreq * options.globalFreq, function () {
+		iterate(hackOptions.itemPixelsFreq * hackOptions.globalFreq, function () {
 			var t = rndItem(visibleItems);
 			var frame = Math.floor(Math.random() * bitsy.item[t].animation.frameCount);
 			var tdata = getItemData(t, frame);
@@ -163,7 +163,7 @@ function corrupt() {
 	// corrupt current room's tilemap
 	var possibleTiles = Object.keys(bitsy.tile);
 	possibleTiles.push("0"); // empty tile
-	iterate(options.tilemapFreq * options.globalFreq, function () {
+	iterate(hackOptions.tilemapFreq * hackOptions.globalFreq, function () {
 		// pick a tile at random in the current room and assign it a random tile
 		y = Math.floor(Math.random() * bitsy.mapsize);
 		x = Math.floor(Math.random() * bitsy.mapsize);
@@ -172,17 +172,17 @@ function corrupt() {
 
 	// corrupt visible palette colours
 	var visibleColors = bitsy.getPal(bitsy.curPal());
-	iterate(options.paletteFreq * options.globalFreq, function () {
+	iterate(hackOptions.paletteFreq * hackOptions.globalFreq, function () {
 		var c = rndItem(visibleColors);
 		var i = rndIndex(c);
-		c[i] = Math.round((c[i] + (Math.random() * 2 - 1) * options.paletteAmplitude) % 256);
+		c[i] = Math.round((c[i] + (Math.random() * 2 - 1) * hackOptions.paletteAmplitude) % 256);
 	});
-	if (options.paletteImmediate) {
+	if (hackOptions.paletteImmediate) {
 		bitsy.renderImages();
 	}
 
 	// corrupt pixels of font data
-	iterate(options.fontPixelsFreq * options.globalFreq, function () {
+	iterate(hackOptions.fontPixelsFreq * hackOptions.globalFreq, function () {
 		var i = rndIndex(fontdata);
 		fontdata[i] = Math.abs(fontdata[i] - 1);
 	});

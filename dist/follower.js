@@ -19,24 +19,64 @@ Known issues:
 
 HOW TO USE:
 1. Copy-paste this script into a script tag after the bitsy source
-2. Edit `follower = sprite.a` to your intended sprite
+2. Edit `follower` to your intended sprite
 */
 (function (bitsy) {
 'use strict';
+var hackOptions = {
+	allowFollowerCollision: false, // if true, the player can walk into the follower and talk to them (possible to get stuck this way)
+	follower: 'a' // id or name of sprite to be the follower
+};
 
 bitsy = bitsy && bitsy.hasOwnProperty('default') ? bitsy['default'] : bitsy;
+
+/*
+bitsy hack helper - edit image at runtime
+
+Adds API for updating sprite, tile, and item data at runtime.
+
+Individual frames of image data in bitsy are 8x8 1-bit 2D arrays in yx order
+e.g. the default player is:
+[
+	[0,0,0,1,1,0,0,0],
+	[0,0,0,1,1,0,0,0],
+	[0,0,0,1,1,0,0,0],
+	[0,0,1,1,1,1,0,0],
+	[0,1,1,1,1,1,1,0],
+	[1,0,1,1,1,1,0,1],
+	[0,0,1,0,0,1,0,0],
+	[0,0,1,0,0,1,0,0]
+]
+*/
+
+/*
+Helper for getting image by name or id
+
+Args:
+	name: id or name of image to return
+	 map: map of images (e.g. `sprite`, `tile`, `item`)
+
+Returns: the image in the given map with the given name/id
+ */
+function getImage(name, map) {
+	var id = map.hasOwnProperty(name) ? name : Object.keys(map).find(function (e) {
+		return map[e].name == name;
+	});
+	return map[id];
+}
+
+
 
 
 
 var follower;
-var allowFollowerCollision = false; // if true, the player can walk into the follower and talk to them (possible to get stuck this way)
 var _startExportedGame = bitsy.startExportedGame;
 bitsy.startExportedGame = function () {
 	if (_startExportedGame) {
 		_startExportedGame();
 	}
 
-	follower = bitsy.sprite.a;
+	follower = getImage(hackOptions.follower, bitsy.sprite);
 
 	// remove + add player to sprite list to force rendering them on top of follower
 	var p = bitsy.sprite[bitsy.playerId];
@@ -88,7 +128,7 @@ bitsy.onPlayerMoved = function () {
 function filterFollowing(id) {
 	return follower === bitsy.sprite[id] ? null : id;
 }
-if (!allowFollowerCollision) {
+if (!hackOptions.allowFollowerCollision) {
 	// filter follower out of collisions
 	var _getSpriteLeft = bitsy.getSpriteLeft;
 	bitsy.getSpriteLeft = function () {

@@ -19,7 +19,7 @@ this one does some silly things with code injection.
 
 HOW TO USE:
 1. Copy-paste this script into a script tag after the bitsy source
-2. Update the `customTextEffects` object at the top of the script with your custom effects
+2. Update the `hackOptions` object at the top of the script with your custom effects
 
 TEXT EFFECT NOTES:
 Each effect looks like:
@@ -51,7 +51,7 @@ import {
 	inject
 } from "./utils.js";
 
-var customTextEffects = {
+var hackOptions = {
 	"my-effect": function () {
 		// a horizontal wavy effect with a blue tint 
 		this.DoEffect = function (char, time) {
@@ -122,16 +122,16 @@ var customTextEffects = {
 			lastCol = char.col;
 			char.offset.y -= Math.pow(char.col - lastSpace, 1.5) * (Math.sin(time / 120 + char.col / 2));
 		}
-	},
+	}
 };
 
 // generate code for each text effect
 var functionMapCode = '';
 var textEffectCode = '';
-for (var i in customTextEffects) {
-	if (customTextEffects.hasOwnProperty(i)) {
+for (var i in hackOptions) {
+	if (hackOptions.hasOwnProperty(i)) {
 		functionMapCode += 'functionMap.set("' + i + '", function (environment, parameters, onReturn) {addOrRemoveTextEffect(environment, "' + i + '");onReturn(null);});';
-		textEffectCode += 'TextEffects["' + i + '"] = new (' + customTextEffects[i].toString() + ')();';
+		textEffectCode += 'TextEffects["' + i + '"] = new (' + hackOptions[i].toString() + ')();';
 	}
 }
 

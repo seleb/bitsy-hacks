@@ -15,14 +15,17 @@ Copy-paste this script into a script tag after the bitsy source
 */
 (function (bitsy) {
 'use strict';
+var hackOptions = {
+	// if true, overrides scaling behaviour to reduce the setup time + memory use,
+	// but the game will be blurry unless you've added pixelated image CSS
+	scaling: false
+};
 
 bitsy = bitsy && bitsy.hasOwnProperty('default') ? bitsy['default'] : bitsy;
 
 
 
-// if true, overrides scaling behaviour to reduce the setup time + memory use,
-// but the game will be blurry unless you've added pixelated image CSS
-var scaling = false;
+
 
 // override imageDataFromImageSource to use transparency for background pixels
 // and save the results to a custom image cache
@@ -41,7 +44,7 @@ bitsy.imageDataFromImageSource = function (imageSource, pal) {
 		var bg = bitsy.getPal(pal)[0];
 		var i;
 		// discard unnecessary pixels
-		if (scaling) {
+		if (hackOptions.scaling) {
 			var scaledImg = bitsy.ctx.createImageData(img.width / bitsy.scale, img.height / bitsy.scale);
 			for (var y = 0; y < scaledImg.height; ++y) {
 				for (var x = 0; x < scaledImg.width; ++x) {
@@ -69,13 +72,13 @@ bitsy.imageDataFromImageSource = function (imageSource, pal) {
 
 		// give ourselves a little canvas + context to work with
 		var spriteCanvas = document.createElement("canvas");
-		spriteCanvas.width = bitsy.tilesize * (scaling ? 1 : bitsy.scale);
-		spriteCanvas.height = bitsy.tilesize * (scaling ? 1 : bitsy.scale);
+		spriteCanvas.width = bitsy.tilesize * (hackOptions.scaling ? 1 : bitsy.scale);
+		spriteCanvas.height = bitsy.tilesize * (hackOptions.scaling ? 1 : bitsy.scale);
 		var spriteContext = spriteCanvas.getContext("2d");
 
 		// put bitsy data to our canvas
 		spriteContext.clearRect(0, 0, bitsy.tilesize, bitsy.tilesize);
-		if (scaling) {
+		if (hackOptions.scaling) {
 			spriteContext.putImageData(img, 0, 0, 0, 0, bitsy.tilesize, bitsy.tilesize);
 		} else {
 			spriteContext.putImageData(img, 0, 0);
@@ -96,7 +99,7 @@ bitsy.drawTile = function (img, x, y, context) {
 		context = bitsy.ctx;
 	}
 
-	if (scaling) {
+	if (hackOptions.scaling) {
 		context.drawImage(
 			img(),
 			x * bitsy.tilesize * bitsy.scale,

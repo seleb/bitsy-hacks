@@ -16,24 +16,28 @@ HOW TO USE:
 */
 (function (bitsy) {
 'use strict';
+var hackOptions = {
+	itemIsUnique: function (item) {
+		//return item.name == 'tea'; // specific unique item
+		//return ['tea', 'flower', 'hat'].indexOf(item.name) !== -1; // specific unique item list
+		//return item.name.indexOf('UNIQUE') !== -1; // unique item flag in name
+		return true; // all items are unique
+	}
+};
 
 bitsy = bitsy && bitsy.hasOwnProperty('default') ? bitsy['default'] : bitsy;
 
 
 
+
+
 var _onInventoryChanged = bitsy.onInventoryChanged;
-var itemIsUnique = function (item) {
-	//return item.name == 'tea'; // specific unique item
-	//return ['tea', 'flower', 'hat'].indexOf(item.name) !== -1; // specific unique item list
-	//return item.name.indexOf('UNIQUE') !== -1; // unique item flag in name
-	return true; // all items are unique
-};
 bitsy.onInventoryChanged = function (id) {
 	var r;
 	if (_onInventoryChanged) {
 		_onInventoryChanged(id);
 	}
-	if (itemIsUnique(bitsy.item[id])) {
+	if (hackOptions.itemIsUnique(bitsy.item[id])) {
 		for (r in bitsy.room) {
 			if (bitsy.room.hasOwnProperty(r)) {
 				r = bitsy.room[r];

@@ -19,19 +19,26 @@ Known issues:
 
 HOW TO USE:
 1. Copy-paste this script into a script tag after the bitsy source
-2. Edit `follower = sprite.a` to your intended sprite
+2. Edit `follower` to your intended sprite
 */
 import bitsy from "bitsy";
+import {
+	getImage
+} from "./edit image at runtime.js";
+
+var hackOptions = {
+	allowFollowerCollision: false, // if true, the player can walk into the follower and talk to them (possible to get stuck this way)
+	follower: 'a' // id or name of sprite to be the follower
+};
 
 var follower;
-var allowFollowerCollision = false; // if true, the player can walk into the follower and talk to them (possible to get stuck this way)
 var _startExportedGame = bitsy.startExportedGame;
 bitsy.startExportedGame = function () {
 	if (_startExportedGame) {
 		_startExportedGame();
 	}
 
-	follower = bitsy.sprite.a;
+	follower = getImage(hackOptions.follower, bitsy.sprite);
 
 	// remove + add player to sprite list to force rendering them on top of follower
 	var p = bitsy.sprite[bitsy.playerId];
@@ -83,7 +90,7 @@ bitsy.onPlayerMoved = function () {
 function filterFollowing(id) {
 	return follower === bitsy.sprite[id] ? null : id;
 }
-if (!allowFollowerCollision) {
+if (!hackOptions.allowFollowerCollision) {
 	// filter follower out of collisions
 	var _getSpriteLeft = bitsy.getSpriteLeft;
 	bitsy.getSpriteLeft = function () {
