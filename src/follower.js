@@ -24,7 +24,7 @@ HOW TO USE:
 import bitsy from "bitsy";
 import {
 	getImage
-} from "./edit image at runtime.js";
+} from "./utils.js";
 
 var hackOptions = {
 	allowFollowerCollision: false, // if true, the player can walk into the follower and talk to them (possible to get stuck this way)

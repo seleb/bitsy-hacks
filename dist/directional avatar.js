@@ -28,9 +28,33 @@ var hackOptions = {
 
 bitsy = bitsy && bitsy.hasOwnProperty('default') ? bitsy['default'] : bitsy;
 
-/*
-bitsy hack helper - edit image at runtime
+/**
+@file utils
+@summary miscellaneous bitsy utilities
+@author Sean S. LeBlanc
+*/
 
+/*
+Helper for getting image by name or id
+
+Args:
+	name: id or name of image to return
+	 map: map of images (e.g. `sprite`, `tile`, `item`)
+
+Returns: the image in the given map with the given name/id
+ */
+function getImage(name, map) {
+	var id = map.hasOwnProperty(name) ? name : Object.keys(map).find(function (e) {
+		return map[e].name == name;
+	});
+	return map[id];
+}
+
+/**
+@file edit image at runtime
+@summary API for updating image data at runtime.
+@author Sean S. LeBlanc
+@description
 Adds API for updating sprite, tile, and item data at runtime.
 
 Individual frames of image data in bitsy are 8x8 1-bit 2D arrays in yx order
@@ -90,22 +114,6 @@ function setImageData(id, frame, map, newData) {
 
 function setSpriteData(id, frame, newData) {
 	setImageData(id, frame, bitsy.sprite, newData);
-}
-
-/*
-Helper for getting image by name or id
-
-Args:
-	name: id or name of image to return
-	 map: map of images (e.g. `sprite`, `tile`, `item`)
-
-Returns: the image in the given map with the given name/id
- */
-function getImage(name, map) {
-	var id = map.hasOwnProperty(name) ? name : Object.keys(map).find(function (e) {
-		return map[e].name == name;
-	});
-	return map[id];
 }
 
 

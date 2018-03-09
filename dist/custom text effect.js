@@ -124,6 +124,12 @@ var hackOptions = {
 
 bitsy = bitsy && bitsy.hasOwnProperty('default') ? bitsy['default'] : bitsy;
 
+/**
+@file utils
+@summary miscellaneous bitsy utilities
+@author Sean S. LeBlanc
+*/
+
 /*helper used to inject code into script tags based on a search string*/
 function inject(searchString, codeToInject) {
 	// find the relevant script tag
