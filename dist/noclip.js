@@ -1,16 +1,14 @@
 /**
 📎
 @file noclip
-@summary walk through wall tiles, sprites, exits, and endings
+@summary walk through wall tiles, sprites, items, exits, and endings
 @license MIT
 @version 1.0.0
 @author Sean S. LeBlanc
 
 @description
-Adds a "noclip" command, which allows player to walk through wall tiles, sprites, exits, and endings.
+Adds a "noclip" command, which allows player to walk through wall tiles, sprites, items, exits, and endings.
 Also adds a room cycle command for use with noclip.
-
-Known issue: player still picks up items while noclip is active
 
 HOW TO USE:
 1. Copy-paste this script into a script tag after the bitsy source
@@ -37,6 +35,7 @@ var _isWallUp = bitsy.isWallUp;
 var _isWallDown = bitsy.isWallDown;
 var _getExit = bitsy.getExit;
 var _getEnding = bitsy.getEnding;
+var _getItemIndex = bitsy.getItemIndex;
 
 var toggleNoClip = function () {
 	noClip = !noClip;
@@ -55,6 +54,9 @@ var toggleNoClip = function () {
 		function () {
 			return null;
 		};
+		bitsy.getItemIndex = function() {
+			return -1;
+		};
 		console.log("noclip enabled");
 	} else {
 		// re-enable functions
@@ -68,6 +70,7 @@ var toggleNoClip = function () {
 		bitsy.isWallDown = _isWallDown;
 		bitsy.getExit = _getExit;
 		bitsy.getEnding = _getEnding;
+		bitsy.getItemIndex = _getItemIndex;
 		console.log("noclip disabled");
 	}
 };
