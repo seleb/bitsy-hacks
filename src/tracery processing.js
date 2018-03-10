@@ -1,20 +1,21 @@
-/*
-bitsy hack - tracery processing
+/**
+🏰
+@file tracery processing
+@summary process all dialog text with a tracery grammar
+@license MIT
+@version 1.0.0
+@author Sean S. LeBlanc
 
+@description
 Adds support for processing all dialog text with a tracery grammar.
 
-This isn't a self-contained hack; it relies on https://github.com/galaxykate/tracery/tree/tracery2
-to handle the processing, and this is simply the code needed to integrate for bitsy.
-
 Use cases for this mostly overlap with the existing bitsy scripting capabilities now,
-but it's also a nice minimal example of hacking features into bitsy.
+but it's also a nice minimal example of hacking features into bitsy,
+and of how to import a third-party dependency into a hack.
 
 HOW TO USE:
-1. Copy https://github.com/galaxykate/tracery/blob/tracery2/js/tracery/tracery.js into your game. You can either:
-	- copy the contents into a script tag in the head
-	- copy the file next to your html file and add a script tag with `src="tracery.js"` to the head
-2. Copy-paste this script into a script tag after the bitsy source
-3. Add your entries to the grammar object
+1. Copy-paste this script into a script tag after the bitsy source
+2. Add your entries to the `hackOptions` object below
 
 TRACERY NOTES:
 Tracery will look for symbols wrapped in hashes ("#"), and then use the entries in a provided
@@ -38,15 +39,19 @@ can create
 
 See http://www.crystalcodepalace.com/traceryTut.html for more on how to use tracery
 */
-(function(){
-	var grammar = tracery.createGrammar({
-		// put your grammar entries here
-	});
-	var _startDialog = startDialog;
-	startDialog = function(dialogStr) {
-		dialogStr = grammar.flatten(dialogStr);
-		if(_startDialog){
-			_startDialog(dialogStr);
-		}
-	};
-}());
+import bitsy from "bitsy";
+
+import tracery from "tracery-grammar";
+
+var hackOptions = {
+	// put your grammar entries here
+};
+
+var bitsyGrammar = tracery.createGrammar(hackOptions);
+var _startDialog = bitsy.startDialog;
+bitsy.startDialog = function (dialogStr) {
+	dialogStr = bitsyGrammar.flatten(dialogStr);
+	if (_startDialog) {
+		_startDialog(dialogStr);
+	}
+};

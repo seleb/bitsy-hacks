@@ -1,0 +1,23 @@
+{
+	"name": "bitsy_hacks",
+	"description": "a collection of re-usable scripts for bitsy game maker",
+	"scripts": {
+		"build": "node build.js"
+	},
+	"author": "Sean S. LeBlanc",
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/seleb/bitsy-hacks.git"
+	},
+	"devDependencies": {
+		"doctrine": "^2.1.0",
+		"input-gamepads.js": "^1.0.0",
+		"rollup": "^0.56.5",
+		"rollup-plugin-clear": "^2.0.7",
+		"rollup-plugin-commonjs": "^9.0.0",
+		"rollup-plugin-eslint": "^4.0.0",
+		"rollup-plugin-node-resolve": "^3.2.0",
+		"tracery-grammar": "^2.7.2",
+		"webglazy": "^1.2.2"
+	}
+}
