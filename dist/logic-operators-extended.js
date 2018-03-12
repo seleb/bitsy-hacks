@@ -39,7 +39,7 @@ bitsy = bitsy && bitsy.hasOwnProperty('default') ? bitsy['default'] : bitsy;
 @license WTFPL (do WTF you want)
 @version 1.0.0
 @requires Bitsy Version: 4.5, 4.6
-@author @mildmoji
+@author @mildmojo
 
 @description
 HOW TO USE:
@@ -124,6 +124,7 @@ CODING WITH KITSY:
 
 function kitsyInit() {
 	var globals = bitsy;
+	var firstInit = !globals.kitsy; // check if kitsy has already been inited
 
 	// Allow multiple copies of this script to work in one HTML file.
 	globals.queuedInjectScripts = globals.queuedInjectScripts || [];
@@ -175,29 +176,26 @@ function kitsyInit() {
 	}
 
 	// IMPLEMENTATION ============================================================
+	if (firstInit) {
+		var oldStartFunc = globals.startExportedGame;
+		globals.startExportedGame = function doAllInjections() {
+			// Only do this once.
+			globals.startExportedGame = oldStartFunc;
 
-	var oldStartFunc = globals.startExportedGame;
-	globals.startExportedGame = function doAllInjections() {
-		// Only do this once.
-		globals.startExportedGame = oldStartFunc;
+			if (injectsDone) {
+				return oldStartFunc();
+			}
+			globals.injectsDone = true;
 
-		if (injectsDone) {
-			return oldStartFunc();
-		}
-		globals.injectsDone = true;
+			// Rewrite scripts and hook everything up.
+			doInjects();
+			hookBefores();
+			hookAfters();
 
-		// Rewrite scripts and hook everything up.
-		doInjects();
-		hookBefores();
-		hookAfters();
-
-		// Start the game. If original `startExportedGame` wasn't overwritten, call it.
-		if (globals.startExportedGame === oldStartFunc) {
-			oldStartFunc.apply(this, arguments);
-		} else {
+			// Start the game
 			globals.startExportedGame.apply(this, arguments);
-		}
-	};
+		};
+	}
 
 	function doInjects() {
 		queuedInjectScripts.forEach(function (injectScript) {
