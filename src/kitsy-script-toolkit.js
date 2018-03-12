@@ -5,7 +5,7 @@
 @license WTFPL (do WTF you want)
 @version 1.0.0
 @requires Bitsy Version: 4.5, 4.6
-@author @mildmoji
+@author @mildmojo
 
 @description
 HOW TO USE:
