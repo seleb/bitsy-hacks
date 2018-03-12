@@ -16,6 +16,7 @@ A collection of re-usable scripts for [Adam LeDoux](https://twitter.com/adamledo
  - 🌐 [favicon-from-sprite](/dist/favicon-from-sprite.js): generate a browser favicon (tab icon) from a Bitsy sprite, including animation!
  - 💕 [follower](/dist/follower.js): makes a single sprite follow the player
  - 🎮 [gamepad input](/dist/gamepad%20input.js): HTML5 gamepad support
+ - 🔀 [logic-operators-extended](/dist/logic-operators-extended.js): adds conditional logic operators
  - 📎 [noclip](/dist/noclip.js): walk through wall tiles, sprites, items, exits, and endings
  - 🏰 [tracery processing](/dist/tracery%20processing.js): process all dialog text with a tracery grammar
  - 🏁 [transparent sprites](/dist/transparent%20sprites.js): makes all sprites have transparent backgrounds
