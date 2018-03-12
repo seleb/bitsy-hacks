@@ -2,8 +2,8 @@
 🚪
 @file exit-from-dialog
 @summary exit to another room from dialog, including conditionals
-@license WTFPL (do WTF you want) except the `_inject` function by @seleb
-@version 2.2.0
+@license WTFPL (do WTF you want)
+@version 3.0.0
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
@@ -43,149 +43,98 @@ NOTE: This uses parentheses "()" instead of curly braces "{}" around function
       For full editor integration, you'd *probably* also need to paste this
       code at the end of the editor's `bitsy.js` file. Untested.
 */
+'use strict';
+import bitsy from "bitsy";
+import {
+	kitsyInit
+} from "./kitsy-script-toolkit.js";
 
-// Give a hoot, don't pollute; encapsulate in an IIFE for isolation.
-(function(globals) {
-  'use strict';
+var kitsy = kitsyInit();
 
-  var queuedDialogExit = null;
+var queuedDialogExit = null;
 
-  // Hook into game load and rewrite custom functions in game data to Bitsy format.
-  var _load_game = load_game;
-  globals.load_game = function(game_data, startWithTitle) {
-     // Rewrite custom functions' parentheses to curly braces for Bitsy's
-     // interpreter. Unescape escaped parentheticals, too. Use regexper.com to
-     // visualize these regexes.
-    var fixedGameData = game_data
-      .replace(/(^|[^\\])\((exit(Now)? ".+?")\)/g, "$1{$2}") // Rewrite (exit...) to {exit...}
-      .replace(/\\\((exit(Now)? ".+")\\?\)/g, "($1)");       // Rewrite \(exit...\) to (exit...)
-    _load_game.call(this, fixedGameData, startWithTitle);
-  };
+// Hook into game load and rewrite custom functions in game data to Bitsy format.
+kitsy.before('load_game', function (game_data, startWithTitle) {
+	// Rewrite custom functions' parentheses to curly braces for Bitsy's
+	// interpreter. Unescape escaped parentheticals, too.
+	var fixedGameData = game_data
+	.replace(/(^|[^\\])\((exit(Now)? ".+?")\)/g, "$1{$2}") // Rewrite (exit...) to {exit...}
+	.replace(/\\\((exit(Now)? ".+")\\?\)/g, "($1)"); // Rewrite \(exit...\) to (exit...)
+	return [fixedGameData, startWithTitle];
+});
 
-  // Hook into the game reset and make sure exit data gets cleared.
-  var _clearGameData = clearGameData;
-  globals.clearGameData = function() {
-    _clearGameData.apply(this, arguments);
-    queuedDialogExit = null;
-  };
+// Hook into the game reset and make sure exit data gets cleared.
+kitsy.after('clearGameData', function () {
+	queuedDialogExit = null;
+});
 
-  // Hook into the dialog finish event; if there was an {exit}, travel there now.
-  var _onExitDialog = onExitDialog;
-  globals.onExitDialog = function() {
-    _onExitDialog.apply(this, arguments);
-    if (queuedDialogExit) {
-      doPlayerExit(queuedDialogExit);
-      queuedDialogExit = null;
-    }
-  };
+// Hook into the dialog finish event; if there was an {exit}, travel there now.
+kitsy.after('onExitDialog', function () {
+	if (queuedDialogExit) {
+		doPlayerExit(queuedDialogExit);
+		queuedDialogExit = null;
+	}
+});
 
-  // Implement the {exit} dialog function. It saves the room name and
-  // destination X/Y coordinates so we can travel there after the dialog is over.
-  globals.exitFunc = function(environment, parameters, onReturn) {
-    queuedDialogExit = _getExitParams('exit', parameters);
+// Implement the {exit} dialog function. It saves the room name and
+// destination X/Y coordinates so we can travel there after the dialog is over.
+bitsy.exitFunc = function (environment, parameters, onReturn) {
+	queuedDialogExit = _getExitParams('exit', parameters);
 
-    onReturn(null);
-  }
+	onReturn(null);
+}
 
-  // Implement the {exitNow} dialog function. It exits to the destination room
-  // and X/Y coordinates right damn now.
-  globals.exitNowFunc = function(environment, parameters, onReturn) {
-    var exitParams = _getExitParams('exitNow', parameters);
-    if (!exitParams) {
-      return;
-    }
+// Implement the {exitNow} dialog function. It exits to the destination room
+// and X/Y coordinates right damn now.
+bitsy.exitNowFunc = function (environment, parameters, onReturn) {
+	var exitParams = _getExitParams('exitNow', parameters);
+	if (!exitParams) {
+		return;
+	}
 
-    doPlayerExit(exitParams);
-    onReturn(null);
-  }
+	doPlayerExit(exitParams);
+	onReturn(null);
+}
 
-  // Rewrite the Bitsy script tag, making these new functions callable from dialog.
-  _inject(
-    'var functionMap = new Map();',
-    'functionMap.set("exit", exitFunc);',
-    'functionMap.set("exitNow", exitNowFunc);'
-  );
+// Rewrite the Bitsy script tag, making these new functions callable from dialog.
+kitsy.inject(
+	'var functionMap = new Map();',
+	'functionMap.set("exit", exitFunc);',
+	'functionMap.set("exitNow", exitNowFunc);'
+);
 
-  function _getExitParams(exitFuncName, parameters) {
-    var params = parameters[0].split(',');
-    var roomName = params[0];
-    var x = params[1];
-    var y = params[2];
-    var coordsType = (params[3] || 'exit').toLowerCase();
-    var useSpriteCoords = coordsType === 'sprite';
-    var roomId = names.room.get(roomName);
+function _getExitParams(exitFuncName, parameters) {
+	var params = parameters[0].split(',');
+	var roomName = params[0];
+	var x = params[1];
+	var y = params[2];
+	var coordsType = (params[3] || 'exit').toLowerCase();
+	var useSpriteCoords = coordsType === 'sprite';
+	var roomId = bitsy.names.room.get(roomName);
 
-    if (!roomName || x === undefined || y === undefined) {
-      console.warn('{' + exitFuncName + '} was missing parameters! Usage: {' +
-        exitFuncName + ' "roomname,x,y"}');
-      return null;
-    }
+	if (!roomName || x === undefined || y === undefined) {
+		console.warn('{' + exitFuncName + '} was missing parameters! Usage: {' +
+			exitFuncName + ' "roomname,x,y"}');
+		return null;
+	}
 
-    if (roomId === undefined) {
-      console.warn("Bad {" + exitFuncName + "} parameter: Room '" + roomName + "' not found!");
-      return null;
-    }
+	if (roomId === undefined) {
+		console.warn("Bad {" + exitFuncName + "} parameter: Room '" + roomName + "' not found!");
+		return null;
+	}
 
-    return {
-      room: roomId,
-      x: Number(x),
-      y: useSpriteCoords ? 15 - Number(y) : Number(y)
-    };
-  }
+	return {
+		room: roomId,
+		x: Number(x),
+		y: useSpriteCoords ? 15 - Number(y) : Number(y)
+	};
+}
 
-  // dest === {room: Room, x: Int, y: Int}
-  function doPlayerExit(dest) {
-    player().room = dest.room;
-    player().x = dest.x;
-    player().y = dest.y;
-    curRoom = dest.room;
-  }
-
-  // From https://gist.github.com/seleb/27798c1022e14aba82b9b77b97ad8002
-  // helper used to inject code into script tags based on a search string
-  function _inject(searchString, codeToInject) {
-    // find the relevant script tag
-    searchString = arguments[0];
-    codeToInject = [].slice.call(arguments, 1).join('');
-
-    var scriptTags = document.getElementsByTagName('script');
-    var scriptTag;
-    var code;
-    for (var i = 0; i < scriptTags.length; ++i) {
-      scriptTag = scriptTags[i];
-      if (
-        scriptTag.textContent.indexOf(searchString) >= 0 // script contains the search string
-        &&
-        scriptTag != document.currentScript // script isn't the one doing the injecting (which also contains the search string)
-      ) {
-        code = scriptTag.textContent;
-        break;
-      }
-    }
-
-    // error-handling
-    if (!code) {
-      throw 'Couldn\'t find "' + searchString + '" in script tags';
-    }
-
-    // modify the content
-    code = code.replace(searchString, searchString + codeToInject);
-
-    // replace the old script tag with a new one using our modified code
-    scriptTag.remove();
-    scriptTag = document.createElement('script');
-    scriptTag.textContent = code;
-    document.head.appendChild(scriptTag);
-
-    // recreate the script and dialog objects so that they'll be
-    // referencing the code with injections instead of the original
-    scriptModule = new Script();
-    scriptInterpreter = scriptModule.CreateInterpreter();
-
-    dialogModule = new Dialog();
-    dialogRenderer = dialogModule.CreateRenderer();
-    dialogBuffer = dialogModule.CreateBuffer();
-  };
-
-})(window);
+// dest === {room: Room, x: Int, y: Int}
+function doPlayerExit(dest) {
+	bitsy.player().room = dest.room;
+	bitsy.player().x = dest.x;
+	bitsy.player().y = dest.y;
+	bitsy.curRoom = dest.room;
+}
 // End of (exit) dialog function mod

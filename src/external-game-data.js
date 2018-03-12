@@ -3,7 +3,7 @@
 @file external-game-data
 @summary separate Bitsy game data from your (modded) HTML for easier development
 @license WTFPL (do WTF you want)
-@version 1.1.0
+@version 2.0.0
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
@@ -39,104 +39,89 @@ NOTE: Chrome can only fetch external files when they're served from a
       IMPORTed data. It will not execute nested IMPORT statements in
       external files.
 */
+'use strict';
+import bitsy from "bitsy";
+import {
+	kitsyInit
+} from "./kitsy-script-toolkit.js";
 
-// Give a hoot, don't pollute; encapsulate in an IIFE for isolation.
-(function(globals) {
-  'use strict';
+var kitsy = kitsyInit();
 
-  var ERR_MISSING_IMPORT = 1;
+var ERR_MISSING_IMPORT = 1;
 
-  before('startExportedGame', function run(done) {
-    var gameDataElem = document.getElementById('exportedGameData');
+kitsy.before('startExportedGame', function (done) {
+	var gameDataElem = document.getElementById('exportedGameData');
 
-    tryImportGameData(gameDataElem.text, function withGameData(err, importedData) {
-      if (err && err.error === ERR_MISSING_IMPORT) {
-        console.warn(err.message);
-      } else if (err) {
-        console.warn('Make sure game data IMPORT statement refers to a valid file or URL.');
-        throw err;
-      }
+	tryImportGameData(gameDataElem.text, function withGameData(err, importedData) {
+		if (err && err.error === ERR_MISSING_IMPORT) {
+			console.warn(err.message);
+		} else if (err) {
+			console.warn('Make sure game data IMPORT statement refers to a valid file or URL.');
+			throw err;
+		}
 
-      gameDataElem.text = "\n" + dos2unix(importedData);
-      done();
-    });
-  });
+		gameDataElem.text = "\n" + dos2unix(importedData);
+		done();
+	});
+});
 
-  function tryImportGameData(gameData, done) {
-    // Make sure this game data even uses the word "IMPORT".
-    if (gameData.indexOf('IMPORT') === -1) {
-      return done({
-        error: ERR_MISSING_IMPORT,
-        message: 'No IMPORT found in Bitsy data. See instructions for external game data mod.'
-      }, gameData);
-    }
+function tryImportGameData(gameData, done) {
+	// Make sure this game data even uses the word "IMPORT".
+	if (gameData.indexOf('IMPORT') === -1) {
+		return done({
+			error: ERR_MISSING_IMPORT,
+			message: 'No IMPORT found in Bitsy data. See instructions for external game data mod.'
+		}, gameData);
+	}
 
-    var trim = function(line) { return line.trim(); };
-    var isImport = function(line) { return getType(line) === 'IMPORT'; };
-    var importCmd = gameData
-      .split("\n")
-      .map(trim)
-      .find(isImport);
+	var trim = function (line) {
+		return line.trim();
+	};
+	var isImport = function (line) {
+		return bitsy.getType(line) === 'IMPORT';
+	};
+	var importCmd = gameData
+	.split("\n")
+	.map(trim)
+	.find(isImport);
 
-    // Make sure we found an actual IMPORT command.
-    if (!importCmd) {
-      return done({
-        error: ERR_MISSING_IMPORT,
-        message: 'No IMPORT found in Bitsy data. See instructions for external game data mod.'
-      });
-    }
+	// Make sure we found an actual IMPORT command.
+	if (!importCmd) {
+		return done({
+			error: ERR_MISSING_IMPORT,
+			message: 'No IMPORT found in Bitsy data. See instructions for external game data mod.'
+		});
+	}
 
-    var src = (importCmd || '').split(/\s+/)[1];
+	var src = (importCmd || '').split(/\s+/)[1];
 
-    if (src) {
-      return fetchData(src, done);
-    } else {
-      return done('IMPORT missing a URL or path to a Bitsy data file!');
-    }
-  }
+	if (src) {
+		return fetchData(src, done);
+	} else {
+		return done('IMPORT missing a URL or path to a Bitsy data file!');
+	}
+}
 
-  function fetchData(url, done) {
-    var request = new XMLHttpRequest();
-    request.open('GET', url, true);
+function fetchData(url, done) {
+	var request = new XMLHttpRequest();
+	request.open('GET', url, true);
 
-    request.onload = function() {
-      if (this.status >= 200 && this.status < 400) {
-        // Success!
-        return done(null, this.response);
-      } else {
-        return done('Failed to load game data: ' + request.statusText + ' (' + this.status + ')');
-      }
-    };
+	request.onload = function () {
+		if (this.status >= 200 && this.status < 400) {
+			// Success!
+			return done(null, this.response);
+		} else {
+			return done('Failed to load game data: ' + request.statusText + ' (' + this.status + ')');
+		}
+	};
 
-    request.onerror = function() {
-      return done('Failed to load game data: ' + request.statusText);
-    };
+	request.onerror = function () {
+		return done('Failed to load game data: ' + request.statusText);
+	};
 
-    request.send();
-  }
+	request.send();
+}
 
-  function before(functionName, beforeFn) {
-    var superFn = globals[functionName];
-
-    globals[functionName] = function() {
-      var self = this;
-      var args = [].slice.call(arguments);
-
-      if (beforeFn.length > superFn.length) {
-        beforeFn.apply(self, args.concat(asyncDone));
-      } else {
-        args = beforeFn.apply(self, args) || args;
-        asyncDone.apply(self, args);
-      }
-
-      function asyncDone(newArgs) {
-        superFn.apply(self, newArgs || args);
-      }
-    };
-  }
-
-  function dos2unix(text) {
-    return text.replace(/\r\n/g, "\n");
-  }
-
-})(window);
+function dos2unix(text) {
+	return text.replace(/\r\n/g, "\n");
+}

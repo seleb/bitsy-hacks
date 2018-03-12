@@ -1,43 +1,31 @@
 /**
-🛰
-@file external-game-data
-@summary separate Bitsy game data from your (modded) HTML for easier development
-@license WTFPL (do WTF you want)
-@version 2.0.0
-@requires Bitsy Version: 4.5, 4.6
+🔀
+@file logic-operators-extended
+@summary adds conditional logic operators
+@version 1.0.0
 @author @mildmojo
 
 @description
-Load your Bitsy game data from an external file or URL, separating it from your
-(modified) Bitsy HTML.
+Adds conditional logic operators:
+  - !== (not equal to)
+  - && (and)
+  - || (or)
+  - &&! (and not)
+  - ||! (or not)
 
-Usage: IMPORT <file or URL>
+Examples: candlecount > 5 && haslighter == 1
+          candlecount > 5 && papercount > 1 && isIndoors
+          haslighter == 1 || hasmatches == 1
+          candlecount > 5 && candlecount !== 666
+          candlecount > 5 &&! droppedlighter
+          droppedlighter ||! hasmatches
 
-Examples: IMPORT frontier.bitsydata
-          IMPORT http://my-cool-website.nz/frontier/frontier.bitsydata
-          IMPORT /games/frontier/data/frontier.bitsydata
-
-HOW TO USE:
-  1. Copy-paste this script into a new script tag after the Bitsy source code.
-     Make sure this script comes *after* any other mods to guarantee that it
-     executes first.
-  2. Copy all your Bitsy game data out of the script tag at the top of your
-     HTML into another file (I recommend `game-name.bitsydata`). In the HTML
-     file, replace all game data with a single IMPORT statement that refers to
-     your new data file.
-
-NOTE: Chrome can only fetch external files when they're served from a
-      web server, so your game won't work if you just open your HTML file from
-      disk. You could use Firefox, install a web server, or, if you have
-      development tools like NodeJS, Ruby, Python, Perl, PHP, or others
-      installed, here's a big list of how to use them to serve a folder as a
-      local web server:
-      https://gist.github.com/willurd/5720255
-
-      If this mod finds an IMPORT statement anywhere in the Bitsy data
-      contained in the HTML file, it will replace all game data with the
-      IMPORTed data. It will not execute nested IMPORT statements in
-      external files.
+NOTE: The combining operators (&&, ||, &&!, ||!) have lower precedence than
+      all other math and comparison operators, so it might be hard to write
+      tests that mix and match these new operators and have them evaluate
+      correctly. If you're using multiple `&&` and `||` operators in one
+      condition, be sure to test every possibility to make sure it behaves
+      the way you want.
 */
 (function (bitsy) {
 'use strict';
@@ -330,83 +318,55 @@ function kitsyInit() {
 
 var kitsy = kitsyInit();
 
-var ERR_MISSING_IMPORT = 1;
 
-kitsy.before('startExportedGame', function (done) {
-	var gameDataElem = document.getElementById('exportedGameData');
+kitsy.inject('operatorMap.set("-", subExp);',
+	'operatorMap.set("!==", notEqExp);',
+	'operatorMap.set("&&", andExp);',
+	'operatorMap.set("||", orExp);',
+	'operatorMap.set("&&!", andNotExp);',
+	'operatorMap.set("||!", orNotExp);');
+kitsy.inject('var operatorSymbols = ["-", "+", "/", "*", "<=", ">=", "<", ">", "=="];',
+	'operatorSymbols.unshift("!==", "&&", "||", "&&!", "||!");');
 
-	tryImportGameData(gameDataElem.text, function withGameData(err, importedData) {
-		if (err && err.error === ERR_MISSING_IMPORT) {
-			console.warn(err.message);
-		} else if (err) {
-			console.warn('Make sure game data IMPORT statement refers to a valid file or URL.');
-			throw err;
-		}
-
-		gameDataElem.text = "\n" + dos2unix(importedData);
-		done();
-	});
-});
-
-function tryImportGameData(gameData, done) {
-	// Make sure this game data even uses the word "IMPORT".
-	if (gameData.indexOf('IMPORT') === -1) {
-		return done({
-			error: ERR_MISSING_IMPORT,
-			message: 'No IMPORT found in Bitsy data. See instructions for external game data mod.'
-		}, gameData);
-	}
-
-	var trim = function (line) {
-		return line.trim();
-	};
-	var isImport = function (line) {
-		return bitsy.getType(line) === 'IMPORT';
-	};
-	var importCmd = gameData
-	.split("\n")
-	.map(trim)
-	.find(isImport);
-
-	// Make sure we found an actual IMPORT command.
-	if (!importCmd) {
-		return done({
-			error: ERR_MISSING_IMPORT,
-			message: 'No IMPORT found in Bitsy data. See instructions for external game data mod.'
+bitsy.andExp = function andExp(environment, left, right, onReturn) {
+	right.Eval(environment, function (rVal) {
+		left.Eval(environment, function (lVal) {
+			onReturn(lVal && rVal);
 		});
-	}
+	});
+};
 
-	var src = (importCmd || '').split(/\s+/)[1];
+bitsy.orExp = function orExp(environment, left, right, onReturn) {
+	right.Eval(environment, function (rVal) {
+		left.Eval(environment, function (lVal) {
+			onReturn(lVal || rVal);
+		});
+	});
+};
 
-	if (src) {
-		return fetchData(src, done);
-	} else {
-		return done('IMPORT missing a URL or path to a Bitsy data file!');
-	}
-}
+bitsy.notEqExp = function notEqExp(environment, left, right, onReturn) {
+	right.Eval(environment, function (rVal) {
+		left.Eval(environment, function (lVal) {
+			onReturn(lVal !== rVal);
+		});
+	});
+};
 
-function fetchData(url, done) {
-	var request = new XMLHttpRequest();
-	request.open('GET', url, true);
+bitsy.andNotExp = function andNotExp(environment, left, right, onReturn) {
+	right.Eval(environment, function (rVal) {
+		left.Eval(environment, function (lVal) {
+			onReturn(lVal && !rVal);
+		});
+	});
+};
 
-	request.onload = function () {
-		if (this.status >= 200 && this.status < 400) {
-			// Success!
-			return done(null, this.response);
-		} else {
-			return done('Failed to load game data: ' + request.statusText + ' (' + this.status + ')');
-		}
-	};
-
-	request.onerror = function () {
-		return done('Failed to load game data: ' + request.statusText);
-	};
-
-	request.send();
-}
-
-function dos2unix(text) {
-	return text.replace(/\r\n/g, "\n");
-}
+bitsy.orNotExp = function orNotExp(environment, left, right, onReturn) {
+	right.Eval(environment, function (rVal) {
+		left.Eval(environment, function (lVal) {
+			onReturn(lVal || !rVal);
+		});
+	});
+};
+// End of logic operators mod
 
 }(window));
