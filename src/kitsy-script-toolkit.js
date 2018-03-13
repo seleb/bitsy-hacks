@@ -3,89 +3,20 @@
 @file kitsy-script-toolkit
 @summary makes it easier and cleaner to run code before and after Bitsy functions or to inject new code into Bitsy script tags
 @license WTFPL (do WTF you want)
-@version 1.0.1
+@version 2.0.0
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
 @description
 HOW TO USE:
-  1. Paste this whole file in script tags at the bottom of your Bitsy
-     exported game HTML, after the last /script> tag.
-  2. Call `kitsyInit()` to make the `kitsy` object available.
+  import {before, after, inject} from "./kitsy-script-toolkit.js";
 
-CODING WITH KITSY:
-  kitsy.before(targetFuncName, beforeFn)
-  kitsy.after(targetFuncName, afterFn)
-  kitsy.inject(searchString, codeFragment1[, ...codefragmentN])
+  before(targetFuncName, beforeFn);
+  after(targetFuncName, afterFn);
+  inject(searchString, codeFragment1[, ...codefragmentN]);
 
   For more info, see the documentation at:
-  https://github.com/wiki/whatever
-
-  kitsy.before(targetFuncName, beforeFn)
-    targetFuncName (string): Name of the global function you want your code
-      to run before.
-
-    beforeFn (function): A function to run. This function should take the same
-      arguments as the original function.
-
-    Use this function to register your own code to run before a Bitsy built-in
-    function each time it's called. For example, if you wanted to modify Bitsy
-    game data as it's loaded, you could write:
-
-    kitsy.before('load_game', function run(game_data, startWithTitle) {
-      var newGameData = game_data.replace('midnight', '12 AM');
-      return [newGameData, startWithTitle];
-    });
-
-    In that example, the `run` function returns an array, so the values in the
-    array will replace the parameters sent to the original `load_game`
-    function. If you don't return anything, the original `load_game` will be
-    called with the original `game_data, startWithTitle` parameters.
-
-    If your `run` function is asynchronous, add an extra parameter to its
-    argument list and Kitsy will provide a callback for you to signal when
-    your code has finished. If you call the callback with parameters, they'll
-    replace parameters to the original function as above.
-
-    kitsy.before('load_game', function run(game_data, startWithTitle, done) {
-      fetch('http://example.com')
-        .then(function(response) {
-          done(response.text(), startWithTitle);
-        });
-    });
-
-
-  kitsy.after(targetFuncName, afterFn)
-    targetFuncName (string): Name of the global function you want your code
-      to run after.
-
-    afterFn (function): A function to run. This function should take the same
-      arguments as the original function.
-
-    Use this function to register your own code to run after a Bitsy built-in
-    function each time it's called. For example, if you wanted to pop up an
-    alertbox every time the player exits a room, you could write:
-
-    kitsy.after('onExitDialog', function run() {
-      alert('Player exited.');
-    });
-
-    You might use this to clean up game state or play a sound on certain game
-    events or send gameplay stats to an analytics provider.
-
-
-  kitsy.inject(searchString, codeFragment1[, ...codefragmentN])
-    searchString (string): A snippet of source code you want to find inside a
-      script tag. Your code fragments will be inserted IMMEDIATELY after the
-      end of this string, if found.
-
-    codeFragment (string): Javascript code to inject. You can provide as many
-      code fragment parameters as you want, they'll all be strung together
-      before they're injected.
-
-    Use this function to perform surgery on the Bitsy code. It's a search-and-
-    insert. Use sparingly. Best used to install new dialog functions, new
-    operators, or expose internal variables globally.
+  https://github.com/seleb/bitsy-hacks/wiki/Coding-with-kitsy
 */
 import bitsy from "bitsy";
 import {
