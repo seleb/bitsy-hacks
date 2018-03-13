@@ -102,15 +102,13 @@ export function kitsyInit() {
 		after: after,
 		queuedInjectScripts: [],
 		queuedBeforeScripts: [],
-		queuedAfterScripts: [],
-		injectsDone: false
+		queuedAfterScripts: []
 	};
 
 	// Local aliases
 	var queuedInjectScripts = bitsy.kitsy.queuedInjectScripts;
 	var queuedBeforeScripts = bitsy.kitsy.queuedBeforeScripts;
 	var queuedAfterScripts = bitsy.kitsy.queuedAfterScripts;
-	var injectsDone = bitsy.kitsy.injectsDone;
 
 	// Examples: inject('names.sprite.set( name, id );', 'console.dir(names)');
 	//           inject('names.sprite.set( name, id );', 'console.dir(names);', 'console.dir(sprite);');
@@ -145,11 +143,6 @@ export function kitsyInit() {
 		bitsy.startExportedGame = function doAllInjections() {
 			// Only do this once.
 			bitsy.startExportedGame = oldStartFunc;
-
-			if (injectsDone) {
-				return oldStartFunc();
-			}
-			bitsy.kitsy.injectsDone = true;
 
 			// Rewrite scripts and hook everything up.
 			doInjects();
