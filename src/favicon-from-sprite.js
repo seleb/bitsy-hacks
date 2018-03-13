@@ -20,7 +20,7 @@ HOW TO USE:
 'use strict';
 import bitsy from "bitsy";
 import {
-	kitsyInit
+	after
 } from "./kitsy-script-toolkit.js";
 
 // CONFIGURATION FOR FAVICON
@@ -46,9 +46,7 @@ var faviconLinkElem;
 var faviconFrameURLs = [];
 var isStarted = false;
 
-var kitsy = kitsyInit();
-
-kitsy.after('load_game', function () {
+after('load_game', function () {
 	if (isStarted) {
 		return;
 	}

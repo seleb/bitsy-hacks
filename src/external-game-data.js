@@ -42,14 +42,12 @@ NOTE: Chrome can only fetch external files when they're served from a
 'use strict';
 import bitsy from "bitsy";
 import {
-	kitsyInit
+	before
 } from "./kitsy-script-toolkit.js";
-
-var kitsy = kitsyInit();
 
 var ERR_MISSING_IMPORT = 1;
 
-kitsy.before('startExportedGame', function (done) {
+before('startExportedGame', function (done) {
 	var gameDataElem = document.getElementById('exportedGameData');
 
 	tryImportGameData(gameDataElem.text, function withGameData(err, importedData) {
