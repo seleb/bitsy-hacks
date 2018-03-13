@@ -97,11 +97,11 @@ import {
 //           inject('names.sprite.set( name, id );', 'console.dir(names);', 'console.dir(sprite);');
 //           inject('names.sprite.set( name, id );', ['console.dir(names)', 'console.dir(sprite);']);
 export function inject(searchString, codeFragments) {
-	kitsyInit();
+	var kitsy = kitsyInit();
 	var args = [].slice.call(arguments);
 	codeFragments = _flatten(args.slice(1));
 
-	bitsy.kitsy.queuedInjectScripts.push({
+	kitsy.queuedInjectScripts.push({
 		searchString: searchString,
 		codeFragments: codeFragments
 	});
@@ -111,16 +111,16 @@ export function inject(searchString, codeFragments) {
 //     before('show_text', function run(text) { return text.toUpperCase(); });
 //     before('show_text', function run(text, done) { done(text.toUpperCase()); });
 export function before(targetFuncName, beforeFn) {
-	kitsyInit();
-	bitsy.kitsy.queuedBeforeScripts[targetFuncName] = bitsy.kitsy.queuedBeforeScripts[targetFuncName] || [];
-	bitsy.kitsy.queuedBeforeScripts[targetFuncName].push(beforeFn);
+	var kitsy = kitsyInit();
+	kitsy.queuedBeforeScripts[targetFuncName] = kitsy.queuedBeforeScripts[targetFuncName] || [];
+	kitsy.queuedBeforeScripts[targetFuncName].push(beforeFn);
 }
 
 // Ex: after('load_game', function run() { alert('Loaded!'); });
 export function after(targetFuncName, afterFn) {
-	kitsyInit();
-	bitsy.kitsy.queuedAfterScripts[targetFuncName] = bitsy.kitsy.queuedAfterScripts[targetFuncName] || [];
-	bitsy.kitsy.queuedAfterScripts[targetFuncName].push(afterFn);
+	var kitsy = kitsyInit();
+	kitsy.queuedAfterScripts[targetFuncName] = kitsy.queuedAfterScripts[targetFuncName] || [];
+	kitsy.queuedAfterScripts[targetFuncName].push(afterFn);
 }
 
 function kitsyInit() {
