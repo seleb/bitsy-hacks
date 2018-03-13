@@ -99,14 +99,12 @@ export function kitsyInit() {
 	bitsy.queuedInjectScripts = bitsy.queuedInjectScripts || [];
 	bitsy.queuedBeforeScripts = bitsy.queuedBeforeScripts || {};
 	bitsy.queuedAfterScripts = bitsy.queuedAfterScripts || [];
-	bitsy.superFuncs = bitsy.superFuncs || {};
 	bitsy.injectsDone = bitsy.injectsDone || false;
 
 	// Local aliases
 	var queuedInjectScripts = bitsy.queuedInjectScripts;
 	var queuedBeforeScripts = bitsy.queuedBeforeScripts;
 	var queuedAfterScripts = bitsy.queuedAfterScripts;
-	var superFuncs = bitsy.superFuncs;
 	var injectsDone = bitsy.injectsDone;
 
 	bitsy.kitsy = {
