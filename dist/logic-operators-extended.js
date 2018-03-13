@@ -37,7 +37,7 @@ bitsy = bitsy && bitsy.hasOwnProperty('default') ? bitsy['default'] : bitsy;
 @file kitsy-script-toolkit
 @summary makes it easier and cleaner to run code before and after Bitsy functions or to inject new code into Bitsy script tags
 @license WTFPL (do WTF you want)
-@version 1.0.0
+@version 1.0.1
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
@@ -169,10 +169,8 @@ function kitsyInit() {
 
 	// Ex: after('load_game', function run() { alert('Loaded!'); });
 	function after(targetFuncName, afterFn) {
-		queuedAfterScripts.push({
-			targetFuncName: targetFuncName,
-			runFunc: afterFn
-		});
+		queuedAfterScripts[targetFuncName] = queuedAfterScripts[targetFuncName] || [];
+		queuedAfterScripts[targetFuncName].push(afterFn);
 	}
 
 	// IMPLEMENTATION ============================================================
@@ -189,8 +187,7 @@ function kitsyInit() {
 
 			// Rewrite scripts and hook everything up.
 			doInjects();
-			hookBefores();
-			hookAfters();
+			applyAllHooks();
 
 			// Start the game
 			globals.startExportedGame.apply(this, arguments);
@@ -204,48 +201,51 @@ function kitsyInit() {
 		_reinitEngine();
 	}
 
-	function hookBefores() {
-		Object.keys(queuedBeforeScripts).forEach(function (targetFuncName) {
-			var superFn = globals[targetFuncName];
-			var beforeFuncs = queuedBeforeScripts[targetFuncName];
-
-			globals[targetFuncName] = function () {
-				var self = this;
-				var args = [].slice.call(arguments);
-				var i = 0;
-				runBefore.call(self);
-
-				// Iterate thru sync & async functions. Run each, finally run original.
-				function runBefore() {
-					// Update args if provided.
-					if (arguments.length > 0) {
-						args = [].slice.call(arguments);
-					}
-
-					// All outta before functions? Finish by running the original.
-					if (i === beforeFuncs.length) {
-						return superFn.apply(self, args);
-					}
-
-					// Assume before funcs that accept more args than the original are
-					// async and accept a callback as an additional argument.
-					if (beforeFuncs[i].length > superFn.length) {
-						beforeFuncs[i++].apply(self, args.concat(runBefore));
-					} else {
-						var newArgs = beforeFuncs[i++].apply(self, args) || args;
-						setTimeout(function () {
-							runBefore.apply(self, newArgs);
-						}, 0);
-					}
-				}
-			};
-		});
+	function applyAllHooks() {
+		var allHooks = new Set(Object.keys(queuedBeforeScripts).concat(Object.keys(queuedAfterScripts)));
+		allHooks.forEach(applyHook);
 	}
 
-	function hookAfters() {
-		queuedAfterScripts.forEach(function (afterScript) {
-			_after(afterScript.targetFuncName, afterScript.runFunc);
-		});
+	function applyHook(functionName) {
+		var superFn = globals[functionName];
+		var superFnLength = superFn.length;
+		var functions = [];
+		// start with befores
+		functions = functions.concat(queuedBeforeScripts[functionName] || []);
+		// then original
+		functions.push(superFn);
+		// then afters
+		functions = functions.concat(queuedAfterScripts[functionName] || []);
+
+		// overwrite original with one which will call each in order
+		globals[functionName] = function () {
+			var args = [].slice.call(arguments);
+			var i = 0;
+			runBefore.apply(this, arguments);
+
+			// Iterate thru sync & async functions. Run each, finally run original.
+			function runBefore() {
+				// All outta functions? Finish
+				if (i === functions.length) {
+					return;
+				}
+
+				// Update args if provided.
+				if (arguments.length > 0) {
+					args = [].slice.call(arguments);
+				}
+
+				if (functions[i].length > superFnLength) {
+					// Assume funcs that accept more args than the original are
+					// async and accept a callback as an additional argument.
+					functions[i++].apply(this, args.concat(runBefore.bind(this)));
+				} else {
+					// run synchronously
+					var newArgs = functions[i++].apply(this, args) || args;
+					runBefore.apply(this, newArgs);
+				}
+			}
+		};
 	}
 
 	function _inject(searchString, codeToInject) {
@@ -279,15 +279,6 @@ function kitsyInit() {
 		newScriptTag.textContent = code;
 		scriptTag.insertAdjacentElement('afterend', newScriptTag);
 		scriptTag.remove();
-	}
-
-	function _after(targetFuncName, afterFn) {
-		var superFn = globals[targetFuncName];
-
-		globals[targetFuncName] = function () {
-			superFn.apply(this, arguments);
-			afterFn.apply(this, arguments);
-		};
 	}
 
 	function _reinitEngine() {
