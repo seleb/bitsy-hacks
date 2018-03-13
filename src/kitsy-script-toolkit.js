@@ -93,24 +93,23 @@ import {
 } from "./utils.js";
 
 export function kitsyInit() {
-	var globals = bitsy;
-	var firstInit = !globals.kitsy; // check if kitsy has already been inited
+	var firstInit = !bitsy.kitsy; // check if kitsy has already been inited
 
 	// Allow multiple copies of this script to work in one HTML file.
-	globals.queuedInjectScripts = globals.queuedInjectScripts || [];
-	globals.queuedBeforeScripts = globals.queuedBeforeScripts || {};
-	globals.queuedAfterScripts = globals.queuedAfterScripts || [];
-	globals.superFuncs = globals.superFuncs || {};
-	globals.injectsDone = globals.injectsDone || false;
+	bitsy.queuedInjectScripts = bitsy.queuedInjectScripts || [];
+	bitsy.queuedBeforeScripts = bitsy.queuedBeforeScripts || {};
+	bitsy.queuedAfterScripts = bitsy.queuedAfterScripts || [];
+	bitsy.superFuncs = bitsy.superFuncs || {};
+	bitsy.injectsDone = bitsy.injectsDone || false;
 
 	// Local aliases
-	var queuedInjectScripts = globals.queuedInjectScripts;
-	var queuedBeforeScripts = globals.queuedBeforeScripts;
-	var queuedAfterScripts = globals.queuedAfterScripts;
-	var superFuncs = globals.superFuncs;
-	var injectsDone = globals.injectsDone;
+	var queuedInjectScripts = bitsy.queuedInjectScripts;
+	var queuedBeforeScripts = bitsy.queuedBeforeScripts;
+	var queuedAfterScripts = bitsy.queuedAfterScripts;
+	var superFuncs = bitsy.superFuncs;
+	var injectsDone = bitsy.injectsDone;
 
-	globals.kitsy = {
+	bitsy.kitsy = {
 		inject: inject,
 		before: before,
 		after: after
@@ -145,22 +144,22 @@ export function kitsyInit() {
 
 	// IMPLEMENTATION ============================================================
 	if (firstInit) {
-		var oldStartFunc = globals.startExportedGame;
-		globals.startExportedGame = function doAllInjections() {
+		var oldStartFunc = bitsy.startExportedGame;
+		bitsy.startExportedGame = function doAllInjections() {
 			// Only do this once.
-			globals.startExportedGame = oldStartFunc;
+			bitsy.startExportedGame = oldStartFunc;
 
 			if (injectsDone) {
 				return oldStartFunc();
 			}
-			globals.injectsDone = true;
+			bitsy.injectsDone = true;
 
 			// Rewrite scripts and hook everything up.
 			doInjects();
 			applyAllHooks();
 
 			// Start the game
-			globals.startExportedGame.apply(this, arguments);
+			bitsy.startExportedGame.apply(this, arguments);
 		};
 	}
 
@@ -177,7 +176,7 @@ export function kitsyInit() {
 	}
 
 	function applyHook(functionName) {
-		var superFn = globals[functionName];
+		var superFn = bitsy[functionName];
 		var superFnLength = superFn.length;
 		var functions = [];
 		// start with befores
@@ -188,7 +187,7 @@ export function kitsyInit() {
 		functions = functions.concat(queuedAfterScripts[functionName] || []);
 
 		// overwrite original with one which will call each in order
-		globals[functionName] = function () {
+		bitsy[functionName] = function () {
 			var args = [].slice.call(arguments);
 			var i = 0;
 			runBefore.apply(this, arguments);
@@ -254,12 +253,12 @@ export function kitsyInit() {
 	function _reinitEngine() {
 		// recreate the script and dialog objects so that they'll be
 		// referencing the code with injections instead of the original
-		globals.scriptModule = new globals.Script();
-		globals.scriptInterpreter = globals.scriptModule.CreateInterpreter();
+		bitsy.scriptModule = new bitsy.Script();
+		bitsy.scriptInterpreter = bitsy.scriptModule.CreateInterpreter();
 
-		globals.dialogModule = new globals.Dialog();
-		globals.dialogRenderer = globals.dialogModule.CreateRenderer();
-		globals.dialogBuffer = globals.dialogModule.CreateBuffer();
+		bitsy.dialogModule = new bitsy.Dialog();
+		bitsy.dialogRenderer = bitsy.dialogModule.CreateRenderer();
+		bitsy.dialogBuffer = bitsy.dialogModule.CreateBuffer();
 	}
 
 	function _flatten(list) {
@@ -272,5 +271,5 @@ export function kitsyInit() {
 		}, []);
 	}
 
-	return globals.kitsy;
+	return bitsy.kitsy;
 }
