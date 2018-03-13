@@ -88,6 +88,9 @@ CODING WITH KITSY:
     operators, or expose internal variables globally.
 */
 import bitsy from "bitsy";
+import {
+	unique
+} from "./utils.js";
 
 export function kitsyInit() {
 	var globals = bitsy;
@@ -169,7 +172,7 @@ export function kitsyInit() {
 	}
 
 	function applyAllHooks() {
-		var allHooks = new Set(Object.keys(queuedBeforeScripts).concat(Object.keys(queuedAfterScripts)));
+		var allHooks = unique(Object.keys(queuedBeforeScripts).concat(Object.keys(queuedAfterScripts)));
 		allHooks.forEach(applyHook);
 	}
 

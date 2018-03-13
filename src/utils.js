@@ -61,3 +61,14 @@ export function getImage(name, map) {
 	});
 	return map[id];
 }
+
+/**
+ * Helper for getting an array with unique elements 
+ * @param  {Array} array Original array
+ * @return {Array}       Copy of array, excluding duplicates
+ */
+export function unique(array) {
+	return array.filter(function (item, idx) {
+		return array.indexOf(item) === idx;
+	});
+}
