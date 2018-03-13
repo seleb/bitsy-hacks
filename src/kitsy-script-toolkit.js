@@ -105,11 +105,6 @@ export function kitsyInit() {
 		queuedAfterScripts: []
 	};
 
-	// Local aliases
-	var queuedInjectScripts = bitsy.kitsy.queuedInjectScripts;
-	var queuedBeforeScripts = bitsy.kitsy.queuedBeforeScripts;
-	var queuedAfterScripts = bitsy.kitsy.queuedAfterScripts;
-
 	// Examples: inject('names.sprite.set( name, id );', 'console.dir(names)');
 	//           inject('names.sprite.set( name, id );', 'console.dir(names);', 'console.dir(sprite);');
 	//           inject('names.sprite.set( name, id );', ['console.dir(names)', 'console.dir(sprite);']);
@@ -117,7 +112,7 @@ export function kitsyInit() {
 		var args = [].slice.call(arguments);
 		codeFragments = _flatten(args.slice(1));
 
-		queuedInjectScripts.push({
+		bitsy.kitsy.queuedInjectScripts.push({
 			searchString: searchString,
 			codeFragments: codeFragments
 		});
@@ -127,14 +122,14 @@ export function kitsyInit() {
 	//     before('show_text', function run(text) { return text.toUpperCase(); });
 	//     before('show_text', function run(text, done) { done(text.toUpperCase()); });
 	function before(targetFuncName, beforeFn) {
-		queuedBeforeScripts[targetFuncName] = queuedBeforeScripts[targetFuncName] || [];
-		queuedBeforeScripts[targetFuncName].push(beforeFn);
+		bitsy.kitsy.queuedBeforeScripts[targetFuncName] = bitsy.kitsy.queuedBeforeScripts[targetFuncName] || [];
+		bitsy.kitsy.queuedBeforeScripts[targetFuncName].push(beforeFn);
 	}
 
 	// Ex: after('load_game', function run() { alert('Loaded!'); });
 	function after(targetFuncName, afterFn) {
-		queuedAfterScripts[targetFuncName] = queuedAfterScripts[targetFuncName] || [];
-		queuedAfterScripts[targetFuncName].push(afterFn);
+		bitsy.kitsy.queuedAfterScripts[targetFuncName] = bitsy.kitsy.queuedAfterScripts[targetFuncName] || [];
+		bitsy.kitsy.queuedAfterScripts[targetFuncName].push(afterFn);
 	}
 
 	// IMPLEMENTATION ============================================================
@@ -154,14 +149,14 @@ export function kitsyInit() {
 	}
 
 	function doInjects() {
-		queuedInjectScripts.forEach(function (injectScript) {
+		bitsy.kitsy.queuedInjectScripts.forEach(function (injectScript) {
 			_inject(injectScript.searchString, injectScript.codeFragments);
 		});
 		_reinitEngine();
 	}
 
 	function applyAllHooks() {
-		var allHooks = unique(Object.keys(queuedBeforeScripts).concat(Object.keys(queuedAfterScripts)));
+		var allHooks = unique(Object.keys(bitsy.kitsy.queuedBeforeScripts).concat(Object.keys(bitsy.kitsy.queuedAfterScripts)));
 		allHooks.forEach(applyHook);
 	}
 
@@ -170,11 +165,11 @@ export function kitsyInit() {
 		var superFnLength = superFn.length;
 		var functions = [];
 		// start with befores
-		functions = functions.concat(queuedBeforeScripts[functionName] || []);
+		functions = functions.concat(bitsy.kitsy.queuedBeforeScripts[functionName] || []);
 		// then original
 		functions.push(superFn);
 		// then afters
-		functions = functions.concat(queuedAfterScripts[functionName] || []);
+		functions = functions.concat(bitsy.kitsy.queuedAfterScripts[functionName] || []);
 
 		// overwrite original with one which will call each in order
 		bitsy[functionName] = function () {
