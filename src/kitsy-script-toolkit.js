@@ -89,7 +89,9 @@ CODING WITH KITSY:
 */
 import bitsy from "bitsy";
 import {
-	unique
+	unique,
+	flatten,
+	inject as utilsInject
 } from "./utils.js";
 
 
@@ -99,7 +101,7 @@ import {
 export function inject(searchString, codeFragments) {
 	var kitsy = kitsyInit();
 	var args = [].slice.call(arguments);
-	codeFragments = _flatten(args.slice(1));
+	codeFragments = flatten(args.slice(1));
 
 	kitsy.queuedInjectScripts.push({
 		searchString: searchString,
@@ -125,7 +127,7 @@ export function after(targetFuncName, afterFn) {
 
 function kitsyInit() {
 	// return already-initialized kitsy
-	if(bitsy.kitsy) {
+	if (bitsy.kitsy) {
 		return bitsy.kitsy;
 	}
 
@@ -158,7 +160,7 @@ function kitsyInit() {
 
 function doInjects() {
 	bitsy.kitsy.queuedInjectScripts.forEach(function (injectScript) {
-		_inject(injectScript.searchString, injectScript.codeFragments);
+		utilsInject(injectScript.searchString, injectScript.codeFragments);
 	});
 	_reinitEngine();
 }
@@ -210,39 +212,6 @@ function applyHook(functionName) {
 	};
 }
 
-function _inject(searchString, codeToInject) {
-	var args = [].slice.call(arguments);
-	codeToInject = _flatten(args.slice(1)).join('');
-
-	// find the relevant script tag
-	var scriptTags = document.getElementsByTagName('script');
-	var scriptTag;
-	var code;
-	for (var i = 0; i < scriptTags.length; ++i) {
-		scriptTag = scriptTags[i];
-		var matchesSearch = scriptTag.textContent.indexOf(searchString) !== -1;
-		var isCurrentScript = scriptTag === document.currentScript;
-		if (matchesSearch && !isCurrentScript) {
-			code = scriptTag.textContent;
-			break;
-		}
-	}
-
-	// error-handling
-	if (!code) {
-		throw 'Couldn\'t find "' + searchString + '" in script tags';
-	}
-
-	// modify the content
-	code = code.replace(searchString, searchString + codeToInject);
-
-	// replace the old script tag with a new one using our modified code
-	var newScriptTag = document.createElement('script');
-	newScriptTag.textContent = code;
-	scriptTag.insertAdjacentElement('afterend', newScriptTag);
-	scriptTag.remove();
-}
-
 function _reinitEngine() {
 	// recreate the script and dialog objects so that they'll be
 	// referencing the code with injections instead of the original
@@ -252,14 +221,4 @@ function _reinitEngine() {
 	bitsy.dialogModule = new bitsy.Dialog();
 	bitsy.dialogRenderer = bitsy.dialogModule.CreateRenderer();
 	bitsy.dialogBuffer = bitsy.dialogModule.CreateBuffer();
-}
-
-function _flatten(list) {
-	if (!Array.isArray(list)) {
-		return list;
-	}
-
-	return list.reduce(function (fragments, arg) {
-		return fragments.concat(_flatten(arg));
-	}, []);
 }

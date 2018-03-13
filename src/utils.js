@@ -6,17 +6,18 @@
 
 /*helper used to inject code into script tags based on a search string*/
 export function inject(searchString, codeToInject) {
+	var args = [].slice.call(arguments);
+	codeToInject = flatten(args.slice(1)).join('');
+
 	// find the relevant script tag
 	var scriptTags = document.getElementsByTagName('script');
 	var scriptTag;
 	var code;
 	for (var i = 0; i < scriptTags.length; ++i) {
 		scriptTag = scriptTags[i];
-		if (
-			scriptTag.textContent.indexOf(searchString) >= 0 // script contains the search string
-			&&
-			scriptTag != document.currentScript // script isn't the one doing the injecting (which also contains the search string)
-		) {
+		var matchesSearch = scriptTag.textContent.indexOf(searchString) !== -1;
+		var isCurrentScript = scriptTag === document.currentScript;
+		if (matchesSearch && !isCurrentScript) {
 			code = scriptTag.textContent;
 			break;
 		}
@@ -31,10 +32,10 @@ export function inject(searchString, codeToInject) {
 	code = code.replace(searchString, searchString + codeToInject);
 
 	// replace the old script tag with a new one using our modified code
+	var newScriptTag = document.createElement('script');
+	newScriptTag.textContent = code;
+	scriptTag.insertAdjacentElement('afterend', newScriptTag);
 	scriptTag.remove();
-	scriptTag = document.createElement('script');
-	scriptTag.textContent = code;
-	document.head.appendChild(scriptTag);
 }
 
 /*helper for exposing getter/setter for private vars*/
@@ -71,4 +72,14 @@ export function unique(array) {
 	return array.filter(function (item, idx) {
 		return array.indexOf(item) === idx;
 	});
+}
+
+export function flatten(list) {
+	if (!Array.isArray(list)) {
+		return list;
+	}
+
+	return list.reduce(function (fragments, arg) {
+		return fragments.concat(flatten(arg));
+	}, []);
 }
