@@ -96,22 +96,21 @@ export function kitsyInit() {
 	var firstInit = !bitsy.kitsy; // check if kitsy has already been inited
 
 	// Allow multiple copies of this script to work in one HTML file.
-	bitsy.queuedInjectScripts = bitsy.queuedInjectScripts || [];
-	bitsy.queuedBeforeScripts = bitsy.queuedBeforeScripts || {};
-	bitsy.queuedAfterScripts = bitsy.queuedAfterScripts || [];
-	bitsy.injectsDone = bitsy.injectsDone || false;
-
-	// Local aliases
-	var queuedInjectScripts = bitsy.queuedInjectScripts;
-	var queuedBeforeScripts = bitsy.queuedBeforeScripts;
-	var queuedAfterScripts = bitsy.queuedAfterScripts;
-	var injectsDone = bitsy.injectsDone;
-
-	bitsy.kitsy = {
+	bitsy.kitsy = bitsy.kitsy || {
 		inject: inject,
 		before: before,
-		after: after
+		after: after,
+		queuedInjectScripts: [],
+		queuedBeforeScripts: [],
+		queuedAfterScripts: [],
+		injectsDone: false
 	};
+
+	// Local aliases
+	var queuedInjectScripts = bitsy.kitsy.queuedInjectScripts;
+	var queuedBeforeScripts = bitsy.kitsy.queuedBeforeScripts;
+	var queuedAfterScripts = bitsy.kitsy.queuedAfterScripts;
+	var injectsDone = bitsy.kitsy.injectsDone;
 
 	// Examples: inject('names.sprite.set( name, id );', 'console.dir(names)');
 	//           inject('names.sprite.set( name, id );', 'console.dir(names);', 'console.dir(sprite);');
@@ -150,7 +149,7 @@ export function kitsyInit() {
 			if (injectsDone) {
 				return oldStartFunc();
 			}
-			bitsy.injectsDone = true;
+			bitsy.kitsy.injectsDone = true;
 
 			// Rewrite scripts and hook everything up.
 			doInjects();
