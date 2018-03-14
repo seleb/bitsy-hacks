@@ -18,6 +18,7 @@ A collection of re-usable scripts for [Adam LeDoux](https://twitter.com/adamledo
  - 🎮 [gamepad input](/dist/gamepad%20input.js): HTML5 gamepad support
  - 🔀 [logic-operators-extended](/dist/logic-operators-extended.js): adds conditional logic operators
  - 📎 [noclip](/dist/noclip.js): walk through wall tiles, sprites, items, exits, and endings
+ - 🛑 [solid items](/dist/solid%20items.js): treat some items like sprites that can be placed multiple times
  - 🏰 [tracery processing](/dist/tracery%20processing.js): process all dialog text with a tracery grammar
  - 🏁 [transparent sprites](/dist/transparent%20sprites.js): makes all sprites have transparent backgrounds
  - ❄ [unique items](/dist/unique%20items.js): items which, when picked up, remove all other instances of that item from the game
