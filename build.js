@@ -59,6 +59,7 @@ Promise.all([
 	"gamepad input",
 	"logic-operators-extended",
 	"noclip",
+	"permanent items",
 	"solid items",
 	"tracery processing",
 	"transparent sprites",
