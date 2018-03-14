@@ -7,7 +7,7 @@
 @author Sean S. LeBlanc
 
 @description
-Prevents certain items from being picked up, but still triggers their dialog.
+Prevents certain items from being picked up or walked over, but still triggers their dialog.
 This allows them to be treated like sprites that can be placed multiple times.
 
 HOW TO USE:
