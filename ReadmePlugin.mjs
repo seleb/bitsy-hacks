@@ -1,12 +1,13 @@
 // a Very Bad readme generator
 "use strict";
 
-const doctrine = require("doctrine");
-var fs = require("fs");
+import doctrine from "doctrine";
+import fs from "fs";
 
-const ReadmePlugin = {
+export default {
 	headers: [],
 	plugin: function (options = {}) {
+		const self = this;
 		return {
 			// grab headers
 			transformBundle(code) {
@@ -17,7 +18,7 @@ const ReadmePlugin = {
 					return code;
 				}
 				const header = matches[matches.length - 1];
-				ReadmePlugin.headers.push(header);
+				self.headers.push(header);
 				return code;
 			}
 		};
@@ -98,5 +99,3 @@ then edit it to look like this:
 `);
 	}
 };
-
-module.exports = ReadmePlugin;

@@ -3,7 +3,7 @@
 // assuming the source doesn't have any other /**/ blocks,
 // this will be the header
 // this is hackier than it should be, but gets the job done for now
-module.exports = function (options = {}) {
+export default function () {
 	return {
 		transformBundle(code) {
 			const pattern = /^(\/\*[\S\s]*?\*\/)$/gm;
@@ -19,4 +19,4 @@ module.exports = function (options = {}) {
 			};
 		}
 	};
-};
+}
