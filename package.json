@@ -2,7 +2,7 @@
 	"name": "bitsy_hacks",
 	"description": "a collection of re-usable scripts for bitsy game maker",
 	"scripts": {
-		"build": "node build.js"
+		"build": "node --experimental-modules build.mjs"
 	},
 	"author": "Sean S. LeBlanc",
 	"repository": {

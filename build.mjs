@@ -1,12 +1,12 @@
-const rollup = require("rollup");
-const clear = require("rollup-plugin-clear");
-const eslint = require("rollup-plugin-eslint");
-const nodeResolve = require("rollup-plugin-node-resolve");
-const commonjs = require("rollup-plugin-commonjs");
+import rollup from "rollup";
+import clear from "rollup-plugin-clear";
+import eslint from "rollup-plugin-eslint";
+import nodeResolve from "rollup-plugin-node-resolve";
+import commonjs from "rollup-plugin-commonjs";
 
-const headerComment = require("./HeaderCommentPlugin");
-const topLevelOptions = require("./TopLevelOptionsPlugin");
-const readme = require("./ReadmePlugin");
+import headerComment from "./HeaderCommentPlugin";
+import topLevelOptions from "./TopLevelOptionsPlugin";
+import readme from "./ReadmePlugin";
 
 const inputDir = "./src/";
 const outputDir = "./dist/";
