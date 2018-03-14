@@ -34,11 +34,11 @@ import {
 } from "./kitsy-script-toolkit.js";
 
 inject('operatorMap.set("-", subExp);',
-	'operatorMap.set("!==", notEqExp);',
 	'operatorMap.set("&&", andExp);',
 	'operatorMap.set("||", orExp);',
 	'operatorMap.set("&&!", andNotExp);',
-	'operatorMap.set("||!", orNotExp);');
+	'operatorMap.set("||!", orNotExp);',
+	'operatorMap.set("!==", notEqExp);');
 inject('var operatorSymbols = ["-", "+", "/", "*", "<=", ">=", "<", ">", "=="];',
 	'operatorSymbols.unshift("!==", "&&", "||", "&&!", "||!");');
 
