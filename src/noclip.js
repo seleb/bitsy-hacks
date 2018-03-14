@@ -3,7 +3,7 @@
 @file noclip
 @summary walk through wall tiles, sprites, items, exits, and endings
 @license MIT
-@version 1.0.0
+@version 1.0.1
 @author Sean S. LeBlanc
 
 @description
@@ -20,10 +20,7 @@ import bitsy from "bitsy";
 var noClip = false;
 
 // save references to existing functions
-var _getSpriteLeft = bitsy.getSpriteLeft;
-var _getSpriteRight = bitsy.getSpriteRight;
-var _getSpriteUp = bitsy.getSpriteUp;
-var _getSpriteDown = bitsy.getSpriteDown;
+var _getSpriteAt = bitsy.getSpriteAt;
 var _isWallLeft = bitsy.isWallLeft;
 var _isWallRight = bitsy.isWallRight;
 var _isWallUp = bitsy.isWallUp;
@@ -36,10 +33,7 @@ var toggleNoClip = function () {
 	noClip = !noClip;
 	if (noClip) {
 		// disable functions
-		bitsy.getSpriteLeft =
-		bitsy.getSpriteRight =
-		bitsy.getSpriteUp =
-		bitsy.getSpriteDown =
+		bitsy.getSpriteAt =
 		bitsy.isWallLeft =
 		bitsy.isWallRight =
 		bitsy.isWallUp =
@@ -55,10 +49,7 @@ var toggleNoClip = function () {
 		console.log("noclip enabled");
 	} else {
 		// re-enable functions
-		bitsy.getSpriteLeft = _getSpriteLeft;
-		bitsy.getSpriteRight = _getSpriteRight;
-		bitsy.getSpriteUp = _getSpriteUp;
-		bitsy.getSpriteDown = _getSpriteDown;
+		bitsy.getSpriteAt = _getSpriteAt;
 		bitsy.isWallLeft = _isWallLeft;
 		bitsy.isWallRight = _isWallRight;
 		bitsy.isWallUp = _isWallUp;
