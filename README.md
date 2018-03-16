@@ -68,3 +68,8 @@ then edit it to look like this:
 
 </html>
 ```
+
+## Further reading
+- [Writing hacks with this repo's source code](https://github.com/seleb/bitsy-hacks/wiki)
+- [Claire Morley's "A Bitsy Tutorial"](http://www.clairemorleyart.com/a-bitsy-tutorial)
+- [Bitsy games!](https://itch.io/games/tag-bitsy)
