@@ -3,7 +3,7 @@
 @file end-from-dialog
 @summary trigger an ending from dialog, including narration text
 @license WTFPL (do WTF you want)
-@version 2.0.0
+@version 2.0.1
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
@@ -45,15 +45,15 @@ NOTE: This uses parentheses "()" instead of curly braces "{}" around function
 'use strict';
 import bitsy from "bitsy";
 import {
-	kitsyInit
+	before,
+	after,
+	inject
 } from "./kitsy-script-toolkit.js";
-
-var kitsy = kitsyInit();
 
 var queuedEndingNarration = null;
 
 // Hook into game load and rewrite custom functions in game data to Bitsy format.
-kitsy.before('load_game', function (game_data, startWithTitle) {
+before('load_game', function (game_data, startWithTitle) {
 	// Rewrite custom functions' parentheses to curly braces for Bitsy's
 	// interpreter. Unescape escaped parentheticals, too.
 	var fixedGameData = game_data
@@ -63,12 +63,12 @@ kitsy.before('load_game', function (game_data, startWithTitle) {
 });
 
 // Hook into the game reset and make sure queued ending data gets cleared.
-kitsy.after('clearGameData', function () {
+after('clearGameData', function () {
 	queuedEndingNarration = null;
 });
 
 // Hook into the dialog finish event; if there was an {end}, start the ending.
-kitsy.after('onExitDialog', function () {
+after('onExitDialog', function () {
 	if (!bitsy.isEnding && queuedEndingNarration) {
 		bitsy.startNarrating(queuedEndingNarration === true ? null : queuedEndingNarration, true);
 	}
@@ -91,7 +91,7 @@ bitsy.endNowFunc = function (environment, parameters, onReturn) {
 }
 
 // Rewrite the Bitsy script tag, making these new functions callable from dialog.
-kitsy.inject(
+inject(
 	'var functionMap = new Map();',
 	'functionMap.set("end", endFunc);',
 	'functionMap.set("endNow", endNowFunc);'

@@ -3,7 +3,7 @@
 @file external-game-data
 @summary separate Bitsy game data from your (modded) HTML for easier development
 @license WTFPL (do WTF you want)
-@version 2.0.0
+@version 2.0.1
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
@@ -42,14 +42,12 @@ NOTE: Chrome can only fetch external files when they're served from a
 'use strict';
 import bitsy from "bitsy";
 import {
-	kitsyInit
+	before
 } from "./kitsy-script-toolkit.js";
-
-var kitsy = kitsyInit();
 
 var ERR_MISSING_IMPORT = 1;
 
-kitsy.before('startExportedGame', function (done) {
+before('startExportedGame', function (done) {
 	var gameDataElem = document.getElementById('exportedGameData');
 
 	tryImportGameData(gameDataElem.text, function withGameData(err, importedData) {

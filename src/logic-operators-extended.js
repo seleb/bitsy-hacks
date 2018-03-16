@@ -2,7 +2,7 @@
 🔀
 @file logic-operators-extended
 @summary adds conditional logic operators
-@version 1.0.0
+@version 1.0.1
 @author @mildmojo
 
 @description
@@ -30,19 +30,16 @@ NOTE: The combining operators (&&, ||, &&!, ||!) have lower precedence than
 'use strict';
 import bitsy from "bitsy";
 import {
-	kitsyInit
+	inject
 } from "./kitsy-script-toolkit.js";
 
-var kitsy = kitsyInit();
-
-
-kitsy.inject('operatorMap.set("-", subExp);',
-	'operatorMap.set("!==", notEqExp);',
+inject('operatorMap.set("-", subExp);',
 	'operatorMap.set("&&", andExp);',
 	'operatorMap.set("||", orExp);',
 	'operatorMap.set("&&!", andNotExp);',
-	'operatorMap.set("||!", orNotExp);');
-kitsy.inject('var operatorSymbols = ["-", "+", "/", "*", "<=", ">=", "<", ">", "=="];',
+	'operatorMap.set("||!", orNotExp);',
+	'operatorMap.set("!==", notEqExp);');
+inject('var operatorSymbols = ["-", "+", "/", "*", "<=", ">=", "<", ">", "=="];',
 	'operatorSymbols.unshift("!==", "&&", "||", "&&!", "||!");');
 
 bitsy.andExp = function andExp(environment, left, right, onReturn) {
