@@ -172,8 +172,8 @@ function kitsyInit() {
 		before: before,
 		after: after,
 		queuedInjectScripts: [],
-		queuedBeforeScripts: [],
-		queuedAfterScripts: []
+		queuedBeforeScripts: {},
+		queuedAfterScripts: {}
 	};
 
 	var oldStartFunc = bitsy.startExportedGame;

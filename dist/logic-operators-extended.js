@@ -157,8 +157,8 @@ function kitsyInit() {
 		before: before,
 		after: after,
 		queuedInjectScripts: [],
-		queuedBeforeScripts: [],
-		queuedAfterScripts: []
+		queuedBeforeScripts: {},
+		queuedAfterScripts: {}
 	};
 
 	var oldStartFunc = bitsy.startExportedGame;
@@ -246,11 +246,11 @@ function _reinitEngine() {
 
 
 inject$1('operatorMap.set("-", subExp);',
-	'operatorMap.set("!==", notEqExp);',
 	'operatorMap.set("&&", andExp);',
 	'operatorMap.set("||", orExp);',
 	'operatorMap.set("&&!", andNotExp);',
-	'operatorMap.set("||!", orNotExp);');
+	'operatorMap.set("||!", orNotExp);',
+	'operatorMap.set("!==", notEqExp);');
 inject$1('var operatorSymbols = ["-", "+", "/", "*", "<=", ">=", "<", ">", "=="];',
 	'operatorSymbols.unshift("!==", "&&", "||", "&&!", "||!");');
 
