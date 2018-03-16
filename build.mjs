@@ -57,6 +57,7 @@ Promise.all([
 	"favicon-from-sprite",
 	"follower",
 	"gamepad input",
+	"javascript dialog",
 	"logic-operators-extended",
 	"noclip",
 	"permanent items",
