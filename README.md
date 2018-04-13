@@ -18,6 +18,7 @@ A collection of re-usable scripts for [Adam LeDoux](https://twitter.com/adamledo
  - 🎮 [gamepad input](/dist/gamepad%20input.js): HTML5 gamepad support
  - ☕ [javascript dialog](/dist/javascript%20dialog.js): execute arbitrary javascript from dialog
  - 🔀 [logic-operators-extended](/dist/logic-operators-extended.js): adds conditional logic operators
+ - 👨‍👨‍👧‍👧 [multi-sprite avatar](/dist/multi-sprite%20avatar.js): make the player big
  - 📎 [noclip](/dist/noclip.js): walk through wall tiles, sprites, items, exits, and endings
  - ⏳ [permanent items](/dist/permanent%20items.js): prevent some items from being picked up
  - 🛑 [solid items](/dist/solid%20items.js): treat some items like sprites that can be placed multiple times

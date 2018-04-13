@@ -59,6 +59,7 @@ Promise.all([
 	"gamepad input",
 	"javascript dialog",
 	"logic-operators-extended",
+	"multi-sprite avatar",
 	"noclip",
 	"permanent items",
 	"solid items",
