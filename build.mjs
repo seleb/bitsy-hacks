@@ -61,6 +61,7 @@ Promise.all([
 	"logic-operators-extended",
 	"multi-sprite avatar",
 	"noclip",
+	"online",
 	"permanent items",
 	"solid items",
 	"tracery processing",

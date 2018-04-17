@@ -20,6 +20,7 @@ A collection of re-usable scripts for [Adam LeDoux](https://twitter.com/adamledo
  - 🔀 [logic-operators-extended](/dist/logic-operators-extended.js): adds conditional logic operators
  - 👨‍👨‍👧‍👧 [multi-sprite avatar](/dist/multi-sprite%20avatar.js): make the player big
  - 📎 [noclip](/dist/noclip.js): walk through wall tiles, sprites, items, exits, and endings
+ - 🔄 [online](/dist/online.js): multiplayer bitsy
  - ⏳ [permanent items](/dist/permanent%20items.js): prevent some items from being picked up
  - 🛑 [solid items](/dist/solid%20items.js): treat some items like sprites that can be placed multiple times
  - 🏰 [tracery processing](/dist/tracery%20processing.js): process all dialog text with a tracery grammar
