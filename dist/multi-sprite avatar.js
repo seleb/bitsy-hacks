@@ -129,21 +129,6 @@ HOW TO USE:
   https://github.com/seleb/bitsy-hacks/wiki/Coding-with-kitsy
 */
 
-
-// Examples: inject('names.sprite.set( name, id );', 'console.dir(names)');
-//           inject('names.sprite.set( name, id );', 'console.dir(names);', 'console.dir(sprite);');
-//           inject('names.sprite.set( name, id );', ['console.dir(names)', 'console.dir(sprite);']);
-function inject$1(searchString, codeFragments) {
-	var kitsy = kitsyInit();
-	var args = [].slice.call(arguments);
-	codeFragments = flatten(args.slice(1));
-
-	kitsy.queuedInjectScripts.push({
-		searchString: searchString,
-		codeFragments: codeFragments
-	});
-}
-
 // Ex: before('load_game', function run() { alert('Loading!'); });
 //     before('show_text', function run(text) { return text.toUpperCase(); });
 //     before('show_text', function run(text, done) { done(text.toUpperCase()); });
@@ -168,9 +153,6 @@ function kitsyInit() {
 
 	// Initialize kitsy
 	bitsy.kitsy = {
-		inject: inject$1,
-		before: before,
-		after: after,
 		queuedInjectScripts: [],
 		queuedBeforeScripts: {},
 		queuedAfterScripts: {}

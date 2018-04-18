@@ -169,9 +169,6 @@ function kitsyInit() {
 
 	// Initialize kitsy
 	bitsy.kitsy = {
-		inject: inject$1,
-		before: before,
-		after: after,
 		queuedInjectScripts: [],
 		queuedBeforeScripts: {},
 		queuedAfterScripts: {}

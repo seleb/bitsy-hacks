@@ -147,13 +147,6 @@ function before(targetFuncName, beforeFn) {
 	kitsy.queuedBeforeScripts[targetFuncName].push(beforeFn);
 }
 
-// Ex: after('load_game', function run() { alert('Loaded!'); });
-function after(targetFuncName, afterFn) {
-	var kitsy = kitsyInit();
-	kitsy.queuedAfterScripts[targetFuncName] = kitsy.queuedAfterScripts[targetFuncName] || [];
-	kitsy.queuedAfterScripts[targetFuncName].push(afterFn);
-}
-
 function kitsyInit() {
 	// return already-initialized kitsy
 	if (bitsy.kitsy) {
@@ -162,9 +155,6 @@ function kitsyInit() {
 
 	// Initialize kitsy
 	bitsy.kitsy = {
-		inject: inject$1,
-		before: before,
-		after: after,
 		queuedInjectScripts: [],
 		queuedBeforeScripts: {},
 		queuedAfterScripts: {}
