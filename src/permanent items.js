@@ -3,7 +3,7 @@
 @file permanent items
 @summary prevent some items from being picked up
 @license MIT
-@version 1.0.0
+@version 2.0.0
 @author Sean S. LeBlanc
 
 @description
@@ -14,6 +14,10 @@ HOW TO USE:
 2. Update the `itemIsPermanent` function below to match your needs
 */
 import bitsy from "bitsy";
+import {
+	before,
+	after
+} from "./kitsy-script-toolkit";
 
 var hackOptions = {
 	itemIsPermanent: function (item) {
@@ -24,18 +28,37 @@ var hackOptions = {
 	}
 };
 
-var _onInventoryChanged = bitsy.onInventoryChanged;
-bitsy.onInventoryChanged = function(itemId) {
-	if(_onInventoryChanged){
-		_onInventoryChanged.apply(this, arguments);
+var room;
+var oldItems;
+before("movePlayer", function () {
+	room = bitsy.room[bitsy.curRoom];
+	oldItems = room.items.slice();
+});
+after("movePlayer", function () {
+	var newItems = room.items;
+	if (newItems.length === oldItems.length) {
+		return; // nothing changed
 	}
-	// if a permanent item is picked up, immediately add another instance
-	// to replace the one that was just picked up
-	if(hackOptions.itemIsPermanent(bitsy.item[itemId])){
-		bitsy.room[bitsy.curRoom].items.push({
-			id: itemId,
-			x: bitsy.player().x,
-			y: bitsy.player().y
-		});
+
+	// check for changes
+	for (var i = 0; i < oldItems.length; ++i) {
+		if (!newItems[i] ||
+			oldItems[i].x !== newItems[i].x ||
+			oldItems[i].y !== newItems[i].y ||
+			oldItems[i].id !== newItems[i].id
+		) {
+			// something changed
+			if (hackOptions.itemIsPermanent(bitsy.item[oldItems[i].id])) {
+				// put that back!
+				newItems.splice(i, 0, oldItems[i]);
+			} else {
+				// add an empty entry for now to keep the arrays aligned
+				newItems.splice(i, 0, null);
+			}
+		}
 	}
-};
+	// clear out those empty entries
+	room.items = newItems.filter(function (item) {
+		return !!item;
+	});
+});
