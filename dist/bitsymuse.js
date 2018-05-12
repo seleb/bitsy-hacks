@@ -298,14 +298,14 @@ function changeMusic(newMusic) {
 	}
 
 	if (currentMusic === undefined) {
-		document.getElementById(NewMusic).play();
-		currentMusic = NewMusic;
+		document.getElementById(newMusic).play();
+		currentMusic = newMusic;
 	} else {
-		if (currentMusic !== 'S'&& CurrentMusic) {
-			document.getElementById(CurrentMusic).pause();
-			document.getElementById(CurrentMusic).currentTime = 0.0;
+		if (currentMusic !== 'S'&& currentMusic) {
+			document.getElementById(currentMusic).pause();
+			document.getElementById(currentMusic).currentTime = 0.0;
 		}
-		document.getElementById(NewMusic).play();
+		document.getElementById(newMusic).play();
 		currentMusic = newMusic;
 	}
 
