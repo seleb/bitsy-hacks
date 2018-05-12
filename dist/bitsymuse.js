@@ -1,5 +1,5 @@
 /**
-😁
+😌
 @file bitsymuse
 @summary A variety of Bitsy sound and music handlers
 @license MIT
@@ -293,7 +293,7 @@ function changeMusic(newMusic) {
 			document.getElementById(currentMusic).pause();
 			document.getElementById(currentMusic).currentTime = 0.0;
 		}
-		currentMusic = NewMusic;
+		currentMusic = newMusic;
 		return;
 	}
 
@@ -301,18 +301,18 @@ function changeMusic(newMusic) {
 		document.getElementById(NewMusic).play();
 		currentMusic = NewMusic;
 	} else {
-		if (currentMusic != 'S'&& CurrentMusic) {
+		if (currentMusic !== 'S'&& CurrentMusic) {
 			document.getElementById(CurrentMusic).pause();
 			document.getElementById(CurrentMusic).currentTime = 0.0;
 		}
 		document.getElementById(NewMusic).play();
-		CurrentMusic = NewMusic;
+		currentMusic = newMusic;
 	}
 
 }
 
 after('drawRoom', function () {
-	if (roomMusicFlag != bitsy.curRoom) {	
+	if (roomMusicFlag !== bitsy.curRoom) {	
 		changeMusic(hackOptions.musicByRoom[bitsy.curRoom]);
 		roomMusicFlag = bitsy.curRoom;
 	}
