@@ -4,6 +4,7 @@ A collection of re-usable scripts for [Adam LeDoux](https://twitter.com/adamledo
 
 ## contents
  - 🔈 [basic sfx](/dist/basic%20sfx.js): "walk" and "talk" sound effect support
+ - 😌 [bitsymuse](/dist/bitsymuse.js): A variety of Bitsy sound and music handlers
  - 😴 [canvas replacement](/dist/canvas%20replacement.js): WebGLazy bitsy integration (this one's mostly just for me)
  - ➿ [corrupt](/dist/corrupt.js): corrupts gamedata at runtime
  - 🅰 [custom font](https://seleb.github.io/bitsy-hacks/custom%20font/custom%20font%20-%20converter.html): change the bitsy font
