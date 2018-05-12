@@ -1,4 +1,4 @@
-import rollup from "rollup";
+﻿import rollup from "rollup";
 import clear from "rollup-plugin-clear";
 import eslint from "rollup-plugin-eslint";
 import nodeResolve from "rollup-plugin-node-resolve";
@@ -46,6 +46,7 @@ function build(src) {
 
 Promise.all([
 	"basic sfx",
+	"bitsymuse",
 	"canvas replacement",
 	"corrupt",
 	"custom text effect",
