@@ -1,4 +1,5 @@
 /**
+😁
 @file bitsymuse
 @summary A variety of Bitsy sound and music handlers
 @license MIT
@@ -77,29 +78,29 @@ function changeMusic(newMusic) {
 	}
 	
 	if (newMusic === currentMusic) {
-        return;
-    }
+		return;
+	}
 
-    if (newMusic === 'S') {
-        if (currentMusic !== 'S' && currentMusic) {
+	if (newMusic === 'S') {
+		if (currentMusic !== 'S' && currentMusic) {
 			document.getElementById(currentMusic).pause();
 			document.getElementById(currentMusic).currentTime = 0.0;
 		}
-        currentMusic = NewMusic;
-        return;
-    }
+		currentMusic = NewMusic;
+		return;
+	}
 
 	if (currentMusic === undefined) {
-        document.getElementById(NewMusic).play();
-        currentMusic = NewMusic;
-    } else {
-        if (currentMusic != 'S'&& CurrentMusic) {
+		document.getElementById(NewMusic).play();
+		currentMusic = NewMusic;
+	} else {
+		if (currentMusic != 'S'&& CurrentMusic) {
 			document.getElementById(CurrentMusic).pause();
 			document.getElementById(CurrentMusic).currentTime = 0.0;
 		}
-        document.getElementById(NewMusic).play();
-        CurrentMusic = NewMusic;
-    }
+		document.getElementById(NewMusic).play();
+		CurrentMusic = NewMusic;
+	}
 
 }
 
