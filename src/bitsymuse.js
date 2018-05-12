@@ -1,6 +1,5 @@
 /**
-ðŸšª
-@file Bitsymuse
+@file bitsymuse
 @summary A variety of Bitsy sound and music handlers
 @license MIT
 @version 1.0.0
@@ -8,18 +7,18 @@
 @author David Mowatt
 
 @description
-A hack that a variety of audio controlls, including music that changes as you move between rooms.
+A hack that a variety of audio controls, including music that changes as you move between rooms.
 If the same song is played as you move between rooms, the audio file will continue playing.
 
 HOW TO USE:
 1. Place your audio files somewhere relative to your bitsy html file (in the zip if you're uploading to itch.io)
 2. Copy-paste `<audio id="<sound ID>" src="<relative path to sound file>"></audio>` into the <head> of your document.
    You need to do it once for each sound file you are adding, and each needs a unique sound ID. Add "loop" after the src=""
-   tag if it's music tha's going to loop (so `<audio id ="<sound id> src="<path>" loop></audio>
-3. See var hackOptions below to set up the TRACK LIST for rooms you move through.
-4. Copy-paste this script into a script tag after the bitsy source.
+   tag if it's music that's going to loop (so `<audio id ="<sound id> src="<path>" loop></audio>
+3. Copy-paste this script into a script tag after the bitsy source.
+4. Edit hackOptions below to set up the TRACK LIST for rooms you move through.
 
-In addition to the track list, that will play audio based on the room number, you have access to the following
+In addition to the track list, which will play audio based on the room number, you have access to the following
 commands you can add to dialogue:
 
 1. soundeffect ("<sound ID>") will play a sound without interrupting the music
@@ -29,6 +28,8 @@ commands you can add to dialogue:
 You can call both music and musicEnd in the same dialogue, to e.g. change the music while you speak to a character
 and then restart the regular room music once you stop speaking to them. "S" can be used as a sound ID for music
 and musicEnd to Silence the music.
+
+Whenever music tracks are changed they automatically restart from the beginning if you go back to a previous track.
 
 */
 
@@ -41,58 +42,60 @@ import {
 } from "./kitsy-script-toolkit.js";
 
 var hackOptions = {
-    MusicByRoom: {
-	0: 'song ID',
-	1: 'song ID',
-    }
-    //You need to put an entry in this list for every ROOM NUMBER that is accessible by the player,
-    //and then specify the song ID for each room. Expand this list to as many rooms as you need.
+	musicByRoom: {
+		0: 'song ID',
+		1: 'S', // This room is silent - it will stop music when you enter
+		2: 'another song ID',
+		'room ID': 'third song ID'
+	}
+	//You need to put an entry in this list for every ROOM NUMBER that is accessible by the player,
+	//and then specify the song ID for each room. Expand this list to as many rooms as you need.
 	//If the player moves between rooms with the same audio ID the music keeps playing seamlessly.
 	//Undefined rooms will keep playing whatever music they were last playing
-    //You may add a song ID of 'S' to make a room fall silent.
+	//You may add a song ID of 'S' to make a room fall silent.
 };
 
-var CurrentMusic;
+var currentMusic;
 
-var RoomMusicFlag = null;
+var roomMusicFlag = null;
 
 
-function PlaySound(SoundParam) {
+function playSound(soundParam) {
 
-	if (!SoundParam) {
-		return
+	if (!soundParam) {
+		return;
 	}
 	
-	document.getElementById(SoundParam).play();
+	document.getElementById(soundParam).play();
 
 }
 
-function ChangeMusic(NewMusic) {
+function changeMusic(newMusic) {
 
-	if (!NewMusic) {
-		return
+	if (!newMusic) {
+		return;
 	}
 	
-	if (NewMusic == CurrentMusic) {
-        return
+	if (newMusic === currentMusic) {
+        return;
     }
 
-    if (NewMusic == 'S') {
-        if (CurrentMusic != 'S' && CurrentMusic) {
-				document.getElementById(CurrentMusic).pause();
-				document.getElementById(CurrentMusic).currentTime = 0.0;
+    if (newMusic === 'S') {
+        if (currentMusic !== 'S' && currentMusic) {
+			document.getElementById(currentMusic).pause();
+			document.getElementById(currentMusic).currentTime = 0.0;
 		}
-        CurrentMusic = NewMusic;
-        return
+        currentMusic = NewMusic;
+        return;
     }
 
-	if (CurrentMusic == undefined) {
+	if (currentMusic === undefined) {
         document.getElementById(NewMusic).play();
-        CurrentMusic = NewMusic;
+        currentMusic = NewMusic;
     } else {
-        if (CurrentMusic != 'S'&& CurrentMusic) {
-				document.getElementById(CurrentMusic).pause();
-				document.getElementById(CurrentMusic).currentTime = 0.0;
+        if (currentMusic != 'S'&& CurrentMusic) {
+			document.getElementById(CurrentMusic).pause();
+			document.getElementById(CurrentMusic).currentTime = 0.0;
 		}
         document.getElementById(NewMusic).play();
         CurrentMusic = NewMusic;
@@ -101,9 +104,9 @@ function ChangeMusic(NewMusic) {
 }
 
 after('drawRoom', function () {
-	if (RoomMusicFlag != curRoom) {	
-		ChangeMusic(hackOptions.MusicByRoom[curRoom]);
-		RoomMusicFlag = curRoom;
+	if (roomMusicFlag != bitsy.curRoom) {	
+		changeMusic(hackOptions.musicByRoom[bitsy.curRoom]);
+		roomMusicFlag = bitsy.curRoom;
 	}
 });
 
@@ -127,10 +130,10 @@ after('clearGameData', function () {
 	queuedMusic = null;
 });
 
-// Hook into the dialog finish event; if there was an {musicEnd}, play it now.
+// Hook into the dialog finish event; if there was a {musicEnd}, play it now.
 after('onExitDialog', function () {
 	if (queuedMusic) {
-		ChangeMusic(queuedMusic);
+		changeMusic(queuedMusic);
 		queuedMusic = null;
 	}
 });
@@ -143,7 +146,7 @@ bitsy.musicFunc = function (environment, parameters, onReturn) {
 		return;
 	}
 
-	ChangeMusic(musicParams);
+	changeMusic(musicParams);
 	onReturn(null);
 }
 
@@ -161,7 +164,7 @@ bitsy.soundeffectFunc = function (environment, parameters, onReturn) {
 		return;
 	}
 	
-	PlaySound(soundParams);
+	playSound(soundParams);
 	onReturn(null);
 }
 
