@@ -19,8 +19,8 @@ HOW TO USE:
 3. Copy-paste this script into a script tag after the bitsy source.
 4. Edit hackOptions below to set up the TRACK LIST for rooms you move through.
 
-In addition to the track list, which will play audio based on the room number, you have access to the following
-commands you can add to dialogue:
+In addition to the track list, which will play audio based on the room number/name,
+you have access to the following commands you can add to dialogue:
 
 1. (soundeffect "<sound ID>") will play a sound without interrupting the music
 2. (music "<sound ID>?) will change the music as soon as it is called in the dialogue
@@ -79,50 +79,44 @@ after('load_game', function () {
 
 
 function playSound(soundParam) {
-
 	if (!soundParam) {
 		return;
 	}
-	
 	document.getElementById(soundParam).play();
-
 }
 
 function changeMusic(newMusic) {
-
-	if (!newMusic) {
-		return;
-	}
-	
-	if (newMusic === currentMusic) {
+	// if we didn't get new music,
+	// or the music didn't change,
+	// there's no work to be done
+	if (!newMusic || newMusic === currentMusic) {
 		return;
 	}
 
+	// special case: silence currently playing music
+	// and don't start anything new
 	if (newMusic === 'S') {
-		if (currentMusic !== 'S' && currentMusic) {
+		if (currentMusic) {
 			document.getElementById(currentMusic).pause();
 			document.getElementById(currentMusic).currentTime = 0.0;
 		}
-		currentMusic = newMusic;
+		currentMusic = undefined;
 		return;
 	}
 
-	if (currentMusic === undefined) {
-		document.getElementById(newMusic).play();
-		currentMusic = newMusic;
-	} else {
-		if (currentMusic !== 'S'&& currentMusic) {
-			document.getElementById(currentMusic).pause();
-			document.getElementById(currentMusic).currentTime = 0.0;
-		}
-		document.getElementById(newMusic).play();
-		currentMusic = newMusic;
+	// stop old music
+	if (currentMusic) {
+		document.getElementById(currentMusic).pause();
+		document.getElementById(currentMusic).currentTime = 0.0;
 	}
 
+	// start new music
+	document.getElementById(newMusic).play();
+	currentMusic = newMusic;
 }
 
 after('drawRoom', function () {
-	if (roomMusicFlag !== bitsy.curRoom) {	
+	if (roomMusicFlag !== bitsy.curRoom) {
 		changeMusic(hackOptions.musicByRoom[bitsy.curRoom]);
 		roomMusicFlag = bitsy.curRoom;
 	}
@@ -181,7 +175,7 @@ bitsy.soundeffectFunc = function (environment, parameters, onReturn) {
 	if (!soundParams) {
 		return;
 	}
-	
+
 	playSound(soundParams);
 	onReturn(null);
 }
