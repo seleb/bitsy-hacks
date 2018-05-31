@@ -22,9 +22,9 @@ HOW TO USE:
 In addition to the track list, which will play audio based on the room number, you have access to the following
 commands you can add to dialogue:
 
-1. soundeffect ("<sound ID>") will play a sound without interrupting the music
-2. music ("<sound ID>?) will change the music as soon as it is called in the dialogue
-3. musicEnd ("<sound ID>") will change the music once the dialogue box closes
+1. (soundeffect "<sound ID>") will play a sound without interrupting the music
+2. (music "<sound ID>?) will change the music as soon as it is called in the dialogue
+3. (musicEnd "<sound ID>") will change the music once the dialogue box closes
 
 You can call both music and musicEnd in the same dialogue, to e.g. change the music while you speak to a character
 and then restart the regular room music once you stop speaking to them. "S" can be used as a sound ID for music
