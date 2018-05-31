@@ -80,7 +80,7 @@ after('load_game', function () {
 var audioCache = {};
 
 function getAudio(id) {
-	var el = audioCache[id] || audioCache[id] = document.getElementById(id);
+	var el = audioCache[id] || (audioCache[id] = document.getElementById(id));
 	if (!el) {
 		throw new Error("bitsymuse tried to use audio with id '" + id + "' but couldn't find one on the page!");
 	}
