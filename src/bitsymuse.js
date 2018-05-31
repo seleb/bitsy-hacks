@@ -48,9 +48,10 @@ var hackOptions = {
 		0: 'song ID',
 		1: 'S', // This room is silent - it will stop music when you enter
 		2: 'another song ID',
-		'room ID': 'third song ID'
+		h: 'a song ID for a room with a non-numeric ID',
+		'my room': 'a song ID for a room with a user-defined name'
 	}
-	//You need to put an entry in this list for every ROOM NUMBER that is accessible by the player,
+	//You need to put an entry in this list for every room ID or name that is accessible by the player,
 	//and then specify the song ID for each room. Expand this list to as many rooms as you need.
 	//If the player moves between rooms with the same audio ID the music keeps playing seamlessly.
 	//Undefined rooms will keep playing whatever music they were last playing
