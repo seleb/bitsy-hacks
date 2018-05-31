@@ -58,6 +58,7 @@ var hackOptions = {
 	// If the player moves between rooms with the same audio ID the music keeps playing seamlessly.
 	// Undefined rooms will keep playing whatever music they were last playing
 	silenceId: 'S', // Use this song ID of to make a room fall silent.
+	resume: false, // If true, songs will pause/resume on change; otherwise, they'll stop/play (doesn't affect sound effects)
 };
 
 var currentMusic;
@@ -98,7 +99,9 @@ function changeMusic(newMusic) {
 	if (newMusic === hackOptions.silenceId) {
 		if (currentMusic) {
 			document.getElementById(currentMusic).pause();
-			document.getElementById(currentMusic).currentTime = 0.0;
+			if (!hackOptions.resume) {
+				document.getElementById(currentMusic).currentTime = 0.0;
+			}
 		}
 		currentMusic = undefined;
 		return;
@@ -107,7 +110,9 @@ function changeMusic(newMusic) {
 	// stop old music
 	if (currentMusic) {
 		document.getElementById(currentMusic).pause();
-		document.getElementById(currentMusic).currentTime = 0.0;
+		if (!hackOptions.resume) {
+			document.getElementById(currentMusic).currentTime = 0.0;
+		}
 	}
 
 	// start new music
