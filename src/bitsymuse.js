@@ -36,7 +36,9 @@ Whenever music tracks are changed they automatically restart from the beginning 
 
 'use strict';
 import bitsy from "bitsy";
-import { getRoom } from "./utils.js";
+import {
+	getRoom
+} from "./utils.js";
 import {
 	before,
 	after,
@@ -64,15 +66,15 @@ var roomMusicFlag = null;
 
 // expand the map to include ids of rooms listed by name
 after('load_game', function () {
-var room;
-for(var i in hackOptions.musicByRoom) {
-	if(hackOptions.musicByRoom.hasOwnProperty(i)) {
-		room = getRoom(i);
-		if (room) {
-			hackOptions.musicByRoom[room.id] = hackOptions.musicByRoom[i];
+	var room;
+	for (var i in hackOptions.musicByRoom) {
+		if (hackOptions.musicByRoom.hasOwnProperty(i)) {
+			room = getRoom(i);
+			if (room) {
+				hackOptions.musicByRoom[room.id] = hackOptions.musicByRoom[i];
+			}
 		}
 	}
-}
 });
 
 
