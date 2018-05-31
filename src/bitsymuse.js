@@ -103,20 +103,6 @@ function changeMusic(newMusic) {
 		return;
 	}
 
-	// special case: silence currently playing music
-	// and don't start anything new
-	if (newMusic === hackOptions.silenceId) {
-		if (currentMusic) {
-			audio = getAudio(currentMusic);
-			audio.pause();
-			if (!hackOptions.resume) {
-				audio.currentTime = 0.0;
-			}
-		}
-		currentMusic = undefined;
-		return;
-	}
-
 	// stop old music
 	if (currentMusic) {
 		audio = getAudio(currentMusic);
@@ -127,8 +113,12 @@ function changeMusic(newMusic) {
 	}
 
 	// start new music
-	document.getElementById(newMusic).play();
 	currentMusic = newMusic;
+	// special case: don't start anything new
+	if (newMusic === hackOptions.silenceId) {
+		return;
+	}
+	getAudio(newMusic).play();
 }
 
 after('drawRoom', function () {
