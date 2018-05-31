@@ -4,6 +4,8 @@
 @author Sean S. LeBlanc
 */
 
+import bitsy from "bitsy";
+
 /*helper used to inject code into script tags based on a search string*/
 export function inject(searchString, codeToInject) {
 	var args = [].slice.call(arguments);
@@ -61,6 +63,16 @@ export function getImage(name, map) {
 		return map[e].name == name;
 	});
 	return map[id];
+}
+
+/**
+ * Helper for getting room by name or id
+ * @param {string} name id or name of room to return
+ * @return {string} room, or undefined if it doesn't exist
+ */
+export function getRoom(name) {
+	var id = bitsy.room.hasOwnProperty(name) ? name : bitsy.names.room.get(name);
+	return bitsy.room[id];
 }
 
 /**
