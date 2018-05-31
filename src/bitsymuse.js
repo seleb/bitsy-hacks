@@ -104,7 +104,7 @@ function changeMusic(newMusic) {
 	}
 
 	// stop old music
-	if (currentMusic) {
+	if (currentMusic && currentMusic !== hackOptions.silenceId) {
 		audio = getAudio(currentMusic);
 		audio.pause();
 		if (!hackOptions.resume) {
