@@ -8,14 +8,14 @@
 @author David Mowatt
 
 @description
-A hack that a variety of audio controls, including music that changes as you move between rooms.
+A hack that adds a variety of audio controls, including music that changes as you move between rooms.
 If the same song is played as you move between rooms, the audio file will continue playing.
 
 HOW TO USE:
 1. Place your audio files somewhere relative to your bitsy html file (in the zip if you're uploading to itch.io)
-2. Copy-paste `<audio id="<sound ID>" src="<relative path to sound file>"></audio>` into the <head> of your document.
-   You need to do it once for each sound file you are adding, and each needs a unique sound ID. Add "loop" after the src=""
-   tag if it's music that's going to loop (so `<audio id ="<sound id> src="<path>" loop></audio>
+2. Copy-paste `<audio id="sound ID" src="relative path to sound file"></audio>` into the <head> of your document.
+   You need to do it once for each sound file you are adding, and each needs a unique sound ID. Add `loop` after the `src=""`
+   tag if it's music that's going to loop (e.g. `<audio id="sound ID" src="./mySong.mp3" loop></audio>`)
 3. Copy-paste this script into a script tag after the bitsy source.
 4. Edit hackOptions below to set up the TRACK LIST for rooms you move through.
 
@@ -23,15 +23,15 @@ In addition to the track list, which will play audio based on the room number/na
 you have access to the following commands you can add to dialogue:
 
 1. (soundeffect "<sound ID>") will play a sound without interrupting the music
-2. (music "<sound ID>?) will change the music as soon as it is called in the dialogue
+2. (music "<sound ID>") will change the music as soon as it is called in the dialogue
 3. (musicEnd "<sound ID>") will change the music once the dialogue box closes
 
 You can call both music and musicEnd in the same dialogue, to e.g. change the music while you speak to a character
-and then restart the regular room music once you stop speaking to them. "S" can be used as a sound ID for music
-and musicEnd to Silence the music.
+and then restart the regular room music once you stop speaking to them.
+You can also use a special ID ("S" by default) to Silence the music.
 
-Whenever music tracks are changed they automatically restart from the beginning if you go back to a previous track.
-
+By default, music tracks automatically restart from the beginning if you go back to a previous track.
+This can also be changed in the hackOptions below.
 */
 
 'use strict';
@@ -46,6 +46,10 @@ import {
 } from "./kitsy-script-toolkit.js";
 
 var hackOptions = {
+	// You need to put an entry in this list for every room ID or name that is accessible by the player,
+	// and then specify the song ID for each room. Expand this list to as many rooms as you need.
+	// If the player moves between rooms with the same audio ID the music keeps playing seamlessly.
+	// Undefined rooms will keep playing whatever music they were last playing
 	musicByRoom: {
 		0: 'song ID',
 		1: 'S', // This room is silent - it will stop music when you enter (see `silenceId` below)
@@ -53,16 +57,11 @@ var hackOptions = {
 		h: 'a song ID for a room with a non-numeric ID',
 		'my room': 'a song ID for a room with a user-defined name'
 	},
-	// You need to put an entry in this list for every room ID or name that is accessible by the player,
-	// and then specify the song ID for each room. Expand this list to as many rooms as you need.
-	// If the player moves between rooms with the same audio ID the music keeps playing seamlessly.
-	// Undefined rooms will keep playing whatever music they were last playing
 	silenceId: 'S', // Use this song ID of to make a room fall silent.
 	resume: false, // If true, songs will pause/resume on change; otherwise, they'll stop/play (doesn't affect sound effects)
 };
 
 var currentMusic;
-
 var roomMusicFlag = null;
 
 // expand the map to include ids of rooms listed by name
@@ -77,7 +76,6 @@ after('load_game', function () {
 		}
 	}
 });
-
 
 function playSound(soundParam) {
 	if (!soundParam) {
@@ -205,6 +203,4 @@ function _getMusicParams(musicFuncName, parameters) {
 
 	return trackName;
 }
-
-
 // End of (music) dialog function mod
