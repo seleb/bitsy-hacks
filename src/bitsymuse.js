@@ -77,14 +77,25 @@ after('load_game', function () {
 	}
 });
 
+var audioCache = {};
+
+function getAudio(id) {
+	var el = audioCache[id] || audioCache[id] = document.getElementById(id);
+	if (!el) {
+		throw new Error("bitsymuse tried to use audio with id '" + id + "' but couldn't find one on the page!");
+	}
+	return el;
+}
+
 function playSound(soundParam) {
 	if (!soundParam) {
 		return;
 	}
-	document.getElementById(soundParam).play();
+	getAudio(soundParam).play();
 }
 
 function changeMusic(newMusic) {
+	var audio;
 	// if we didn't get new music,
 	// or the music didn't change,
 	// there's no work to be done
@@ -96,9 +107,10 @@ function changeMusic(newMusic) {
 	// and don't start anything new
 	if (newMusic === hackOptions.silenceId) {
 		if (currentMusic) {
-			document.getElementById(currentMusic).pause();
+			audio = getAudio(currentMusic);
+			audio.pause();
 			if (!hackOptions.resume) {
-				document.getElementById(currentMusic).currentTime = 0.0;
+				audio.currentTime = 0.0;
 			}
 		}
 		currentMusic = undefined;
@@ -107,9 +119,10 @@ function changeMusic(newMusic) {
 
 	// stop old music
 	if (currentMusic) {
-		document.getElementById(currentMusic).pause();
+		audio = getAudio(currentMusic);
+		audio.pause();
 		if (!hackOptions.resume) {
-			document.getElementById(currentMusic).currentTime = 0.0;
+			audio.currentTime = 0.0;
 		}
 	}
 
