@@ -113,7 +113,7 @@ function flatten(list) {
 
 @description
 HOW TO USE:
-  import {before, after, inject} from "./kitsy-script-toolkit.js";
+  import {before, after, inject} from "./helpers/kitsy-script-toolkit";
 
   before(targetFuncName, beforeFn);
   after(targetFuncName, afterFn);
@@ -257,10 +257,7 @@ before("load_game", function (game_data, startWithTitle) {
 // Rewrite the Bitsy script tag, making these new functions callable from dialog.
 inject$1(
 	"var functionMap = new Map();",
-	"functionMap.set('js', " + function (environment, parameters, onReturn) {
-		eval(parameters[0]);
-		onReturn(null);
-	}.toString() + ");"
+	"functionMap.set('js', function (environment, parameters, onReturn) { eval(parameters[0]); onReturn(null); });"
 );
 
 }(window));

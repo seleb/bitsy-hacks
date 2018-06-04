@@ -120,7 +120,7 @@ function flatten(list) {
 
 @description
 HOW TO USE:
-  import {before, after, inject} from "./kitsy-script-toolkit.js";
+  import {before, after, inject} from "./helpers/kitsy-script-toolkit";
 
   before(targetFuncName, beforeFn);
   after(targetFuncName, afterFn);
