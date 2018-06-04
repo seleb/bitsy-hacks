@@ -41,12 +41,13 @@ export function inject(searchString, codeToInject) {
 }
 
 /*helper for exposing getter/setter for private vars*/
+var indirectEval = eval;
 export function expose(target) {
 	var code = target.toString();
 	code = code.substring(0, code.lastIndexOf("}"));
 	code += "this.get = function(name) {return eval(name);};";
 	code += "this.set = function(name, value) {eval(name+'=value');};";
-	return eval("[" + code + "}]")[0];
+	return indirectEval("[" + code + "}]")[0];
 }
 
 /*

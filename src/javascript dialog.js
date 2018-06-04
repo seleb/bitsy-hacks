@@ -55,8 +55,5 @@ before("load_game", function (game_data, startWithTitle) {
 // Rewrite the Bitsy script tag, making these new functions callable from dialog.
 inject(
 	"var functionMap = new Map();",
-	"functionMap.set('js', " + function (environment, parameters, onReturn) {
-		eval(parameters[0]);
-		onReturn(null);
-	}.toString() + ");"
+	"functionMap.set('js', function (environment, parameters, onReturn) { eval(parameters[0]); onReturn(null); });"
 );
