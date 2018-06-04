@@ -49,7 +49,7 @@ import {
 	before,
 	after,
 	inject
-} from "./kitsy-script-toolkit.js";
+} from "./helpers/kitsy-script-toolkit";
 
 var queuedDialogExit = null;
 

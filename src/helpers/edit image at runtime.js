@@ -21,7 +21,7 @@ e.g. the default player is:
 import bitsy from "bitsy";
 import {
 	getImage
-} from "./utils.js";
+} from "./utils";
 
 export {
 	getImage

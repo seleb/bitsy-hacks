@@ -17,7 +17,7 @@ import bitsy from "bitsy";
 import {
 	before,
 	after
-} from "./kitsy-script-toolkit";
+} from "./helpers/kitsy-script-toolkit";
 
 var hackOptions = {
 	itemIsPermanent: function (item) {

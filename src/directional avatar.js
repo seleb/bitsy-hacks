@@ -17,7 +17,7 @@ import bitsy from "bitsy";
 import {
 	getSpriteData,
 	setSpriteData
-} from "./edit image at runtime.js";
+} from "./helpers/edit image at runtime";
 
 var hackOptions = {
 	// If `horizontalFlipAllowed` is true:

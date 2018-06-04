@@ -31,7 +31,7 @@ NOTE: The combining operators (&&, ||, &&!, ||!) have lower precedence than
 import bitsy from "bitsy";
 import {
 	inject
-} from "./kitsy-script-toolkit.js";
+} from "./helpers/kitsy-script-toolkit";
 
 inject('operatorMap.set("-", subExp);',
 	'operatorMap.set("&&", andExp);',

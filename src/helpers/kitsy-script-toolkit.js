@@ -9,7 +9,7 @@
 
 @description
 HOW TO USE:
-  import {before, after, inject} from "./kitsy-script-toolkit.js";
+  import {before, after, inject} from "./helpers/kitsy-script-toolkit";
 
   before(targetFuncName, beforeFn);
   after(targetFuncName, afterFn);
@@ -23,7 +23,7 @@ import {
 	unique,
 	flatten,
 	inject as utilsInject
-} from "./utils.js";
+} from "./utils";
 
 
 // Examples: inject('names.sprite.set( name, id );', 'console.dir(names)');

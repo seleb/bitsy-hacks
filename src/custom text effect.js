@@ -49,7 +49,7 @@ A number of example effects are included
 import bitsy from "bitsy";
 import {
 	inject
-} from "./utils.js";
+} from "./helpers/utils";
 
 var hackOptions = {
 	"my-effect": function () {

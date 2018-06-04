@@ -38,12 +38,12 @@ This can also be changed in the hackOptions below.
 import bitsy from "bitsy";
 import {
 	getRoom
-} from "./utils.js";
+} from "./helpers/utils";
 import {
 	before,
 	after,
 	inject
-} from "./kitsy-script-toolkit.js";
+} from "./helpers/kitsy-script-toolkit";
 
 var hackOptions = {
 	// You need to put an entry in this list for every room ID or name that is accessible by the player,

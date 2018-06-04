@@ -40,7 +40,7 @@ NOTE: This uses parentheses "()" instead of curly braces "{}" around function
 import {
 	before,
 	inject
-} from "./kitsy-script-toolkit.js";
+} from "./helpers/kitsy-script-toolkit";
 
 // Hook into game load and rewrite custom functions in game data to Bitsy format.
 before("load_game", function (game_data, startWithTitle) {

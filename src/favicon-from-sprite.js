@@ -21,7 +21,7 @@ HOW TO USE:
 import bitsy from "bitsy";
 import {
 	after
-} from "./kitsy-script-toolkit.js";
+} from "./helpers/kitsy-script-toolkit";
 
 // CONFIGURATION FOR FAVICON
 var hackOptions = {
