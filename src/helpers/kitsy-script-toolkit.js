@@ -66,7 +66,9 @@ function kitsyInit() {
 	bitsy.kitsy = {
 		queuedInjectScripts: [],
 		queuedBeforeScripts: {},
-		queuedAfterScripts: {}
+		queuedAfterScripts: {},
+		dialogFunctions: {},
+		deferredDialogFunctions: {}
 	};
 
 	var oldStartFunc = bitsy.startExportedGame;
@@ -149,4 +151,54 @@ function _reinitEngine() {
 	bitsy.dialogModule = new bitsy.Dialog();
 	bitsy.dialogRenderer = bitsy.dialogModule.CreateRenderer();
 	bitsy.dialogBuffer = bitsy.dialogModule.CreateBuffer();
+}
+
+
+function addDialogFunction(tag, fn) {
+	var kitsy = kitsyInit();
+	if (kitsy.dialogFunctions[tag]) {
+		throw new Error('The dialog function "' + tag + '" already exists.');
+	}
+
+	// Hook into game load and rewrite custom functions in game data to Bitsy format.
+	before('load_game', function (game_data, startWithTitle) {
+		// Rewrite custom functions' parentheses to curly braces for Bitsy's
+		// interpreter. Unescape escaped parentheticals, too.
+		var fixedGameData = game_data
+		.replace(new RegExp("(^|[^\\\\])\\((" + tag + " \".+?\")\\)", "g"), "$1{$2}") // Rewrite (tag...) to {tag...}
+		.replace(new RegExp("\\\\\\((" + tag + " \".+\")\\\\?\\)", "g"), "($1)"); // Rewrite \(tag...\) to (tag...)
+		return [fixedGameData, startWithTitle];
+	});
+
+	kitsy.dialogFunctions[tag] = fn;
+}
+
+// executes immediately
+export function addDialogTag(tag, fn) {
+	addDialogFunction(tag, fn);
+	inject(
+		'var functionMap = new Map();',
+		'functionMap.set("' + tag + '", kitsy.dialogFunctions.' + tag + ');'
+	);
+}
+
+// executes after dialog closes
+export function addDeferredDialogTag(tag, fn) {
+	addDialogFunction(tag, fn);
+	var deferred = bitsy.kitsy.deferredDialogFunctions[tag] = [];
+	inject(
+		'var functionMap = new Map();',
+		'functionMap.set("' + tag + '", function(e, p, o){ kitsy.deferredDialogFunctions.' + tag + '.push({e:e,p:p,o:o}); });'
+	);
+	// Hook into the dialog finish event and execute the actual function
+	after('onExitDialog', function () {
+		while (deferred.length) {
+			var args = deferred.shift();
+			fn(args.e, args.p, args.o);
+		}
+	});
+	// Hook into the game reset and make sure data gets cleared
+	after('clearGameData', function () {
+		deferred.length = 0;
+	});
 }
