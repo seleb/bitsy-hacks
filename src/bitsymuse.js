@@ -40,9 +40,9 @@ import {
 	getRoom
 } from "./helpers/utils";
 import {
-	before,
 	after,
-	inject
+	addDialogTag,
+	addDeferredDialogTag
 } from "./helpers/kitsy-script-toolkit";
 
 var hackOptions = {
@@ -128,82 +128,30 @@ after('drawRoom', function () {
 	}
 });
 
-var queuedMusic = null;
-
-// Hook into game load and rewrite custom functions in game data to Bitsy format.
-before('load_game', function (game_data, startWithTitle) {
-	// Rewrite custom functions' parentheses to curly braces for Bitsy's
-	// interpreter. Unescape escaped parentheticals, too.
-	var fixedGameData = game_data
-	.replace(/(^|[^\\])\((music(End)? ".+?")\)/g, "$1{$2}") // Rewrite (music...) to {music...}
-	.replace(/\\\((music(End)? ".+")\\?\)/g, "($1)") // Rewrite \(music...\) to (music...)
-	.replace(/(^|[^\\])\((soundeffect ".+?")\)/g, "$1{$2}") // Rewrite (soundeffect) to {soundeffect}
-	.replace(/\\\((soundeffect ".+")\\?\)/g, "($1)"); // Rewrite \(soundeffect...\) to (soundeffect...)
-
-	return [fixedGameData, startWithTitle];
+// Implement the {music} dialog function.
+// It changes the music track as soon as it is called.
+addDialogTag('music', function (environment, parameters, onReturn) {
+	if (!parameters) {
+		throw new Error('{music} was missing parameters! Usage: {music "track name"}');
+	}
+	changeMusic(parameters);
+	onReturn(null);
 });
 
-// Hook into the game reset and make sure music data gets cleared.
-after('clearGameData', function () {
-	queuedMusic = null;
+// Implement the {musicEnd} dialog function.
+// It changes the music track once the dialog closes.
+addDeferredDialogTag('musicEnd', function (environment, parameters) {
+	if (!parameters) {
+		throw new Error('{musicEnd} was missing parameters! Usage: {musicEnd "track name"}');
+	}
+	changeMusic(parameters);
 });
 
-// Hook into the dialog finish event; if there was a {musicEnd}, play it now.
-after('onExitDialog', function () {
-	if (queuedMusic) {
-		changeMusic(queuedMusic);
-		queuedMusic = null;
+addDialogTag('soundeffect', function (environment, parameters, onReturn) {
+	if (!parameters) {
+		throw new Error('{soundeffect} was missing parameters! Usage: {soundeffect "track name"}');
 	}
+	playSound(parameters);
+	onReturn(null);
 });
-
-// Implement the {music} dialog function. It changes the music track as soon as
-// it is called.
-bitsy.musicFunc = function (environment, parameters, onReturn) {
-	var musicParams = _getMusicParams('music', parameters);
-	if (!musicParams) {
-		return;
-	}
-
-	changeMusic(musicParams);
-	onReturn(null);
-}
-
-// Implement the {musicEnd} dialog function. It saves the new track name and 
-// changes it once the dialog closes.
-bitsy.musicEndFunc = function (environment, parameters, onReturn) {
-	queuedMusic = _getMusicParams('musicEnd', parameters);
-
-	onReturn(null);
-}
-
-bitsy.soundeffectFunc = function (environment, parameters, onReturn) {
-	var soundParams = _getMusicParams('soundeffect', parameters);
-	if (!soundParams) {
-		return;
-	}
-
-	playSound(soundParams);
-	onReturn(null);
-}
-
-// Rewrite the Bitsy script tag, making these new functions callable from dialog.
-inject(
-	'var functionMap = new Map();',
-	'functionMap.set("music", musicFunc);',
-	'functionMap.set("musicEnd", musicEndFunc);',
-	'functionMap.set("soundeffect", soundeffectFunc);'
-);
-
-function _getMusicParams(musicFuncName, parameters) {
-	var params = parameters[0].split(',');
-	var trackName = params[0];
-
-	if (!trackName) {
-		console.warn('{' + musicFuncName + '} was missing parameters! Usage: {' +
-			musicFuncName + ' "track name"}');
-		return null;
-	}
-
-	return trackName;
-}
 // End of (music) dialog function mod
