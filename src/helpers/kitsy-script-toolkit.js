@@ -201,10 +201,9 @@ export function addDialogTag(tag, fn) {
  * Function is executed after the dialog box.
  *
  * @param {string}   tag Name of tag
- * @param {Function} fn  Function to execute, with signature `function(environment, parameters, onReturn){}`
+ * @param {Function} fn  Function to execute, with signature `function(environment, parameters){}`
  *                       environment: provides access to SetVariable/GetVariable (among other things, see Environment in the bitsy source for more info)
  *                       parameters: string containing parameters
- *                       onReturn: function to call with return value (just call `onReturn(null);` at the end of your function if your tag doesn't interact with the logic system)
  */
 export function addDeferredDialogTag(tag, fn) {
 	addDialogFunction(tag, fn);
@@ -212,7 +211,7 @@ export function addDeferredDialogTag(tag, fn) {
 	var deferred = bitsy.kitsy.deferredDialogFunctions[tag] = [];
 	inject(
 		'var functionMap = new Map();',
-		'functionMap.set("' + tag + '", function(e, p, o){ kitsy.deferredDialogFunctions.' + tag + '.push({e:e,p:p,o:o}); });'
+		'functionMap.set("' + tag + '", function(e, p, o){ kitsy.deferredDialogFunctions.' + tag + '.push({e:e,p:p}); o(null); });'
 	);
 	// Hook into the dialog finish event and execute the actual function
 	after('onExitDialog', function () {
