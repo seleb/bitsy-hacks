@@ -131,27 +131,27 @@ after('drawRoom', function () {
 // Implement the {music} dialog function.
 // It changes the music track as soon as it is called.
 addDialogTag('music', function (environment, parameters, onReturn) {
-	if (!parameters) {
+	if (!parameters[0]) {
 		throw new Error('{music} was missing parameters! Usage: {music "track name"}');
 	}
-	changeMusic(parameters);
+	changeMusic(parameters[0]);
 	onReturn(null);
 });
 
 // Implement the {musicEnd} dialog function.
 // It changes the music track once the dialog closes.
 addDeferredDialogTag('musicEnd', function (environment, parameters) {
-	if (!parameters) {
+	if (!parameters[0]) {
 		throw new Error('{musicEnd} was missing parameters! Usage: {musicEnd "track name"}');
 	}
-	changeMusic(parameters);
+	changeMusic(parameters[0]);
 });
 
 addDialogTag('soundeffect', function (environment, parameters, onReturn) {
-	if (!parameters) {
+	if (!parameters[0]) {
 		throw new Error('{soundeffect} was missing parameters! Usage: {soundeffect "track name"}');
 	}
-	playSound(parameters);
+	playSound(parameters[0]);
 	onReturn(null);
 });
 // End of (music) dialog function mod

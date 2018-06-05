@@ -182,7 +182,7 @@ function addDialogFunction(tag, fn) {
  * @param {string}   tag Name of tag
  * @param {Function} fn  Function to execute, with signature `function(environment, parameters, onReturn){}`
  *                       environment: provides access to SetVariable/GetVariable (among other things, see Environment in the bitsy source for more info)
- *                       parameters: string containing parameters
+ *                       parameters: array containing parameters as string in first element (i.e. `parameters[0]`)
  *                       onReturn: function to call with return value (just call `onReturn(null);` at the end of your function if your tag doesn't interact with the logic system)
  */
 export function addDialogTag(tag, fn) {
@@ -203,7 +203,7 @@ export function addDialogTag(tag, fn) {
  * @param {string}   tag Name of tag
  * @param {Function} fn  Function to execute, with signature `function(environment, parameters){}`
  *                       environment: provides access to SetVariable/GetVariable (among other things, see Environment in the bitsy source for more info)
- *                       parameters: string containing parameters
+ *                       parameters: array containing parameters as string in first element (i.e. `parameters[0]`)
  */
 export function addDeferredDialogTag(tag, fn) {
 	addDialogFunction(tag, fn);
