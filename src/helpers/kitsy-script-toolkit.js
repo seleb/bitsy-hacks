@@ -66,9 +66,7 @@ function kitsyInit() {
 	bitsy.kitsy = {
 		queuedInjectScripts: [],
 		queuedBeforeScripts: {},
-		queuedAfterScripts: {},
-		dialogFunctions: {},
-		deferredDialogFunctions: {}
+		queuedAfterScripts: {}
 	};
 
 	var oldStartFunc = bitsy.startExportedGame;
@@ -156,6 +154,7 @@ function _reinitEngine() {
 
 function addDialogFunction(tag, fn) {
 	var kitsy = kitsyInit();
+	kitsy.dialogFunctions = kitsy.dialogFunctions || {};
 	if (kitsy.dialogFunctions[tag]) {
 		throw new Error('The dialog function "' + tag + '" already exists.');
 	}
@@ -185,6 +184,7 @@ export function addDialogTag(tag, fn) {
 // executes after dialog closes
 export function addDeferredDialogTag(tag, fn) {
 	addDialogFunction(tag, fn);
+	bitsy.kitsy.deferredDialogFunctions = bitsy.kitsy.deferredDialogFunctions || {};
 	var deferred = bitsy.kitsy.deferredDialogFunctions[tag] = [];
 	inject(
 		'var functionMap = new Map();',
