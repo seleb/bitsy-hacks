@@ -3,7 +3,7 @@
 @file javascript dialog
 @summary execute arbitrary javascript from dialog
 @license MIT
-@version 1.0.0
+@version 2.0.0
 @requires Bitsy Version: 4.5, 4.6
 @author Sean S. LeBlanc
 
@@ -38,22 +38,11 @@ NOTE: This uses parentheses "()" instead of curly braces "{}" around function
 */
 "use strict";
 import {
-	before,
-	inject
+	addDialogTag
 } from "./helpers/kitsy-script-toolkit";
 
-// Hook into game load and rewrite custom functions in game data to Bitsy format.
-before("load_game", function (game_data, startWithTitle) {
-	// Rewrite custom functions' parentheses to curly braces for Bitsy's
-	// interpreter. Unescape escaped parentheticals, too.
-	var fixedGameData = game_data
-	.replace(/(^|[^\\])\((.*? ".+?")\)/g, "$1{$2}") // Rewrite (...) to {...}
-	.replace(/\\\((.*? ".+")\\?\)/g, "($1)"); // Rewrite \(...\) to (...)
-	return [fixedGameData, startWithTitle];
+var indirectEval = eval;
+addDialogTag('js', function (environment, parameters, onReturn) {
+	indirectEval(parameters[0]);
+	onReturn(null);
 });
-
-// Rewrite the Bitsy script tag, making these new functions callable from dialog.
-inject(
-	"var functionMap = new Map();",
-	"functionMap.set('js', function (environment, parameters, onReturn) { eval(parameters[0]); onReturn(null); });"
-);
