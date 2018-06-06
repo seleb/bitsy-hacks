@@ -3,7 +3,7 @@
 @file end-from-dialog
 @summary trigger an ending from dialog, including narration text
 @license WTFPL (do WTF you want)
-@version 2.0.1
+@version 3.0.0
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
@@ -113,17 +113,19 @@ function flatten(list) {
 @file kitsy-script-toolkit
 @summary makes it easier and cleaner to run code before and after Bitsy functions or to inject new code into Bitsy script tags
 @license WTFPL (do WTF you want)
-@version 2.0.0
+@version 2.1.0
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
 @description
 HOW TO USE:
-  import {before, after, inject} from "./helpers/kitsy-script-toolkit";
+  import {before, after, inject, addDialogTag, addDeferredDialogTag} from "./helpers/kitsy-script-toolkit";
 
   before(targetFuncName, beforeFn);
   after(targetFuncName, afterFn);
   inject(searchString, codeFragment1[, ...codefragmentN]);
+  addDialogTag(tagName, dialogFn);
+  addDeferredDialogTag(tagName, dialogFn);
 
   For more info, see the documentation at:
   https://github.com/seleb/bitsy-hacks/wiki/Coding-with-kitsy
@@ -256,53 +258,93 @@ function _reinitEngine() {
 }
 
 
-
-var queuedEndingNarration = null;
-
-// Hook into game load and rewrite custom functions in game data to Bitsy format.
-before('load_game', function (game_data, startWithTitle) {
-	// Rewrite custom functions' parentheses to curly braces for Bitsy's
-	// interpreter. Unescape escaped parentheticals, too.
-	var fixedGameData = game_data
-	.replace(/(^|[^\\])\(((end|endNow)( ".+?")?)\)/g, "$1{$2}") // Rewrite (end...) to {end...}
-	.replace(/(^|\\)\(((end|endNow)( ".+?")?)\\?\)/g, "($2)"); // Rewrite \(end...\) to (end...)
-	return [fixedGameData, startWithTitle];
-});
-
-// Hook into the game reset and make sure queued ending data gets cleared.
-after('clearGameData', function () {
-	queuedEndingNarration = null;
-});
-
-// Hook into the dialog finish event; if there was an {end}, start the ending.
-after('onExitDialog', function () {
-	if (!bitsy.isEnding && queuedEndingNarration) {
-		bitsy.startNarrating(queuedEndingNarration === true ? null : queuedEndingNarration, true);
+function addDialogFunction(tag, fn) {
+	var kitsy = kitsyInit();
+	kitsy.dialogFunctions = kitsy.dialogFunctions || {};
+	if (kitsy.dialogFunctions[tag]) {
+		throw new Error('The dialog function "' + tag + '" already exists.');
 	}
+
+	// Hook into game load and rewrite custom functions in game data to Bitsy format.
+	before('load_game', function (game_data, startWithTitle) {
+		// Rewrite custom functions' parentheses to curly braces for Bitsy's
+		// interpreter. Unescape escaped parentheticals, too.
+		var fixedGameData = game_data
+		.replace(new RegExp("(^|[^\\\\])\\((" + tag + " \".+?\")\\)", "g"), "$1{$2}") // Rewrite (tag...) to {tag...}
+		.replace(new RegExp("\\\\\\((" + tag + " \".+\")\\\\?\\)", "g"), "($1)"); // Rewrite \(tag...\) to (tag...)
+		return [fixedGameData, startWithTitle];
+	});
+
+	kitsy.dialogFunctions[tag] = fn;
+}
+
+/**
+ * Adds a custom dialog tag which executes the provided function.
+ * For ease-of-use with the bitsy editor, tags can be written as
+ * (tagname "parameters") in addition to the standard {tagname "parameters"}
+ * 
+ * Function is executed immediately when the tag is reached.
+ *
+ * @param {string}   tag Name of tag
+ * @param {Function} fn  Function to execute, with signature `function(environment, parameters, onReturn){}`
+ *                       environment: provides access to SetVariable/GetVariable (among other things, see Environment in the bitsy source for more info)
+ *                       parameters: array containing parameters as string in first element (i.e. `parameters[0]`)
+ *                       onReturn: function to call with return value (just call `onReturn(null);` at the end of your function if your tag doesn't interact with the logic system)
+ */
+function addDialogTag(tag, fn) {
+	addDialogFunction(tag, fn);
+	inject$1(
+		'var functionMap = new Map();',
+		'functionMap.set("' + tag + '", kitsy.dialogFunctions.' + tag + ');'
+	);
+}
+
+/**
+ * Adds a custom dialog tag which executes the provided function.
+ * For ease-of-use with the bitsy editor, tags can be written as
+ * (tagname "parameters") in addition to the standard {tagname "parameters"}
+ * 
+ * Function is executed after the dialog box.
+ *
+ * @param {string}   tag Name of tag
+ * @param {Function} fn  Function to execute, with signature `function(environment, parameters){}`
+ *                       environment: provides access to SetVariable/GetVariable (among other things, see Environment in the bitsy source for more info)
+ *                       parameters: array containing parameters as string in first element (i.e. `parameters[0]`)
+ */
+function addDeferredDialogTag(tag, fn) {
+	addDialogFunction(tag, fn);
+	bitsy.kitsy.deferredDialogFunctions = bitsy.kitsy.deferredDialogFunctions || {};
+	var deferred = bitsy.kitsy.deferredDialogFunctions[tag] = [];
+	inject$1(
+		'var functionMap = new Map();',
+		'functionMap.set("' + tag + '", function(e, p, o){ kitsy.deferredDialogFunctions.' + tag + '.push({e:e,p:p}); o(null); });'
+	);
+	// Hook into the dialog finish event and execute the actual function
+	after('onExitDialog', function () {
+		while (deferred.length) {
+			var args = deferred.shift();
+			fn(args.e, args.p, args.o);
+		}
+	});
+	// Hook into the game reset and make sure data gets cleared
+	after('clearGameData', function () {
+		deferred.length = 0;
+	});
+}
+
+
+
+// Implement the {end} dialog function. It schedules the game to end after the current dialog finishes.
+addDeferredDialogTag('end', function (environment, parameters) {
+	bitsy.startNarrating(parameters[0] || null, true);
 });
-
-// Implement the {end} dialog function. It stores the ending narration, if any,
-// and schedules the game to end after the current dialog finishes.
-bitsy.endFunc = function (environment, parameters, onReturn) {
-	queuedEndingNarration = parameters || true;
-
-	onReturn(null);
-};
 
 // Implement the {endNow} dialog function. It starts ending narration, if any,
 // and restarts the game right damn now.
-bitsy.endNowFunc = function (environment, parameters, onReturn) {
-	bitsy.endFunc.call(this, environment, parameters, function () {});
-	bitsy.dialogBuffer.EndDialog();
-	bitsy.onExitDialog();
-};
-
-// Rewrite the Bitsy script tag, making these new functions callable from dialog.
-inject$1(
-	'var functionMap = new Map();',
-	'functionMap.set("end", endFunc);',
-	'functionMap.set("endNow", endNowFunc);'
-);
+addDialogTag('endNow', function (environment, parameters, onReturn) {
+	onReturn(null);
+	bitsy.startNarrating(parameters[0] || null, true);
+});
 // End of (end) dialog function mod
 
 }(window));
