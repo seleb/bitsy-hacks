@@ -8,20 +8,32 @@
 
 @description
 You can use this to edit the image data of sprites (including the player avatar), items, and tiles through dialog.
+Image data can be replaced with data from another image, and the palette index can be set.
 
-Using the (image "map, target, source") function will copy the image data of type "map" from a source to a target after dialog is closed.
+(image "map, target, source")
 Parameters:
   map:    Type of image (SPR, TIL, or ITM)
   target: id/name of image to edit
   source: id/name of image to copy
 
-Using the (imageNow "map, target, source") function will do the same thing,
-except it takes effect immediately instead of after dialog is closed.
+(imageNow "map, target, source")
+Same as (image), but applied immediately instead of after dialog is closed.
+
+(imagePal "map, target, palette")
+Parameters:
+  map:    Type of image (SPR, TIL, or ITM)
+  target: id/name of image to edit
+  source: palette index (0 is bg, 1 is tiles, 2 is sprites/items, anything higher requires editing your game data to include more)
+
+(imagePalNow "map, target, palette")
+Same as (imagePal), but applied immediately instead of after dialog is closed.
 
 Examples:
   (image "SPR, A, a")
   (imageNow "TIL, a, floor")
   (image "ITM, a, b")
+  (imagePal "SPR, A, 1")
+  (imagePalNow "TIL, floor, 2")
 
 HOW TO USE:
   1. Copy-paste this script into a new script tag after the Bitsy source code.
@@ -109,6 +121,46 @@ function editImage(environment, parameters, onReturn) {
   }
 }
 
+function editPalette(environment, parameters, onReturn) {
+  // parse parameters
+  var params = parameters[0].split(/,\s?/);
+  var mapId = params[0];
+  var tgtId = params[1];
+  var palId = params[2];
+
+  if (!mapId || !tgtId || !palId) {
+    throw new Error('Image expects three parameters: "map, target, palette", but received: "' + parameters.join(', ') + '"');
+  }
+
+  // get objects
+  var mapObj = maps[mapId];
+  if (!mapObj) {
+    throw new Error('Invalid map "' + mapId + '". Try "SPR", "TIL", or "ITM" instead.');
+  }
+  var tgtObj = getImage(tgtId, mapObj);
+  if (!tgtObj) {
+    throw new Error('Target "' + tgtId + '" was not the id/name of a ' + mapId + '.');
+  }
+  var palObj = parseInt(palId);
+  if (isNaN(palObj)) {
+    throw new Error('Palette "' + palId + '" was not a number.');
+  }
+
+  // set palette
+  tgtObj.col = palObj;
+
+  // update images in cache
+  bitsy.renderImageForAllPalettes(tgtObj);
+
+  // done
+  if (onReturn) {
+    onReturn(null);
+  }
+}
+
 // hook up the dialog tags
 addDeferredDialogTag('image', editImage);
 addDialogTag('imageNow', editImage);
+
+addDeferredDialogTag('imagePal', editPalette);
+addDialogTag('imagePalNow', editPalette);
