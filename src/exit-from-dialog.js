@@ -46,6 +46,9 @@ NOTE: This uses parentheses "()" instead of curly braces "{}" around function
 'use strict';
 import bitsy from "bitsy";
 import {
+	getRoom
+} from "./helpers/utils";
+import {
 	addDialogTag,
 	addDeferredDialogTag
 } from "./helpers/kitsy-script-toolkit";
@@ -81,7 +84,7 @@ function _getExitParams(exitFuncName, parameters) {
 	var y = params[2];
 	var coordsType = (params[3] || 'exit').toLowerCase();
 	var useSpriteCoords = coordsType === 'sprite';
-	var roomId = bitsy.names.room.get(roomName);
+	var roomId = getRoom(roomName).id;
 
 	if (!roomName || x === undefined || y === undefined) {
 		console.warn('{' + exitFuncName + '} was missing parameters! Usage: {' +
