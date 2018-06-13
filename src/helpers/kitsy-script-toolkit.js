@@ -166,8 +166,8 @@ function addDialogFunction(tag, fn) {
 		// Rewrite custom functions' parentheses to curly braces for Bitsy's
 		// interpreter. Unescape escaped parentheticals, too.
 		var fixedGameData = game_data
-		.replace(new RegExp("(^|[^\\\\])\\((" + tag + " \".+?\")\\)", "g"), "$1{$2}") // Rewrite (tag...) to {tag...}
-		.replace(new RegExp("\\\\\\((" + tag + " \".+\")\\\\?\\)", "g"), "($1)"); // Rewrite \(tag...\) to (tag...)
+		.replace(new RegExp("(^|[^\\\\])\\((" + tag + " \"?.+?\"?)\\)", "g"), "$1{$2}") // Rewrite (tag...) to {tag...}
+		.replace(new RegExp("\\\\\\((" + tag + " \"?.+\"?)\\\\?\\)", "g"), "($1)"); // Rewrite \(tag...\) to (tag...)
 		return [fixedGameData, startWithTitle];
 	});
 
