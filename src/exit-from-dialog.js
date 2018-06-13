@@ -3,7 +3,7 @@
 @file exit-from-dialog
 @summary exit to another room from dialog, including conditionals
 @license WTFPL (do WTF you want)
-@version 4.0.0
+@version 5.0.0
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
@@ -46,20 +46,22 @@ NOTE: This uses parentheses "()" instead of curly braces "{}" around function
 'use strict';
 import bitsy from "bitsy";
 import {
+	getRoom
+} from "./helpers/utils";
+import {
 	addDialogTag,
 	addDeferredDialogTag
 } from "./helpers/kitsy-script-toolkit";
 
 // Implement the {exit} dialog function. It saves the room name and
 // destination X/Y coordinates so we can travel there after the dialog is over.
-addDeferredDialogTag('exit', function (environment, parameters, onReturn) {
+addDeferredDialogTag('exit', function (environment, parameters) {
 	var exitParams = _getExitParams('exit', parameters);
 	if (!exitParams) {
 		return;
 	}
 
 	doPlayerExit(exitParams);
-	onReturn(null);
 });
 
 // Implement the {exitNow} dialog function. It exits to the destination room
@@ -81,7 +83,7 @@ function _getExitParams(exitFuncName, parameters) {
 	var y = params[2];
 	var coordsType = (params[3] || 'exit').toLowerCase();
 	var useSpriteCoords = coordsType === 'sprite';
-	var roomId = bitsy.names.room.get(roomName);
+	var roomId = getRoom(roomName).id;
 
 	if (!roomName || x === undefined || y === undefined) {
 		console.warn('{' + exitFuncName + '} was missing parameters! Usage: {' +

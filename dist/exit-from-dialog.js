@@ -3,7 +3,7 @@
 @file exit-from-dialog
 @summary exit to another room from dialog, including conditionals
 @license WTFPL (do WTF you want)
-@version 4.0.0
+@version 5.0.0
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
@@ -89,6 +89,16 @@ function inject(searchString, codeToInject) {
 }
 
 /**
+ * Helper for getting room by name or id
+ * @param {string} name id or name of room to return
+ * @return {string} room, or undefined if it doesn't exist
+ */
+function getRoom(name) {
+	var id = bitsy.room.hasOwnProperty(name) ? name : bitsy.names.room.get(name);
+	return bitsy.room[id];
+}
+
+/**
  * Helper for getting an array with unique elements 
  * @param  {Array} array Original array
  * @return {Array}       Copy of array, excluding duplicates
@@ -114,7 +124,7 @@ function flatten(list) {
 @file kitsy-script-toolkit
 @summary makes it easier and cleaner to run code before and after Bitsy functions or to inject new code into Bitsy script tags
 @license WTFPL (do WTF you want)
-@version 2.1.0
+@version 2.1.1
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
@@ -271,8 +281,8 @@ function addDialogFunction(tag, fn) {
 		// Rewrite custom functions' parentheses to curly braces for Bitsy's
 		// interpreter. Unescape escaped parentheticals, too.
 		var fixedGameData = game_data
-		.replace(new RegExp("(^|[^\\\\])\\((" + tag + " \".+?\")\\)", "g"), "$1{$2}") // Rewrite (tag...) to {tag...}
-		.replace(new RegExp("\\\\\\((" + tag + " \".+\")\\\\?\\)", "g"), "($1)"); // Rewrite \(tag...\) to (tag...)
+		.replace(new RegExp("(^|[^\\\\])\\((" + tag + " \"?.+?\"?)\\)", "g"), "$1{$2}") // Rewrite (tag...) to {tag...}
+		.replace(new RegExp("\\\\\\((" + tag + " \"?.+\"?)\\\\?\\)", "g"), "($1)"); // Rewrite \(tag...\) to (tag...)
 		return [fixedGameData, startWithTitle];
 	});
 
@@ -337,14 +347,13 @@ function addDeferredDialogTag(tag, fn) {
 
 // Implement the {exit} dialog function. It saves the room name and
 // destination X/Y coordinates so we can travel there after the dialog is over.
-addDeferredDialogTag('exit', function (environment, parameters, onReturn) {
+addDeferredDialogTag('exit', function (environment, parameters) {
 	var exitParams = _getExitParams('exit', parameters);
 	if (!exitParams) {
 		return;
 	}
 
 	doPlayerExit(exitParams);
-	onReturn(null);
 });
 
 // Implement the {exitNow} dialog function. It exits to the destination room
@@ -366,7 +375,7 @@ function _getExitParams(exitFuncName, parameters) {
 	var y = params[2];
 	var coordsType = (params[3] || 'exit').toLowerCase();
 	var useSpriteCoords = coordsType === 'sprite';
-	var roomId = bitsy.names.room.get(roomName);
+	var roomId = getRoom(roomName).id;
 
 	if (!roomName || x === undefined || y === undefined) {
 		console.warn('{' + exitFuncName + '} was missing parameters! Usage: {' +

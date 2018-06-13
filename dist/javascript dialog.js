@@ -3,7 +3,7 @@
 @file javascript dialog
 @summary execute arbitrary javascript from dialog
 @license MIT
-@version 2.0.0
+@version 3.0.0
 @requires Bitsy Version: 4.5, 4.6
 @author Sean S. LeBlanc
 
@@ -12,7 +12,9 @@ Lets you execute arbitrary JavaScript from dialog (including inside conditionals
 If you're familiar with the Bitsy source, this will let you write one-shot hacks
 for a wide variety of situations.
 
-Usage: (js "<JavaScript code to evaluate>")
+Usage:
+	(js "<JavaScript code to evaluate after dialog is closed>")
+	(jsNow "<JavaScript code to evaluate immediately>")
 
 Examples:
 	move a sprite:
@@ -107,7 +109,7 @@ function flatten(list) {
 @file kitsy-script-toolkit
 @summary makes it easier and cleaner to run code before and after Bitsy functions or to inject new code into Bitsy script tags
 @license WTFPL (do WTF you want)
-@version 2.1.0
+@version 2.1.1
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
@@ -147,6 +149,13 @@ function before(targetFuncName, beforeFn) {
 	var kitsy = kitsyInit();
 	kitsy.queuedBeforeScripts[targetFuncName] = kitsy.queuedBeforeScripts[targetFuncName] || [];
 	kitsy.queuedBeforeScripts[targetFuncName].push(beforeFn);
+}
+
+// Ex: after('load_game', function run() { alert('Loaded!'); });
+function after(targetFuncName, afterFn) {
+	var kitsy = kitsyInit();
+	kitsy.queuedAfterScripts[targetFuncName] = kitsy.queuedAfterScripts[targetFuncName] || [];
+	kitsy.queuedAfterScripts[targetFuncName].push(afterFn);
 }
 
 function kitsyInit() {
@@ -257,8 +266,8 @@ function addDialogFunction(tag, fn) {
 		// Rewrite custom functions' parentheses to curly braces for Bitsy's
 		// interpreter. Unescape escaped parentheticals, too.
 		var fixedGameData = game_data
-		.replace(new RegExp("(^|[^\\\\])\\((" + tag + " \".+?\")\\)", "g"), "$1{$2}") // Rewrite (tag...) to {tag...}
-		.replace(new RegExp("\\\\\\((" + tag + " \".+\")\\\\?\\)", "g"), "($1)"); // Rewrite \(tag...\) to (tag...)
+		.replace(new RegExp("(^|[^\\\\])\\((" + tag + " \"?.+?\"?)\\)", "g"), "$1{$2}") // Rewrite (tag...) to {tag...}
+		.replace(new RegExp("\\\\\\((" + tag + " \"?.+\"?)\\\\?\\)", "g"), "($1)"); // Rewrite \(tag...\) to (tag...)
 		return [fixedGameData, startWithTitle];
 	});
 
@@ -286,12 +295,51 @@ function addDialogTag(tag, fn) {
 	);
 }
 
+/**
+ * Adds a custom dialog tag which executes the provided function.
+ * For ease-of-use with the bitsy editor, tags can be written as
+ * (tagname "parameters") in addition to the standard {tagname "parameters"}
+ * 
+ * Function is executed after the dialog box.
+ *
+ * @param {string}   tag Name of tag
+ * @param {Function} fn  Function to execute, with signature `function(environment, parameters){}`
+ *                       environment: provides access to SetVariable/GetVariable (among other things, see Environment in the bitsy source for more info)
+ *                       parameters: array containing parameters as string in first element (i.e. `parameters[0]`)
+ */
+function addDeferredDialogTag(tag, fn) {
+	addDialogFunction(tag, fn);
+	bitsy.kitsy.deferredDialogFunctions = bitsy.kitsy.deferredDialogFunctions || {};
+	var deferred = bitsy.kitsy.deferredDialogFunctions[tag] = [];
+	inject$1(
+		'var functionMap = new Map();',
+		'functionMap.set("' + tag + '", function(e, p, o){ kitsy.deferredDialogFunctions.' + tag + '.push({e:e,p:p}); o(null); });'
+	);
+	// Hook into the dialog finish event and execute the actual function
+	after('onExitDialog', function () {
+		while (deferred.length) {
+			var args = deferred.shift();
+			fn(args.e, args.p, args.o);
+		}
+	});
+	// Hook into the game reset and make sure data gets cleared
+	after('clearGameData', function () {
+		deferred.length = 0;
+	});
+}
+
 
 
 var indirectEval$1 = eval;
-addDialogTag('js', function (environment, parameters, onReturn) {
+
+function executeJs(environment, parameters, onReturn) {
 	indirectEval$1(parameters[0]);
-	onReturn(null);
-});
+	if (onReturn) {
+		onReturn(null);
+	}
+}
+
+addDeferredDialogTag('js', executeJs);
+addDialogTag('jsNow', executeJs);
 
 }(window));
