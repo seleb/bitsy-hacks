@@ -55,14 +55,13 @@ import {
 
 // Implement the {exit} dialog function. It saves the room name and
 // destination X/Y coordinates so we can travel there after the dialog is over.
-addDeferredDialogTag('exit', function (environment, parameters, onReturn) {
+addDeferredDialogTag('exit', function (environment, parameters) {
 	var exitParams = _getExitParams('exit', parameters);
 	if (!exitParams) {
 		return;
 	}
 
 	doPlayerExit(exitParams);
-	onReturn(null);
 });
 
 // Implement the {exitNow} dialog function. It exits to the destination room
