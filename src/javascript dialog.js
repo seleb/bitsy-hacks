@@ -3,7 +3,7 @@
 @file javascript dialog
 @summary execute arbitrary javascript from dialog
 @license MIT
-@version 2.0.1
+@version 3.0.0
 @requires Bitsy Version: 4.5, 4.6
 @author Sean S. LeBlanc
 
@@ -12,7 +12,9 @@ Lets you execute arbitrary JavaScript from dialog (including inside conditionals
 If you're familiar with the Bitsy source, this will let you write one-shot hacks
 for a wide variety of situations.
 
-Usage: (js "<JavaScript code to evaluate>")
+Usage:
+	(js "<JavaScript code to evaluate after dialog is closed>")
+	(jsNow "<JavaScript code to evaluate immediately>")
 
 Examples:
 	move a sprite:
@@ -38,11 +40,18 @@ NOTE: This uses parentheses "()" instead of curly braces "{}" around function
 */
 "use strict";
 import {
-	addDialogTag
+	addDialogTag,
+	addDeferredDialogTag
 } from "./helpers/kitsy-script-toolkit";
 
 var indirectEval = eval;
-addDialogTag('js', function (environment, parameters, onReturn) {
+
+function executeJs(environment, parameters, onReturn) {
 	indirectEval(parameters[0]);
-	onReturn(null);
-});
+	if (onReturn) {
+		onReturn(null);
+	}
+}
+
+addDeferredDialogTag('js', executeJs);
+addDialogTag('jsNow', executeJs);
