@@ -36,9 +36,7 @@ e.g.
 (closing script tag omitted in comment to avoid confusing browser)
 */
 import bitsy from "bitsy";
-import {
-	WebGLazy
-} from "webglazy";
+import WebGLazy from "webglazy";
 
 var hackOptions = {
 	background: "black",
