@@ -2,7 +2,8 @@
 	"name": "bitsy_hacks",
 	"description": "a collection of re-usable scripts for bitsy game maker",
 	"scripts": {
-		"build": "node --experimental-modules build.mjs"
+		"build": "node --experimental-modules build.mjs",
+		"test": "jest"
 	},
 	"author": "Sean S. LeBlanc",
 	"repository": {
@@ -10,8 +11,10 @@
 		"url": "git://github.com/seleb/bitsy-hacks.git"
 	},
 	"devDependencies": {
+		"babel-preset-env": "^1.7.0",
 		"doctrine": "^2.1.0",
 		"input-gamepads.js": "^1.0.0",
+		"jest": "^23.1.0",
 		"rollup": "^0.56.5",
 		"rollup-plugin-clear": "^2.0.7",
 		"rollup-plugin-commonjs": "^9.1.3",
