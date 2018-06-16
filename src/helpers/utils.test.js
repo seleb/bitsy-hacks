@@ -1,6 +1,7 @@
 import {
 	expose,
 	flatten,
+	inject,
 	unique
 } from './utils';
 
@@ -55,6 +56,14 @@ describe('flatten', () => {
 		expect(flatten([1,[2,[3],4],5])).toMatchSnapshot();
 		expect(flatten([1,[2,[3],[4],5]])).toMatchSnapshot();
 		expect(flatten([[[[1]]],[2,[3],[4],5]])).toMatchSnapshot();
+	});
+});
+
+xdescribe('inject', () => {
+	it('requires a search string and a string to inject', () => {
+	});
+
+	it('replaces the script tag containing the search string with a copy containing the code to inject after the search string', () => {
 	});
 });
 
