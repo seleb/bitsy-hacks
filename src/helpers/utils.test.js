@@ -1,6 +1,7 @@
 import {
 	expose,
-	flatten
+	flatten,
+	unique
 } from './utils';
 
 function constructor() {
@@ -54,5 +55,21 @@ describe('flatten', () => {
 		expect(flatten([1,[2,[3],4],5])).toMatchSnapshot();
 		expect(flatten([1,[2,[3],[4],5]])).toMatchSnapshot();
 		expect(flatten([[[[1]]],[2,[3],[4],5]])).toMatchSnapshot();
+	});
+});
+
+describe('unique', () => {
+	it('requires an array as a paramter', () => {
+		expect(()=>unique()).toThrow();
+		expect(()=>unique([])).not.toThrow();
+	});
+
+	it('returns an array which is a copy of the parameter, without duplicates', () => {
+		const obj={};
+		expect(unique([])).toMatchSnapshot();
+		expect(unique([1,1,1,2,3,4,1,2,3,4,5,1,4,5])).toMatchSnapshot();
+		expect(unique(['a','b','c','a','b','c','A','A'])).toMatchSnapshot();
+		expect(unique([obj,obj,obj])).toMatchSnapshot();
+		expect(unique([1,'1',obj,obj,'1',1])).toMatchSnapshot();
 	});
 });

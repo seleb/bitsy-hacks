@@ -51,3 +51,38 @@ Array [
   5,
 ]
 `;
+
+exports[`unique returns an array which is a copy of the parameter, without duplicates 1`] = `Array []`;
+
+exports[`unique returns an array which is a copy of the parameter, without duplicates 2`] = `
+Array [
+  1,
+  2,
+  3,
+  4,
+  5,
+]
+`;
+
+exports[`unique returns an array which is a copy of the parameter, without duplicates 3`] = `
+Array [
+  "a",
+  "b",
+  "c",
+  "A",
+]
+`;
+
+exports[`unique returns an array which is a copy of the parameter, without duplicates 4`] = `
+Array [
+  Object {},
+]
+`;
+
+exports[`unique returns an array which is a copy of the parameter, without duplicates 5`] = `
+Array [
+  1,
+  "1",
+  Object {},
+]
+`;
