@@ -1,6 +1,7 @@
 import {
 	expose,
 	flatten,
+	getImage,
 	inject,
 	unique
 } from './utils';
@@ -56,6 +57,44 @@ describe('flatten', () => {
 		expect(flatten([1,[2,[3],4],5])).toMatchSnapshot();
 		expect(flatten([1,[2,[3],[4],5]])).toMatchSnapshot();
 		expect(flatten([[[[1]]],[2,[3],[4],5]])).toMatchSnapshot();
+	});
+});
+
+describe('getImage', () => {
+	it('requires a name/id and a map', () => {
+		expect(() => getImage()).toThrow();
+		expect(() => getImage('', {})).not.toThrow();
+	});
+
+	it('returns the image in the map with the provided id if it exists', () => {
+		const map = {
+			a: {}
+		};
+		expect(getImage('a', map)).toBe(map.a);
+	});
+
+	it('returns the first image in the map with the provided name if one exists', () => {
+		const map = {
+			a: {
+				name: '1',
+				order: 1,
+			},
+			b: {
+				name: '1',
+				order: 2,
+			}
+		};
+		expect(getImage('1', map)).toBe(map.a);
+	});
+
+	it('returns the image in the map with the provided id if there exists both an image with that id, and with that name', () => {
+		const map = {
+			a: {},
+			b: {
+				name: 'a'
+			}
+		};
+		expect(getImage('a', map)).toBe(map.a);
 	});
 });
 
