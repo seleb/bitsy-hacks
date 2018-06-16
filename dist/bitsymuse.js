@@ -129,7 +129,7 @@ function flatten(list) {
 @file kitsy-script-toolkit
 @summary makes it easier and cleaner to run code before and after Bitsy functions or to inject new code into Bitsy script tags
 @license WTFPL (do WTF you want)
-@version 2.1.2
+@version 2.2.0
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
@@ -273,6 +273,14 @@ function _reinitEngine() {
 	bitsy.dialogBuffer = bitsy.dialogModule.CreateBuffer();
 }
 
+// Rewrite custom functions' parentheses to curly braces for Bitsy's
+// interpreter. Unescape escaped parentheticals, too.
+function convertDialogTags(input, tag) {
+	return input
+		.replace(new RegExp('(^|[^\\\\])\\((' + tag + '\\s+(".+?"|.+?))\\)', 'g'), '$1{$2}') // Rewrite (tag "..."|...) to {tag "..."|...}
+		.replace(new RegExp('\\\\\\((' + tag + '\\s+(".+"|.+))\\\\?\\)', 'g'), '($1)'); // Rewrite \(tag "..."|...\) to (tag "..."|...)
+}
+
 
 function addDialogFunction(tag, fn) {
 	var kitsy = kitsyInit();
@@ -283,12 +291,7 @@ function addDialogFunction(tag, fn) {
 
 	// Hook into game load and rewrite custom functions in game data to Bitsy format.
 	before('load_game', function (game_data, startWithTitle) {
-		// Rewrite custom functions' parentheses to curly braces for Bitsy's
-		// interpreter. Unescape escaped parentheticals, too.
-		var fixedGameData = game_data
-		.replace(new RegExp('(^|[^\\\\])\\((' + tag + '\\s+(".+?"|.+?))\\)', 'g'), '$1{$2}') // Rewrite (tag "..."|...) to {tag "..."|...}
-		.replace(new RegExp('\\\\\\((' + tag + '\\s+(".+"|.+))\\\\?\\)', 'g'), '($1)'); // Rewrite \(tag "..."|...\) to (tag "..."|...)
-		return [fixedGameData, startWithTitle];
+		return [convertDialogTags(game_data), startWithTitle];
 	});
 
 	kitsy.dialogFunctions[tag] = fn;
