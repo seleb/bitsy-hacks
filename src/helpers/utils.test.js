@@ -1,5 +1,6 @@
 import {
-	expose
+	expose,
+	flatten
 } from './utils';
 
 function constructor() {
@@ -34,4 +35,24 @@ describe('expose', () => {
 		obj.set('privateVar', newVal);
 		expect(obj.get('privateVar')).toBe(newVal);
 	});
-})
+});
+
+describe('flatten', () => {
+	it('returns the parameter if it is not an array', () => {
+		expect(flatten()).toBe();
+		expect(flatten('')).toBe('');
+		expect(flatten(1)).toBe(1);
+		expect(flatten(null)).toBe(null);
+		const obj = {};
+		expect(flatten(obj)).toBe(obj);
+	});
+
+	it('returns an array which is a copy of the parameter, fully flattened', () => {
+		expect(flatten([])).toMatchSnapshot();
+		expect(flatten([1,2,3,4,5])).toMatchSnapshot();
+		expect(flatten([1,[2,3],4,5])).toMatchSnapshot();
+		expect(flatten([1,[2,[3],4],5])).toMatchSnapshot();
+		expect(flatten([1,[2,[3],[4],5]])).toMatchSnapshot();
+		expect(flatten([[[[1]]],[2,[3],[4],5]])).toMatchSnapshot();
+	});
+});
