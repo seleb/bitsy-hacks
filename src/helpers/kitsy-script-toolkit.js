@@ -3,7 +3,7 @@
 @file kitsy-script-toolkit
 @summary makes it easier and cleaner to run code before and after Bitsy functions or to inject new code into Bitsy script tags
 @license WTFPL (do WTF you want)
-@version 2.1.1
+@version 2.1.2
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
@@ -166,8 +166,8 @@ function addDialogFunction(tag, fn) {
 		// Rewrite custom functions' parentheses to curly braces for Bitsy's
 		// interpreter. Unescape escaped parentheticals, too.
 		var fixedGameData = game_data
-		.replace(new RegExp("(^|[^\\\\])\\((" + tag + " \"?.+?\"?)\\)", "g"), "$1{$2}") // Rewrite (tag...) to {tag...}
-		.replace(new RegExp("\\\\\\((" + tag + " \"?.+\"?)\\\\?\\)", "g"), "($1)"); // Rewrite \(tag...\) to (tag...)
+		.replace(new RegExp('(^|[^\\\\])\\((' + tag + '\\s+(".+?"|.+?))\\)', 'g'), '$1{$2}') // Rewrite (tag "..."|...) to {tag "..."|...}
+		.replace(new RegExp('\\\\\\((' + tag + '\\s+(".+"|.+))\\\\?\\)', 'g'), '($1)'); // Rewrite \(tag "..."|...\) to (tag "..."|...)
 		return [fixedGameData, startWithTitle];
 	});
 
