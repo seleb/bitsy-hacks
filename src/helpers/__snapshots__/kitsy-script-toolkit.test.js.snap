@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`convertDialogTags doesn't work when nested 1`] = `"{js \\"(js \\"(js \\"\\"}\\")\\")"`;
+
+exports[`convertDialogTags handles relatively complex cases 1`] = `"a{js \\"console.log('a');\\"}b{js \\"console.log('b');\\"}c{js \\"console.log('c');\\"}d{js \\"console.log('d');\\"}e{js e}f{js f}e{js e}f{js f}"`;
+
+exports[`convertDialogTags replaces \`(tag "input")\` with \`{tag "input"}\` 1`] = `"{tag \\"input\\"}"`;
+
+exports[`convertDialogTags replaces \`(tag input)\` with \`{tag input}\` 1`] = `"{tag input}"`;
+
+exports[`convertDialogTags replaces \`\\(tag "input"\\)\` with \`(tag "input")\` 1`] = `"{tag \\"input\\"}"`;
+
+exports[`convertDialogTags replaces \`\\(tag input\\)\` with \`(tag input)\` 1`] = `"{tag input}"`;
