@@ -3,7 +3,7 @@
 @file kitsy-script-toolkit
 @summary makes it easier and cleaner to run code before and after Bitsy functions or to inject new code into Bitsy script tags
 @license WTFPL (do WTF you want)
-@version 2.2.0
+@version 2.2.1
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
@@ -171,7 +171,7 @@ function addDialogFunction(tag, fn) {
 
 	// Hook into game load and rewrite custom functions in game data to Bitsy format.
 	before('load_game', function (game_data, startWithTitle) {
-		return [convertDialogTags(game_data), startWithTitle];
+		return [convertDialogTags(game_data, tag), startWithTitle];
 	});
 
 	kitsy.dialogFunctions[tag] = fn;
