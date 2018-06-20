@@ -124,6 +124,7 @@ function editImage(environment, parameters, onReturn) {
 function editPalette(environment, parameters, onReturn) {
   // parse parameters
   var params = parameters[0].split(/,\s?/);
+  params[0] = (params[0] || "").toLowerCase();
   var mapId = params[0];
   var tgtId = params[1];
   var palId = params[2];
