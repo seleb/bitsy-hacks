@@ -3,7 +3,7 @@
 @file edit image from dialog
 @summary edit sprites, items, and tiles from dialog
 @license MIT
-@version 1.0.1
+@version 1.0.2
 @author Sean S. LeBlanc
 
 @description
@@ -480,6 +480,7 @@ function editImage(environment, parameters, onReturn) {
 function editPalette(environment, parameters, onReturn) {
   // parse parameters
   var params = parameters[0].split(/,\s?/);
+  params[0] = (params[0] || "").toLowerCase();
   var mapId = params[0];
   var tgtId = params[1];
   var palId = params[2];
