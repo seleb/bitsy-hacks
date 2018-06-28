@@ -3,7 +3,7 @@
 @file edit image from dialog
 @summary edit sprites, items, and tiles from dialog
 @license MIT
-@version 1.0.2
+@version 1.0.3
 @author Sean S. LeBlanc
 
 @description
@@ -444,7 +444,7 @@ function editImage(environment, parameters, onReturn) {
   var srcId = params[2];
 
   if (!mapId || !tgtId || !srcId) {
-    throw new Error('Image expects three parameters: "map, target, source", but received: "' + parameters.join(', ') + '"');
+    throw new Error('Image expects three parameters: "map, target, source", but received: "' + params.join(', ') + '"');
   }
 
   // get objects
@@ -486,7 +486,7 @@ function editPalette(environment, parameters, onReturn) {
   var palId = params[2];
 
   if (!mapId || !tgtId || !palId) {
-    throw new Error('Image expects three parameters: "map, target, palette", but received: "' + parameters.join(', ') + '"');
+    throw new Error('Image expects three parameters: "map, target, palette", but received: "' + params.join(', ') + '"');
   }
 
   // get objects
