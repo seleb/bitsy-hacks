@@ -157,8 +157,12 @@ function _reinitEngine() {
 // interpreter. Unescape escaped parentheticals, too.
 export function convertDialogTags(input, tag) {
 	return input
-		.replace(new RegExp('(^|[^\\\\])\\((' + tag + '\\s+(".+?"|.+?))\\)', 'g'), '$1{$2}') // Rewrite (tag "..."|...) to {tag "..."|...}
-		.replace(new RegExp('\\\\\\((' + tag + '\\s+(".+"|.+))\\\\?\\)', 'g'), '($1)'); // Rewrite \(tag "..."|...\) to (tag "..."|...)
+		.replace(new RegExp('\\\\?\\((' + tag + '\\s+(".+?"|.+?))\\\\?\\)', 'g'), function(match, group){
+			if(match.substr(0,1) === '\\') {
+				return '('+ group + ')'; // Rewrite \(tag "..."|...\) to (tag "..."|...)
+			}
+			return '{'+ group + '}'; // Rewrite (tag "..."|...) to {tag "..."|...}
+		});
 }
 
 
