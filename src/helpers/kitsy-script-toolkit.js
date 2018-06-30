@@ -3,7 +3,7 @@
 @file kitsy-script-toolkit
 @summary makes it easier and cleaner to run code before and after Bitsy functions or to inject new code into Bitsy script tags
 @license WTFPL (do WTF you want)
-@version 2.2.1
+@version 2.2.2
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
