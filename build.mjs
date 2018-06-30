@@ -66,6 +66,7 @@ Promise.all([
 	"permanent items",
 	"solid items",
 	"tracery processing",
+	"transparent dialog",
 	"transparent sprites",
 	"unique items"
 ].map(src => {

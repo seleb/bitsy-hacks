@@ -25,6 +25,7 @@ A collection of re-usable scripts for [Adam LeDoux](https://twitter.com/adamledo
  - ⏳ [permanent items](/dist/permanent%20items.js): prevent some items from being picked up
  - 🛑 [solid items](/dist/solid%20items.js): treat some items like sprites that can be placed multiple times
  - 🏰 [tracery processing](/dist/tracery%20processing.js): process all dialog text with a tracery grammar
+ - 👁️‍🗨️ [transparent dialog](/dist/transparent%20dialog.js): makes the dialog box have a transparent background
  - 🏁 [transparent sprites](/dist/transparent%20sprites.js): makes all sprites have transparent backgrounds
  - ❄ [unique items](/dist/unique%20items.js): items which, when picked up, remove all other instances of that item from the game
 
