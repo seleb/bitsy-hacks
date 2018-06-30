@@ -3,7 +3,7 @@
 @file javascript dialog
 @summary execute arbitrary javascript from dialog
 @license MIT
-@version 3.0.1
+@version 3.0.2
 @requires Bitsy Version: 4.5, 4.6
 @author Sean S. LeBlanc
 
@@ -109,7 +109,7 @@ function flatten(list) {
 @file kitsy-script-toolkit
 @summary makes it easier and cleaner to run code before and after Bitsy functions or to inject new code into Bitsy script tags
 @license WTFPL (do WTF you want)
-@version 2.2.1
+@version 2.2.2
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
@@ -257,8 +257,12 @@ function _reinitEngine() {
 // interpreter. Unescape escaped parentheticals, too.
 function convertDialogTags(input, tag) {
 	return input
-		.replace(new RegExp('(^|[^\\\\])\\((' + tag + '\\s+(".+?"|.+?))\\)', 'g'), '$1{$2}') // Rewrite (tag "..."|...) to {tag "..."|...}
-		.replace(new RegExp('\\\\\\((' + tag + '\\s+(".+"|.+))\\\\?\\)', 'g'), '($1)'); // Rewrite \(tag "..."|...\) to (tag "..."|...)
+		.replace(new RegExp('\\\\?\\((' + tag + '\\s+(".+?"|.+?))\\\\?\\)', 'g'), function(match, group){
+			if(match.substr(0,1) === '\\') {
+				return '('+ group + ')'; // Rewrite \(tag "..."|...\) to (tag "..."|...)
+			}
+			return '{'+ group + '}'; // Rewrite (tag "..."|...) to {tag "..."|...}
+		});
 }
 
 
