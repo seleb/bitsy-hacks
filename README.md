@@ -1,6 +1,6 @@
 
 # bitsy-hacks
-A collection of re-usable scripts for [Adam LeDoux](https://twitter.com/adamledoux)'s [Bitsy Game Maker](https://ledoux.itch.io/bitsy).
+A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamledoux)'s [Bitsy Game Maker](https://ledoux.itch.io/bitsy).
 
 ## contents
  - 🔈 [basic sfx](/dist/basic%20sfx.js): "walk" and "talk" sound effect support
