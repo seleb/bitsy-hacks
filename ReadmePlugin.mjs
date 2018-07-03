@@ -43,7 +43,7 @@ export default {
 		var contents = this.headers.sort((a, b) => {
 			return a.file < b.file ? -1 : a.file > b.file ? 1 : 0;
 		});
-		fs.writeFile("README.md", `
+		fs.writeFileSync("README.md", `
 # bitsy-hacks
 A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamledoux)'s [Bitsy Game Maker](https://ledoux.itch.io/bitsy).
 
