@@ -1,4 +1,14 @@
 /**
+⏱️
+@file stopwatch
+@summary time player actions
+@license MIT
+@version 1.0.0
+@author Lenny Magner
+
+@description
+Lets you start, stop and reset a timer from dialogue and print the resulting time as part of dialogue.
+
 Usage:
 	(startWatch "timer id"): starts a timer with provided id
 	(stopWatch "timer id"): stops a timer with provided id
