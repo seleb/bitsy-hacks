@@ -24,6 +24,7 @@ A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamled
  - 📎 [noclip](/dist/noclip.js): walk through wall tiles, sprites, items, exits, and endings
  - ⏳ [permanent items](/dist/permanent%20items.js): prevent some items from being picked up
  - 🛑 [solid items](/dist/solid%20items.js): treat some items like sprites that can be placed multiple times
+ - ⏱️ [stopwatch](/dist/stopwatch.js): time player actions
  - 🏰 [tracery processing](/dist/tracery%20processing.js): process all dialog text with a tracery grammar
  - 👁️‍🗨️ [transparent dialog](/dist/transparent%20dialog.js): makes the dialog box have a transparent background
  - 🏁 [transparent sprites](/dist/transparent%20sprites.js): makes all sprites have transparent backgrounds

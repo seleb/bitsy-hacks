@@ -65,6 +65,7 @@ Promise.all([
 	"noclip",
 	"permanent items",
 	"solid items",
+	"stopwatch",
 	"tracery processing",
 	"transparent dialog",
 	"transparent sprites",
