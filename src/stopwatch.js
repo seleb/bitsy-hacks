@@ -3,7 +3,7 @@
 @file stopwatch
 @summary time player actions
 @license MIT
-@version 1.0.0
+@version 1.0.1
 @author Lenny Magner
 
 @description
@@ -45,6 +45,7 @@ import {
 	addDeferredDialogTag,
 	before
 } from "./helpers/kitsy-script-toolkit";
+import { printDialog } from "./helpers/utils";
 
 var hackOptions = {
 	// function which returns the string which bitsy will print
@@ -146,7 +147,5 @@ addDialogTag('sayWatch', function (environment, parameters, onReturn) {
 	if (!timer) {
 		throw new Error('Tried to sayWatch "' + parameters[0] + '" but it was never started');
 	}
-	environment.GetDialogBuffer().AddText(hackOptions.timeToString(timer), function finish() {
-		onReturn(null);
-	});
+	printDialog(environment, hackOptions.timeToString(timer), onReturn);
 });

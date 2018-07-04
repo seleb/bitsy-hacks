@@ -96,3 +96,20 @@ export function flatten(list) {
 		return fragments.concat(flatten(arg));
 	}, []);
 }
+
+/**
+ * Helper for printing dialog inside of a dialog function.
+ * Intended to be called using the environment + onReturn parameters of the original function;
+ * e.g.
+ * addDialogTag('myTag', function (environment, parameters, onReturn) {
+ * 	printDialog(environment, 'my text', onReturn);
+ * });
+ * @param {Environment} environment Bitsy environment object; first param to a dialog function
+ * @param {String} text Text to print
+ * @param {Function} onReturn Bitsy onReturn function; third param to a dialog function
+ */
+export function printDialog(environment, text, onReturn) {
+	environment.GetDialogBuffer().AddText(text, function() {
+		onReturn(null);
+	});
+}

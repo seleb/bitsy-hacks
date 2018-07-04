@@ -3,7 +3,7 @@
 @file stopwatch
 @summary time player actions
 @license MIT
-@version 1.0.0
+@version 1.0.1
 @author Lenny Magner
 
 @description
@@ -121,6 +121,23 @@ function flatten(list) {
 	return list.reduce(function (fragments, arg) {
 		return fragments.concat(flatten(arg));
 	}, []);
+}
+
+/**
+ * Helper for printing dialog inside of a dialog function.
+ * Intended to be called using the environment + onReturn parameters of the original function;
+ * e.g.
+ * addDialogTag('myTag', function (environment, parameters, onReturn) {
+ * 	printDialog(environment, 'my text', onReturn);
+ * });
+ * @param {Environment} environment Bitsy environment object; first param to a dialog function
+ * @param {String} text Text to print
+ * @param {Function} onReturn Bitsy onReturn function; third param to a dialog function
+ */
+function printDialog(environment, text, onReturn) {
+	environment.GetDialogBuffer().AddText(text, function() {
+		onReturn(null);
+	});
 }
 
 /**
@@ -439,9 +456,7 @@ addDialogTag('sayWatch', function (environment, parameters, onReturn) {
 	if (!timer) {
 		throw new Error('Tried to sayWatch "' + parameters[0] + '" but it was never started');
 	}
-	environment.GetDialogBuffer().AddText(hackOptions.timeToString(timer), function finish() {
-		onReturn(null);
-	});
+	printDialog(environment, hackOptions.timeToString(timer), onReturn);
 });
 
 }(window));
