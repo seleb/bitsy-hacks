@@ -136,8 +136,7 @@ for (var i in hackOptions) {
 }
 
 // inject custom text effect code
-inject('var functionMap = new Map();', functionMapCode);
-inject('var TextEffects = new Map();', textEffectCode);
+inject(/(var functionMap = new Map\(\);)/, '$1'+functionMapCode+textEffectCode);
 
 // recreate the script and dialog objects so that they'll be
 // referencing the code with injections instead of the original

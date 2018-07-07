@@ -13,7 +13,7 @@ HOW TO USE:
 
   before(targetFuncName, beforeFn);
   after(targetFuncName, afterFn);
-  inject(searchString, codeFragment1[, ...codefragmentN]);
+  inject(searchRegex, replaceString);
   addDialogTag(tagName, dialogFn);
   addDeferredDialogTag(tagName, dialogFn);
 
@@ -23,22 +23,16 @@ HOW TO USE:
 import bitsy from "bitsy";
 import {
 	unique,
-	flatten,
 	inject as utilsInject
 } from "./utils";
 
 
-// Examples: inject('names.sprite.set( name, id );', 'console.dir(names)');
-//           inject('names.sprite.set( name, id );', 'console.dir(names);', 'console.dir(sprite);');
-//           inject('names.sprite.set( name, id );', ['console.dir(names)', 'console.dir(sprite);']);
-export function inject(searchString, codeFragments) {
+// Ex: inject(/(names.sprite.set\( name, id \);)/, '$1console.dir(names)');
+export function inject(searchRegex, replaceString) {
 	var kitsy = kitsyInit();
-	var args = [].slice.call(arguments);
-	codeFragments = flatten(args.slice(1));
-
 	kitsy.queuedInjectScripts.push({
-		searchString: searchString,
-		codeFragments: codeFragments
+		searchRegex: searchRegex,
+		replaceString: replaceString
 	});
 }
 
@@ -90,7 +84,7 @@ function kitsyInit() {
 
 function doInjects() {
 	bitsy.kitsy.queuedInjectScripts.forEach(function (injectScript) {
-		utilsInject(injectScript.searchString, injectScript.codeFragments);
+		utilsInject(injectScript.searchRegex, injectScript.replaceString);
 	});
 	_reinitEngine();
 }
@@ -197,8 +191,8 @@ function addDialogFunction(tag, fn) {
 export function addDialogTag(tag, fn) {
 	addDialogFunction(tag, fn);
 	inject(
-		'var functionMap = new Map();',
-		'functionMap.set("' + tag + '", kitsy.dialogFunctions.' + tag + ');'
+		/(var functionMap = new Map\(\);)/,
+		'$1functionMap.set("' + tag + '", kitsy.dialogFunctions.' + tag + ');'
 	);
 }
 
@@ -219,8 +213,8 @@ export function addDeferredDialogTag(tag, fn) {
 	bitsy.kitsy.deferredDialogFunctions = bitsy.kitsy.deferredDialogFunctions || {};
 	var deferred = bitsy.kitsy.deferredDialogFunctions[tag] = [];
 	inject(
-		'var functionMap = new Map();',
-		'functionMap.set("' + tag + '", function(e, p, o){ kitsy.deferredDialogFunctions.' + tag + '.push({e:e,p:p}); o(null); });'
+		/(var functionMap = new Map\(\);)/,
+		'$1functionMap.set("' + tag + '", function(e, p, o){ kitsy.deferredDialogFunctions.' + tag + '.push({e:e,p:p}); o(null); });'
 	);
 	// Hook into the dialog finish event and execute the actual function
 	after('onExitDialog', function () {

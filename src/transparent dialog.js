@@ -39,7 +39,7 @@ else {
 return;`;
 
 // override textbox drawing to use draw image version from above
-inject('this.DrawTextbox = function() {', drawOverride);
+inject(/this\.DrawTextbox = function\(\) {/, '$1'+drawOverride);
 
 // override textbox clearing pixels to be fully transparent
-inject('textboxInfo.img.data[i+3]=255', '*0');
+inject(/(textboxInfo\.img\.data\[i\+3\]=)255/, '$10');
