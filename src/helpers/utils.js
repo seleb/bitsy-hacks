@@ -88,16 +88,6 @@ export function unique(array) {
 	});
 }
 
-export function flatten(list) {
-	if (!Array.isArray(list)) {
-		return list;
-	}
-
-	return list.reduce(function (fragments, arg) {
-		return fragments.concat(flatten(arg));
-	}, []);
-}
-
 /**
  * Helper for printing dialog inside of a dialog function.
  * Intended to be called using the environment + onReturn parameters of the original function;
