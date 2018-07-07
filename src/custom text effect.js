@@ -46,10 +46,9 @@ The second argument is `time`, which is the time in milliseconds
 
 A number of example effects are included
 */
-import bitsy from "bitsy";
 import {
 	inject
-} from "./helpers/utils";
+} from "./helpers/kitsy-script-toolkit";
 
 var hackOptions = {
 	"my-effect": function () {
@@ -136,13 +135,4 @@ for (var i in hackOptions) {
 }
 
 // inject custom text effect code
-inject(/(var functionMap = new Map\(\);)/, '$1'+functionMapCode+textEffectCode);
-
-// recreate the script and dialog objects so that they'll be
-// referencing the code with injections instead of the original
-bitsy.scriptModule = new bitsy.Script();
-bitsy.scriptInterpreter = bitsy.scriptModule.CreateInterpreter();
-
-bitsy.dialogModule = new bitsy.Dialog();
-bitsy.dialogRenderer = bitsy.dialogModule.CreateRenderer();
-bitsy.dialogBuffer = bitsy.dialogModule.CreateBuffer();
+inject(/(var functionMap = new Map\(\);)/, '$1' + functionMapCode + textEffectCode);
