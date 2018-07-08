@@ -27,6 +27,7 @@ A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamled
  - 🔄 [online](/dist/online.js): multiplayer bitsy
  - 📃 [paragraph-break](/dist/paragraph-break.js): Adds paragraph breaks to the dialogue parser
  - ⏳ [permanent items](/dist/permanent%20items.js): prevent some items from being picked up
+ - 💾 [save](/dist/save.js): save/load your game
  - 🛑 [solid items](/dist/solid%20items.js): treat some items like sprites that can be placed multiple times
  - ⏱️ [stopwatch](/dist/stopwatch.js): time player actions
  - 🏰 [tracery processing](/dist/tracery%20processing.js): process all dialog text with a tracery grammar

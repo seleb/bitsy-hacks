@@ -68,6 +68,7 @@ Promise.all([
 	"online",
 	"paragraph-break",
 	"permanent items",
+	"save",
 	"solid items",
 	"stopwatch",
 	"tracery processing",
