@@ -135,4 +135,5 @@ for (var i in hackOptions) {
 }
 
 // inject custom text effect code
-inject(/(var functionMap = new Map\(\);)/, '$1' + functionMapCode + textEffectCode);
+inject(/(var functionMap = new Map\(\);)/, '$1' + functionMapCode);
+inject(/(var TextEffects = new Map\(\);)/, '$1' + textEffectCode);
