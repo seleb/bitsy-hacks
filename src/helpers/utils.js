@@ -6,18 +6,19 @@
 
 import bitsy from "bitsy";
 
-/*helper used to inject code into script tags based on a search string*/
-export function inject(searchString, codeToInject) {
-	var args = [].slice.call(arguments);
-	codeToInject = flatten(args.slice(1)).join('');
-
+/*
+Helper used to replace code in a script tag based on a search regex
+To inject code without erasing original string, using capturing groups; e.g.
+	inject(/(some string)/,'injected before $1 injected after')
+*/
+export function inject(searchRegex, replaceString) {
 	// find the relevant script tag
 	var scriptTags = document.getElementsByTagName('script');
 	var scriptTag;
 	var code;
 	for (var i = 0; i < scriptTags.length; ++i) {
 		scriptTag = scriptTags[i];
-		var matchesSearch = scriptTag.textContent.indexOf(searchString) !== -1;
+		var matchesSearch = scriptTag.textContent.search(searchRegex) !== -1;
 		var isCurrentScript = scriptTag === document.currentScript;
 		if (matchesSearch && !isCurrentScript) {
 			code = scriptTag.textContent;
@@ -27,11 +28,11 @@ export function inject(searchString, codeToInject) {
 
 	// error-handling
 	if (!code) {
-		throw 'Couldn\'t find "' + searchString + '" in script tags';
+		throw 'Couldn\'t find "' + searchRegex + '" in script tags';
 	}
 
 	// modify the content
-	code = code.replace(searchString, searchString + codeToInject);
+	code = code.replace(searchRegex, replaceString);
 
 	// replace the old script tag with a new one using our modified code
 	var newScriptTag = document.createElement('script');
@@ -85,16 +86,6 @@ export function unique(array) {
 	return array.filter(function (item, idx) {
 		return array.indexOf(item) === idx;
 	});
-}
-
-export function flatten(list) {
-	if (!Array.isArray(list)) {
-		return list;
-	}
-
-	return list.reduce(function (fragments, arg) {
-		return fragments.concat(flatten(arg));
-	}, []);
 }
 
 /**

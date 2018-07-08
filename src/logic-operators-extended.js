@@ -2,7 +2,7 @@
 🔀
 @file logic-operators-extended
 @summary adds conditional logic operators
-@version 1.0.2
+@version 1.0.3
 @author @mildmojo
 
 @description
@@ -33,14 +33,18 @@ import {
 	inject
 } from "./helpers/kitsy-script-toolkit";
 
-inject('operatorMap.set("-", subExp);',
+inject(/(operatorMap\.set\("-", subExp\);)/,[
+	'$1',
 	'operatorMap.set("&&", andExp);',
 	'operatorMap.set("||", orExp);',
 	'operatorMap.set("&&!", andNotExp);',
 	'operatorMap.set("||!", orNotExp);',
-	'operatorMap.set("!==", notEqExp);');
-inject('var operatorSymbols = ["-", "+", "/", "*", "<=", ">=", "<", ">", "=="];',
-	'operatorSymbols.unshift("!==", "&&", "||", "&&!", "||!");');
+	'operatorMap.set("!==", notEqExp);'
+].join('\n'));
+inject(
+	/(var operatorSymbols = \["-", "\+", "\/", "\*", "<=", ">=", "<", ">", "=="\];)/,
+	'$1operatorSymbols.unshift("!==", "&&", "||", "&&!", "||!");'
+);
 
 bitsy.andExp = function andExp(environment, left, right, onReturn) {
 	right.Eval(environment, function (rVal) {

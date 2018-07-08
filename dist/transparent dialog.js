@@ -3,7 +3,7 @@
 @file transparent dialog
 @summary makes the dialog box have a transparent background
 @license MIT
-@version 1.0.0
+@version 1.0.1
 @author Sean S. LeBlanc
 
 @description
@@ -25,18 +25,19 @@ bitsy = bitsy && bitsy.hasOwnProperty('default') ? bitsy['default'] : bitsy;
 @author Sean S. LeBlanc
 */
 
-/*helper used to inject code into script tags based on a search string*/
-function inject(searchString, codeToInject) {
-	var args = [].slice.call(arguments);
-	codeToInject = flatten(args.slice(1)).join('');
-
+/*
+Helper used to replace code in a script tag based on a search regex
+To inject code without erasing original string, using capturing groups; e.g.
+	inject(/(some string)/,'injected before $1 injected after')
+*/
+function inject(searchRegex, replaceString) {
 	// find the relevant script tag
 	var scriptTags = document.getElementsByTagName('script');
 	var scriptTag;
 	var code;
 	for (var i = 0; i < scriptTags.length; ++i) {
 		scriptTag = scriptTags[i];
-		var matchesSearch = scriptTag.textContent.indexOf(searchString) !== -1;
+		var matchesSearch = scriptTag.textContent.search(searchRegex) !== -1;
 		var isCurrentScript = scriptTag === document.currentScript;
 		if (matchesSearch && !isCurrentScript) {
 			code = scriptTag.textContent;
@@ -46,11 +47,11 @@ function inject(searchString, codeToInject) {
 
 	// error-handling
 	if (!code) {
-		throw 'Couldn\'t find "' + searchString + '" in script tags';
+		throw 'Couldn\'t find "' + searchRegex + '" in script tags';
 	}
 
 	// modify the content
-	code = code.replace(searchString, searchString + codeToInject);
+	code = code.replace(searchRegex, replaceString);
 
 	// replace the old script tag with a new one using our modified code
 	var newScriptTag = document.createElement('script');
@@ -70,22 +71,12 @@ function unique(array) {
 	});
 }
 
-function flatten(list) {
-	if (!Array.isArray(list)) {
-		return list;
-	}
-
-	return list.reduce(function (fragments, arg) {
-		return fragments.concat(flatten(arg));
-	}, []);
-}
-
 /**
 
 @file kitsy-script-toolkit
 @summary makes it easier and cleaner to run code before and after Bitsy functions or to inject new code into Bitsy script tags
 @license WTFPL (do WTF you want)
-@version 2.2.2
+@version 3.0.0
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
@@ -95,7 +86,7 @@ HOW TO USE:
 
   before(targetFuncName, beforeFn);
   after(targetFuncName, afterFn);
-  inject(searchString, codeFragment1[, ...codefragmentN]);
+  inject(searchRegex, replaceString);
   addDialogTag(tagName, dialogFn);
   addDeferredDialogTag(tagName, dialogFn);
 
@@ -104,17 +95,12 @@ HOW TO USE:
 */
 
 
-// Examples: inject('names.sprite.set( name, id );', 'console.dir(names)');
-//           inject('names.sprite.set( name, id );', 'console.dir(names);', 'console.dir(sprite);');
-//           inject('names.sprite.set( name, id );', ['console.dir(names)', 'console.dir(sprite);']);
-function inject$1(searchString, codeFragments) {
+// Ex: inject(/(names.sprite.set\( name, id \);)/, '$1console.dir(names)');
+function inject$1(searchRegex, replaceString) {
 	var kitsy = kitsyInit();
-	var args = [].slice.call(arguments);
-	codeFragments = flatten(args.slice(1));
-
 	kitsy.queuedInjectScripts.push({
-		searchString: searchString,
-		codeFragments: codeFragments
+		searchRegex: searchRegex,
+		replaceString: replaceString
 	});
 }
 
@@ -150,7 +136,7 @@ function kitsyInit() {
 
 function doInjects() {
 	bitsy.kitsy.queuedInjectScripts.forEach(function (injectScript) {
-		inject(injectScript.searchString, injectScript.codeFragments);
+		inject(injectScript.searchRegex, injectScript.replaceString);
 	});
 	_reinitEngine();
 }
@@ -235,9 +221,9 @@ else {
 return;`;
 
 // override textbox drawing to use draw image version from above
-inject$1('this.DrawTextbox = function() {', drawOverride);
+inject$1(/(this\.DrawTextbox = function\(\) {)/, '$1'+drawOverride);
 
 // override textbox clearing pixels to be fully transparent
-inject$1('textboxInfo.img.data[i+3]=255', '*0');
+inject$1(/(textboxInfo\.img\.data\[i\+3\]=)255/, '$10');
 
 }(window));

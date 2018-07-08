@@ -3,7 +3,7 @@
 @file custom text effect
 @summary make {custom}text effects{custom}
 @license MIT
-@version 1.0.0
+@version 1.0.1
 @author Sean S. LeBlanc
 
 @description
@@ -46,10 +46,9 @@ The second argument is `time`, which is the time in milliseconds
 
 A number of example effects are included
 */
-import bitsy from "bitsy";
 import {
 	inject
-} from "./helpers/utils";
+} from "./helpers/kitsy-script-toolkit";
 
 var hackOptions = {
 	"my-effect": function () {
@@ -136,14 +135,5 @@ for (var i in hackOptions) {
 }
 
 // inject custom text effect code
-inject('var functionMap = new Map();', functionMapCode);
-inject('var TextEffects = new Map();', textEffectCode);
-
-// recreate the script and dialog objects so that they'll be
-// referencing the code with injections instead of the original
-bitsy.scriptModule = new bitsy.Script();
-bitsy.scriptInterpreter = bitsy.scriptModule.CreateInterpreter();
-
-bitsy.dialogModule = new bitsy.Dialog();
-bitsy.dialogRenderer = bitsy.dialogModule.CreateRenderer();
-bitsy.dialogBuffer = bitsy.dialogModule.CreateBuffer();
+inject(/(var functionMap = new Map\(\);)/, '$1' + functionMapCode);
+inject(/(var TextEffects = new Map\(\);)/, '$1' + textEffectCode);
