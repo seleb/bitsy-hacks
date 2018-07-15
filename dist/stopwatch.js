@@ -3,7 +3,7 @@
 @file stopwatch
 @summary time player actions
 @license MIT
-@version 1.0.1
+@version 1.1.0
 @author Lenny Magner
 
 @description
@@ -136,7 +136,7 @@ function printDialog(environment, text, onReturn) {
 @file kitsy-script-toolkit
 @summary makes it easier and cleaner to run code before and after Bitsy functions or to inject new code into Bitsy script tags
 @license WTFPL (do WTF you want)
-@version 3.0.0
+@version 3.1.0
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
@@ -348,7 +348,7 @@ function addDeferredDialogTag(tag, fn) {
 	after('onExitDialog', function () {
 		while (deferred.length) {
 			var args = deferred.shift();
-			fn(args.e, args.p, args.o);
+			bitsy.kitsy.dialogFunctions[tag](args.e, args.p, args.o);
 		}
 	});
 	// Hook into the game reset and make sure data gets cleared

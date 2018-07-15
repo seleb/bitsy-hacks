@@ -1,61 +1,42 @@
 /**
-🖌
-@file edit image from dialog
-@summary edit sprites, items, and tiles from dialog
+🔄
+@file online
+@summary multiplayer bitsy
 @license MIT
-@version 1.1.0
+@version 2.0.0
 @author Sean S. LeBlanc
-
 @description
-You can use this to edit the image data of sprites (including the player avatar), items, and tiles through dialog.
-Image data can be replaced with data from another image, and the palette index can be set.
+Provides the groundwork for running a small online multiplayer bitsy game.
 
-(image "map, target, source")
-Parameters:
-  map:    Type of image (SPR, TIL, or ITM)
-  target: id/name of image to edit
-  source: id/name of image to copy
+Running it requires running a copy of this server: https://github.com/seleb/web-rtc-mesh
+Server notes:
+	- The actual game data is sent using peer-to-peer data channels;
+	the server just hosts client code and negotaties initial connections.
+	(i.e. it uses very little bandwidth)
+	- A single server can host multiple games simultaneously
+	- If you're not sure how to setup/use the server, ask for help!
 
-(imageNow "map, target, source")
-Same as (image), but applied immediately instead of after dialog is closed.
+This hack also includes the hacks for editing images/dialog at runtime through dialog.
+This provides the (image), (imageNow), (imagePal), (imagePalNow), and (dialog) commands.
+In the online hack, these will automatically trigger a sprite update so that updates to the avatar will be reflected for other players.
+See the respective hacks for more info on how to use the commands.
 
-(imagePal "map, target, palette")
-Parameters:
-  map:    Type of image (SPR, TIL, or ITM)
-  target: id/name of image to edit
-  source: palette index (0 is bg, 1 is tiles, 2 is sprites/items, anything higher requires editing your game data to include more)
-
-(imagePalNow "map, target, palette")
-Same as (imagePal), but applied immediately instead of after dialog is closed.
-
-Examples:
-  (image "SPR, A, a")
-  (imageNow "TIL, a, floor")
-  (image "ITM, a, b")
-  (imagePal "SPR, A, 1")
-  (imagePalNow "TIL, floor, 2")
+Note on dialog: You can use scripting in the dialog, but it will execute on the other players' games, accessing *their* variables.
 
 HOW TO USE:
-  1. Copy-paste this script into a new script tag after the Bitsy source code.
-     It should appear *before* any other mods that handle loading your game
-     data so it executes *after* them (last-in first-out).
-
-TIPS:
-  - The player avatar is always a sprite with id "A"; you can edit your gamedata to give them a name for clarity
-  - You can use the full names or shorthand of image types (e.g. "SPR" and "sprite" will both work)
-  - The "source" images don't have to be placed anywhere; so long as they exist in the gamedata they'll work
-  - This is a destructive operation! Unless you have a copy of an overwritten image, you won't be able to get it back during that run
-
-NOTE: This uses parentheses "()" instead of curly braces "{}" around function
-      calls because the Bitsy editor's fancy dialog window strips unrecognized
-      curly-brace functions from dialog text. To keep from losing data, write
-      these function calls with parentheses like the examples above.
-
-      For full editor integration, you'd *probably* also need to paste this
-      code at the end of the editor's `bitsy.js` file. Untested.
+1. Copy-paste this script into a script tag after the bitsy source
+2. Edit `hackOptions.host` below to point to your server (depending on hosting, you may need to use `ws://` instead of `wss://`)
+3. Edit other hackOptions as needed
 */
 (function (bitsy) {
 'use strict';
+var hackOptions = {
+	host: "wss://your signalling server",
+	// room: "custom room", // sets the room on the server to use; otherwise, uses game title
+	immediateMode: true, // if true, teleports players to their reported positions; otherwise, queues movements and lets bitsy handle the walking (note: other players pick up items like this)
+	ghosts: false, // if true, sprites from players who disconnected while you were online won't go away until you restart
+	debug: false, // if true, includes web-rtc-mesh debug logs in console
+};
 
 bitsy = bitsy && bitsy.hasOwnProperty('default') ? bitsy['default'] : bitsy;
 
@@ -354,6 +335,59 @@ function addDeferredDialogTag(tag, fn) {
 }
 
 /**
+☕
+@file javascript dialog
+@summary execute arbitrary javascript from dialog
+@license MIT
+@version 3.1.0
+@requires Bitsy Version: 4.5, 4.6
+@author Sean S. LeBlanc
+
+@description
+Lets you execute arbitrary JavaScript from dialog (including inside conditionals).
+If you're familiar with the Bitsy source, this will let you write one-shot hacks
+for a wide variety of situations.
+
+Usage:
+	(js "<JavaScript code to evaluate after dialog is closed>")
+	(jsNow "<JavaScript code to evaluate immediately>")
+
+Examples:
+	move a sprite:
+	(js "sprite['a'].x = 10;")
+	edit palette colour:
+	(js "getPal(curPal())[0] = [255,0,0];renderImages();")
+	place an item next to player:
+	(js "room[curRoom].items.push({id:'0',x:player().x+1,y:player().y});")
+	verbose facimile of exit-from-dialog:
+	(js "var _onExitDialog=onExitDialog;onExitDialog=function(){player().room=curRoom='3';_onExitDialog.apply(this,arguments);onExitDialog=_onExitDialog;};")
+
+HOW TO USE:
+1. Copy-paste into a script tag after the bitsy source
+2. Add (js "<code>") to your dialog as needed
+
+NOTE: This uses parentheses "()" instead of curly braces "{}" around function
+      calls because the Bitsy editor's fancy dialog window strips unrecognized
+      curly-brace functions from dialog text. To keep from losing data, write
+      these function calls with parentheses like the examples above.
+
+      For full editor integration, you'd *probably* also need to paste this
+      code at the end of the editor's `bitsy.js` file. Untested.
+*/
+
+var indirectEval$1 = eval;
+
+function executeJs(environment, parameters, onReturn) {
+	indirectEval$1(parameters[0]);
+	if (onReturn) {
+		onReturn(null);
+	}
+}
+
+addDeferredDialogTag('js', executeJs);
+addDialogTag('jsNow', executeJs);
+
+/**
 @file edit image at runtime
 @summary API for updating image data at runtime.
 @author Sean S. LeBlanc
@@ -411,7 +445,66 @@ function setImageData(id, frame, map, newData) {
 	}
 }
 
+function setSpriteData(id, frame, newData) {
+	setImageData(id, frame, bitsy.sprite, newData);
+}
 
+/**
+🖌
+@file edit image from dialog
+@summary edit sprites, items, and tiles from dialog
+@license MIT
+@version 1.1.0
+@author Sean S. LeBlanc
+
+@description
+You can use this to edit the image data of sprites (including the player avatar), items, and tiles through dialog.
+Image data can be replaced with data from another image, and the palette index can be set.
+
+(image "map, target, source")
+Parameters:
+  map:    Type of image (SPR, TIL, or ITM)
+  target: id/name of image to edit
+  source: id/name of image to copy
+
+(imageNow "map, target, source")
+Same as (image), but applied immediately instead of after dialog is closed.
+
+(imagePal "map, target, palette")
+Parameters:
+  map:    Type of image (SPR, TIL, or ITM)
+  target: id/name of image to edit
+  source: palette index (0 is bg, 1 is tiles, 2 is sprites/items, anything higher requires editing your game data to include more)
+
+(imagePalNow "map, target, palette")
+Same as (imagePal), but applied immediately instead of after dialog is closed.
+
+Examples:
+  (image "SPR, A, a")
+  (imageNow "TIL, a, floor")
+  (image "ITM, a, b")
+  (imagePal "SPR, A, 1")
+  (imagePalNow "TIL, floor, 2")
+
+HOW TO USE:
+  1. Copy-paste this script into a new script tag after the Bitsy source code.
+     It should appear *before* any other mods that handle loading your game
+     data so it executes *after* them (last-in first-out).
+
+TIPS:
+  - The player avatar is always a sprite with id "A"; you can edit your gamedata to give them a name for clarity
+  - You can use the full names or shorthand of image types (e.g. "SPR" and "sprite" will both work)
+  - The "source" images don't have to be placed anywhere; so long as they exist in the gamedata they'll work
+  - This is a destructive operation! Unless you have a copy of an overwritten image, you won't be able to get it back during that run
+
+NOTE: This uses parentheses "()" instead of curly braces "{}" around function
+      calls because the Bitsy editor's fancy dialog window strips unrecognized
+      curly-brace functions from dialog text. To keep from losing data, write
+      these function calls with parentheses like the examples above.
+
+      For full editor integration, you'd *probably* also need to paste this
+      code at the end of the editor's `bitsy.js` file. Untested.
+*/
 
 // map of maps
 var maps;
@@ -514,5 +607,235 @@ addDialogTag('imageNow', editImage);
 
 addDeferredDialogTag('imagePal', editPalette);
 addDialogTag('imagePalNow', editPalette);
+
+/**
+📝
+@file edit dialog from dialog
+@summary edit dialog from dialog (yes really)
+@license MIT
+@version 1.0.0
+@author Sean S. LeBlanc
+
+@description
+You can use this to edit the dialog of sprites/items through dialog.
+
+(dialog "map, target, newDialog")
+Parameters:
+	map:       Type of image (SPR or ITM)
+	target:    id/name of image to edit
+	newDialog: id/name of image to edit
+
+Note: this hack disables bitsy's script caching.
+
+HOW TO USE:
+	Copy-paste this script into a new script tag after the Bitsy source code.
+
+TIPS:
+	- The player avatar is always a sprite with id "A"; you can edit your gamedata to give them a name for clarity
+	- You can use the full names or shorthand of image types (e.g. "SPR" and "sprite" will both work)
+*/
+
+// map of maps
+var maps$1;
+after('load_game', function () {
+	maps$1 = {
+		spr: bitsy.sprite,
+		sprite: bitsy.sprite,
+		itm: bitsy.item,
+		item: bitsy.item,
+	};
+});
+
+function editDialog(environment, parameters) {
+	// parse parameters
+	var params = parameters[0].split(/,\s?/);
+	params[0] = (params[0] || "").toLowerCase();
+	var mapId = params[0];
+	var tgtId = params[1];
+	var newDialog = params[2] || "";
+
+	if (!mapId || !tgtId) {
+		throw new Error('Image expects three parameters: "map, target, newDialog", but received: "' + params.join(', ') + '"');
+	}
+
+	// get objects
+	var mapObj = maps$1[mapId];
+	if (!mapObj) {
+		throw new Error('Invalid map "' + mapId + '". Try "SPR" or "ITM" instead.');
+	}
+	var tgtObj = getImage(tgtId, mapObj);
+	if (!tgtObj) {
+		throw new Error('Target "' + tgtId + '" was not the id/name of a ' + mapId + '.');
+	}
+	bitsy.dialog[tgtObj.dlg] = newDialog;
+}
+
+// hook up the dialog tag
+addDeferredDialogTag('dialog', editDialog);
+
+// disable bitsy's dialog caching
+inject(/startDialog\(dialogStr,dialogId\);/g, 'startDialog(dialogStr);');
+
+
+
+
+
+// download the client script
+// bitsy starts onload, so adding it to the head
+// is enough to delay game startup until it's loaded/errored
+var clientScript = document.createElement("script");
+clientScript.src = hackOptions.host.replace(/^ws/, "http") + "/client.js";
+clientScript.onload = function () {
+	console.log("online available!");
+};
+clientScript.onerror = function (error) {
+	console.error("online not available!", error);
+};
+document.head.appendChild(clientScript);
+
+var client;
+
+function onData(event) {
+	var spr;
+	var data = event.data;
+	switch (data.e) {
+		case "move":
+			spr = bitsy.sprite[event.from];
+			if (spr) {
+				// move sprite
+				if (hackOptions.immediateMode) {
+					// do it now
+					spr.x = data.x;
+					spr.y = data.y;
+					spr.room = data.room;
+				} else {
+					// let bitsy handle it later
+					spr.walkingPath.push({
+						x: data.x,
+						y: data.y
+					});
+				}
+			} else {
+				// got a move from an unknown player,
+				// so ask them who they are
+				client.send(event.from, {
+					e: "gimmeSprite"
+				});
+			}
+			break;
+		case "gimmeSprite":
+			// send a sprite update to specific peer
+			client.send(event.from, getSpriteUpdate());
+			break;
+		case "sprite":
+			// update a sprite
+			var longname = "SPR_" + event.from;
+			spr = bitsy.sprite[event.from] = {
+				animation: {
+					frameCount: data.data.length,
+					frameIndex: 0,
+					isAnimated: data.data.length > 1
+				},
+				col: data.col,
+				dlg: longname,
+				drw: longname,
+				inventory: {},
+				name: event.from,
+				walkingPath: [],
+				x: data.x,
+				y: data.y,
+				room: data.room
+			};
+			bitsy.dialog[longname] = data.dlg;
+			bitsy.imageStore.source[longname] = data.data;
+
+			for (var frame = 0; frame < data.data.length; ++frame) {
+				setSpriteData(event.from, frame, data.data[frame]);
+			}
+			break;
+	}
+}
+
+function onClose(event) {
+	if (event.error) {
+		console.error('Connection closed due to error:', event.error);
+	}
+
+	if (!hackOptions.ghosts) {
+		delete bitsy.sprite[event.id];
+	}
+}
+
+after("startExportedGame", function () {
+	if (!window.Client) {
+		console.error("Couldn't retrieve client; running game offline");
+	}
+	client = new window.Client.default({
+		host: hackOptions.host,
+		room: hackOptions.room || bitsy.title,
+	});
+	client.on(window.Client.DATA, onData);
+	client.on(window.Client.CLOSE, onClose);
+	client.setDebug(hackOptions.debug);
+});
+
+after("movePlayer", moveSprite);
+after("onready", function () {
+	// tell everyone who you are
+	// and ask who they are 1s after starting
+	setTimeout(function () {
+		if (client) {
+			updateSprite();
+			client.broadcast({
+				e: "gimmeSprite"
+			});
+		}
+	}, 1000);
+});
+
+// tell everyone where you are
+function moveSprite() {
+	var p = bitsy.player();
+	client.broadcast({
+		e: "move",
+		x: p.x,
+		y: p.y,
+		room: p.room
+	});
+}
+
+// tell everyone who you are
+function updateSprite() {
+	client.broadcast(getSpriteUpdate());
+}
+
+// helper to create a sprite update based on the player avatar
+function getSpriteUpdate() {
+	var p = bitsy.player();
+	return {
+		e: "sprite",
+		data: bitsy.imageStore.source[p.drw],
+		x: p.x,
+		y: p.y,
+		room: p.room,
+		dlg: bitsy.dialog[p.dlg],
+		col: p.col
+	};
+}
+
+// trigger sprite updates after these dialog functions
+[
+	'image',
+	'imageNow',
+	'imagePal',
+	'imagePalNow',
+	'dialog'
+].forEach(function (tag) {
+	var original = bitsy.kitsy.dialogFunctions[tag];
+	bitsy.kitsy.dialogFunctions[tag] = function () {
+		original.apply(this, arguments);
+		updateSprite();
+	};
+});
 
 }(window));

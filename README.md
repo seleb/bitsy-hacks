@@ -11,6 +11,7 @@ A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamled
  - 🅰 [custom text effect](/dist/custom%20text%20effect.js): make {custom}text effects{custom}
  - ↔ [directional avatar](/dist/directional%20avatar.js): flips the player's sprite based on directional movement
  - 🖼 [dynamic background](/dist/dynamic%20background.js): HTML background matching bitsy background
+ - 📝 [edit dialog from dialog](/dist/edit%20dialog%20from%20dialog.js): edit dialog from dialog (yes really)
  - 🖌 [edit image from dialog](/dist/edit%20image%20from%20dialog.js): edit sprites, items, and tiles from dialog
  - 🔚 [end-from-dialog](/dist/end-from-dialog.js): trigger an ending from dialog, including narration text
  - 🚪 [exit-from-dialog](/dist/exit-from-dialog.js): exit to another room from dialog, including conditionals
@@ -22,6 +23,7 @@ A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamled
  - 🔀 [logic-operators-extended](/dist/logic-operators-extended.js): adds conditional logic operators
  - 👨‍👨‍👧‍👧 [multi-sprite avatar](/dist/multi-sprite%20avatar.js): make the player big
  - 📎 [noclip](/dist/noclip.js): walk through wall tiles, sprites, items, exits, and endings
+ - 🔄 [online](/dist/online.js): multiplayer bitsy
  - ⏳ [permanent items](/dist/permanent%20items.js): prevent some items from being picked up
  - 🛑 [solid items](/dist/solid%20items.js): treat some items like sprites that can be placed multiple times
  - ⏱️ [stopwatch](/dist/stopwatch.js): time player actions
