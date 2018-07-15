@@ -34,13 +34,13 @@ the dialog string locally, then set it, then send an update.
 import bitsy from "bitsy";
 import {
 	after
-} from "./kitsy-script-toolkit.js";
+} from "./helpers/kitsy-script-toolkit.js";
 import "./javascript dialog.js";
 import {
 	getImage,
 	getSpriteData,
 	setSpriteData
-} from "./edit image at runtime.js";
+} from "./helpers/edit image at runtime.js";
 
 var hackOptions = {
 	host: "wss://your signalling server",
