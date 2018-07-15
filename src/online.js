@@ -36,17 +36,16 @@ import {
 } from "./helpers/kitsy-script-toolkit.js";
 import "./javascript dialog.js";
 import {
-	getImage,
-	getSpriteData,
 	setSpriteData
 } from "./helpers/edit image at runtime.js";
+import "./edit image from dialog";
+import "./edit dialog from dialog";
 
 var hackOptions = {
 	host: "wss://your signalling server",
 	// room: "custom room", // sets the room on the server to use; otherwise, uses game title
 	immediateMode: true, // if true, teleports players to their reported positions; otherwise, queues movements and lets bitsy handle the walking (note: other players pick up items like this)
 	ghosts: false, // if true, sprites from players who disconnected while you were online won't go away until you restart
-	export: true, // if true, `window.online` will be set to an object with an API for affecting multiplayer
 	debug: false, // if true, includes web-rtc-mesh debug logs in console
 };
 
@@ -144,31 +143,6 @@ after("startExportedGame", function () {
 	client.on(window.Client.DATA, onData);
 	client.on(window.Client.CLOSE, onClose);
 	client.setDebug(hackOptions.debug);
-
-	if (hackOptions.export) {
-		window.online = {
-			client: client,
-			updateSprite: updateSprite,
-			setSprite: function (spr) {
-				var p = bitsy.player();
-				var t = getImage(spr, bitsy.sprite);
-				p.animation = {
-					frameCount: t.animation.frameCount,
-					isAnimated: t.animation.isAnimated,
-					frameIndex: 0
-				};
-				p.col = t.col;
-				for (var i = 0; i < p.animation.frameCount; ++i) {
-					setSpriteData(bitsy.playerId, i, getSpriteData(spr, i));
-				}
-				updateSprite();
-			},
-			setDialog: function (str) {
-				bitsy.dialog[bitsy.player().dlg] = str;
-				updateSprite();
-			}
-		};
-	}
 });
 
 after("movePlayer", moveSprite);
@@ -214,3 +188,18 @@ function getSpriteUpdate() {
 		col: p.col
 	};
 }
+
+// trigger sprite updates after these dialog functions
+[
+	'image',
+	'imageNow',
+	'imagePal',
+	'imagePalNow',
+	'dialog'
+].forEach(function (tag) {
+	var original = bitsy.kitsy.dialogFunctions[tag];
+	bitsy.kitsy.dialogFunctions[tag] = function () {
+		original.apply(this, arguments);
+		updateSprite();
+	};
+});
