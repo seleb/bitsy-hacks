@@ -86,8 +86,7 @@ function onData(event) {
 				// got a move from an unknown player,
 				// so ask them who they are
 				client.send(event.from, {
-					e: "gimmeSprite",
-					from: client.id
+					e: "gimmeSprite"
 				});
 			}
 			break;
@@ -125,10 +124,10 @@ function onData(event) {
 }
 
 function onClose(event) {
-	if(event.error){
+	if (event.error) {
 		console.error('Connection closed due to error:', event.error);
 	}
-	
+
 	if (!hackOptions.ghosts) {
 		delete bitsy.sprite[event.id];
 	}
@@ -180,8 +179,7 @@ after("onready", function () {
 		if (client) {
 			updateSprite();
 			client.broadcast({
-				e: "gimmeSprite",
-				from: client.id
+				e: "gimmeSprite"
 			});
 		}
 	}, 1000);
@@ -194,8 +192,7 @@ function moveSprite() {
 		e: "move",
 		x: p.x,
 		y: p.y,
-		room: p.room,
-		from: client.id
+		room: p.room
 	});
 }
 
@@ -209,7 +206,6 @@ function getSpriteUpdate() {
 	var p = bitsy.player();
 	return {
 		e: "sprite",
-		from: client.id,
 		data: bitsy.imageStore.source[p.drw],
 		x: p.x,
 		y: p.y,
