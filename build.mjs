@@ -52,6 +52,7 @@ Promise.all([
 	"custom text effect",
 	"directional avatar",
 	"dynamic background",
+	"edit dialog from dialog",
 	"edit image from dialog",
 	"end-from-dialog",
 	"exit-from-dialog",
