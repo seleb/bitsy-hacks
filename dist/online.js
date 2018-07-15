@@ -3,42 +3,39 @@
 @file online
 @summary multiplayer bitsy
 @license MIT
-@version 1.0.0
+@version 2.0.0
 @author Sean S. LeBlanc
 @description
 Provides the groundwork for running a small online multiplayer bitsy game.
-Running it requires a signalling server to negotiate connections: https://github.com/seleb/web-rtc-mesh
-The actual game data is sent using peer-to-peer data channels, but the server needs
-to be up and running in order to make the initial connections.
+
+Running it requires running a copy of this server: https://github.com/seleb/web-rtc-mesh
+Server notes:
+	- The actual game data is sent using peer-to-peer data channels;
+	the server just hosts client code and negotaties initial connections.
+	(i.e. it uses very little bandwidth)
+	- A single server can host multiple games simultaneously
+	- If you're not sure how to setup/use the server, ask for help!
+
+This hack also includes the hacks for editing images/dialog at runtime through dialog.
+This provides the (image), (imageNow), (imagePal), (imagePalNow), and (dialog) commands.
+In the online hack, these will automatically trigger a sprite update so that updates to the avatar will be reflected for other players.
+See the respective hacks for more info on how to use the commands.
+
+Note on dialog: You can use scripting in the dialog, but it will execute on the other players' games, accessing *their* variables.
 
 HOW TO USE:
-1. Copy-paste `<script src="https://<your signalling server>/Vertex.js"></script>` after the bitsy source
-1. Copy-paste this script into a script tag after that
+1. Copy-paste this script into a script tag after the bitsy source
 2. Edit `hackOptions.host` below to point to your server (depending on hosting, you may need to use `ws://` instead of `wss://`)
 3. Edit other hackOptions as needed
-
-If `export` is true, an API is provided in `window.online`:
-	setSprite(string): updates the player avatar to match the sprite with the provided name/id, then broadcasts an update
-	setDialog(string): updates the player dialog to the provided string, then broadcasts an update
-	updateSprite(): broadcasts an update
-	vertex: reference to the object managing connections
-
-This hack also includes the javascript dialog hack in order to make it easy to
-control the multiplayer from inside bitsy. An example of how this can be used is:
-(js "online.setSprite('a'); online.setDialog('im a cat');")
-
-Note on dialog: You can use scripting in the dialog, but it will execute on the other players' games,
-accessing *their* variables. If you want to send dialog based on data in your game, you have to construct
-the dialog string locally, then set it, then send an update.
 */
 (function (bitsy) {
 'use strict';
 var hackOptions = {
 	host: "wss://your signalling server",
+	// room: "custom room", // sets the room on the server to use; otherwise, uses game title
 	immediateMode: true, // if true, teleports players to their reported positions; otherwise, queues movements and lets bitsy handle the walking (note: other players pick up items like this)
 	ghosts: false, // if true, sprites from players who disconnected while you were online won't go away until you restart
-	export: true, // if true, `window.online` will be set to an object with an API for affecting multiplayer
-	disableConsole: true // if true, sets console.log to an empty function (recommended; the logs are pretty spammy)
+	debug: false, // if true, includes web-rtc-mesh debug logs in console
 };
 
 bitsy = bitsy && bitsy.hasOwnProperty('default') ? bitsy['default'] : bitsy;
@@ -49,18 +46,19 @@ bitsy = bitsy && bitsy.hasOwnProperty('default') ? bitsy['default'] : bitsy;
 @author Sean S. LeBlanc
 */
 
-/*helper used to inject code into script tags based on a search string*/
-function inject(searchString, codeToInject) {
-	var args = [].slice.call(arguments);
-	codeToInject = flatten(args.slice(1)).join('');
-
+/*
+Helper used to replace code in a script tag based on a search regex
+To inject code without erasing original string, using capturing groups; e.g.
+	inject(/(some string)/,'injected before $1 injected after')
+*/
+function inject(searchRegex, replaceString) {
 	// find the relevant script tag
 	var scriptTags = document.getElementsByTagName('script');
 	var scriptTag;
 	var code;
 	for (var i = 0; i < scriptTags.length; ++i) {
 		scriptTag = scriptTags[i];
-		var matchesSearch = scriptTag.textContent.indexOf(searchString) !== -1;
+		var matchesSearch = scriptTag.textContent.search(searchRegex) !== -1;
 		var isCurrentScript = scriptTag === document.currentScript;
 		if (matchesSearch && !isCurrentScript) {
 			code = scriptTag.textContent;
@@ -70,11 +68,11 @@ function inject(searchString, codeToInject) {
 
 	// error-handling
 	if (!code) {
-		throw 'Couldn\'t find "' + searchString + '" in script tags';
+		throw 'Couldn\'t find "' + searchRegex + '" in script tags';
 	}
 
 	// modify the content
-	code = code.replace(searchString, searchString + codeToInject);
+	code = code.replace(searchRegex, replaceString);
 
 	// replace the old script tag with a new one using our modified code
 	var newScriptTag = document.createElement('script');
@@ -110,49 +108,36 @@ function unique(array) {
 	});
 }
 
-function flatten(list) {
-	if (!Array.isArray(list)) {
-		return list;
-	}
-
-	return list.reduce(function (fragments, arg) {
-		return fragments.concat(flatten(arg));
-	}, []);
-}
-
 /**
 
 @file kitsy-script-toolkit
 @summary makes it easier and cleaner to run code before and after Bitsy functions or to inject new code into Bitsy script tags
 @license WTFPL (do WTF you want)
-@version 2.0.0
+@version 3.1.0
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
 @description
 HOW TO USE:
-  import {before, after, inject} from "./kitsy-script-toolkit.js";
+  import {before, after, inject, addDialogTag, addDeferredDialogTag} from "./helpers/kitsy-script-toolkit";
 
   before(targetFuncName, beforeFn);
   after(targetFuncName, afterFn);
-  inject(searchString, codeFragment1[, ...codefragmentN]);
+  inject(searchRegex, replaceString);
+  addDialogTag(tagName, dialogFn);
+  addDeferredDialogTag(tagName, dialogFn);
 
   For more info, see the documentation at:
   https://github.com/seleb/bitsy-hacks/wiki/Coding-with-kitsy
 */
 
 
-// Examples: inject('names.sprite.set( name, id );', 'console.dir(names)');
-//           inject('names.sprite.set( name, id );', 'console.dir(names);', 'console.dir(sprite);');
-//           inject('names.sprite.set( name, id );', ['console.dir(names)', 'console.dir(sprite);']);
-function inject$1(searchString, codeFragments) {
+// Ex: inject(/(names.sprite.set\( name, id \);)/, '$1console.dir(names)');
+function inject$1(searchRegex, replaceString) {
 	var kitsy = kitsyInit();
-	var args = [].slice.call(arguments);
-	codeFragments = flatten(args.slice(1));
-
 	kitsy.queuedInjectScripts.push({
-		searchString: searchString,
-		codeFragments: codeFragments
+		searchRegex: searchRegex,
+		replaceString: replaceString
 	});
 }
 
@@ -180,9 +165,6 @@ function kitsyInit() {
 
 	// Initialize kitsy
 	bitsy.kitsy = {
-		inject: inject$1,
-		before: before,
-		after: after,
 		queuedInjectScripts: [],
 		queuedBeforeScripts: {},
 		queuedAfterScripts: {}
@@ -207,7 +189,7 @@ function kitsyInit() {
 
 function doInjects() {
 	bitsy.kitsy.queuedInjectScripts.forEach(function (injectScript) {
-		inject(injectScript.searchString, injectScript.codeFragments);
+		inject(injectScript.searchRegex, injectScript.replaceString);
 	});
 	_reinitEngine();
 }
@@ -270,12 +252,94 @@ function _reinitEngine() {
 	bitsy.dialogBuffer = bitsy.dialogModule.CreateBuffer();
 }
 
+// Rewrite custom functions' parentheses to curly braces for Bitsy's
+// interpreter. Unescape escaped parentheticals, too.
+function convertDialogTags(input, tag) {
+	return input
+		.replace(new RegExp('\\\\?\\((' + tag + '\\s+(".+?"|.+?))\\\\?\\)', 'g'), function(match, group){
+			if(match.substr(0,1) === '\\') {
+				return '('+ group + ')'; // Rewrite \(tag "..."|...\) to (tag "..."|...)
+			}
+			return '{'+ group + '}'; // Rewrite (tag "..."|...) to {tag "..."|...}
+		});
+}
+
+
+function addDialogFunction(tag, fn) {
+	var kitsy = kitsyInit();
+	kitsy.dialogFunctions = kitsy.dialogFunctions || {};
+	if (kitsy.dialogFunctions[tag]) {
+		throw new Error('The dialog function "' + tag + '" already exists.');
+	}
+
+	// Hook into game load and rewrite custom functions in game data to Bitsy format.
+	before('load_game', function (game_data, startWithTitle) {
+		return [convertDialogTags(game_data, tag), startWithTitle];
+	});
+
+	kitsy.dialogFunctions[tag] = fn;
+}
+
+/**
+ * Adds a custom dialog tag which executes the provided function.
+ * For ease-of-use with the bitsy editor, tags can be written as
+ * (tagname "parameters") in addition to the standard {tagname "parameters"}
+ * 
+ * Function is executed immediately when the tag is reached.
+ *
+ * @param {string}   tag Name of tag
+ * @param {Function} fn  Function to execute, with signature `function(environment, parameters, onReturn){}`
+ *                       environment: provides access to SetVariable/GetVariable (among other things, see Environment in the bitsy source for more info)
+ *                       parameters: array containing parameters as string in first element (i.e. `parameters[0]`)
+ *                       onReturn: function to call with return value (just call `onReturn(null);` at the end of your function if your tag doesn't interact with the logic system)
+ */
+function addDialogTag(tag, fn) {
+	addDialogFunction(tag, fn);
+	inject$1(
+		/(var functionMap = new Map\(\);)/,
+		'$1functionMap.set("' + tag + '", kitsy.dialogFunctions.' + tag + ');'
+	);
+}
+
+/**
+ * Adds a custom dialog tag which executes the provided function.
+ * For ease-of-use with the bitsy editor, tags can be written as
+ * (tagname "parameters") in addition to the standard {tagname "parameters"}
+ * 
+ * Function is executed after the dialog box.
+ *
+ * @param {string}   tag Name of tag
+ * @param {Function} fn  Function to execute, with signature `function(environment, parameters){}`
+ *                       environment: provides access to SetVariable/GetVariable (among other things, see Environment in the bitsy source for more info)
+ *                       parameters: array containing parameters as string in first element (i.e. `parameters[0]`)
+ */
+function addDeferredDialogTag(tag, fn) {
+	addDialogFunction(tag, fn);
+	bitsy.kitsy.deferredDialogFunctions = bitsy.kitsy.deferredDialogFunctions || {};
+	var deferred = bitsy.kitsy.deferredDialogFunctions[tag] = [];
+	inject$1(
+		/(var functionMap = new Map\(\);)/,
+		'$1functionMap.set("' + tag + '", function(e, p, o){ kitsy.deferredDialogFunctions.' + tag + '.push({e:e,p:p}); o(null); });'
+	);
+	// Hook into the dialog finish event and execute the actual function
+	after('onExitDialog', function () {
+		while (deferred.length) {
+			var args = deferred.shift();
+			bitsy.kitsy.dialogFunctions[tag](args.e, args.p, args.o);
+		}
+	});
+	// Hook into the game reset and make sure data gets cleared
+	after('clearGameData', function () {
+		deferred.length = 0;
+	});
+}
+
 /**
 ☕
 @file javascript dialog
 @summary execute arbitrary javascript from dialog
 @license MIT
-@version 1.0.0
+@version 3.1.0
 @requires Bitsy Version: 4.5, 4.6
 @author Sean S. LeBlanc
 
@@ -284,7 +348,9 @@ Lets you execute arbitrary JavaScript from dialog (including inside conditionals
 If you're familiar with the Bitsy source, this will let you write one-shot hacks
 for a wide variety of situations.
 
-Usage: (js "<JavaScript code to evaluate>")
+Usage:
+	(js "<JavaScript code to evaluate after dialog is closed>")
+	(jsNow "<JavaScript code to evaluate immediately>")
 
 Examples:
 	move a sprite:
@@ -309,24 +375,17 @@ NOTE: This uses parentheses "()" instead of curly braces "{}" around function
       code at the end of the editor's `bitsy.js` file. Untested.
 */
 
-// Hook into game load and rewrite custom functions in game data to Bitsy format.
-before("load_game", function (game_data, startWithTitle) {
-	// Rewrite custom functions' parentheses to curly braces for Bitsy's
-	// interpreter. Unescape escaped parentheticals, too.
-	var fixedGameData = game_data
-	.replace(/(^|[^\\])\((.*? ".+?")\)/g, "$1{$2}") // Rewrite (...) to {...}
-	.replace(/\\\((.*? ".+")\\?\)/g, "($1)"); // Rewrite \(...\) to (...)
-	return [fixedGameData, startWithTitle];
-});
+var indirectEval$1 = eval;
 
-// Rewrite the Bitsy script tag, making these new functions callable from dialog.
-inject$1(
-	"var functionMap = new Map();",
-	"functionMap.set('js', " + function (environment, parameters, onReturn) {
-		eval(parameters[0]);
+function executeJs(environment, parameters, onReturn) {
+	indirectEval$1(parameters[0]);
+	if (onReturn) {
 		onReturn(null);
-	}.toString() + ");"
-);
+	}
+}
+
+addDeferredDialogTag('js', executeJs);
+addDialogTag('jsNow', executeJs);
 
 /**
 @file edit image at runtime
@@ -361,10 +420,6 @@ function getImageData(id, frame, map) {
 	return bitsy.imageStore.source[getImage(id, map).drw][frame];
 }
 
-function getSpriteData(id, frame) {
-	return getImageData(id, frame, bitsy.sprite);
-}
-
 /*
 Updates a single frame of image data
 
@@ -394,119 +449,334 @@ function setSpriteData(id, frame, newData) {
 	setImageData(id, frame, bitsy.sprite, newData);
 }
 
+/**
+🖌
+@file edit image from dialog
+@summary edit sprites, items, and tiles from dialog
+@license MIT
+@version 1.1.0
+@author Sean S. LeBlanc
 
+@description
+You can use this to edit the image data of sprites (including the player avatar), items, and tiles through dialog.
+Image data can be replaced with data from another image, and the palette index can be set.
 
+(image "map, target, source")
+Parameters:
+  map:    Type of image (SPR, TIL, or ITM)
+  target: id/name of image to edit
+  source: id/name of image to copy
 
+(imageNow "map, target, source")
+Same as (image), but applied immediately instead of after dialog is closed.
 
-if (hackOptions.disableConsole) {
-	console.log = function () {}; //eslint-disable-line
+(imagePal "map, target, palette")
+Parameters:
+  map:    Type of image (SPR, TIL, or ITM)
+  target: id/name of image to edit
+  source: palette index (0 is bg, 1 is tiles, 2 is sprites/items, anything higher requires editing your game data to include more)
+
+(imagePalNow "map, target, palette")
+Same as (imagePal), but applied immediately instead of after dialog is closed.
+
+Examples:
+  (image "SPR, A, a")
+  (imageNow "TIL, a, floor")
+  (image "ITM, a, b")
+  (imagePal "SPR, A, 1")
+  (imagePalNow "TIL, floor, 2")
+
+HOW TO USE:
+  1. Copy-paste this script into a new script tag after the Bitsy source code.
+     It should appear *before* any other mods that handle loading your game
+     data so it executes *after* them (last-in first-out).
+
+TIPS:
+  - The player avatar is always a sprite with id "A"; you can edit your gamedata to give them a name for clarity
+  - You can use the full names or shorthand of image types (e.g. "SPR" and "sprite" will both work)
+  - The "source" images don't have to be placed anywhere; so long as they exist in the gamedata they'll work
+  - This is a destructive operation! Unless you have a copy of an overwritten image, you won't be able to get it back during that run
+
+NOTE: This uses parentheses "()" instead of curly braces "{}" around function
+      calls because the Bitsy editor's fancy dialog window strips unrecognized
+      curly-brace functions from dialog text. To keep from losing data, write
+      these function calls with parentheses like the examples above.
+
+      For full editor integration, you'd *probably* also need to paste this
+      code at the end of the editor's `bitsy.js` file. Untested.
+*/
+
+// map of maps
+var maps;
+after('load_game', function () {
+	maps = {
+    spr: bitsy.sprite,
+    sprite: bitsy.sprite,
+    til: bitsy.tile,
+    tile: bitsy.tile,
+    itm: bitsy.item,
+    item: bitsy.item,
+	};
+});
+
+function editImage(environment, parameters, onReturn) {
+  var i;
+
+  // parse parameters
+  var params = parameters[0].split(/,\s?/);
+  params[0] = (params[0] || "").toLowerCase();
+  var mapId = params[0];
+  var tgtId = params[1];
+  var srcId = params[2];
+
+  if (!mapId || !tgtId || !srcId) {
+    throw new Error('Image expects three parameters: "map, target, source", but received: "' + params.join(', ') + '"');
+  }
+
+  // get objects
+  var mapObj = maps[mapId];
+  if (!mapObj) {
+    throw new Error('Invalid map "' + mapId + '". Try "SPR", "TIL", or "ITM" instead.');
+  }
+  var tgtObj = getImage(tgtId, mapObj);
+  if (!tgtObj) {
+    throw new Error('Target "' + tgtId + '" was not the id/name of a ' + mapId + '.');
+  }
+  var srcObj = getImage(srcId, mapObj);
+  if (!srcObj) {
+    throw new Error('Source "' + srcId + '" was not the id/name of a ' + mapId + '.');
+  }
+
+  // copy animation from target to source
+  tgtObj.animation = {
+    frameCount: srcObj.animation.frameCount,
+    isAnimated: srcObj.animation.isAnimated,
+    frameIndex: srcObj.animation.frameIndex
+  };
+  for (i = 0; i < srcObj.animation.frameCount; ++i) {
+    setImageData(tgtId, i, mapObj, getImageData(srcId, i, mapObj));
+  }
+
+  // done
+  if (onReturn) {
+    onReturn(null);
+  }
 }
 
-if (!window.Vertex) {
-	alert("Couldn't connect to server!");
-	throw new Error("Couldn't connect to server");
+function editPalette(environment, parameters, onReturn) {
+  // parse parameters
+  var params = parameters[0].split(/,\s?/);
+  params[0] = (params[0] || "").toLowerCase();
+  var mapId = params[0];
+  var tgtId = params[1];
+  var palId = params[2];
+
+  if (!mapId || !tgtId || !palId) {
+    throw new Error('Image expects three parameters: "map, target, palette", but received: "' + params.join(', ') + '"');
+  }
+
+  // get objects
+  var mapObj = maps[mapId];
+  if (!mapObj) {
+    throw new Error('Invalid map "' + mapId + '". Try "SPR", "TIL", or "ITM" instead.');
+  }
+  var tgtObj = getImage(tgtId, mapObj);
+  if (!tgtObj) {
+    throw new Error('Target "' + tgtId + '" was not the id/name of a ' + mapId + '.');
+  }
+  var palObj = parseInt(palId);
+  if (isNaN(palObj)) {
+    throw new Error('Palette "' + palId + '" was not a number.');
+  }
+
+  // set palette
+  tgtObj.col = palObj;
+
+  // update images in cache
+  bitsy.renderImageForAllPalettes(tgtObj);
+
+  // done
+  if (onReturn) {
+    onReturn(null);
+  }
 }
-var vertex;
 
-// map of dataChannel ids to sprite ids
-var peers = new Map(); // eslint-disable-line
+// hook up the dialog tags
+addDeferredDialogTag('image', editImage);
+addDialogTag('imageNow', editImage);
 
-after("startExportedGame", function () {
-	vertex = new window.Vertex.default({
-		host: hackOptions.host,
-		onClose: function (event) {
-			const p = peers.get(event.target);
-			peers.delete(event.target);
-			if (!hackOptions.ghosts) {
-				delete bitsy.sprite[p];
-			}
-		},
-		onData: function (event) {
-			var spr;
-			var data = JSON.parse(event.data);
-			if (data.from) {
-				peers.set(event.target, data.from);
-			}
-			if (data.e === "move") {
-				spr = bitsy.sprite[data.from];
-				if (spr) {
-					// move sprite
-					if (hackOptions.immediateMode) {
-						// do it now
-						spr.x = data.x;
-						spr.y = data.y;
-						spr.room = data.room;
-					} else {
-						// let bitsy handle it later
-						spr.walkingPath.push({
-							x: data.x,
-							y: data.y
-						});
-					}
+addDeferredDialogTag('imagePal', editPalette);
+addDialogTag('imagePalNow', editPalette);
+
+/**
+📝
+@file edit dialog from dialog
+@summary edit dialog from dialog (yes really)
+@license MIT
+@version 1.0.0
+@author Sean S. LeBlanc
+
+@description
+You can use this to edit the dialog of sprites/items through dialog.
+
+(dialog "map, target, newDialog")
+Parameters:
+	map:       Type of image (SPR or ITM)
+	target:    id/name of image to edit
+	newDialog: id/name of image to edit
+
+Note: this hack disables bitsy's script caching.
+
+HOW TO USE:
+	Copy-paste this script into a new script tag after the Bitsy source code.
+
+TIPS:
+	- The player avatar is always a sprite with id "A"; you can edit your gamedata to give them a name for clarity
+	- You can use the full names or shorthand of image types (e.g. "SPR" and "sprite" will both work)
+*/
+
+// map of maps
+var maps$1;
+after('load_game', function () {
+	maps$1 = {
+		spr: bitsy.sprite,
+		sprite: bitsy.sprite,
+		itm: bitsy.item,
+		item: bitsy.item,
+	};
+});
+
+function editDialog(environment, parameters) {
+	// parse parameters
+	var params = parameters[0].split(/,\s?/);
+	params[0] = (params[0] || "").toLowerCase();
+	var mapId = params[0];
+	var tgtId = params[1];
+	var newDialog = params[2] || "";
+
+	if (!mapId || !tgtId) {
+		throw new Error('Image expects three parameters: "map, target, newDialog", but received: "' + params.join(', ') + '"');
+	}
+
+	// get objects
+	var mapObj = maps$1[mapId];
+	if (!mapObj) {
+		throw new Error('Invalid map "' + mapId + '". Try "SPR" or "ITM" instead.');
+	}
+	var tgtObj = getImage(tgtId, mapObj);
+	if (!tgtObj) {
+		throw new Error('Target "' + tgtId + '" was not the id/name of a ' + mapId + '.');
+	}
+	bitsy.dialog[tgtObj.dlg] = newDialog;
+}
+
+// hook up the dialog tag
+addDeferredDialogTag('dialog', editDialog);
+
+// disable bitsy's dialog caching
+inject(/startDialog\(dialogStr,dialogId\);/g, 'startDialog(dialogStr);');
+
+
+
+
+
+// download the client script
+// bitsy starts onload, so adding it to the head
+// is enough to delay game startup until it's loaded/errored
+var clientScript = document.createElement("script");
+clientScript.src = hackOptions.host.replace(/^ws/, "http") + "/client.js";
+clientScript.onload = function () {
+	console.log("online available!");
+};
+clientScript.onerror = function (error) {
+	console.error("online not available!", error);
+};
+document.head.appendChild(clientScript);
+
+var client;
+
+function onData(event) {
+	var spr;
+	var data = event.data;
+	switch (data.e) {
+		case "move":
+			spr = bitsy.sprite[event.from];
+			if (spr) {
+				// move sprite
+				if (hackOptions.immediateMode) {
+					// do it now
+					spr.x = data.x;
+					spr.y = data.y;
+					spr.room = data.room;
 				} else {
-					// got a move from an unknown player,
-					// so ask them who they are
-					vertex.send(data.from, {
-						e: "gimmeSprite",
-						from: vertex.id
+					// let bitsy handle it later
+					spr.walkingPath.push({
+						x: data.x,
+						y: data.y
 					});
 				}
-			} else if (data.e === "gimmeSprite") {
-				// send a sprite update to specific peer
-				vertex.send(data.from, getSpriteUpdate());
-			} else if (data.e === "sprite") {
-				// update a sprite
-				var longname = "SPR_" + data.from;
-				spr = bitsy.sprite[data.from] = {
-					animation: {
-						frameCount: data.data.length,
-						frameIndex: 0,
-						isAnimated: data.data.length > 1
-					},
-					col: data.col,
-					dlg: longname,
-					drw: longname,
-					inventory: {},
-					name: data.from,
-					walkingPath: [],
-					x: data.x,
-					y: data.y,
-					room: data.room
-				};
-				bitsy.dialog[longname] = data.dlg;
-				bitsy.imageStore.source[longname] = data.data;
-
-				for (var frame = 0; frame < data.data.length; ++frame) {
-					setSpriteData(data.from, frame, data.data[frame]);
-				}
+			} else {
+				// got a move from an unknown player,
+				// so ask them who they are
+				client.send(event.from, {
+					e: "gimmeSprite"
+				});
 			}
-		}
-	});
+			break;
+		case "gimmeSprite":
+			// send a sprite update to specific peer
+			client.send(event.from, getSpriteUpdate());
+			break;
+		case "sprite":
+			// update a sprite
+			var longname = "SPR_" + event.from;
+			spr = bitsy.sprite[event.from] = {
+				animation: {
+					frameCount: data.data.length,
+					frameIndex: 0,
+					isAnimated: data.data.length > 1
+				},
+				col: data.col,
+				dlg: longname,
+				drw: longname,
+				inventory: {},
+				name: event.from,
+				walkingPath: [],
+				x: data.x,
+				y: data.y,
+				room: data.room
+			};
+			bitsy.dialog[longname] = data.dlg;
+			bitsy.imageStore.source[longname] = data.data;
 
-	if (hackOptions.export) {
-		window.online = {
-			vertex: vertex,
-			updateSprite: updateSprite,
-			setSprite: function (spr) {
-				var p = bitsy.player();
-				var t = getImage(spr, bitsy.sprite);
-				p.animation = {
-					frameCount: t.animation.frameCount,
-					isAnimated: t.animation.isAnimated,
-					frameIndex: 0
-				};
-				p.col = t.col;
-				for (var i = 0; i < p.animation.frameCount; ++i) {
-					setSpriteData(bitsy.playerId, i, getSpriteData(spr, i));
-				}
-				updateSprite();
-			},
-			setDialog: function (str) {
-				bitsy.dialog[bitsy.player().dlg] = str;
-				updateSprite();
+			for (var frame = 0; frame < data.data.length; ++frame) {
+				setSpriteData(event.from, frame, data.data[frame]);
 			}
-		};
+			break;
 	}
+}
+
+function onClose(event) {
+	if (event.error) {
+		console.error('Connection closed due to error:', event.error);
+	}
+
+	if (!hackOptions.ghosts) {
+		delete bitsy.sprite[event.id];
+	}
+}
+
+after("startExportedGame", function () {
+	if (!window.Client) {
+		console.error("Couldn't retrieve client; running game offline");
+	}
+	client = new window.Client.default({
+		host: hackOptions.host,
+		room: hackOptions.room || bitsy.title,
+	});
+	client.on(window.Client.DATA, onData);
+	client.on(window.Client.CLOSE, onClose);
+	client.setDebug(hackOptions.debug);
 });
 
 after("movePlayer", moveSprite);
@@ -514,11 +784,10 @@ after("onready", function () {
 	// tell everyone who you are
 	// and ask who they are 1s after starting
 	setTimeout(function () {
-		if (vertex) {
+		if (client) {
 			updateSprite();
-			vertex.broadcast({
-				e: "gimmeSprite",
-				from: vertex.id
+			client.broadcast({
+				e: "gimmeSprite"
 			});
 		}
 	}, 1000);
@@ -527,18 +796,17 @@ after("onready", function () {
 // tell everyone where you are
 function moveSprite() {
 	var p = bitsy.player();
-	vertex.broadcast({
+	client.broadcast({
 		e: "move",
 		x: p.x,
 		y: p.y,
-		room: p.room,
-		from: vertex.id
+		room: p.room
 	});
 }
 
 // tell everyone who you are
 function updateSprite() {
-	vertex.broadcast(getSpriteUpdate());
+	client.broadcast(getSpriteUpdate());
 }
 
 // helper to create a sprite update based on the player avatar
@@ -546,7 +814,6 @@ function getSpriteUpdate() {
 	var p = bitsy.player();
 	return {
 		e: "sprite",
-		from: vertex.id,
 		data: bitsy.imageStore.source[p.drw],
 		x: p.x,
 		y: p.y,
@@ -555,5 +822,20 @@ function getSpriteUpdate() {
 		col: p.col
 	};
 }
+
+// trigger sprite updates after these dialog functions
+[
+	'image',
+	'imageNow',
+	'imagePal',
+	'imagePalNow',
+	'dialog'
+].forEach(function (tag) {
+	var original = bitsy.kitsy.dialogFunctions[tag];
+	bitsy.kitsy.dialogFunctions[tag] = function () {
+		original.apply(this, arguments);
+		updateSprite();
+	};
+});
 
 }(window));

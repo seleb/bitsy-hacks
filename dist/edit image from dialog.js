@@ -3,7 +3,7 @@
 @file edit image from dialog
 @summary edit sprites, items, and tiles from dialog
 @license MIT
-@version 1.0.4
+@version 1.1.0
 @author Sean S. LeBlanc
 
 @description
@@ -132,7 +132,7 @@ function unique(array) {
 @file kitsy-script-toolkit
 @summary makes it easier and cleaner to run code before and after Bitsy functions or to inject new code into Bitsy script tags
 @license WTFPL (do WTF you want)
-@version 3.0.0
+@version 3.1.0
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
@@ -344,7 +344,7 @@ function addDeferredDialogTag(tag, fn) {
 	after('onExitDialog', function () {
 		while (deferred.length) {
 			var args = deferred.shift();
-			fn(args.e, args.p, args.o);
+			bitsy.kitsy.dialogFunctions[tag](args.e, args.p, args.o);
 		}
 	});
 	// Hook into the game reset and make sure data gets cleared
@@ -414,14 +414,17 @@ function setImageData(id, frame, map, newData) {
 
 
 // map of maps
-var maps = {
-  spr: bitsy.sprite,
-  sprite: bitsy.sprite,
-  til: bitsy.tile,
-  tile: bitsy.tile,
-  itm: bitsy.item,
-  item: bitsy.item,
-};
+var maps;
+after('load_game', function () {
+	maps = {
+    spr: bitsy.sprite,
+    sprite: bitsy.sprite,
+    til: bitsy.tile,
+    tile: bitsy.tile,
+    itm: bitsy.item,
+    item: bitsy.item,
+	};
+});
 
 function editImage(environment, parameters, onReturn) {
   var i;
