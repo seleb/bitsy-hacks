@@ -12,8 +12,7 @@ The actual game data is sent using peer-to-peer data channels, but the server ne
 to be up and running in order to make the initial connections.
 
 HOW TO USE:
-1. Copy-paste `<script src="https://<your signalling server>/Vertex.js"></script>` after the bitsy source
-1. Copy-paste this script into a script tag after that
+1. Copy-paste this script into a script tag after the bitsy source
 2. Edit `hackOptions.host` below to point to your server (depending on hosting, you may need to use `ws://` instead of `wss://`)
 3. Edit other hackOptions as needed
 
@@ -21,7 +20,7 @@ If `export` is true, an API is provided in `window.online`:
 	setSprite(string): updates the player avatar to match the sprite with the provided name/id, then broadcasts an update
 	setDialog(string): updates the player dialog to the provided string, then broadcasts an update
 	updateSprite(): broadcasts an update
-	vertex: reference to the object managing connections
+	client: reference to the object managing connections
 
 This hack also includes the javascript dialog hack in order to make it easy to
 control the multiplayer from inside bitsy. An example of how this can be used is:
@@ -44,100 +43,113 @@ import {
 
 var hackOptions = {
 	host: "wss://your signalling server",
+	// room: "custom room", // sets the room on the server to use; otherwise, uses game title
 	immediateMode: true, // if true, teleports players to their reported positions; otherwise, queues movements and lets bitsy handle the walking (note: other players pick up items like this)
 	ghosts: false, // if true, sprites from players who disconnected while you were online won't go away until you restart
 	export: true, // if true, `window.online` will be set to an object with an API for affecting multiplayer
-	disableConsole: true // if true, sets console.log to an empty function (recommended; the logs are pretty spammy)
-}
+};
 
-if (hackOptions.disableConsole) {
-	console.log = function () {}; //eslint-disable-line
-}
+var clientScript = document.createElement("script");
+clientScript.src = hackOptions.host.replace(/^ws/, "http") + "/client.js";
+clientScript.onload = function () {
+	console.log("online available!");
+};
+clientScript.onerror = function (error) {
+	console.error("online not available!", error);
+};
+document.head.appendChild(clientScript);
 
-if (!window.Vertex) {
-	alert("Couldn't connect to server!");
-	throw new Error("Couldn't connect to server");
-}
-var vertex;
+var client;
 
-// map of dataChannel ids to sprite ids
-var peers = new Map(); // eslint-disable-line
-
-after("startExportedGame", function () {
-	vertex = new window.Vertex.default({
-		host: hackOptions.host,
-		onClose: function (event) {
-			const p = peers.get(event.target);
-			peers.delete(event.target);
-			if (!hackOptions.ghosts) {
-				delete bitsy.sprite[p];
-			}
-		},
-		onData: function (event) {
-			var spr;
-			var data = JSON.parse(event.data);
-			if (data.from) {
-				peers.set(event.target, data.from);
-			}
-			if (data.e === "move") {
-				spr = bitsy.sprite[data.from];
-				if (spr) {
-					// move sprite
-					if (hackOptions.immediateMode) {
-						// do it now
-						spr.x = data.x;
-						spr.y = data.y;
-						spr.room = data.room;
-					} else {
-						// let bitsy handle it later
-						spr.walkingPath.push({
-							x: data.x,
-							y: data.y
-						});
-					}
+function onData(event) {
+	console.log({
+		event
+	});
+	var spr;
+	var data = event.data;
+	switch (data.e) {
+		case "move":
+			spr = bitsy.sprite[event.from];
+			if (spr) {
+				// move sprite
+				if (hackOptions.immediateMode) {
+					// do it now
+					spr.x = data.x;
+					spr.y = data.y;
+					spr.room = data.room;
 				} else {
-					// got a move from an unknown player,
-					// so ask them who they are
-					vertex.send(data.from, {
-						e: "gimmeSprite",
-						from: vertex.id
+					// let bitsy handle it later
+					spr.walkingPath.push({
+						x: data.x,
+						y: data.y
 					});
 				}
-			} else if (data.e === "gimmeSprite") {
-				// send a sprite update to specific peer
-				vertex.send(data.from, getSpriteUpdate());
-			} else if (data.e === "sprite") {
-				// update a sprite
-				var longname = "SPR_" + data.from;
-				spr = bitsy.sprite[data.from] = {
-					animation: {
-						frameCount: data.data.length,
-						frameIndex: 0,
-						isAnimated: data.data.length > 1
-					},
-					col: data.col,
-					dlg: longname,
-					drw: longname,
-					inventory: {},
-					name: data.from,
-					walkingPath: [],
-					x: data.x,
-					y: data.y,
-					room: data.room
-				};
-				bitsy.dialog[longname] = data.dlg;
-				bitsy.imageStore.source[longname] = data.data;
-
-				for (var frame = 0; frame < data.data.length; ++frame) {
-					setSpriteData(data.from, frame, data.data[frame]);
-				}
+			} else {
+				// got a move from an unknown player,
+				// so ask them who they are
+				client.send(event.from, {
+					e: "gimmeSprite",
+					from: client.id
+				});
 			}
-		}
+			break;
+		case "gimmeSprite":
+			// send a sprite update to specific peer
+			client.send(event.from, getSpriteUpdate());
+			break;
+		case "sprite":
+			// update a sprite
+			var longname = "SPR_" + event.from;
+			spr = bitsy.sprite[event.from] = {
+				animation: {
+					frameCount: data.data.length,
+					frameIndex: 0,
+					isAnimated: data.data.length > 1
+				},
+				col: data.col,
+				dlg: longname,
+				drw: longname,
+				inventory: {},
+				name: event.from,
+				walkingPath: [],
+				x: data.x,
+				y: data.y,
+				room: data.room
+			};
+			bitsy.dialog[longname] = data.dlg;
+			bitsy.imageStore.source[longname] = data.data;
+
+			for (var frame = 0; frame < data.data.length; ++frame) {
+				setSpriteData(event.from, frame, data.data[frame]);
+			}
+			break;
+	}
+}
+
+function onClose(event) {
+	if(event.error){
+		console.error('Connection closed due to error:', event.error);
+	}
+	
+	if (!hackOptions.ghosts) {
+		delete bitsy.sprite[event.id];
+	}
+}
+
+after("startExportedGame", function () {
+	if (!window.Client) {
+		console.error("Couldn't retrieve client; running game offline");
+	}
+	client = new window.Client.default({
+		host: hackOptions.host,
+		room: hackOptions.room || title,
 	});
+	client.on(window.Client.DATA, onData);
+	client.on(window.Client.CLOSE, onClose);
 
 	if (hackOptions.export) {
 		window.online = {
-			vertex: vertex,
+			client: client,
 			updateSprite: updateSprite,
 			setSprite: function (spr) {
 				var p = bitsy.player();
@@ -166,11 +178,11 @@ after("onready", function () {
 	// tell everyone who you are
 	// and ask who they are 1s after starting
 	setTimeout(function () {
-		if (vertex) {
+		if (client) {
 			updateSprite();
-			vertex.broadcast({
+			client.broadcast({
 				e: "gimmeSprite",
-				from: vertex.id
+				from: client.id
 			});
 		}
 	}, 1000);
@@ -179,18 +191,18 @@ after("onready", function () {
 // tell everyone where you are
 function moveSprite() {
 	var p = bitsy.player();
-	vertex.broadcast({
+	client.broadcast({
 		e: "move",
 		x: p.x,
 		y: p.y,
 		room: p.room,
-		from: vertex.id
+		from: client.id
 	});
 }
 
 // tell everyone who you are
 function updateSprite() {
-	vertex.broadcast(getSpriteUpdate());
+	client.broadcast(getSpriteUpdate());
 }
 
 // helper to create a sprite update based on the player avatar
@@ -198,7 +210,7 @@ function getSpriteUpdate() {
 	var p = bitsy.player();
 	return {
 		e: "sprite",
-		from: vertex.id,
+		from: client.id,
 		data: bitsy.imageStore.source[p.drw],
 		x: p.x,
 		y: p.y,
