@@ -7,28 +7,26 @@
 @author Sean S. LeBlanc
 @description
 Provides the groundwork for running a small online multiplayer bitsy game.
-Running it requires a signalling server to negotiate connections: https://github.com/seleb/web-rtc-mesh
-The actual game data is sent using peer-to-peer data channels, but the server needs
-to be up and running in order to make the initial connections.
+
+Running it requires running a copy of this server: https://github.com/seleb/web-rtc-mesh
+Server notes:
+	- The actual game data is sent using peer-to-peer data channels;
+	the server just hosts client code and negotaties initial connections.
+	(i.e. it uses very little bandwidth)
+	- A single server can host multiple games simultaneously
+	- If you're not sure how to setup/use the server, ask for help!
+
+This hack also includes the hacks for editing images/dialog at runtime through dialog.
+This provides the (image), (imageNow), (imagePal), (imagePalNow), and (dialog) commands.
+In the online hack, these will automatically trigger a sprite update so that updates to the avatar will be reflected for other players.
+See the respective hacks for more info on how to use the commands.
+
+Note on dialog: You can use scripting in the dialog, but it will execute on the other players' games, accessing *their* variables.
 
 HOW TO USE:
 1. Copy-paste this script into a script tag after the bitsy source
 2. Edit `hackOptions.host` below to point to your server (depending on hosting, you may need to use `ws://` instead of `wss://`)
 3. Edit other hackOptions as needed
-
-If `export` is true, an API is provided in `window.online`:
-	setSprite(string): updates the player avatar to match the sprite with the provided name/id, then broadcasts an update
-	setDialog(string): updates the player dialog to the provided string, then broadcasts an update
-	updateSprite(): broadcasts an update
-	client: reference to the object managing connections
-
-This hack also includes the javascript dialog hack in order to make it easy to
-control the multiplayer from inside bitsy. An example of how this can be used is:
-(js "online.setSprite('a'); online.setDialog('im a cat');")
-
-Note on dialog: You can use scripting in the dialog, but it will execute on the other players' games,
-accessing *their* variables. If you want to send dialog based on data in your game, you have to construct
-the dialog string locally, then set it, then send an update.
 */
 import bitsy from "bitsy";
 import {
@@ -49,6 +47,9 @@ var hackOptions = {
 	debug: false, // if true, includes web-rtc-mesh debug logs in console
 };
 
+// download the client script
+// bitsy starts onload, so adding it to the head
+// is enough to delay game startup until it's loaded/errored
 var clientScript = document.createElement("script");
 clientScript.src = hackOptions.host.replace(/^ws/, "http") + "/client.js";
 clientScript.onload = function () {
