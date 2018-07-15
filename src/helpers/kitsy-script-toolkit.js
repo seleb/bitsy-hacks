@@ -220,7 +220,7 @@ export function addDeferredDialogTag(tag, fn) {
 	after('onExitDialog', function () {
 		while (deferred.length) {
 			var args = deferred.shift();
-			fn(args.e, args.p, args.o);
+			bitsy.kitsy.dialogFunctions[tag](args.e, args.p, args.o);
 		}
 	});
 	// Hook into the game reset and make sure data gets cleared
