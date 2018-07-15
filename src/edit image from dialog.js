@@ -57,7 +57,8 @@ NOTE: This uses parentheses "()" instead of curly braces "{}" around function
 import bitsy from "bitsy";
 import {
   addDialogTag,
-  addDeferredDialogTag
+  addDeferredDialogTag,
+  after
 } from "./helpers/kitsy-script-toolkit";
 import {
   getImage
@@ -68,14 +69,17 @@ import {
 } from "./helpers/edit image at runtime";
 
 // map of maps
-var maps = {
-  spr: bitsy.sprite,
-  sprite: bitsy.sprite,
-  til: bitsy.tile,
-  tile: bitsy.tile,
-  itm: bitsy.item,
-  item: bitsy.item,
-};
+var maps;
+after('load_game', function () {
+	maps = {
+    spr: bitsy.sprite,
+    sprite: bitsy.sprite,
+    til: bitsy.tile,
+    tile: bitsy.tile,
+    itm: bitsy.item,
+    item: bitsy.item,
+	};
+});
 
 function editImage(environment, parameters, onReturn) {
   var i;
