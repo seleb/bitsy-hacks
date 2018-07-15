@@ -139,7 +139,7 @@ after("startExportedGame", function () {
 	}
 	client = new window.Client.default({
 		host: hackOptions.host,
-		room: hackOptions.room || title,
+		room: hackOptions.room || bitsy.title,
 	});
 	client.on(window.Client.DATA, onData);
 	client.on(window.Client.CLOSE, onClose);
