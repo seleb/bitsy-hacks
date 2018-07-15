@@ -47,6 +47,7 @@ var hackOptions = {
 	immediateMode: true, // if true, teleports players to their reported positions; otherwise, queues movements and lets bitsy handle the walking (note: other players pick up items like this)
 	ghosts: false, // if true, sprites from players who disconnected while you were online won't go away until you restart
 	export: true, // if true, `window.online` will be set to an object with an API for affecting multiplayer
+	debug: false, // if true, includes web-rtc-mesh debug logs in console
 };
 
 var clientScript = document.createElement("script");
@@ -62,9 +63,6 @@ document.head.appendChild(clientScript);
 var client;
 
 function onData(event) {
-	console.log({
-		event
-	});
 	var spr;
 	var data = event.data;
 	switch (data.e) {
@@ -146,6 +144,7 @@ after("startExportedGame", function () {
 	});
 	client.on(window.Client.DATA, onData);
 	client.on(window.Client.CLOSE, onClose);
+	client.setDebug(hackOptions.debug);
 
 	if (hackOptions.export) {
 		window.online = {
