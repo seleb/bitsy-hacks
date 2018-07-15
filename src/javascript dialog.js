@@ -3,7 +3,7 @@
 @file javascript dialog
 @summary execute arbitrary javascript from dialog
 @license MIT
-@version 1.0.0
+@version 3.0.2
 @requires Bitsy Version: 4.5, 4.6
 @author Sean S. LeBlanc
 
@@ -12,7 +12,9 @@ Lets you execute arbitrary JavaScript from dialog (including inside conditionals
 If you're familiar with the Bitsy source, this will let you write one-shot hacks
 for a wide variety of situations.
 
-Usage: (js "<JavaScript code to evaluate>")
+Usage:
+	(js "<JavaScript code to evaluate after dialog is closed>")
+	(jsNow "<JavaScript code to evaluate immediately>")
 
 Examples:
 	move a sprite:
@@ -38,25 +40,18 @@ NOTE: This uses parentheses "()" instead of curly braces "{}" around function
 */
 "use strict";
 import {
-	before,
-	inject
-} from "./kitsy-script-toolkit.js";
+	addDialogTag,
+	addDeferredDialogTag
+} from "./helpers/kitsy-script-toolkit";
 
-// Hook into game load and rewrite custom functions in game data to Bitsy format.
-before("load_game", function (game_data, startWithTitle) {
-	// Rewrite custom functions' parentheses to curly braces for Bitsy's
-	// interpreter. Unescape escaped parentheticals, too.
-	var fixedGameData = game_data
-	.replace(/(^|[^\\])\((.*? ".+?")\)/g, "$1{$2}") // Rewrite (...) to {...}
-	.replace(/\\\((.*? ".+")\\?\)/g, "($1)"); // Rewrite \(...\) to (...)
-	return [fixedGameData, startWithTitle];
-});
+var indirectEval = eval;
 
-// Rewrite the Bitsy script tag, making these new functions callable from dialog.
-inject(
-	"var functionMap = new Map();",
-	"functionMap.set('js', " + function (environment, parameters, onReturn) {
-		eval(parameters[0]);
+function executeJs(environment, parameters, onReturn) {
+	indirectEval(parameters[0]);
+	if (onReturn) {
 		onReturn(null);
-	}.toString() + ");"
-);
+	}
+}
+
+addDeferredDialogTag('js', executeJs);
+addDialogTag('jsNow', executeJs);

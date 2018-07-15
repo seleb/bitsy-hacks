@@ -43,7 +43,7 @@ NOTE: Chrome can only fetch external files when they're served from a
 import bitsy from "bitsy";
 import {
 	before
-} from "./kitsy-script-toolkit.js";
+} from "./helpers/kitsy-script-toolkit";
 
 var ERR_MISSING_IMPORT = 1;
 

@@ -38,7 +38,7 @@ e.g.
 import bitsy from "bitsy";
 import {
 	expose
-} from "./utils.js";
+} from "./helpers/utils";
 import {
 	getSpriteData,
 	getTileData,
@@ -46,7 +46,7 @@ import {
 	setSpriteData,
 	setTileData,
 	setItemData
-} from "./edit image at runtime.js";
+} from "./helpers/edit image at runtime";
 
 ///////////
 // setup //

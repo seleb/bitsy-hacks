@@ -26,7 +26,7 @@ import bitsy from "bitsy";
 import {
 	before,
 	after
-} from "./kitsy-script-toolkit.js";
+} from "./helpers/kitsy-script-toolkit";
 
 var hackOptions = {
 	pieces: [{

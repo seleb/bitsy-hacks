@@ -1,34 +1,35 @@
 /**
-☕
-@file javascript dialog
-@summary execute arbitrary javascript from dialog
+⏱️
+@file stopwatch
+@summary time player actions
 @license MIT
-@version 3.0.2
-@requires Bitsy Version: 4.5, 4.6
-@author Sean S. LeBlanc
+@version 1.0.1
+@author Lenny Magner
 
 @description
-Lets you execute arbitrary JavaScript from dialog (including inside conditionals).
-If you're familiar with the Bitsy source, this will let you write one-shot hacks
-for a wide variety of situations.
+Lets you start, stop and reset a timer from dialogue and print the resulting time as part of dialogue.
 
 Usage:
-	(js "<JavaScript code to evaluate after dialog is closed>")
-	(jsNow "<JavaScript code to evaluate immediately>")
+	(startWatch "timer id"): starts a timer with provided id
+	(stopWatch "timer id"): stops a timer with provided id
+	(resumeWatch "timer id"): resumes a timer with provided id
+	(sayWatch "timer id"): prints a timer with provided id
 
-Examples:
-	move a sprite:
-	(js "sprite['a'].x = 10;")
-	edit palette colour:
-	(js "getPal(curPal())[0] = [255,0,0];renderImages();")
-	place an item next to player:
-	(js "room[curRoom].items.push({id:'0',x:player().x+1,y:player().y});")
-	verbose facimile of exit-from-dialog:
-	(js "var _onExitDialog=onExitDialog;onExitDialog=function(){player().room=curRoom='3';_onExitDialog.apply(this,arguments);onExitDialog=_onExitDialog;};")
+There's also startWatchNow, stopWatchNow, and resumeWatchNow,
+which do the same things, but immediately instead of when dialog ends.
+
+Notes on edge/error cases:
+	(startWatch "existing id"): overwrites existing timer
+	(stopWatch "non-existent id"): does nothing
+	(stopWatch "stopped id"): does nothing
+	(resumeWatch "non-existent id"): starts new timer
+	(resumeWatch "running id"): does nothing
+	(sayWatch "non-existent id"): throws error
 
 HOW TO USE:
 1. Copy-paste into a script tag after the bitsy source
-2. Add (js "<code>") to your dialog as needed
+2. Customize `timeToString` function in hackOptions below as needed
+3. Add tags to your dialog as needed
 
 NOTE: This uses parentheses "()" instead of curly braces "{}" around function
       calls because the Bitsy editor's fancy dialog window strips unrecognized
@@ -40,6 +41,24 @@ NOTE: This uses parentheses "()" instead of curly braces "{}" around function
 */
 (function (bitsy) {
 'use strict';
+var hackOptions = {
+	// function which returns the string which bitsy will print
+	// parameter is a timer object with:
+	//   start: value of Date.now() on startWatch
+	//   end: value of Date.now() on stopWatch,
+	//        or undefined if timer is running
+	// current implementation is "minutes:seconds"
+	timeToString: function (timer) {
+		var ms = getTimeDifferenceInMs(timer);
+		var time = new Date(ms);
+		var mins = time.getUTCMinutes();
+		var secs = time.getUTCSeconds();
+		if (secs < 10) {
+			secs = "0" + secs;
+		}
+		return mins + ":" + secs;
+	}
+};
 
 bitsy = bitsy && bitsy.hasOwnProperty('default') ? bitsy['default'] : bitsy;
 
@@ -92,6 +111,23 @@ function inject(searchRegex, replaceString) {
 function unique(array) {
 	return array.filter(function (item, idx) {
 		return array.indexOf(item) === idx;
+	});
+}
+
+/**
+ * Helper for printing dialog inside of a dialog function.
+ * Intended to be called using the environment + onReturn parameters of the original function;
+ * e.g.
+ * addDialogTag('myTag', function (environment, parameters, onReturn) {
+ * 	printDialog(environment, 'my text', onReturn);
+ * });
+ * @param {Environment} environment Bitsy environment object; first param to a dialog function
+ * @param {String} text Text to print
+ * @param {Function} onReturn Bitsy onReturn function; third param to a dialog function
+ */
+function printDialog(environment, text, onReturn) {
+	environment.GetDialogBuffer().AddText(text, function() {
+		onReturn(null);
 	});
 }
 
@@ -323,16 +359,90 @@ function addDeferredDialogTag(tag, fn) {
 
 
 
-var indirectEval$1 = eval;
 
-function executeJs(environment, parameters, onReturn) {
-	indirectEval$1(parameters[0]);
+
+function getTimeDifferenceInMs(timer) {
+	return (timer.end || Date.now()) - timer.start;
+}
+
+// map of timers
+var timers;
+
+function startWatch(environment, parameters, onReturn) {
+	var id = parameters[0];
+	timers[id] = {
+		start: Date.now(),
+		end: undefined
+	};
+
 	if (onReturn) {
 		onReturn(null);
 	}
 }
 
-addDeferredDialogTag('js', executeJs);
-addDialogTag('jsNow', executeJs);
+// note: this updates start time directly
+function resumeWatch(environment, parameters, onReturn) {
+	var id = parameters[0];
+	var timer = timers[id];
+
+	// just start the timer if there isn't one
+	if (!timer) {
+		return startWatch(environment, parameters, onReturn);
+	}
+
+	// don't do anything if the timer's not running
+	if (!timer.end) {
+		return;
+	}
+
+	// resume timer
+	timer.start = Date.now() - (timer.end - timer.start);
+	timer.end = undefined;
+
+	if (onReturn) {
+		onReturn(null);
+	}
+}
+
+function stopWatch(environment, parameters, onReturn) {
+	var id = parameters[0];
+	var timer = timers[id];
+	// don't do anything if there's no timer
+	if (!timer) {
+		return;
+	}
+	// don't do anything if the timer's not running
+	if (timer.end) {
+		return;
+	}
+	// end timer
+	timer.end = Date.now();
+
+	if (onReturn) {
+		onReturn(null);
+	}
+}
+
+// clear timers on game-load
+before('load_game', function () {
+	timers = {};
+});
+
+// add control functions
+addDeferredDialogTag('startWatch', startWatch);
+addDeferredDialogTag('stopWatch', stopWatch);
+addDeferredDialogTag('resumeWatch', resumeWatch);
+addDialogTag('startWatchNow', startWatch);
+addDialogTag('stopWatchNow', stopWatch);
+addDialogTag('resumeWatchNow', resumeWatch);
+
+// add display function
+addDialogTag('sayWatch', function (environment, parameters, onReturn) {
+	var timer = timers[parameters[0]];
+	if (!timer) {
+		throw new Error('Tried to sayWatch "' + parameters[0] + '" but it was never started');
+	}
+	printDialog(environment, hackOptions.timeToString(timer), onReturn);
+});
 
 }(window));

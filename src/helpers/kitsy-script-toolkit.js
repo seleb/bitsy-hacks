@@ -1,101 +1,4 @@
 /**
-☕
-@file javascript dialog
-@summary execute arbitrary javascript from dialog
-@license MIT
-@version 3.0.2
-@requires Bitsy Version: 4.5, 4.6
-@author Sean S. LeBlanc
-
-@description
-Lets you execute arbitrary JavaScript from dialog (including inside conditionals).
-If you're familiar with the Bitsy source, this will let you write one-shot hacks
-for a wide variety of situations.
-
-Usage:
-	(js "<JavaScript code to evaluate after dialog is closed>")
-	(jsNow "<JavaScript code to evaluate immediately>")
-
-Examples:
-	move a sprite:
-	(js "sprite['a'].x = 10;")
-	edit palette colour:
-	(js "getPal(curPal())[0] = [255,0,0];renderImages();")
-	place an item next to player:
-	(js "room[curRoom].items.push({id:'0',x:player().x+1,y:player().y});")
-	verbose facimile of exit-from-dialog:
-	(js "var _onExitDialog=onExitDialog;onExitDialog=function(){player().room=curRoom='3';_onExitDialog.apply(this,arguments);onExitDialog=_onExitDialog;};")
-
-HOW TO USE:
-1. Copy-paste into a script tag after the bitsy source
-2. Add (js "<code>") to your dialog as needed
-
-NOTE: This uses parentheses "()" instead of curly braces "{}" around function
-      calls because the Bitsy editor's fancy dialog window strips unrecognized
-      curly-brace functions from dialog text. To keep from losing data, write
-      these function calls with parentheses like the examples above.
-
-      For full editor integration, you'd *probably* also need to paste this
-      code at the end of the editor's `bitsy.js` file. Untested.
-*/
-(function (bitsy) {
-'use strict';
-
-bitsy = bitsy && bitsy.hasOwnProperty('default') ? bitsy['default'] : bitsy;
-
-/**
-@file utils
-@summary miscellaneous bitsy utilities
-@author Sean S. LeBlanc
-*/
-
-/*
-Helper used to replace code in a script tag based on a search regex
-To inject code without erasing original string, using capturing groups; e.g.
-	inject(/(some string)/,'injected before $1 injected after')
-*/
-function inject(searchRegex, replaceString) {
-	// find the relevant script tag
-	var scriptTags = document.getElementsByTagName('script');
-	var scriptTag;
-	var code;
-	for (var i = 0; i < scriptTags.length; ++i) {
-		scriptTag = scriptTags[i];
-		var matchesSearch = scriptTag.textContent.search(searchRegex) !== -1;
-		var isCurrentScript = scriptTag === document.currentScript;
-		if (matchesSearch && !isCurrentScript) {
-			code = scriptTag.textContent;
-			break;
-		}
-	}
-
-	// error-handling
-	if (!code) {
-		throw 'Couldn\'t find "' + searchRegex + '" in script tags';
-	}
-
-	// modify the content
-	code = code.replace(searchRegex, replaceString);
-
-	// replace the old script tag with a new one using our modified code
-	var newScriptTag = document.createElement('script');
-	newScriptTag.textContent = code;
-	scriptTag.insertAdjacentElement('afterend', newScriptTag);
-	scriptTag.remove();
-}
-
-/**
- * Helper for getting an array with unique elements 
- * @param  {Array} array Original array
- * @return {Array}       Copy of array, excluding duplicates
- */
-function unique(array) {
-	return array.filter(function (item, idx) {
-		return array.indexOf(item) === idx;
-	});
-}
-
-/**
 
 @file kitsy-script-toolkit
 @summary makes it easier and cleaner to run code before and after Bitsy functions or to inject new code into Bitsy script tags
@@ -117,10 +20,15 @@ HOW TO USE:
   For more info, see the documentation at:
   https://github.com/seleb/bitsy-hacks/wiki/Coding-with-kitsy
 */
+import bitsy from "bitsy";
+import {
+	unique,
+	inject as utilsInject
+} from "./utils";
 
 
 // Ex: inject(/(names.sprite.set\( name, id \);)/, '$1console.dir(names)');
-function inject$1(searchRegex, replaceString) {
+export function inject(searchRegex, replaceString) {
 	var kitsy = kitsyInit();
 	kitsy.queuedInjectScripts.push({
 		searchRegex: searchRegex,
@@ -131,14 +39,14 @@ function inject$1(searchRegex, replaceString) {
 // Ex: before('load_game', function run() { alert('Loading!'); });
 //     before('show_text', function run(text) { return text.toUpperCase(); });
 //     before('show_text', function run(text, done) { done(text.toUpperCase()); });
-function before(targetFuncName, beforeFn) {
+export function before(targetFuncName, beforeFn) {
 	var kitsy = kitsyInit();
 	kitsy.queuedBeforeScripts[targetFuncName] = kitsy.queuedBeforeScripts[targetFuncName] || [];
 	kitsy.queuedBeforeScripts[targetFuncName].push(beforeFn);
 }
 
 // Ex: after('load_game', function run() { alert('Loaded!'); });
-function after(targetFuncName, afterFn) {
+export function after(targetFuncName, afterFn) {
 	var kitsy = kitsyInit();
 	kitsy.queuedAfterScripts[targetFuncName] = kitsy.queuedAfterScripts[targetFuncName] || [];
 	kitsy.queuedAfterScripts[targetFuncName].push(afterFn);
@@ -176,7 +84,7 @@ function kitsyInit() {
 
 function doInjects() {
 	bitsy.kitsy.queuedInjectScripts.forEach(function (injectScript) {
-		inject(injectScript.searchRegex, injectScript.replaceString);
+		utilsInject(injectScript.searchRegex, injectScript.replaceString);
 	});
 	_reinitEngine();
 }
@@ -241,7 +149,7 @@ function _reinitEngine() {
 
 // Rewrite custom functions' parentheses to curly braces for Bitsy's
 // interpreter. Unescape escaped parentheticals, too.
-function convertDialogTags(input, tag) {
+export function convertDialogTags(input, tag) {
 	return input
 		.replace(new RegExp('\\\\?\\((' + tag + '\\s+(".+?"|.+?))\\\\?\\)', 'g'), function(match, group){
 			if(match.substr(0,1) === '\\') {
@@ -280,9 +188,9 @@ function addDialogFunction(tag, fn) {
  *                       parameters: array containing parameters as string in first element (i.e. `parameters[0]`)
  *                       onReturn: function to call with return value (just call `onReturn(null);` at the end of your function if your tag doesn't interact with the logic system)
  */
-function addDialogTag(tag, fn) {
+export function addDialogTag(tag, fn) {
 	addDialogFunction(tag, fn);
-	inject$1(
+	inject(
 		/(var functionMap = new Map\(\);)/,
 		'$1functionMap.set("' + tag + '", kitsy.dialogFunctions.' + tag + ');'
 	);
@@ -300,11 +208,11 @@ function addDialogTag(tag, fn) {
  *                       environment: provides access to SetVariable/GetVariable (among other things, see Environment in the bitsy source for more info)
  *                       parameters: array containing parameters as string in first element (i.e. `parameters[0]`)
  */
-function addDeferredDialogTag(tag, fn) {
+export function addDeferredDialogTag(tag, fn) {
 	addDialogFunction(tag, fn);
 	bitsy.kitsy.deferredDialogFunctions = bitsy.kitsy.deferredDialogFunctions || {};
 	var deferred = bitsy.kitsy.deferredDialogFunctions[tag] = [];
-	inject$1(
+	inject(
 		/(var functionMap = new Map\(\);)/,
 		'$1functionMap.set("' + tag + '", function(e, p, o){ kitsy.deferredDialogFunctions.' + tag + '.push({e:e,p:p}); o(null); });'
 	);
@@ -320,19 +228,3 @@ function addDeferredDialogTag(tag, fn) {
 		deferred.length = 0;
 	});
 }
-
-
-
-var indirectEval$1 = eval;
-
-function executeJs(environment, parameters, onReturn) {
-	indirectEval$1(parameters[0]);
-	if (onReturn) {
-		onReturn(null);
-	}
-}
-
-addDeferredDialogTag('js', executeJs);
-addDialogTag('jsNow', executeJs);
-
-}(window));

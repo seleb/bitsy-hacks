@@ -3,7 +3,7 @@
 @file exit-from-dialog
 @summary exit to another room from dialog, including conditionals
 @license WTFPL (do WTF you want)
-@version 3.0.1
+@version 5.0.2
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
@@ -46,47 +46,27 @@ NOTE: This uses parentheses "()" instead of curly braces "{}" around function
 'use strict';
 import bitsy from "bitsy";
 import {
-	before,
-	after,
-	inject
-} from "./kitsy-script-toolkit.js";
-
-var queuedDialogExit = null;
-
-// Hook into game load and rewrite custom functions in game data to Bitsy format.
-before('load_game', function (game_data, startWithTitle) {
-	// Rewrite custom functions' parentheses to curly braces for Bitsy's
-	// interpreter. Unescape escaped parentheticals, too.
-	var fixedGameData = game_data
-	.replace(/(^|[^\\])\((exit(Now)? ".+?")\)/g, "$1{$2}") // Rewrite (exit...) to {exit...}
-	.replace(/\\\((exit(Now)? ".+")\\?\)/g, "($1)"); // Rewrite \(exit...\) to (exit...)
-	return [fixedGameData, startWithTitle];
-});
-
-// Hook into the game reset and make sure exit data gets cleared.
-after('clearGameData', function () {
-	queuedDialogExit = null;
-});
-
-// Hook into the dialog finish event; if there was an {exit}, travel there now.
-after('onExitDialog', function () {
-	if (queuedDialogExit) {
-		doPlayerExit(queuedDialogExit);
-		queuedDialogExit = null;
-	}
-});
+	getRoom
+} from "./helpers/utils";
+import {
+	addDialogTag,
+	addDeferredDialogTag
+} from "./helpers/kitsy-script-toolkit";
 
 // Implement the {exit} dialog function. It saves the room name and
 // destination X/Y coordinates so we can travel there after the dialog is over.
-bitsy.exitFunc = function (environment, parameters, onReturn) {
-	queuedDialogExit = _getExitParams('exit', parameters);
+addDeferredDialogTag('exit', function (environment, parameters) {
+	var exitParams = _getExitParams('exit', parameters);
+	if (!exitParams) {
+		return;
+	}
 
-	onReturn(null);
-}
+	doPlayerExit(exitParams);
+});
 
 // Implement the {exitNow} dialog function. It exits to the destination room
 // and X/Y coordinates right damn now.
-bitsy.exitNowFunc = function (environment, parameters, onReturn) {
+addDialogTag('exitNow', function (environment, parameters, onReturn) {
 	var exitParams = _getExitParams('exitNow', parameters);
 	if (!exitParams) {
 		return;
@@ -94,14 +74,7 @@ bitsy.exitNowFunc = function (environment, parameters, onReturn) {
 
 	doPlayerExit(exitParams);
 	onReturn(null);
-}
-
-// Rewrite the Bitsy script tag, making these new functions callable from dialog.
-inject(
-	'var functionMap = new Map();',
-	'functionMap.set("exit", exitFunc);',
-	'functionMap.set("exitNow", exitNowFunc);'
-);
+});
 
 function _getExitParams(exitFuncName, parameters) {
 	var params = parameters[0].split(',');
@@ -110,7 +83,7 @@ function _getExitParams(exitFuncName, parameters) {
 	var y = params[2];
 	var coordsType = (params[3] || 'exit').toLowerCase();
 	var useSpriteCoords = coordsType === 'sprite';
-	var roomId = bitsy.names.room.get(roomName);
+	var roomId = getRoom(roomName).id;
 
 	if (!roomName || x === undefined || y === undefined) {
 		console.warn('{' + exitFuncName + '} was missing parameters! Usage: {' +

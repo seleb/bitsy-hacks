@@ -43,9 +43,9 @@ export default {
 		var contents = this.headers.sort((a, b) => {
 			return a.file < b.file ? -1 : a.file > b.file ? 1 : 0;
 		});
-		fs.writeFile("README.md", `
+		fs.writeFileSync("README.md", `
 # bitsy-hacks
-A collection of re-usable scripts for [Adam LeDoux](https://twitter.com/adamledoux)'s [Bitsy Game Maker](https://ledoux.itch.io/bitsy).
+A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamledoux)'s [Bitsy Game Maker](https://ledoux.itch.io/bitsy).
 
 ## contents
 ${contents.map(hack => 
@@ -100,6 +100,9 @@ then edit it to look like this:
 ## Further reading
 - [Writing hacks with this repo's source code](https://github.com/seleb/bitsy-hacks/wiki)
 - [Claire Morley's "A Bitsy Tutorial"](http://www.clairemorleyart.com/a-bitsy-tutorial)
-- [Bitsy games!](https://itch.io/games/tag-bitsy)`);
+- [Bitsy games!](https://itch.io/games/tag-bitsy)
+
+- [Andrew Yolland's Borksy](https://ayolland.itch.io/borksy): Hack helper
+- [ruin's image-to-bitsy](https://ruin.itch.io/image-to-bitsy): Artistic aid`);
 	}
 };

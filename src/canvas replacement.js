@@ -3,7 +3,7 @@
 @file canvas replacement
 @summary WebGLazy bitsy integration (this one's mostly just for me)
 @license MIT
-@version 1.0.0
+@version 1.0.1
 @author Sean S. LeBlanc
 
 @description
@@ -36,9 +36,7 @@ e.g.
 (closing script tag omitted in comment to avoid confusing browser)
 */
 import bitsy from "bitsy";
-import {
-	WebGLazy
-} from "webglazy";
+import WebGLazy from "webglazy";
 
 var hackOptions = {
 	background: "black",

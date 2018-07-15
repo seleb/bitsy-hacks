@@ -3,7 +3,7 @@
 @file solid items
 @summary treat some items like sprites that can be placed multiple times
 @license MIT
-@version 1.0.0
+@version 1.0.1
 @author Sean S. LeBlanc
 
 @description
@@ -64,7 +64,7 @@ bitsy.getSpriteAt = function (x, y) {
 	var itemIndex = _getItemIndex(bitsy.curRoom, x, y);
 	var item = getSolidItemFromIndex(itemIndex);
 	if (item) {
-		return item.dlg;
+		return item.drw;
 	}
 };
 

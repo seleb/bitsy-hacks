@@ -1,4 +1,4 @@
-import rollup from "rollup";
+﻿import rollup from "rollup";
 import clear from "rollup-plugin-clear";
 import eslint from "rollup-plugin-eslint";
 import nodeResolve from "rollup-plugin-node-resolve";
@@ -46,11 +46,13 @@ function build(src) {
 
 Promise.all([
 	"basic sfx",
+	"bitsymuse",
 	"canvas replacement",
 	"corrupt",
 	"custom text effect",
 	"directional avatar",
 	"dynamic background",
+	"edit image from dialog",
 	"end-from-dialog",
 	"exit-from-dialog",
 	"external-game-data",
@@ -64,7 +66,9 @@ Promise.all([
 	"online",
 	"permanent items",
 	"solid items",
+	"stopwatch",
 	"tracery processing",
+	"transparent dialog",
 	"transparent sprites",
 	"unique items"
 ].map(src => {

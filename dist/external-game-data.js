@@ -50,18 +50,19 @@ bitsy = bitsy && bitsy.hasOwnProperty('default') ? bitsy['default'] : bitsy;
 @author Sean S. LeBlanc
 */
 
-/*helper used to inject code into script tags based on a search string*/
-function inject(searchString, codeToInject) {
-	var args = [].slice.call(arguments);
-	codeToInject = flatten(args.slice(1)).join('');
-
+/*
+Helper used to replace code in a script tag based on a search regex
+To inject code without erasing original string, using capturing groups; e.g.
+	inject(/(some string)/,'injected before $1 injected after')
+*/
+function inject(searchRegex, replaceString) {
 	// find the relevant script tag
 	var scriptTags = document.getElementsByTagName('script');
 	var scriptTag;
 	var code;
 	for (var i = 0; i < scriptTags.length; ++i) {
 		scriptTag = scriptTags[i];
-		var matchesSearch = scriptTag.textContent.indexOf(searchString) !== -1;
+		var matchesSearch = scriptTag.textContent.search(searchRegex) !== -1;
 		var isCurrentScript = scriptTag === document.currentScript;
 		if (matchesSearch && !isCurrentScript) {
 			code = scriptTag.textContent;
@@ -71,11 +72,11 @@ function inject(searchString, codeToInject) {
 
 	// error-handling
 	if (!code) {
-		throw 'Couldn\'t find "' + searchString + '" in script tags';
+		throw 'Couldn\'t find "' + searchRegex + '" in script tags';
 	}
 
 	// modify the content
-	code = code.replace(searchString, searchString + codeToInject);
+	code = code.replace(searchRegex, replaceString);
 
 	// replace the old script tag with a new one using our modified code
 	var newScriptTag = document.createElement('script');
@@ -95,51 +96,28 @@ function unique(array) {
 	});
 }
 
-function flatten(list) {
-	if (!Array.isArray(list)) {
-		return list;
-	}
-
-	return list.reduce(function (fragments, arg) {
-		return fragments.concat(flatten(arg));
-	}, []);
-}
-
 /**
 
 @file kitsy-script-toolkit
 @summary makes it easier and cleaner to run code before and after Bitsy functions or to inject new code into Bitsy script tags
 @license WTFPL (do WTF you want)
-@version 2.0.0
+@version 3.0.0
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
 @description
 HOW TO USE:
-  import {before, after, inject} from "./kitsy-script-toolkit.js";
+  import {before, after, inject, addDialogTag, addDeferredDialogTag} from "./helpers/kitsy-script-toolkit";
 
   before(targetFuncName, beforeFn);
   after(targetFuncName, afterFn);
-  inject(searchString, codeFragment1[, ...codefragmentN]);
+  inject(searchRegex, replaceString);
+  addDialogTag(tagName, dialogFn);
+  addDeferredDialogTag(tagName, dialogFn);
 
   For more info, see the documentation at:
   https://github.com/seleb/bitsy-hacks/wiki/Coding-with-kitsy
 */
-
-
-// Examples: inject('names.sprite.set( name, id );', 'console.dir(names)');
-//           inject('names.sprite.set( name, id );', 'console.dir(names);', 'console.dir(sprite);');
-//           inject('names.sprite.set( name, id );', ['console.dir(names)', 'console.dir(sprite);']);
-function inject$1(searchString, codeFragments) {
-	var kitsy = kitsyInit();
-	var args = [].slice.call(arguments);
-	codeFragments = flatten(args.slice(1));
-
-	kitsy.queuedInjectScripts.push({
-		searchString: searchString,
-		codeFragments: codeFragments
-	});
-}
 
 // Ex: before('load_game', function run() { alert('Loading!'); });
 //     before('show_text', function run(text) { return text.toUpperCase(); });
@@ -150,13 +128,6 @@ function before(targetFuncName, beforeFn) {
 	kitsy.queuedBeforeScripts[targetFuncName].push(beforeFn);
 }
 
-// Ex: after('load_game', function run() { alert('Loaded!'); });
-function after(targetFuncName, afterFn) {
-	var kitsy = kitsyInit();
-	kitsy.queuedAfterScripts[targetFuncName] = kitsy.queuedAfterScripts[targetFuncName] || [];
-	kitsy.queuedAfterScripts[targetFuncName].push(afterFn);
-}
-
 function kitsyInit() {
 	// return already-initialized kitsy
 	if (bitsy.kitsy) {
@@ -165,9 +136,6 @@ function kitsyInit() {
 
 	// Initialize kitsy
 	bitsy.kitsy = {
-		inject: inject$1,
-		before: before,
-		after: after,
 		queuedInjectScripts: [],
 		queuedBeforeScripts: {},
 		queuedAfterScripts: {}
@@ -192,7 +160,7 @@ function kitsyInit() {
 
 function doInjects() {
 	bitsy.kitsy.queuedInjectScripts.forEach(function (injectScript) {
-		inject(injectScript.searchString, injectScript.codeFragments);
+		inject(injectScript.searchRegex, injectScript.replaceString);
 	});
 	_reinitEngine();
 }

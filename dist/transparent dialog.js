@@ -1,31 +1,18 @@
 /**
-🔀
-@file logic-operators-extended
-@summary adds conditional logic operators
-@version 1.0.3
-@author @mildmojo
+👁️‍🗨️
+@file transparent dialog
+@summary makes the dialog box have a transparent background
+@license MIT
+@version 1.0.1
+@author Sean S. LeBlanc
 
 @description
-Adds conditional logic operators:
-  - !== (not equal to)
-  - && (and)
-  - || (or)
-  - &&! (and not)
-  - ||! (or not)
+Makes the dialog box have a transparent background.
 
-Examples: candlecount > 5 && haslighter == 1
-          candlecount > 5 && papercount > 1 && isIndoors
-          haslighter == 1 || hasmatches == 1
-          candlecount > 5 && candlecount !== 666
-          candlecount > 5 &&! droppedlighter
-          droppedlighter ||! hasmatches
+Note: this one's ~pretty hacky~.
 
-NOTE: The combining operators (&&, ||, &&!, ||!) have lower precedence than
-      all other math and comparison operators, so it might be hard to write
-      tests that mix and match these new operators and have them evaluate
-      correctly. If you're using multiple `&&` and `||` operators in one
-      condition, be sure to test every possibility to make sure it behaves
-      the way you want.
+HOW TO USE:
+Copy-paste into a script tag after the bitsy source
 */
 (function (bitsy) {
 'use strict';
@@ -214,58 +201,29 @@ function _reinitEngine() {
 
 
 
-inject$1(/(operatorMap\.set\("-", subExp\);)/,[
-	'$1',
-	'operatorMap.set("&&", andExp);',
-	'operatorMap.set("||", orExp);',
-	'operatorMap.set("&&!", andNotExp);',
-	'operatorMap.set("||!", orNotExp);',
-	'operatorMap.set("!==", notEqExp);'
-].join('\n'));
-inject$1(
-	/(var operatorSymbols = \["-", "\+", "\/", "\*", "<=", ">=", "<", ">", "=="\];)/,
-	'$1operatorSymbols.unshift("!==", "&&", "||", "&&!", "||!");'
-);
-
-bitsy.andExp = function andExp(environment, left, right, onReturn) {
-	right.Eval(environment, function (rVal) {
-		left.Eval(environment, function (lVal) {
-			onReturn(lVal && rVal);
-		});
-	});
+bitsy.transparentDialog = {
+	canvas: document.createElement('canvas')
 };
+bitsy.transparentDialog.context = bitsy.transparentDialog.canvas.getContext('2d');
+var drawOverride = `
+if(context == null) return;
+transparentDialog.canvas.width = textboxInfo.width*scale;
+transparentDialog.canvas.height = textboxInfo.height*scale;
+transparentDialog.context.putImageData(textboxInfo.img, 0, 0);
+if (isCentered) {
+	context.drawImage(transparentDialog.canvas, textboxInfo.left*scale, ((height/2)-(textboxInfo.height/2))*scale);
+} else if (player().y < mapsize/2) {
+	context.drawImage(transparentDialog.canvas, textboxInfo.left*scale, (height-textboxInfo.bottom-textboxInfo.height)*scale);
+}
+else {
+	context.drawImage(transparentDialog.canvas, textboxInfo.left*scale, textboxInfo.top*scale);
+}
+return;`;
 
-bitsy.orExp = function orExp(environment, left, right, onReturn) {
-	right.Eval(environment, function (rVal) {
-		left.Eval(environment, function (lVal) {
-			onReturn(lVal || rVal);
-		});
-	});
-};
+// override textbox drawing to use draw image version from above
+inject$1(/(this\.DrawTextbox = function\(\) {)/, '$1'+drawOverride);
 
-bitsy.notEqExp = function notEqExp(environment, left, right, onReturn) {
-	right.Eval(environment, function (rVal) {
-		left.Eval(environment, function (lVal) {
-			onReturn(lVal !== rVal);
-		});
-	});
-};
-
-bitsy.andNotExp = function andNotExp(environment, left, right, onReturn) {
-	right.Eval(environment, function (rVal) {
-		left.Eval(environment, function (lVal) {
-			onReturn(lVal && !rVal);
-		});
-	});
-};
-
-bitsy.orNotExp = function orNotExp(environment, left, right, onReturn) {
-	right.Eval(environment, function (rVal) {
-		left.Eval(environment, function (lVal) {
-			onReturn(lVal || !rVal);
-		});
-	});
-};
-// End of logic operators mod
+// override textbox clearing pixels to be fully transparent
+inject$1(/(textboxInfo\.img\.data\[i\+3\]=)255/, '$10');
 
 }(window));
