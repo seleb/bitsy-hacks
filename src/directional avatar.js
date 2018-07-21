@@ -68,7 +68,7 @@ bitsy.onPlayerMoved = function () {
 	}
 
 	// save the original frames
-	if (!originalAnimation) {
+	if (!originalAnimation || originalAnimation.referenceFrame !== getSpriteData(bitsy.playerId, 0)) {
 		originalAnimation = {
 			frames: []
 		};
