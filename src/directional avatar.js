@@ -69,9 +69,11 @@ bitsy.onPlayerMoved = function () {
 
 	// save the original frames
 	if (!originalAnimation) {
-		originalAnimation = [];
+		originalAnimation = {
+			frames: []
+		};
 		for (i = 0; i < bitsy.player().animation.frameCount; ++i) {
-			originalAnimation.push(getSpriteData(bitsy.playerId, i));
+			originalAnimation.frames.push(getSpriteData(bitsy.playerId, i));
 		}
 	}
 
@@ -94,7 +96,8 @@ bitsy.onPlayerMoved = function () {
 	}
 
 	// update sprite with flipped frames
-	for (i = 0; i < originalAnimation.length; ++i) {
-		setSpriteData(bitsy.playerId, i, flip(originalAnimation[i], vflip, hflip));
+	for (i = 0; i < originalAnimation.frames.length; ++i) {
+		setSpriteData(bitsy.playerId, i, flip(originalAnimation.frames[i], vflip, hflip));
 	}
+	originalAnimation.referenceFrame = getSpriteData(bitsy.playerId, 0);
 };
