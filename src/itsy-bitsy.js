@@ -38,21 +38,20 @@ inject(/2(; \/\/using a different scaling factor for text feels like cheating\.\
 // rewrite textbox info
 inject(/(var textboxInfo = {)[^]*?(};)/, '$1' + [
 	'img : null,',
-	'width : 64,',
+	'width : 62,',
 	'height : 64,',
-	'top : 0,',
-	'left : 0,',
-	'bottom : 0,',
+	'top : 1,',
+	'left : 1,',
+	'bottom : 1,',
 	'font_scale : 1,',
-	'padding_vert : 1,',
-	'padding_horz : 0,',
-	'arrow_height : 10'
+	'padding_vert : 2,',
+	'arrow_height : 5'
 ].join('\n') + '$2');
 inject(/(top = \()4/, '$1 1');
 inject(/(left = \()4/, '$1 1');
 
 inject(/(relativeFontHeight\(\) \*) 2/, '$1 ' + hackOptions.rows); // rewrite textbox height
-inject(/(pixelsPerRow =) 192/, '$1 64'); // rewrite hard-coded textbox wrap width
+inject(/(pixelsPerRow =) 192/, '$1 62'); // rewrite hard-coded textbox wrap width
 inject(/(else if \(curRowIndex )== 0/g, '$1< ' + (hackOptions.rows - 1)); // rewrite hard-coded row limit
 
 // inject pixelated rendering style
