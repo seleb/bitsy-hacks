@@ -18,6 +18,11 @@ customize how many rows of text the dialog boxes will show.
 HOW TO USE:
 	1. Copy-paste this script into a new script tag after the Bitsy source code.
 	2. edit hackOptions below as needed
+
+NOTE:
+The number of rows is the only provided hack option,
+but most of the numbers being replaced can be easily
+customized if you want slightly different sizes/positions.
 */
 import {
 	inject
