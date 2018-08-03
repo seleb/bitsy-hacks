@@ -60,6 +60,7 @@ Promise.all([
 	"favicon-from-sprite",
 	"follower",
 	"gamepad input",
+	"itsy-bitsy",
 	"javascript dialog",
 	"logic-operators-extended",
 	"multi-sprite avatar",
