@@ -54,3 +54,8 @@ inject(/(left = \()4/, '$1 1');
 inject(/(relativeFontHeight\(\) \*) 2/, '$1 ' + hackOptions.rows); // rewrite textbox height
 inject(/(pixelsPerRow =) 192/, '$1 64'); // rewrite hard-coded textbox wrap width
 inject(/(else if \(curRowIndex )== 0/g, '$1< ' + (hackOptions.rows - 1)); // rewrite hard-coded row limit
+
+// inject pixelated rendering style
+var style = document.createElement('style');
+style.innerText = '#game{ -ms-interpolation-mode: nearest-neighbor;image-rendering: -webkit-optimize-contrast;image-rendering: -moz-crisp-edges;image-rendering: -o-pixelated;image-rendering: pixelated; }';
+document.head.appendChild(style);
