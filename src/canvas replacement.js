@@ -44,17 +44,23 @@ var hackOptions = {
 	background: "black",
 	scaleMode: "MULTIPLES", // use "FIT" if you prefer size to pixel accuracy
 	allowDownscaling: true,
-	disableFeedbackTexture: true // set this to false if you want to use the feedback texture
+	disableFeedbackTexture: true, // set this to false if you want to use the feedback texture
+	init: function() {
+		// you can set up any custom uniforms you have here if needed
+		// e.g. glazy.glLocations.myUniform = glazy.gl.getUniformLocation(glazy.shader.program, 'myUniform');
+	},
+	update: function() {
+		// you can update any custom uniforms you have here if needed
+		// e.g. glazy.gl.uniform1f(glazy.glLocations.myUniform, 0);
+	},
 };
 
 var glazy;
 after('startExportedGame', function () {
 	glazy = new WebGLazy(hackOptions);
-	// you can set up any custom uniforms you have here if needed
-	// e.g. glazy.glLocations.myUniform = glazy.gl.getUniformLocation(glazy.shader.program, 'myUniform');
+	hackOptions.init();
 });
 
 after('update', function () {
-	// you can update any custom uniforms you have here if needed
-	// e.g. glazy.gl.uniform1f(glazy.glLocations.myUniform, 0);
+	hackOptions.update();
 });
