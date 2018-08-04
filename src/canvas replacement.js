@@ -35,8 +35,10 @@ e.g.
 	}
 (closing script tag omitted in comment to avoid confusing browser)
 */
-import bitsy from "bitsy";
 import WebGLazy from "webglazy";
+import {
+	after
+} from "./helpers/kitsy-script-toolkit";
 
 var hackOptions = {
 	background: "black",
@@ -46,20 +48,13 @@ var hackOptions = {
 };
 
 var glazy;
-var _startExportedGame = bitsy.startExportedGame;
-bitsy.startExportedGame = function () {
-	if (_startExportedGame) {
-		_startExportedGame();
-	}
+after('startExportedGame', function () {
 	glazy = new WebGLazy(hackOptions);
 	// you can set up any custom uniforms you have here if needed
 	// e.g. glazy.glLocations.myUniform = glazy.gl.getUniformLocation(glazy.shader.program, 'myUniform');
-}
-var _update = bitsy.update;
-bitsy.update = function () {
-	if (_update) {
-		_update();
-	}
+});
+
+after('update', function () {
 	// you can update any custom uniforms you have here if needed
 	// e.g. glazy.gl.uniform1f(glazy.glLocations.myUniform, 0);
-}
+});
