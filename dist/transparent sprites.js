@@ -206,7 +206,7 @@ function _reinitEngine() {
 inject$1(/(function imageDataFromImageSource\(imageSource, pal, col\) {)([^]*?)return img;/, [
 '$1',
 '	var cache;',
-'	return function(imageSource, pal, col){',
+'	return function(){',
 '		if (cache) {',
 '			return cache;',
 '		}',
@@ -240,7 +240,7 @@ inject$1(/(function imageDataFromImageSource\(imageSource, pal, col\) {)([^]*?)r
 '	',
 '		// return our image	',
 '		return cache;',
-'	}.bind(undefined, arguments);',
+'	};',
 ].join('\n'));
 
 // override drawTile to draw from our custom image cache
