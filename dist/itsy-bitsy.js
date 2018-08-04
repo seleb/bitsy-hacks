@@ -3,7 +3,7 @@
 @file itsy-bitsy
 @summary for when bitsy's not small enough
 @license MIT
-@version 1.0.0
+@version 1.0.1
 @requires Bitsy Version: 5.1
 @author Sean S. LeBlanc
 
@@ -222,6 +222,8 @@ inject$1(/(height =) 128/, '$1 64');
 
 inject$1(/4(; \/\/this is stupid but necessary)/, '1$1'); // rewrite canvas scale
 inject$1(/(mapsize =) 16/, '$1 8'); // rewrite mapsize
+inject$1(/(\+ 1 >=) 16/g, '$1 8'); // rewrite right/down wall checks
+
 inject$1(/2(; \/\/using a different scaling factor for text feels like cheating\.\.\. but it looks better)/, '1$1'); // rewrite text scale
 
 // rewrite textbox info
