@@ -1,57 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`flatten returns an array which is a copy of the parameter, fully flattened 1`] = `Array []`;
-
-exports[`flatten returns an array which is a copy of the parameter, fully flattened 2`] = `
-Array [
-  1,
-  2,
-  3,
-  4,
-  5,
-]
-`;
-
-exports[`flatten returns an array which is a copy of the parameter, fully flattened 3`] = `
-Array [
-  1,
-  2,
-  3,
-  4,
-  5,
-]
-`;
-
-exports[`flatten returns an array which is a copy of the parameter, fully flattened 4`] = `
-Array [
-  1,
-  2,
-  3,
-  4,
-  5,
-]
-`;
-
-exports[`flatten returns an array which is a copy of the parameter, fully flattened 5`] = `
-Array [
-  1,
-  2,
-  3,
-  4,
-  5,
-]
-`;
-
-exports[`flatten returns an array which is a copy of the parameter, fully flattened 6`] = `
-Array [
-  1,
-  2,
-  3,
-  4,
-  5,
-]
-`;
-
 exports[`unique returns an array which is a copy of the parameter, without duplicates 1`] = `Array []`;
 
 exports[`unique returns an array which is a copy of the parameter, without duplicates 2`] = `
