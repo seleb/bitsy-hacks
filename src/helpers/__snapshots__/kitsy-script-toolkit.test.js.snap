@@ -33,11 +33,3 @@ exports[`convertDialogTags handles relatively complex cases 3`] = `
 		  {image \\"ITM, 8HU display PERMANENT, 8HU off PERMANENT\\"}
 		  }"
 `;
-
-exports[`convertDialogTags replaces \`(tag "input")\` with \`{tag "input"}\` 1`] = `"{tag \\"input\\"}"`;
-
-exports[`convertDialogTags replaces \`(tag input)\` with \`{tag input}\` 1`] = `"{tag input}"`;
-
-exports[`convertDialogTags replaces \`\\(tag "input"\\)\` with \`(tag "input")\` 1`] = `"(tag \\"input\\")"`;
-
-exports[`convertDialogTags replaces \`\\(tag input\\)\` with \`(tag input)\` 1`] = `"(tag input)"`;
