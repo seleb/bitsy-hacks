@@ -3,7 +3,7 @@
 @file kitsy-script-toolkit
 @summary makes it easier and cleaner to run code before and after Bitsy functions or to inject new code into Bitsy script tags
 @license WTFPL (do WTF you want)
-@version 3.1.0
+@version 3.2.0
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
@@ -151,7 +151,7 @@ function _reinitEngine() {
 // interpreter. Unescape escaped parentheticals, too.
 export function convertDialogTags(input, tag) {
 	return input
-		.replace(new RegExp('\\\\?\\((' + tag + '\\s+(".+?"|.+?))\\\\?\\)', 'g'), function(match, group){
+		.replace(new RegExp('\\\\?\\((' + tag + '(\\s+(".+?"|.+?))?)\\\\?\\)', 'g'), function(match, group){
 			if(match.substr(0,1) === '\\') {
 				return '('+ group + ')'; // Rewrite \(tag "..."|...\) to (tag "..."|...)
 			}

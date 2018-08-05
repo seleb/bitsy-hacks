@@ -8,20 +8,28 @@ describe('convertDialogTags', ()=>{
 		expect(()=>convertDialogTags('', '')).not.toThrow();
 	});
 
+	it('replaces `(tag)` with `{tag}`', ()=>{
+		expect(convertDialogTags(`(tag)`, 'tag')).toEqual('{tag}');
+	});
+
 	it('replaces `(tag "input")` with `{tag "input"}`', ()=>{
-		expect(convertDialogTags(`(tag "input")`, 'tag')).toMatchSnapshot();
+		expect(convertDialogTags(`(tag "input")`, 'tag')).toEqual('{tag "input"}');
 	});
 
 	it('replaces `(tag input)` with `{tag input}`', ()=>{
-		expect(convertDialogTags(`(tag input)`, 'tag')).toMatchSnapshot();
+		expect(convertDialogTags(`(tag input)`, 'tag')).toEqual('{tag input}');
+	});
+
+	it('replaces `\\(tag\\)` with `(tag)`', ()=>{
+		expect(convertDialogTags(String.raw`\(tag\)`, 'tag')).toEqual('(tag)');
 	});
 
 	it('replaces `\\(tag "input"\\)` with `(tag "input")`', ()=>{
-		expect(convertDialogTags(String.raw`\(tag "input"\)`, 'tag')).toMatchSnapshot();
+		expect(convertDialogTags(String.raw`\(tag "input"\)`, 'tag')).toEqual('(tag "input")');
 	});
 
 	it('replaces `\\(tag input\\)` with `(tag input)`', ()=>{
-		expect(convertDialogTags(String.raw`\(tag input\)`, 'tag')).toMatchSnapshot();
+		expect(convertDialogTags(String.raw`\(tag input\)`, 'tag')).toEqual('(tag input)');
 	});
 
 	it('doesn\'t work when nested', ()=>{
