@@ -3,7 +3,7 @@
 @file canvas replacement
 @summary WebGLazy bitsy integration (this one's mostly just for me)
 @license MIT
-@version 1.0.1
+@version 1.1.0
 @author Sean S. LeBlanc
 
 @description
@@ -35,31 +35,32 @@ e.g.
 	}
 (closing script tag omitted in comment to avoid confusing browser)
 */
-import bitsy from "bitsy";
 import WebGLazy from "webglazy";
+import {
+	after
+} from "./helpers/kitsy-script-toolkit";
 
 var hackOptions = {
 	background: "black",
 	scaleMode: "MULTIPLES", // use "FIT" if you prefer size to pixel accuracy
 	allowDownscaling: true,
-	disableFeedbackTexture: true // set this to false if you want to use the feedback texture
+	disableFeedbackTexture: true, // set this to false if you want to use the feedback texture
+	init: function() {
+		// you can set up any custom uniforms you have here if needed
+		// e.g. glazy.glLocations.myUniform = glazy.gl.getUniformLocation(glazy.shader.program, 'myUniform');
+	},
+	update: function() {
+		// you can update any custom uniforms you have here if needed
+		// e.g. glazy.gl.uniform1f(glazy.glLocations.myUniform, 0);
+	},
 };
 
 var glazy;
-var _startExportedGame = bitsy.startExportedGame;
-bitsy.startExportedGame = function () {
-	if (_startExportedGame) {
-		_startExportedGame();
-	}
+after('startExportedGame', function () {
 	glazy = new WebGLazy(hackOptions);
-	// you can set up any custom uniforms you have here if needed
-	// e.g. glazy.glLocations.myUniform = glazy.gl.getUniformLocation(glazy.shader.program, 'myUniform');
-}
-var _update = bitsy.update;
-bitsy.update = function () {
-	if (_update) {
-		_update();
-	}
-	// you can update any custom uniforms you have here if needed
-	// e.g. glazy.gl.uniform1f(glazy.glLocations.myUniform, 0);
-}
+	hackOptions.init();
+});
+
+after('update', function () {
+	hackOptions.update();
+});
