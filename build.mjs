@@ -66,6 +66,7 @@ Promise.all([
 	"multi-sprite avatar",
 	"noclip",
 	"online",
+	"paragraph-break",
 	"permanent items",
 	"solid items",
 	"stopwatch",
