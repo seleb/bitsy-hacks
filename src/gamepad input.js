@@ -3,7 +3,8 @@
 @file gamepad input
 @summary HTML5 gamepad support
 @license MIT
-@version 1.0.0
+@version 2.0.0
+@requires Bitsy Version: 5.1
 @author Sean S. LeBlanc
 
 @description
@@ -17,14 +18,12 @@ Copy-paste this script into a script tag after the bitsy source
 */
 import bitsy from "bitsy";
 import gamepads from "input-gamepads.js";
+import {
+	before,
+	after
+} from "./helpers/kitsy-script-toolkit";
 
-var _startExportedGame = bitsy.startExportedGame;
-bitsy.startExportedGame = function () {
-	gamepads.init();
-	if (_startExportedGame) {
-		_startExportedGame();
-	}
-}
+before('startExportedGame', gamepads.init.bind(gamepads));
 var empty = function () {};
 
 var move = function (dpad, face, axis, axis2, axispast, axisdir, key) {
@@ -42,7 +41,7 @@ var move = function (dpad, face, axis, axis2, axispast, axisdir, key) {
 		)
 	) {
 		bitsy.curPlayerDirection = bitsy.Direction.None;
-		bitsy.onkeydown({
+		bitsy.input.onkeydown({
 			keyCode: key,
 			preventDefault: empty
 		});
@@ -54,22 +53,19 @@ var move = function (dpad, face, axis, axis2, axispast, axisdir, key) {
 		gamepads.isJustUp(face) ||
 		gamepads.axisJustPast(axis, axispast, -axisdir)
 	) {
-		bitsy.onkeyup({
+		bitsy.input.onkeyup({
 			keyCode: key,
 			preventDefault: empty
 		});
 	}
 }
 
-var _update = bitsy.update;
-bitsy.update = function () {
+before('update', function(){
 	move(gamepads.DPAD_LEFT, gamepads.X, gamepads.LSTICK_H, gamepads.RSTICK_H, -0.5, -1, bitsy.key.left);
 	move(gamepads.DPAD_RIGHT, gamepads.B, gamepads.LSTICK_H, gamepads.RSTICK_H, 0.5, 1, bitsy.key.right);
 	move(gamepads.DPAD_UP, gamepads.Y, gamepads.LSTICK_V, gamepads.RSTICK_V, -0.5, -1, bitsy.key.up);
 	move(gamepads.DPAD_DOWN, gamepads.A, gamepads.LSTICK_V, gamepads.RSTICK_V, 0.5, 1, bitsy.key.down);
-
-	if (_update) {
-		_update();
-	}
+});
+after('update', function(){
 	gamepads.update();
-}
+});
