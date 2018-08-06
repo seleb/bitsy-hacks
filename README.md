@@ -25,6 +25,7 @@ A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamled
  - 👨‍👨‍👧‍👧 [multi-sprite avatar](/dist/multi-sprite%20avatar.js): make the player big
  - 📎 [noclip](/dist/noclip.js): walk through wall tiles, sprites, items, exits, and endings
  - 🔄 [online](/dist/online.js): multiplayer bitsy
+ - 📃 [paragraph-break](/dist/paragraph-break.js): Adds paragraph breaks to the dialogue parser
  - ⏳ [permanent items](/dist/permanent%20items.js): prevent some items from being picked up
  - 🛑 [solid items](/dist/solid%20items.js): treat some items like sprites that can be placed multiple times
  - ⏱️ [stopwatch](/dist/stopwatch.js): time player actions
