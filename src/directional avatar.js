@@ -15,6 +15,9 @@ HOW TO USE:
 */
 import bitsy from "bitsy";
 import {
+	after
+} from "./helpers/kitsy-script-toolkit";
+import {
 	getSpriteData,
 	setSpriteData
 } from "./helpers/edit image at runtime";
@@ -59,14 +62,9 @@ function flip(spriteData, v, h) {
 var hflip = false;
 var vflip = false;
 var originalAnimation;
-var _onPlayerMoved = bitsy.onPlayerMoved;
-bitsy.onPlayerMoved = function () {
-	var i;
-	// future-proofing
-	if (_onPlayerMoved) {
-		_onPlayerMoved();
-	}
 
+after('onPlayerMoved', function () {
+	var i;
 	// save the original frames
 	if (!originalAnimation || originalAnimation.referenceFrame !== getSpriteData(bitsy.playerId, 0)) {
 		originalAnimation = {
@@ -100,4 +98,4 @@ bitsy.onPlayerMoved = function () {
 		setSpriteData(bitsy.playerId, i, flip(originalAnimation.frames[i], vflip, hflip));
 	}
 	originalAnimation.referenceFrame = getSpriteData(bitsy.playerId, 0);
-};
+});
