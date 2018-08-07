@@ -27,6 +27,9 @@ import {
 	before,
 	after
 } from "./helpers/kitsy-script-toolkit";
+import {
+	getImage
+} from "./helpers/utils";
 
 var hackOptions = {
 	pieces: [{
@@ -60,7 +63,7 @@ function syncPieces() {
 	var p = bitsy.player();
 	for (var i = 0; i < pieces.length; ++i) {
 		var piece = pieces[i];
-		var spr = bitsy.sprite[piece.spr];
+		var spr = getImage(piece.spr, bitsy.sprite);
 
 		spr.room = p.room;
 		spr.x = p.x + piece.x;
@@ -78,7 +81,7 @@ function enableBig(newPieces) {
 function disableBig() {
 	enabled = false;
 	for (var i = 0; i < pieces.length; ++i) {
-		bitsy.sprite[pieces[i].spr].room = null;
+		getImage(pieces[i].spr, bitsy.sprite).room = null;
 	}
 }
 
