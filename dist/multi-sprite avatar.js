@@ -3,7 +3,7 @@
 @file multi-sprite avatar
 @summary make the player big
 @license MIT
-@version 1.0.0
+@version 2.0.0
 @author Sean S. LeBlanc
 
 @description
@@ -88,6 +88,22 @@ function inject(searchRegex, replaceString) {
 	scriptTag.remove();
 }
 
+/*
+Helper for getting image by name or id
+
+Args:
+	name: id or name of image to return
+	 map: map of images (e.g. `sprite`, `tile`, `item`)
+
+Returns: the image in the given map with the given name/id
+ */
+function getImage(name, map) {
+	var id = map.hasOwnProperty(name) ? name : Object.keys(map).find(function (e) {
+		return map[e].name == name;
+	});
+	return map[id];
+}
+
 /**
  * Helper for getting an array with unique elements 
  * @param  {Array} array Original array
@@ -104,7 +120,7 @@ function unique(array) {
 @file kitsy-script-toolkit
 @summary makes it easier and cleaner to run code before and after Bitsy functions or to inject new code into Bitsy script tags
 @license WTFPL (do WTF you want)
-@version 3.1.0
+@version 3.2.1
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
@@ -182,12 +198,14 @@ function applyAllHooks() {
 
 function applyHook(functionName) {
 	var superFn = bitsy[functionName];
-	var superFnLength = superFn.length;
+	var superFnLength = superFn ? superFn.length : 0;
 	var functions = [];
 	// start with befores
 	functions = functions.concat(bitsy.kitsy.queuedBeforeScripts[functionName] || []);
 	// then original
-	functions.push(superFn);
+	if (superFn) {
+		functions.push(superFn);
+	}
 	// then afters
 	functions = functions.concat(bitsy.kitsy.queuedAfterScripts[functionName] || []);
 
@@ -248,7 +266,7 @@ function syncPieces() {
 	var p = bitsy.player();
 	for (var i = 0; i < pieces.length; ++i) {
 		var piece = pieces[i];
-		var spr = bitsy.sprite[piece.spr];
+		var spr = getImage(piece.spr, bitsy.sprite);
 
 		spr.room = p.room;
 		spr.x = p.x + piece.x;
@@ -266,7 +284,7 @@ function enableBig(newPieces) {
 function disableBig() {
 	enabled = false;
 	for (var i = 0; i < pieces.length; ++i) {
-		bitsy.sprite[pieces[i].spr].room = null;
+		getImage(pieces[i].spr, bitsy.sprite).room = null;
 	}
 }
 

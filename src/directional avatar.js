@@ -3,7 +3,7 @@
 @file directional avatar
 @summary flips the player's sprite based on directional movement
 @license MIT
-@version 1.0.1
+@version 1.0.2
 @author Sean S. LeBlanc
 
 @description
@@ -14,6 +14,9 @@ HOW TO USE:
 2. Edit `horizontalFlipAllowed` and `verticalFlipAllowed` below as needed
 */
 import bitsy from "bitsy";
+import {
+	after
+} from "./helpers/kitsy-script-toolkit";
 import {
 	getSpriteData,
 	setSpriteData
@@ -59,14 +62,9 @@ function flip(spriteData, v, h) {
 var hflip = false;
 var vflip = false;
 var originalAnimation;
-var _onPlayerMoved = bitsy.onPlayerMoved;
-bitsy.onPlayerMoved = function () {
-	var i;
-	// future-proofing
-	if (_onPlayerMoved) {
-		_onPlayerMoved();
-	}
 
+after('onPlayerMoved', function () {
+	var i;
 	// save the original frames
 	if (!originalAnimation || originalAnimation.referenceFrame !== getSpriteData(bitsy.playerId, 0)) {
 		originalAnimation = {
@@ -100,4 +98,4 @@ bitsy.onPlayerMoved = function () {
 		setSpriteData(bitsy.playerId, i, flip(originalAnimation.frames[i], vflip, hflip));
 	}
 	originalAnimation.referenceFrame = getSpriteData(bitsy.playerId, 0);
-};
+});
