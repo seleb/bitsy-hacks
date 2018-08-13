@@ -3,7 +3,7 @@
 @file favicon-from-sprite
 @summary generate a browser favicon (tab icon) from a Bitsy sprite, including animation!
 @license WTFPL (do WTF you want)
-@version 2.0.1
+@version 2.0.2
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
@@ -88,7 +88,7 @@ function unique(array) {
 @file kitsy-script-toolkit
 @summary makes it easier and cleaner to run code before and after Bitsy functions or to inject new code into Bitsy script tags
 @license WTFPL (do WTF you want)
-@version 3.1.0
+@version 3.2.1
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
@@ -157,12 +157,14 @@ function applyAllHooks() {
 
 function applyHook(functionName) {
 	var superFn = bitsy[functionName];
-	var superFnLength = superFn.length;
+	var superFnLength = superFn ? superFn.length : 0;
 	var functions = [];
 	// start with befores
 	functions = functions.concat(bitsy.kitsy.queuedBeforeScripts[functionName] || []);
 	// then original
-	functions.push(superFn);
+	if (superFn) {
+		functions.push(superFn);
+	}
 	// then afters
 	functions = functions.concat(bitsy.kitsy.queuedAfterScripts[functionName] || []);
 

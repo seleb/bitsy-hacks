@@ -3,7 +3,7 @@
 @file exit-from-dialog
 @summary exit to another room from dialog, including conditionals
 @license WTFPL (do WTF you want)
-@version 5.1.0
+@version 5.1.1
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
@@ -115,7 +115,7 @@ function unique(array) {
 @file kitsy-script-toolkit
 @summary makes it easier and cleaner to run code before and after Bitsy functions or to inject new code into Bitsy script tags
 @license WTFPL (do WTF you want)
-@version 3.1.0
+@version 3.2.1
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
@@ -203,12 +203,14 @@ function applyAllHooks() {
 
 function applyHook(functionName) {
 	var superFn = bitsy[functionName];
-	var superFnLength = superFn.length;
+	var superFnLength = superFn ? superFn.length : 0;
 	var functions = [];
 	// start with befores
 	functions = functions.concat(bitsy.kitsy.queuedBeforeScripts[functionName] || []);
 	// then original
-	functions.push(superFn);
+	if (superFn) {
+		functions.push(superFn);
+	}
 	// then afters
 	functions = functions.concat(bitsy.kitsy.queuedAfterScripts[functionName] || []);
 
@@ -258,7 +260,7 @@ function _reinitEngine() {
 // interpreter. Unescape escaped parentheticals, too.
 function convertDialogTags(input, tag) {
 	return input
-		.replace(new RegExp('\\\\?\\((' + tag + '\\s+(".+?"|.+?))\\\\?\\)', 'g'), function(match, group){
+		.replace(new RegExp('\\\\?\\((' + tag + '(\\s+(".+?"|.+?))?)\\\\?\\)', 'g'), function(match, group){
 			if(match.substr(0,1) === '\\') {
 				return '('+ group + ')'; // Rewrite \(tag "..."|...\) to (tag "..."|...)
 			}
