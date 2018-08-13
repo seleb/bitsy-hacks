@@ -71,11 +71,12 @@ if (hackOptions.autosaveInterval < Infinity) {
 	}, hackOptions.autosaveInterval);
 }
 
-if (hackOptions.loadOnStart) {
-	after('onready', function () {
+after('onready', function () {
+	bitsy.saveHack.originalVariables = Array.from(bitsy.saveHack.variableMap.entries()).reduce(reduceEntriesToObj, {});
+	if (hackOptions.loadOnStart) {
 		load();
-	});
-}
+	}
+});
 
 if (hackOptions.resetOnEnd) {
 	after('reset_cur_game', function () {
