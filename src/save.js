@@ -47,6 +47,11 @@ function nodeKey(node) {
 	return key;
 }
 
+function reduceEntriesToObj(result, entry) {
+	result[entry[0]] = entry[1];
+	return result;
+}
+
 // setup global needed for saving/loading dialog progress
 bitsy.saveHack = {
 	sequenceIndices: {},
@@ -88,11 +93,7 @@ function save() {
 			curRoom: bitsy.curRoom,
 			variable: bitsy.variable
 		},
-		variableMap: Array.from(bitsy.saveHack.variableMap.entries())
-			.reduce(function (result, entry) {
-				result[entry[0]] = entry[1];
-				return result;
-			}, {}),
+		variableMap: Array.from(bitsy.saveHack.variableMap.entries()).reduce(reduceEntriesToObj, {}),
 		sequenceIndices: bitsy.saveHack.sequenceIndices
 	};
 	localStorage.setItem('snapshot', JSON.stringify(snapshot));
