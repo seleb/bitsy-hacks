@@ -19,7 +19,17 @@ Notes:
 	- Storage is implemented through browser localStorage
 	  Remember to clear storage while working on a game,
 	  otherwise loading will prevent you from seeing your changes!
-	- Compatability with other hacks untested
+	- Compatability with other hacks varies
+	  You may need to modify save/load to include or exclude things
+	  depending on the other hacks being used
+	  (feel free to ask for help tailoring them to your needs)
+
+Things that are saved/loaded:
+	- current room
+	- sprites
+	- items in rooms
+	- variables
+	- dialog indices
 
 HOW TO USE:
 1. Copy-paste this script into a script tag after the bitsy source
