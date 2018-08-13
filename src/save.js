@@ -113,7 +113,9 @@ function load() {
 
 	// variableMap needs to preserve its reference
 	bitsy.saveHack.variableMap.clear();
-	Object.entries(snapshot.variableMap).forEach(function (entry) {
+	Object.entries(
+		Object.assign({}, bitsy.saveHack.originalVariables, snapshot.variableMap)
+	).forEach(function (entry) {
 		bitsy.saveHack.variableMap.set(entry[0], entry[1]);
 	});
 
