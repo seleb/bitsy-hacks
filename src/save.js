@@ -91,9 +91,9 @@ function save() {
 		basic: {
 			room: bitsy.room,
 			curRoom: bitsy.curRoom,
-			variable: bitsy.variable
 		},
 		sprite: bitsy.sprite,
+		variable: bitsy.variable,
 		variableMap: Array.from(bitsy.saveHack.variableMap.entries()).reduce(reduceEntriesToObj, {}),
 		sequenceIndices: bitsy.saveHack.sequenceIndices
 	};
@@ -111,6 +111,7 @@ function load() {
 	// basic props can be assigned directly
 	Object.assign(bitsy, snapshot.basic);
 	Object.assign(bitsy.sprite, snapshot.sprite);
+	Object.assign(bitsy.variable, snapshot.variable);
 
 	// variableMap needs to preserve its reference
 	bitsy.saveHack.variableMap.clear();
