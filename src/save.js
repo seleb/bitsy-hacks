@@ -12,7 +12,7 @@ Introduces save/load functionality.
 Includes:
 	- autosave option: automatically saves every X milliseconds
 	- load on start option: automatically loads save on start
-	- (saveNow "") dialog tag: manually saves game (parameter doesn't do anything, but is required)
+	- (saveNow) dialog tag: manually saves game
 	- (loadNow "") dialog tag: manually loads game (parameter is text to show as title on load)
 
 Notes:
