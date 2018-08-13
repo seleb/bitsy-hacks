@@ -12,16 +12,24 @@ Introduces save/load functionality.
 Includes:
 	- autosave option: automatically saves every X milliseconds
 	- load on start option: automatically loads save on start
-	- (save "") dialog tag: manually saves game (parameter doesn't do anything, but is required)
-	- (load "") dialog tag: manually loads game (parameter is text to show as title on load)
+	- (saveNow) dialog tag: manually saves game
+	- (loadNow "") dialog tag: manually loads game (parameter is text to show as title on load)
 
 Notes:
-	- To simplify things, save/load dialog tags execute immediately
-	  (i.e. they act like {exitNow}, not {exit})
 	- Storage is implemented through browser localStorage
 	  Remember to clear storage while working on a game,
 	  otherwise loading will prevent you from seeing your changes!
-	- Compatability with other hacks untested
+	- Compatability with other hacks varies
+	  You may need to modify save/load to include or exclude things
+	  depending on the other hacks being used
+	  (feel free to ask for help tailoring them to your needs)
+
+Things that are saved/loaded:
+	- current room
+	- sprites
+	- items in rooms
+	- variables
+	- dialog indices
 
 HOW TO USE:
 1. Copy-paste this script into a script tag after the bitsy source
@@ -94,7 +102,7 @@ function unique(array) {
 @file kitsy-script-toolkit
 @summary makes it easier and cleaner to run code before and after Bitsy functions or to inject new code into Bitsy script tags
 @license WTFPL (do WTF you want)
-@version 3.0.0
+@version 3.2.1
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
@@ -182,12 +190,14 @@ function applyAllHooks() {
 
 function applyHook(functionName) {
 	var superFn = bitsy[functionName];
-	var superFnLength = superFn.length;
+	var superFnLength = superFn ? superFn.length : 0;
 	var functions = [];
 	// start with befores
 	functions = functions.concat(bitsy.kitsy.queuedBeforeScripts[functionName] || []);
 	// then original
-	functions.push(superFn);
+	if (superFn) {
+		functions.push(superFn);
+	}
 	// then afters
 	functions = functions.concat(bitsy.kitsy.queuedAfterScripts[functionName] || []);
 
@@ -237,7 +247,7 @@ function _reinitEngine() {
 // interpreter. Unescape escaped parentheticals, too.
 function convertDialogTags(input, tag) {
 	return input
-		.replace(new RegExp('\\\\?\\((' + tag + '\\s+(".+?"|.+?))\\\\?\\)', 'g'), function(match, group){
+		.replace(new RegExp('\\\\?\\((' + tag + '(\\s+(".+?"|.+?))?)\\\\?\\)', 'g'), function(match, group){
 			if(match.substr(0,1) === '\\') {
 				return '('+ group + ')'; // Rewrite \(tag "..."|...\) to (tag "..."|...)
 			}
@@ -293,6 +303,11 @@ function nodeKey(node) {
 	return key;
 }
 
+function reduceEntriesToObj(result, entry) {
+	result[entry[0]] = entry[1];
+	return result;
+}
+
 // setup global needed for saving/loading dialog progress
 bitsy.saveHack = {
 	sequenceIndices: {},
@@ -312,11 +327,12 @@ if (hackOptions.autosaveInterval < Infinity) {
 	}, hackOptions.autosaveInterval);
 }
 
-if (hackOptions.loadOnStart) {
-	after('onready', function () {
+after('onready', function () {
+	bitsy.saveHack.originalVariables = Array.from(bitsy.saveHack.variableMap.entries()).reduce(reduceEntriesToObj, {});
+	if (hackOptions.loadOnStart) {
 		load();
-	});
-}
+	}
+});
 
 if (hackOptions.resetOnEnd) {
 	after('reset_cur_game', function () {
@@ -328,17 +344,11 @@ if (hackOptions.resetOnEnd) {
 
 function save() {
 	var snapshot = {
-		basic: {
-			sprite: bitsy.sprite,
-			room: bitsy.room,
-			curRoom: bitsy.curRoom,
-			variable: bitsy.variable
-		},
-		variableMap: Array.from(bitsy.saveHack.variableMap.entries())
-			.reduce(function (result, entry) {
-				result[entry[0]] = entry[1];
-				return result;
-			}, {}),
+		curRoom: bitsy.curRoom,
+		sprite: bitsy.sprite,
+		room: bitsy.room,
+		variable: bitsy.variable,
+		variableMap: Array.from(bitsy.saveHack.variableMap.entries()).reduce(reduceEntriesToObj, {}),
 		sequenceIndices: bitsy.saveHack.sequenceIndices
 	};
 	localStorage.setItem('snapshot', JSON.stringify(snapshot));
@@ -353,11 +363,20 @@ function load() {
 
 	snapshot = JSON.parse(snapshot);
 	// basic props can be assigned directly
-	Object.assign(bitsy, snapshot.basic);
+	bitsy.curRoom = snapshot.curRoom;
+	Object.assign(bitsy.sprite, snapshot.sprite);
+	Object.assign(bitsy.variable, snapshot.variable);
+
+	// the only thing that changes in rooms is items
+	Object.entries(snapshot.room).forEach(function(entry){
+		bitsy.room[entry[0]].items = entry[1].items;
+	});
 
 	// variableMap needs to preserve its reference
 	bitsy.saveHack.variableMap.clear();
-	Object.entries(snapshot.variableMap).forEach(function (entry) {
+	Object.entries(
+		Object.assign({}, bitsy.saveHack.originalVariables, snapshot.variableMap)
+	).forEach(function (entry) {
 		bitsy.saveHack.variableMap.set(entry[0], entry[1]);
 	});
 
@@ -366,13 +385,13 @@ function load() {
 }
 
 // add dialog functions
-addDialogTag('load', function (environment, parameters, onReturn) {
+addDialogTag('loadNow', function (environment, parameters, onReturn) {
 	bitsy.stopGame();
 	bitsy.clearGameData();
 	bitsy.load_game(bitsy.curGameData.replace(/^(.*)$/m, parameters[0]));
 	onReturn(null);
 });
-addDialogTag('save', function (environment, parameters, onReturn) {
+addDialogTag('saveNow', function (environment, parameters, onReturn) {
 	save();
 	onReturn(null);
 });
