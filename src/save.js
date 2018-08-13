@@ -90,8 +90,8 @@ function save() {
 	var snapshot = {
 		basic: {
 			room: bitsy.room,
-			curRoom: bitsy.curRoom,
 		},
+		curRoom: bitsy.curRoom,
 		sprite: bitsy.sprite,
 		variable: bitsy.variable,
 		variableMap: Array.from(bitsy.saveHack.variableMap.entries()).reduce(reduceEntriesToObj, {}),
@@ -109,6 +109,7 @@ function load() {
 
 	snapshot = JSON.parse(snapshot);
 	// basic props can be assigned directly
+	bitsy.curRoom = snapshot.curRoom;
 	Object.assign(bitsy, snapshot.basic);
 	Object.assign(bitsy.sprite, snapshot.sprite);
 	Object.assign(bitsy.variable, snapshot.variable);
