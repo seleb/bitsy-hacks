@@ -88,11 +88,9 @@ if (hackOptions.resetOnEnd) {
 
 function save() {
 	var snapshot = {
-		basic: {
-			room: bitsy.room,
-		},
 		curRoom: bitsy.curRoom,
 		sprite: bitsy.sprite,
+		room: bitsy.room,
 		variable: bitsy.variable,
 		variableMap: Array.from(bitsy.saveHack.variableMap.entries()).reduce(reduceEntriesToObj, {}),
 		sequenceIndices: bitsy.saveHack.sequenceIndices
@@ -110,9 +108,13 @@ function load() {
 	snapshot = JSON.parse(snapshot);
 	// basic props can be assigned directly
 	bitsy.curRoom = snapshot.curRoom;
-	Object.assign(bitsy, snapshot.basic);
 	Object.assign(bitsy.sprite, snapshot.sprite);
 	Object.assign(bitsy.variable, snapshot.variable);
+
+	// the only thing that changes in rooms is items
+	Object.entries(snapshot.room).forEach(function(entry){
+		bitsy.room[entry[0]].items = entry[1].items;
+	});
 
 	// variableMap needs to preserve its reference
 	bitsy.saveHack.variableMap.clear();
