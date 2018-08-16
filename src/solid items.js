@@ -15,6 +15,10 @@ HOW TO USE:
 2. Update the `itemIsSolid` function below to match your needs
 */
 import bitsy from "bitsy";
+import {
+	before,
+	after
+} from "./helpers/kitsy-script-toolkit";
 
 var hackOptions = {
 	itemIsSolid: function (item) {
@@ -25,48 +29,43 @@ var hackOptions = {
 	}
 };
 
-// true if item should be treated as sprite
-// false if item should be treated normally
-function getSolidItemFromIndex(itemIndex) {
-	if (itemIndex === -1) {
-		return;
+var room;
+var oldItems;
+var x,y;
+before("movePlayer", function () {
+	x = bitsy.player().x;
+	y = bitsy.player().y;
+	room = bitsy.room[bitsy.curRoom];
+	oldItems = room.items.slice();
+});
+after("movePlayer", function () {
+	var newItems = room.items;
+	if (newItems.length === oldItems.length) {
+		return; // nothing changed
 	}
-	var itemId = bitsy.room[bitsy.curRoom].items[itemIndex].id;
-	var item = bitsy.item[itemId];
-	if (hackOptions.itemIsSolid(item)) {
-		return item;
-	}
-	return;
-}
 
-var _getItemIndex = bitsy.getItemIndex;
-bitsy.getItemIndex = function () {
-	var itemIndex = _getItemIndex.apply(this, arguments);
-	var sprItem = getSolidItemFromIndex(itemIndex);
-	if (sprItem) {
-		return -1;
+	// check for changes
+	for (var i = 0; i < oldItems.length; ++i) {
+		if (!newItems[i] ||
+			oldItems[i].x !== newItems[i].x ||
+			oldItems[i].y !== newItems[i].y ||
+			oldItems[i].id !== newItems[i].id
+		) {
+			// something changed
+			if (hackOptions.itemIsSolid(bitsy.item[oldItems[i].id])) {
+				// put that back!
+				newItems.splice(i, 0, oldItems[i]);
+				// get back there!
+				bitsy.player().x = x;
+				bitsy.player().y = y;
+			} else {
+				// add an empty entry for now to keep the arrays aligned
+				newItems.splice(i, 0, null);
+			}
+		}
 	}
-	return itemIndex;
-};
-
-var _getSpriteAt = bitsy.getSpriteAt;
-bitsy.getSpriteAt = function (x, y) {
-	var spr = _getSpriteAt.apply(this, arguments);
-	if (spr) {
-		return spr;
-	}
-	var itemIndex = _getItemIndex(bitsy.curRoom, x, y);
-	var item = getSolidItemFromIndex(itemIndex);
-	if (item) {
-		return item.drw;
-	}
-};
-
-var _startSpriteDialog = bitsy.startSpriteDialog;
-bitsy.startSpriteDialog = function (spriteId) {
-	var item = spriteId.split("ITM_")[1];
-	if (item) {
-		return bitsy.startItemDialog(item);
-	}
-	_startSpriteDialog.apply(this, arguments);
-}
+	// clear out those empty entries
+	room.items = newItems.filter(function (item) {
+		return !!item;
+	});
+});
