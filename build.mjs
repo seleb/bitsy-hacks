@@ -78,12 +78,5 @@ Promise.all([
 	return build(src);
 })).then(() => {
 	readme.parse();
-	// HACK: custom font isn't in build system right now, so add it directly
-	readme.headers.push({
-		emoji: "🅰",
-		file: "custom font",
-		url: "https://seleb.github.io/bitsy-hacks/custom%20font/custom%20font%20-%20converter.html",
-		summary: "change the bitsy font"
-	});
 	readme.write();
 });
