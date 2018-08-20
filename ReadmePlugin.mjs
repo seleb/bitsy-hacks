@@ -103,6 +103,7 @@ then edit it to look like this:
 - [Bitsy games!](https://itch.io/games/tag-bitsy)
 
 - [Andrew Yolland's Borksy](https://ayolland.itch.io/borksy): Hack helper
-- [ruin's image-to-bitsy](https://ruin.itch.io/image-to-bitsy): Artistic aid`);
+- [ruin's image-to-bitsy](https://ruin.itch.io/image-to-bitsy): Artistic aid
+- [Fontsy](https://seansleblanc.itch.io/Fontsy): Typographic tool`);
 	}
 };

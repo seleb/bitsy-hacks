@@ -7,7 +7,6 @@ A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamled
  - 😌 [bitsymuse](/dist/bitsymuse.js): A variety of Bitsy sound and music handlers
  - 😴 [canvas replacement](/dist/canvas%20replacement.js): WebGLazy bitsy integration (this one's mostly just for me)
  - ➿ [corrupt](/dist/corrupt.js): corrupts gamedata at runtime
- - 🅰 [custom font](https://seleb.github.io/bitsy-hacks/custom%20font/custom%20font%20-%20converter.html): change the bitsy font
  - 🅰 [custom text effect](/dist/custom%20text%20effect.js): make {custom}text effects{custom}
  - ↔ [directional avatar](/dist/directional%20avatar.js): flips the player's sprite based on directional movement
  - 🖼 [dynamic background](/dist/dynamic%20background.js): HTML background matching bitsy background
@@ -86,3 +85,4 @@ then edit it to look like this:
 
 - [Andrew Yolland's Borksy](https://ayolland.itch.io/borksy): Hack helper
 - [ruin's image-to-bitsy](https://ruin.itch.io/image-to-bitsy): Artistic aid
+- [Fontsy](https://seansleblanc.itch.io/Fontsy): Typographic tool
