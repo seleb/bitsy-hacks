@@ -106,3 +106,21 @@ export async function snapshot() {
 	expect(screenshot).toMatchImageSnapshot();
 }
 
+// perform the sequence of key presses
+// to walk from the default starting position
+// to the space to the left of the cat
+export async function walkToCat() {
+	await press('Enter');
+	await press('Enter');
+	await press('ArrowDown');
+	await press('ArrowDown');
+	await press('ArrowDown');
+	await press('ArrowDown');
+	await press('ArrowDown');
+	await press('ArrowDown');
+	await press('ArrowDown');
+	await press('ArrowDown');
+	await press('ArrowRight');
+	await press('ArrowRight');
+	await press('ArrowRight');
+}
