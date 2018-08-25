@@ -64,3 +64,10 @@ export async function end() {
 	page = undefined;
 }
 
+// take a screenshot of the current frame
+// and perform a snapshot test on it
+export async function snapshot() {
+	const screenshot = await page.screenshot();
+	expect(screenshot).toMatchImageSnapshot();
+}
+
