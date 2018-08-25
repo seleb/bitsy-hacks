@@ -26,6 +26,7 @@
 		"webglazy": "^2.1.2"
 	},
 	"jest": {
-		"testEnvironment": "node"
+		"testEnvironment": "node",
+		"setupTestFrameworkScriptFile": "<rootDir>/src/test/setupTests.js"
 	}
 }
