@@ -22,6 +22,9 @@ export async function start({
 } = {}) {
 	let game = template;
 
+	// hack update to let jest know when updates happen
+	game = game.replace(/(function update\(\) {)/, '$1jestUpdate && jestUpdate();');
+
 	// replace gamedata
 	if (gamedata) {
 		game = game.replace(/(id="exportedGameData">)[^]*?(<\/script>)/, `$1${gamedata}$2`);
@@ -63,6 +66,26 @@ export async function end() {
 	browser = undefined;
 	page = undefined;
 }
+
+// wait for bitsy to have handled input
+export async function waitForFrame() {
+	await page.evaluate(() => new Promise(resolve => {
+		window.jestUpdate = () => {
+			window.jestUpdate = null;
+			resolve();
+		};
+	}));
+}
+
+// helper to press a key
+// bitsy's key handling is a bit non-standard,
+// so can't use the built-in puppeteer press reliably
+export async function press(key) {
+	await page.keyboard.down(key);
+	await waitForFrame();
+	await page.keyboard.up(key);
+	await waitForFrame();
+};
 
 // take a screenshot of the current frame
 // and perform a snapshot test on it
