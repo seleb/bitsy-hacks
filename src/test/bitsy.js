@@ -13,6 +13,7 @@ const template = readFileSync(resolve(__dirname, 'bitsy 5.1.html'), {
 
 let browser;
 let page;
+let recording = false;
 
 // start pupeteer
 // and configure it for testing a bitsy game
@@ -67,6 +68,14 @@ export async function end() {
 	page = undefined;
 }
 
+export async function startRecording() {
+	recording = true;
+}
+
+export async function stopRecording() {
+	recording = false;
+}
+
 // wait for bitsy to have handled input
 export async function waitForFrame() {
 	await page.evaluate(() => new Promise(resolve => {
@@ -85,6 +94,9 @@ export async function press(key) {
 	await waitForFrame();
 	await page.keyboard.up(key);
 	await waitForFrame();
+	if (recording) {
+		await snapshot();
+	}
 };
 
 // take a screenshot of the current frame
