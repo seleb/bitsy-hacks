@@ -2,7 +2,7 @@
 🔀
 @file logic-operators-extended
 @summary adds conditional logic operators
-@version 1.0.4
+@version 1.0.5
 @author @mildmojo
 
 @description

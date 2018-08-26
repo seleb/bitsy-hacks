@@ -3,7 +3,7 @@
 @file online
 @summary multiplayer bitsy
 @license MIT
-@version 2.0.1
+@version 2.0.2
 @author Sean S. LeBlanc
 @description
 Provides the groundwork for running a small online multiplayer bitsy game.
@@ -113,7 +113,7 @@ function unique(array) {
 @file kitsy-script-toolkit
 @summary makes it easier and cleaner to run code before and after Bitsy functions or to inject new code into Bitsy script tags
 @license WTFPL (do WTF you want)
-@version 3.2.1
+@version 3.2.2
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
@@ -236,7 +236,8 @@ function applyHook(functionName) {
 				functions[i++].apply(this, args.concat(runBefore.bind(this)));
 			} else {
 				// run synchronously
-				var newArgs = functions[i++].apply(this, args) || args;
+				var newArgs = functions[i++].apply(this, args);
+				newArgs = newArgs && newArgs.length ? newArgs : args;
 				runBefore.apply(this, newArgs);
 			}
 		}
@@ -275,8 +276,8 @@ function addDialogFunction(tag, fn) {
 	}
 
 	// Hook into game load and rewrite custom functions in game data to Bitsy format.
-	before('load_game', function (game_data, startWithTitle) {
-		return [convertDialogTags(game_data, tag), startWithTitle];
+	before('parseWorld', function (game_data) {
+		return [convertDialogTags(game_data, tag)];
 	});
 
 	kitsy.dialogFunctions[tag] = fn;
@@ -341,7 +342,7 @@ function addDeferredDialogTag(tag, fn) {
 @file javascript dialog
 @summary execute arbitrary javascript from dialog
 @license MIT
-@version 3.1.1
+@version 3.1.2
 @requires Bitsy Version: 4.5, 4.6
 @author Sean S. LeBlanc
 
@@ -456,7 +457,7 @@ function setSpriteData(id, frame, newData) {
 @file edit image from dialog
 @summary edit sprites, items, and tiles from dialog
 @license MIT
-@version 1.1.1
+@version 1.1.2
 @author Sean S. LeBlanc
 
 @description
@@ -615,7 +616,7 @@ addDialogTag('imagePalNow', editPalette);
 @file edit dialog from dialog
 @summary edit dialog from dialog (yes really)
 @license MIT
-@version 1.0.1
+@version 1.0.2
 @author Sean S. LeBlanc
 
 @description
