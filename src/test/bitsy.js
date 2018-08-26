@@ -32,8 +32,9 @@ export async function start({
 		game = game.replace(/(id="exportedGameData">)[^]*?(<\/script>)/, `$1${gamedata}$2`);
 	}
 
+	// replace cat dialog
 	if (catDialog) {
-		game = game.replace(/(DLG SPR_0\n)I'm a cat(\n)/, `$1${catDialog}$2`);
+		game = game.replace(/I'm a cat/, catDialog);
 	}
 
 	// add hacks
