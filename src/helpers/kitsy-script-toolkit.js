@@ -131,7 +131,8 @@ function applyHook(functionName) {
 				functions[i++].apply(this, args.concat(runBefore.bind(this)));
 			} else {
 				// run synchronously
-				var newArgs = functions[i++].apply(this, args) || args;
+				var newArgs = functions[i++].apply(this, args);
+				newArgs = newArgs && newArgs.length ? newArgs : args;
 				runBefore.apply(this, newArgs);
 			}
 		}
@@ -170,8 +171,8 @@ function addDialogFunction(tag, fn) {
 	}
 
 	// Hook into game load and rewrite custom functions in game data to Bitsy format.
-	before('load_game', function (game_data, startWithTitle) {
-		return [convertDialogTags(game_data, tag), startWithTitle];
+	before('parseWorld', function (game_data) {
+		return [convertDialogTags(game_data, tag)];
 	});
 
 	kitsy.dialogFunctions[tag] = fn;
