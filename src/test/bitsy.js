@@ -19,6 +19,7 @@ let recording = false;
 // and configure it for testing a bitsy game
 export async function start({
 	gamedata = '',
+	catDialog = '',
 	hacks = [],
 } = {}) {
 	let game = template;
@@ -29,6 +30,10 @@ export async function start({
 	// replace gamedata
 	if (gamedata) {
 		game = game.replace(/(id="exportedGameData">)[^]*?(<\/script>)/, `$1${gamedata}$2`);
+	}
+
+	if (catDialog) {
+		game = game.replace(/(DLG SPR_0\n)I'm a cat(\n)/, `$1${catDialog}$2`);
 	}
 
 	// add hacks
