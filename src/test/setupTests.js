@@ -4,4 +4,4 @@ import {
 expect.extend({
 	toMatchImageSnapshot
 });
-jest.setTimeout(10000);
+jest.setTimeout(20000);
