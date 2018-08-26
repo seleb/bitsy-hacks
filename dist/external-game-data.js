@@ -3,7 +3,7 @@
 @file external-game-data
 @summary separate Bitsy game data from your (modded) HTML for easier development
 @license WTFPL (do WTF you want)
-@version 2.0.2
+@version 2.0.3
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
@@ -101,7 +101,7 @@ function unique(array) {
 @file kitsy-script-toolkit
 @summary makes it easier and cleaner to run code before and after Bitsy functions or to inject new code into Bitsy script tags
 @license WTFPL (do WTF you want)
-@version 3.2.1
+@version 3.2.2
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
@@ -207,7 +207,8 @@ function applyHook(functionName) {
 				functions[i++].apply(this, args.concat(runBefore.bind(this)));
 			} else {
 				// run synchronously
-				var newArgs = functions[i++].apply(this, args) || args;
+				var newArgs = functions[i++].apply(this, args);
+				newArgs = newArgs && newArgs.length ? newArgs : args;
 				runBefore.apply(this, newArgs);
 			}
 		}
