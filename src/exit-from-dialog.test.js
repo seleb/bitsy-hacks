@@ -30,6 +30,5 @@ test('exitNow', async () => {
 	await press('ArrowRight');
 	await press('Enter');
 	await snapshot();
-	await press('Enter');
 	await end();
 });
