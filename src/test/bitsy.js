@@ -3,13 +3,40 @@ import {
 	resolve
 } from 'path';
 
-import {
-	readFileSync
-} from 'fs';
+import fs from 'fs';
+import util from 'util';
+const readdir = util.promisify(fs.readdir);
+const readFile = util.promisify(fs.readFile);
 
-const template = readFileSync(resolve(__dirname, 'bitsy 5.1.html'), {
-	encoding: 'utf8'
-});
+let template;
+let hackDist;
+
+async function loadResources() {
+	if (template && hackDist) {
+		return;
+	}
+	[template, hackDist] = await Promise.all([getHackTemplate(), getHackDist()]);
+}
+
+async function getHackDist() {
+	const files = await readdir('./dist/');
+
+	const fileContents = await Promise.all(files.map(file => readFile(`./dist/${file}`, {
+		encoding: 'utf8'
+	})));
+
+	const fileMap = files.reduce((result, file, idx) => ({
+		...result,
+		[file.match(/(.+)\.js$/)[1]]: fileContents[idx],
+	}), {});
+	return fileMap;
+}
+
+async function getHackTemplate() {
+	return readFile(resolve(__dirname, 'bitsy 5.1.html'), {
+		encoding: 'utf8'
+	});
+}
 
 let browser;
 let page;
@@ -22,6 +49,7 @@ export async function start({
 	catDialog = '',
 	hacks = [],
 } = {}) {
+	await loadResources();
 	let game = template;
 
 	// hack update to let jest know when updates happen
@@ -43,9 +71,8 @@ export async function start({
 			hacks.map(hack => `
 <script>
 ${
-	// import the hack file, making sure not to screw up the regex in the process
-	// TODO: async file reads
-	readFileSync(resolve(`dist/${hack}.js`), {encoding: 'utf8'}).replace(/\$([0-9]+)/g, '$$$$$1')
+	// make sure not to screw up the regex in the process
+	hackDist[hack].replace(/\$([0-9]+)/g, '$$$$$1')
 }
 </script>
 `).join('\n')
