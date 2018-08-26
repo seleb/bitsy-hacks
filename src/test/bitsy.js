@@ -25,7 +25,7 @@ export async function start({
 	let game = template;
 
 	// hack update to let jest know when updates happen
-	game = game.replace(/(function update\(\) {)/, '$1jestUpdate && jestUpdate();');
+	game = game.replace(/(function update\(\) {)/, '$1window.jestUpdate && window.jestUpdate();');
 
 	// replace gamedata
 	if (gamedata) {
