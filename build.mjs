@@ -73,6 +73,7 @@ Promise.all([
 	"solid items",
 	"stopwatch",
 	"tracery processing",
+	"transitions",
 	"transparent dialog",
 	"transparent sprites",
 	"unique items"
