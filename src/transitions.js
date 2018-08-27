@@ -35,7 +35,11 @@ import {
 } from "./canvas replacement";
 
 var hackOptions = {
+	// transition duration
 	duration: 1000,
+	// function which defines when a transition occured
+	// return true to indicate a transition; false otherwise
+	// example implementation is transition on room change
 	checkTransition: function () {
 		var r = bitsy.curRoom;
 		if (this.room !== r) {
