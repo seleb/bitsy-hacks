@@ -17,6 +17,8 @@ var hackOptions = {
 		}
 		return false;
 	},
+	// glsl snippet which defines the rendered output of the transition
+	transition: 'result = mix(start, end, t);',
 };
 
 canvasReplacementHackOptions.disableFeedbackTexture = false;
@@ -56,7 +58,7 @@ shader.textContent = `
 		vec3 start = texture2D(tex1,uv).rgb;
 		vec3 result;
 		float t = clamp((time-transitionTime)/float(${hackOptions.duration}), 0.0, 1.0);
-		result = mix(start, end, t);
+		${hackOptions.transition}
 		gl_FragColor = vec4(result, 1.0);
 	}
 `;
