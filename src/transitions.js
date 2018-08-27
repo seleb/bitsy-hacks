@@ -1,24 +1,38 @@
 import bitsy from "bitsy";
 import {
-	hackOptions,
+	hackOptions as canvasReplacementHackOptions,
 	glazy
 } from "./canvas replacement";
+
 var room;
-hackOptions.disableFeedbackTexture = false;
-hackOptions.init = function() {
+
+var hackOptions = {
+	duration: 1000,
+	checkTransition: function () {
+		var r = bitsy.curRoom;
+		if (room !== r) {
+			// room changed between frames
+			room = r;
+			return true;
+		}
+		return false;
+	},
+};
+
+canvasReplacementHackOptions.disableFeedbackTexture = false;
+canvasReplacementHackOptions.init = function () {
 	room = bitsy.curRoom;
+	glazy.glLocations.transitionTime = glazy.gl.getUniformLocation(glazy.shader.program, 'transitionTime');
 
 	// hack textureFeedback update
 	// so we can update it as-needed rather than every frame
 	glazy.textureFeedback.oldUpdate = glazy.textureFeedback.update;
-	glazy.textureFeedback.update = function(){};
+	glazy.textureFeedback.update = function () {};
 };
-hackOptions.update = function() {
-	// check for transition
-	var r = bitsy.curRoom;
-	if (room !== r) {
+canvasReplacementHackOptions.update = function () {
+	if (hackOptions.checkTransition()) {
 		// transition occurred; update feedback texture to capture frame
-		room = r;
+		glazy.gl.uniform1f(glazy.glLocations.transitionTime, glazy.curTime);
 		glazy.textureFeedback.oldUpdate();
 	}
 };
@@ -32,13 +46,18 @@ shader.textContent = `
 	uniform sampler2D tex0;
 	uniform sampler2D tex1;
 	uniform float time;
+	uniform float transitionTime;
 	uniform vec2 resolution;
 
 	void main(){
 		vec2 coord = gl_FragCoord.xy;
 		vec2 uv = coord.xy / resolution.xy;
-		vec3 col = texture2D(tex0,uv).rgb;
-		gl_FragColor = vec4(col, 1.0);
+		vec3 end = texture2D(tex0,uv).rgb;
+		vec3 start = texture2D(tex1,uv).rgb;
+		vec3 result;
+		float t = clamp((time-transitionTime)/float(${hackOptions.duration}), 0.0, 1.0);
+		result = mix(start, end, t);
+		gl_FragColor = vec4(result, 1.0);
 	}
 `;
 document.head.appendChild(shader);
