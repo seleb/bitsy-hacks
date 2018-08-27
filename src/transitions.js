@@ -34,15 +34,13 @@ import {
 	glazy
 } from "./canvas replacement";
 
-var room;
-
 var hackOptions = {
 	duration: 1000,
 	checkTransition: function () {
 		var r = bitsy.curRoom;
-		if (room !== r) {
+		if (this.room !== r) {
 			// room changed between frames
-			room = r;
+			this.room = r;
 			return true;
 		}
 		return false;
@@ -53,7 +51,6 @@ var hackOptions = {
 
 canvasReplacementHackOptions.disableFeedbackTexture = false;
 canvasReplacementHackOptions.init = function () {
-	room = bitsy.curRoom;
 	glazy.glLocations.transitionTime = glazy.gl.getUniformLocation(glazy.shader.program, 'transitionTime');
 
 	// hack textureFeedback update
