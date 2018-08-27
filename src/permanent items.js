@@ -19,7 +19,7 @@ import {
 	after
 } from "./helpers/kitsy-script-toolkit";
 
-var hackOptions = {
+export var hackOptions = {
 	itemIsPermanent: function (item) {
 		//return item.name == 'tea'; // specific permanent item
 		//return ['tea', 'flower', 'hat'].indexOf(item.name) !== -1; // specific permanent item list

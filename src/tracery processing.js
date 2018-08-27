@@ -43,7 +43,7 @@ import bitsy from "bitsy";
 
 import tracery from "tracery-grammar";
 
-var hackOptions = {
+export var hackOptions = {
 	// put your grammar entries here
 };
 

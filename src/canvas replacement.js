@@ -40,7 +40,7 @@ import {
 	after
 } from "./helpers/kitsy-script-toolkit";
 
-var hackOptions = {
+export var hackOptions = {
 	background: "black",
 	scaleMode: "MULTIPLES", // use "FIT" if you prefer size to pixel accuracy
 	allowDownscaling: true,

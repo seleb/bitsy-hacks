@@ -31,7 +31,7 @@ import {
 	getImage
 } from "./helpers/utils";
 
-var hackOptions = {
+export var hackOptions = {
 	pieces: [{
 		x: 0,
 		y: 0,

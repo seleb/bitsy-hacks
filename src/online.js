@@ -39,7 +39,7 @@ import {
 import "./edit image from dialog";
 import "./edit dialog from dialog";
 
-var hackOptions = {
+export var hackOptions = {
 	host: "wss://your signalling server",
 	// room: "custom room", // sets the room on the server to use; otherwise, uses game title
 	immediateMode: true, // if true, teleports players to their reported positions; otherwise, queues movements and lets bitsy handle the walking (note: other players pick up items like this)

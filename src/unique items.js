@@ -16,7 +16,7 @@ HOW TO USE:
 */
 import bitsy from "bitsy";
 
-var hackOptions = {
+export var hackOptions = {
 	itemIsUnique: function (item) {
 		//return item.name == 'tea'; // specific unique item
 		//return ['tea', 'flower', 'hat'].indexOf(item.name) !== -1; // specific unique item list

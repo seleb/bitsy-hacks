@@ -51,7 +51,7 @@ import {
 ///////////
 // setup //
 ///////////
-var hackOptions = {
+export var hackOptions = {
 	tilemapFreq: 1,
 	tilePixelsFreq: 1,
 	spritePixelsFreq: 1,

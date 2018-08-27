@@ -20,7 +20,7 @@ import {
 	after
 } from "./helpers/kitsy-script-toolkit";
 
-var hackOptions = {
+export var hackOptions = {
 	itemIsSolid: function (item) {
 		//return item.name == 'tea'; // specific solid item
 		//return ['tea', 'flower', 'hat'].indexOf(item.name) !== -1; // specific solid item list

@@ -47,7 +47,7 @@ import {
 } from "./helpers/kitsy-script-toolkit";
 import { printDialog } from "./helpers/utils";
 
-var hackOptions = {
+export var hackOptions = {
 	// function which returns the string which bitsy will print
 	// parameter is a timer object with:
 	//   start: value of Date.now() on startWatch

@@ -26,7 +26,7 @@ import {
 	getImage
 } from "./helpers/utils";
 
-var hackOptions = {
+export var hackOptions = {
 	allowFollowerCollision: false, // if true, the player can walk into the follower and talk to them (possible to get stuck this way)
 	follower: 'a' // id or name of sprite to be the follower
 };

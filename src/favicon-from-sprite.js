@@ -24,7 +24,7 @@ import {
 } from "./helpers/kitsy-script-toolkit";
 
 // CONFIGURATION FOR FAVICON
-var hackOptions = {
+export var hackOptions = {
 	SPRITE_NAME: '', // Sprite name as entered in editor (not case-sensitive). Defaults to player avatar.
 	PALETTE_ID: 0, // Palette name or number to draw colors from. (Names not case-sensitive.)
 	BG_COLOR_NUM: 0, // Favicon background color in palette. 0 = BG, 1 = Tile, 2 = Sprite.
