@@ -24,7 +24,7 @@ Additional sounds can be added by by including more <audio> tags with different 
 */
 import bitsy from "bitsy";
 
-var hackOptions = {
+export var hackOptions = {
 	beNiceToEars: true // if `true`, reduces volume of recently played sound effects
 };
 

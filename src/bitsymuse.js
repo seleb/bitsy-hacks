@@ -45,7 +45,7 @@ import {
 	addDeferredDialogTag
 } from "./helpers/kitsy-script-toolkit";
 
-var hackOptions = {
+export var hackOptions = {
 	// You need to put an entry in this list for every room ID or name that is accessible by the player,
 	// and then specify the song ID for each room. Expand this list to as many rooms as you need.
 	// If the player moves between rooms with the same audio ID the music keeps playing seamlessly.

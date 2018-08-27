@@ -28,7 +28,7 @@ import {
 	inject
 } from "./helpers/kitsy-script-toolkit";
 
-var hackOptions = {
+export var hackOptions = {
 	rows: 2, // number of rows per text box (bitsy default is 2)
 };
 

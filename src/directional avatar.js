@@ -22,7 +22,7 @@ import {
 	setSpriteData
 } from "./helpers/edit image at runtime";
 
-var hackOptions = {
+export var hackOptions = {
 	// If `horizontalFlipAllowed` is true:
 	// 	pressing left will make the player's sprite face backwards
 	// 	pressing right will make the player's sprite face forwards

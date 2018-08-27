@@ -7,6 +7,7 @@ import commonjs from "rollup-plugin-commonjs";
 import headerComment from "./HeaderCommentPlugin";
 import topLevelOptions from "./TopLevelOptionsPlugin";
 import readme from "./ReadmePlugin";
+import stripExportsPlugin from "./StripExportsPlugin";
 
 const inputDir = "./src/";
 const outputDir = "./dist/";
@@ -23,6 +24,7 @@ function build(src) {
 			}),
 			nodeResolve(),
 			commonjs(),
+			stripExportsPlugin(),
 			readme.plugin(),
 			headerComment(),
 			topLevelOptions(),

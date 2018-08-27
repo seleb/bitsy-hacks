@@ -50,7 +50,7 @@ import {
 	inject
 } from "./helpers/kitsy-script-toolkit";
 
-var hackOptions = {
+export var hackOptions = {
 	"my-effect": function () {
 		// a horizontal wavy effect with a blue tint 
 		this.DoEffect = function (char, time) {
