@@ -29,6 +29,7 @@ A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamled
  - 🛑 [solid items](/dist/solid%20items.js): treat some items like sprites that can be placed multiple times
  - ⏱️ [stopwatch](/dist/stopwatch.js): time player actions
  - 🏰 [tracery processing](/dist/tracery%20processing.js): process all dialog text with a tracery grammar
+ - 🎞 [transitions](/dist/transitions.js): customizable WebGL transitions
  - 👁️‍🗨️ [transparent dialog](/dist/transparent%20dialog.js): makes the dialog box have a transparent background
  - 🏁 [transparent sprites](/dist/transparent%20sprites.js): makes all sprites have transparent backgrounds
  - ❄ [unique items](/dist/unique%20items.js): items which, when picked up, remove all other instances of that item from the game
