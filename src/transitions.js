@@ -25,6 +25,7 @@ NOTES:
 - Example shader snippets:
 	    fade: result = mix(start, end, t);
 	ltr wipe: result = mix(start, end, step(uv.x, t));
+	 iris in: result = mix(start, end, step(distance(uv, vec2(0.5))/sqrt(0.5), t));
 */
 import bitsy from "bitsy";
 import {
