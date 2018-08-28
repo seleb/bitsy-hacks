@@ -7,7 +7,7 @@
 @author Sean S. LeBlanc
 
 @description
-Adds a simply system for defining fancy transitions.
+Adds a simple system for defining fancy transitions.
 
 HOW TO USE:
 1. Copy-paste this script into a script tag after the bitsy source
@@ -15,18 +15,16 @@ HOW TO USE:
 
 NOTES:
 - Includes canvas replacement hack
-
 - Available in shader snippet:
-  	result:  vec3 - rendered output (assign to this)
-  	 start:  vec3 - output at start of transition
-  	   end:  vec3 - output at end of transition
-  	    uv:  vec2 - uv coordinates for output
-  	     t: float - transition time (0-1)
-  	 (see shader source below for more detail if needed)
-
+	result:  vec3 - rendered output (assign to this)
+	 start:  vec3 - output at start of transition
+	   end:  vec3 - output at end of transition
+	    uv:  vec2 - uv coordinates for output
+	     t: float - transition time (0-1)
+	(see shader source below for more detail if needed)
 - Example shader snippets:
-  	    fade: result = mix(start, end, t);
-  	ltr wipe: result = mix(start, end, step(uv.x, t));
+	    fade: result = mix(start, end, t);
+	ltr wipe: result = mix(start, end, step(uv.x, t));
 */
 import bitsy from "bitsy";
 import {
