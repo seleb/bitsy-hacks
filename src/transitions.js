@@ -27,6 +27,10 @@ NOTES:
 	    fade: result = mix(start, end, t);
 	ltr wipe: result = mix(start, end, step(uv.x, t));
 	 iris in: result = mix(start, end, step(distance(uv, vec2(0.5))/sqrt(0.5), t));
+	squash up:
+		vec2 eUv = uv/vec2(1.0,t);
+		end = texture2D(tex0, eUv).rgb;
+		result = mix(start, end, step(uv.y,t));
 */
 import bitsy from "bitsy";
 import {
