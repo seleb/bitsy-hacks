@@ -50,7 +50,7 @@ import {
 	glazy
 } from "./canvas replacement";
 
-var hackOptions = {
+export var hackOptions = {
 	// transition duration
 	duration: 1000,
 	// function which defines when a transition occured
