@@ -31,6 +31,16 @@ NOTES:
 		vec2 eUv = uv/vec2(1.0,t);
 		end = texture2D(tex0, eUv).rgb;
 		result = mix(start, end, step(uv.y,t));
+	noisy pixels:
+		float sPix = max(1.0, floor(256.0*pow(max(0.0, 0.5-t)*2.0,2.0)));
+		float ePix = max(1.0, floor(256.0*pow(max(0.0, t-0.5)*2.0,2.0)));
+		vec2 sUv = floor(uv*sPix + 0.5)/sPix;
+		vec2 eUv = floor(uv*ePix + 0.5)/ePix;
+		end = texture2D(tex0, eUv).rgb;
+		start = texture2D(tex1, sUv).rgb;
+		end += mix(rand(eUv+vec2(t)), 0.0, t);
+		start += mix(0.0, rand(sUv-vec2(t)), t);
+		result = mix(start, end, step(.5,t));
 */
 import bitsy from "bitsy";
 import {
