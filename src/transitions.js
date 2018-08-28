@@ -9,6 +9,16 @@
 @description
 Adds a simple system for defining fancy transitions.
 
+The transition effect is customizable as a GLSL snippet,
+and the transition trigger is customizable as a basic function
+returning either `true` or `false`.
+
+The most obvious use (and example implementation)
+is to create transitions between room changes,
+but the transition function can be defined as anything.
+e.g. you could transition every time the player moves,
+when they pick up a specific item, after an arbitrary timeout, etc.
+
 HOW TO USE:
 1. Copy-paste this script into a script tag after the bitsy source
 2. Edit the transition hackOptions below as needed
