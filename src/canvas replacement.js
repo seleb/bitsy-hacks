@@ -55,7 +55,7 @@ export var hackOptions = {
 	},
 };
 
-var glazy;
+export var glazy;
 after('startExportedGame', function () {
 	glazy = new WebGLazy(hackOptions);
 	hackOptions.init();
