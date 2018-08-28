@@ -22,6 +22,8 @@ NOTES:
 	    uv:  vec2 - uv coordinates for output
 	     t: float - transition time (0-1)
 	  rand: float(vec2) - function returning a random value (0-1) based on an input vec2
+	  tex0:   sampler2D - sampler for end
+	  tex1:   sampler2D - sampler for start
 	(see shader source below for more detail if needed)
 - Example shader snippets:
 	    fade: result = mix(start, end, t);
