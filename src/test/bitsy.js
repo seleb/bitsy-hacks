@@ -33,7 +33,7 @@ async function getHackDist() {
 }
 
 async function getHackTemplate() {
-	return readFile(resolve(__dirname, 'bitsy 5.1.html'), {
+	return readFile(resolve(__dirname, 'bitsy 5.3.html'), {
 		encoding: 'utf8'
 	});
 }
@@ -109,9 +109,13 @@ export async function stopRecording() {
 	recording = false;
 }
 
+export async function evaluate(fn) {
+	await page.evaluate(fn);
+}
+
 // wait for bitsy to have handled input
 export async function waitForFrame() {
-	await page.evaluate(() => new Promise(resolve => {
+	await evaluate(() => new Promise(resolve => {
 		window.jestUpdate = () => {
 			window.jestUpdate = null;
 			resolve();
