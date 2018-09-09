@@ -36,7 +36,7 @@ Args:
 Returns: a single frame of a image data
 */
 export function getImageData(id, frame, map) {
-	return bitsy.imageStore.source[getImage(id, map).drw][frame];
+	return bitsy.renderer.GetImageSource(getImage(id, map).drw)[frame];
 }
 
 export function getSpriteData(id, frame) {
