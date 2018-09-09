@@ -3,7 +3,8 @@
 @file corrupt
 @summary corrupts gamedata at runtime
 @license MIT
-@version 1.0.0
+@version 1.0.1
+@requires 5.3
 @author Sean S. LeBlanc
 
 @description
@@ -114,7 +115,7 @@ Args:
 Returns: a single frame of a image data
 */
 function getImageData(id, frame, map) {
-	return bitsy.imageStore.source[getImage(id, map).drw][frame];
+	return bitsy.renderer.GetImageSource(getImage(id, map).drw)[frame];
 }
 
 function getSpriteData(id, frame) {
@@ -141,17 +142,9 @@ Args:
 function setImageData(id, frame, map, newData) {
 	var drawing = getImage(id, map);
 	var drw = drawing.drw;
-	bitsy.imageStore.source[drw][frame] = newData;
-	if (drawing.animation.isAnimated) {
-		drw += "_" + frame;
-	}
-	for (var pal in bitsy.palette) {
-		if (bitsy.palette.hasOwnProperty(pal)) {
-			var col = drawing.col;
-			var colStr = "" + col;
-			bitsy.imageStore.render[pal][colStr][drw] = bitsy.imageDataFromImageSource(newData, pal, col);
-		}
-	}
+	var img = bitsy.renderer.GetImageSource(drw);
+	img[frame] = newData;
+	bitsy.renderer.SetImageSource(drw, img);
 }
 
 function setSpriteData(id, frame, newData) {
