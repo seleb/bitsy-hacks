@@ -3,7 +3,8 @@
 @file custom text effect
 @summary make {custom}text effects{custom}
 @license MIT
-@version 1.0.3
+@version 2.0.0
+@requires 5.3
 @author Sean S. LeBlanc
 
 @description
@@ -23,11 +24,11 @@ HOW TO USE:
 
 TEXT EFFECT NOTES:
 Each effect looks like:
-    key: function() {
-        this.DoEffect = function (char, time) {
-            // effect code
-        }
-    }
+	key: function() {
+		this.DoEffect = function (char, time) {
+			// effect code
+		}
+	}
 
 The key is the text you'll write inside {} in bitsy to trigger the effect
 
@@ -36,12 +37,18 @@ The key is the text you'll write inside {} in bitsy to trigger the effect
 The first argument is `char`, an individual character, which has the following properties:
 	offset: offset from actual position in pixels. starts at {x:0, y:0}
 	color: color of rendered text in [0-255]. starts at {r:255, g:255, b:255, a:255}
-	char: character string
+	bitmap: character bitmap as array of pixels
 	row: vertical position in rows (doesn't affect rendering)
 	col: horizontal position in characters (doesn't affect rendering)
 `row`, `col`, and `offset` are reset every frame
-`color`, `char`, and any custom properties are reset when the dialog page is changed
+`color` and any custom properties are reset when the dialog page is changed
+`bitmap` is not reset! This edits the character in the font data directly
 
+A few helpers are provided under `window.customTextEffects` for more complex effects:
+	- `saveOriginalChar`: saves the character string on `char`
+	- `setBitmap`: sets bitmap based on a new character
+	- `editBitmapCopy`: copies the character bitmap and runs an edit function once
+	
 The second argument is `time`, which is the time in milliseconds
 
 A number of example effects are included
@@ -73,26 +80,53 @@ export var hackOptions = {
 			char.color.a = Math.max(0, 255 - (time - char.start) / 2);
 		}
 	},
+	noise: function () {
+		// renders noise on top of text
+		// note that it's making a copy with `.slice()` since it's a dynamic bitmap change
+		this.DoEffect = function (char) {
+			char.bitmap = char.bitmap.slice();
+			for(var i = 0; i < char.bitmap.length; ++i) {
+				char.bitmap[i] = Math.random() < 0.25 ? 1 : 0;
+			}
+		}
+	},
+	strike: function () {
+		// renders text with a strike-through
+		// note that it's using `editBitmapCopy` since it's a static bitmap change
+		this.DoEffect = function (char) {
+			var font = window.fontManager.Get(window.fontName);
+			var w = font.getWidth();
+			var h = font.getHeight();
+			window.customTextEffects.editBitmapCopy(char, function(bitmap) {
+				for(var x = 0; x < w; ++x) {
+					bitmap[x + Math.floor(h/2)*w] = 1;
+				}
+			});
+		}
+	},
 	scramble: function () {
 		// animated text scrambling
-		// note that it's saving the original character so it can be referenced every frame
+		// note that it's saving the original character with `saveOriginalChar` so `char.original` can be used
+		// it's also using `setBitmap` to render a different character in the font
 		this.DoEffect = function (char, time) {
-			char.original = char.original !== undefined ? char.original : char.char;
-			if (char.original == ' ') {
+			window.customTextEffects.saveOriginalChar(char);
+			if (char.original.match(/\s|\0/)) {
 				return;
 			}
-			char.char = String.fromCharCode(char.original.codePointAt(0) + (char.col + time / 40) % 10);
-		}
+			var c = String.fromCharCode(char.original.codePointAt(0) + (char.col + time / 40) % 10);
+			window.customTextEffects.setBitmap(char, c);
+		};
 	},
 	rot13: function () {
 		// puts letters through the rot13 cipher (see www.rot13.com)
 		this.DoEffect = function (char) {
-			char.original = char.original !== undefined ? char.original : char.char;
-			char.char = char.original.replace(/[a-z]/, function (c) {
+			window.customTextEffects.saveOriginalChar(char);
+			var c = char.original.replace(/[a-z]/, function (c) {
 				return String.fromCharCode((c.codePointAt(0) - 97 + 13) % 26 + 97);
 			}).replace(/[A-Z]/, function (c) {
 				return String.fromCharCode((c.codePointAt(0) - 65 + 13) % 26 + 65);
 			});
+			window.customTextEffects.setBitmap(char, c);
 		}
 	},
 	sponge: function () {
@@ -102,8 +136,9 @@ export var hackOptions = {
 			return ((a % b) + b) % b;
 		}
 		this.DoEffect = function (char, time) {
-			char.original = char.original !== undefined ? char.original : char.char;
-			char.char = char.original[['toUpperCase', 'toLowerCase'][Math.round(posmod(time / 1000 - (char.col + char.row) / 2, 1))]]();
+			window.customTextEffects.saveOriginalChar(char);
+			var c = char.original[['toUpperCase', 'toLowerCase'][Math.round(posmod(time / 1000 - (char.col + char.row) / 2, 1))]]();
+			window.customTextEffects.setBitmap(char, c);
 		}
 	},
 	flag: function () {
@@ -113,7 +148,8 @@ export var hackOptions = {
 		var lastSpace = 0;
 		var lastCol = -Infinity;
 		this.DoEffect = function (char, time) {
-			if (char.char == ' ') {
+			window.customTextEffects.saveOriginalChar(char);
+			if (char.original.match(/\s|\0/)) {
 				return;
 			} else if (Math.abs(char.col - lastCol) > 1) {
 				lastSpace = char.col - 1;
@@ -121,6 +157,37 @@ export var hackOptions = {
 			lastCol = char.col;
 			char.offset.y -= Math.pow(char.col - lastSpace, 1.5) * (Math.sin(time / 120 + char.col / 2));
 		}
+	}
+};
+
+// custom text effects are injected,
+// so need to store helpers somewhere accessible
+// from outside of hack scope
+window.customTextEffects = {
+	// helper for caching original character string on character object
+	saveOriginalChar: function (char) {
+		if (char.original !== undefined) {
+			return;
+		}
+		var font = window.fontManager.Get(window.fontName);
+		var characters = Object.entries(font.getData());
+		var character = characters.find(function(keyval){
+			return keyval[1].toString() === char.bitmap.toString();
+		});
+		char.original = String.fromCharCode(character[0]);
+	},
+	// helper for setting new character bitmap by string on character object
+	setBitmap: function (char, c) {
+		char.bitmap = window.fontManager.Get(window.fontName).getChar(c);
+	},
+	// helper for editing bitmap without affecting other characters
+	editBitmapCopy: function (char, editFn) {
+		if (char.originalBitmap !== undefined) {
+			return;
+		}
+		char.originalBitmap = char.bitmap;
+		char.bitmap = char.bitmap.slice();
+		editFn(char.bitmap);
 	}
 };
 
