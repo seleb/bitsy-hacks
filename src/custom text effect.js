@@ -116,7 +116,8 @@ export var hackOptions = {
 		var lastSpace = 0;
 		var lastCol = -Infinity;
 		this.DoEffect = function (char, time) {
-			if (char.char == ' ') {
+			window.customTextEffects.saveOriginalChar(char);
+			if (char.original.match(/\s|\0/)) {
 				return;
 			} else if (Math.abs(char.col - lastCol) > 1) {
 				lastSpace = char.col - 1;
