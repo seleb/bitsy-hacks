@@ -77,22 +77,24 @@ export var hackOptions = {
 		// animated text scrambling
 		// note that it's saving the original character so it can be referenced every frame
 		this.DoEffect = function (char, time) {
-			char.original = char.original !== undefined ? char.original : char.char;
-			if (char.original == ' ') {
+			window.customTextEffects.saveOriginalChar(char);
+			if (char.original.match(/\s|\0/)) {
 				return;
 			}
-			char.char = String.fromCharCode(char.original.codePointAt(0) + (char.col + time / 40) % 10);
-		}
+			var c = String.fromCharCode(char.original.codePointAt(0) + (char.col + time / 40) % 10);
+			window.customTextEffects.setBitmap(char, c);
+		};
 	},
 	rot13: function () {
 		// puts letters through the rot13 cipher (see www.rot13.com)
 		this.DoEffect = function (char) {
-			char.original = char.original !== undefined ? char.original : char.char;
-			char.char = char.original.replace(/[a-z]/, function (c) {
+			window.customTextEffects.saveOriginalChar(char);
+			var c = char.original.replace(/[a-z]/, function (c) {
 				return String.fromCharCode((c.codePointAt(0) - 97 + 13) % 26 + 97);
 			}).replace(/[A-Z]/, function (c) {
 				return String.fromCharCode((c.codePointAt(0) - 65 + 13) % 26 + 65);
 			});
+			window.customTextEffects.setBitmap(char, c);
 		}
 	},
 	sponge: function () {
@@ -102,8 +104,9 @@ export var hackOptions = {
 			return ((a % b) + b) % b;
 		}
 		this.DoEffect = function (char, time) {
-			char.original = char.original !== undefined ? char.original : char.char;
-			char.char = char.original[['toUpperCase', 'toLowerCase'][Math.round(posmod(time / 1000 - (char.col + char.row) / 2, 1))]]();
+			window.customTextEffects.saveOriginalChar(char);
+			var c = char.original[['toUpperCase', 'toLowerCase'][Math.round(posmod(time / 1000 - (char.col + char.row) / 2, 1))]]();
+			window.customTextEffects.setBitmap(char, c);
 		}
 	},
 	flag: function () {
@@ -121,6 +124,28 @@ export var hackOptions = {
 			lastCol = char.col;
 			char.offset.y -= Math.pow(char.col - lastSpace, 1.5) * (Math.sin(time / 120 + char.col / 2));
 		}
+	}
+};
+
+// custom text effects are injected,
+// so need to store helpers somewhere accessible
+// from outside of hack scope
+window.customTextEffects = {
+	// helper for caching original character string on character object
+	saveOriginalChar: function (char) {
+		if (char.original !== undefined) {
+			return;
+		}
+		var font = window.fontManager.Get(window.fontName);
+		var characters = Object.entries(font.getData());
+		var character = characters.find(function(keyval){
+			return keyval[1].toString() === char.bitmap.toString();
+		});
+		char.original = String.fromCharCode(character[0]);
+	},
+	// helper for setting new character bitmap by string on character object
+	setBitmap: function (char, c) {
+		char.bitmap = window.fontManager.Get(window.fontName).getChar(c);
 	}
 };
 
