@@ -73,6 +73,28 @@ export var hackOptions = {
 			char.color.a = Math.max(0, 255 - (time - char.start) / 2);
 		}
 	},
+	noise: function () {
+		// renders noise on top of text
+		this.DoEffect = function (char) {
+			char.bitmap = char.bitmap.slice();
+			for(var i = 0; i < char.bitmap.length; ++i) {
+				char.bitmap[i] = Math.random() < 0.25 ? 1 : 0;
+			}
+		}
+	},
+	strike: function () {
+		// renders text with a strike-through
+		this.DoEffect = function (char) {
+			var font = window.fontManager.Get(window.fontName);
+			var w = font.getWidth();
+			var h = font.getHeight();
+			window.customTextEffects.editBitmapCopy(char, function(bitmap) {
+				for(var x = 0; x < w; ++x) {
+					bitmap[x + Math.floor(h/2)*w] = 1;
+				}
+			});
+		}
+	},
 	scramble: function () {
 		// animated text scrambling
 		// note that it's saving the original character so it can be referenced every frame
@@ -147,6 +169,15 @@ window.customTextEffects = {
 	// helper for setting new character bitmap by string on character object
 	setBitmap: function (char, c) {
 		char.bitmap = window.fontManager.Get(window.fontName).getChar(c);
+	},
+	// helper for editing bitmap without affecting other characters
+	editBitmapCopy: function (char, editFn) {
+		if (char.originalBitmap !== undefined) {
+			return;
+		}
+		char.originalBitmap = char.bitmap;
+		char.bitmap = char.bitmap.slice();
+		editFn(char.bitmap);
 	}
 };
 
