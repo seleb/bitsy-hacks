@@ -4,6 +4,7 @@
 @summary make {custom}text effects{custom}
 @license MIT
 @version 1.0.3
+@requires 5.3
 @author Sean S. LeBlanc
 
 @description
@@ -23,11 +24,11 @@ HOW TO USE:
 
 TEXT EFFECT NOTES:
 Each effect looks like:
-    key: function() {
-        this.DoEffect = function (char, time) {
-            // effect code
-        }
-    }
+	key: function() {
+		this.DoEffect = function (char, time) {
+			// effect code
+		}
+	}
 
 The key is the text you'll write inside {} in bitsy to trigger the effect
 
@@ -36,12 +37,18 @@ The key is the text you'll write inside {} in bitsy to trigger the effect
 The first argument is `char`, an individual character, which has the following properties:
 	offset: offset from actual position in pixels. starts at {x:0, y:0}
 	color: color of rendered text in [0-255]. starts at {r:255, g:255, b:255, a:255}
-	char: character string
+	bitmap: character bitmap as array of pixels
 	row: vertical position in rows (doesn't affect rendering)
 	col: horizontal position in characters (doesn't affect rendering)
 `row`, `col`, and `offset` are reset every frame
-`color`, `char`, and any custom properties are reset when the dialog page is changed
+`color` and any custom properties are reset when the dialog page is changed
+`bitmap` is not reset! This edits the character in the font data directly
 
+A few helpers are provided under `window.customTextEffects` for more complex effects:
+	- `saveOriginalChar`: saves the character string on `char`
+	- `setBitmap`: sets bitmap based on a new character
+	- `editBitmapCopy`: copies the character bitmap and runs an edit function once
+	
 The second argument is `time`, which is the time in milliseconds
 
 A number of example effects are included
@@ -75,6 +82,7 @@ export var hackOptions = {
 	},
 	noise: function () {
 		// renders noise on top of text
+		// note that it's making a copy with `.slice()` since it's a dynamic bitmap change
 		this.DoEffect = function (char) {
 			char.bitmap = char.bitmap.slice();
 			for(var i = 0; i < char.bitmap.length; ++i) {
@@ -84,6 +92,7 @@ export var hackOptions = {
 	},
 	strike: function () {
 		// renders text with a strike-through
+		// note that it's using `editBitmapCopy` since it's a static bitmap change
 		this.DoEffect = function (char) {
 			var font = window.fontManager.Get(window.fontName);
 			var w = font.getWidth();
@@ -97,7 +106,8 @@ export var hackOptions = {
 	},
 	scramble: function () {
 		// animated text scrambling
-		// note that it's saving the original character so it can be referenced every frame
+		// note that it's saving the original character with `saveOriginalChar` so `char.original` can be used
+		// it's also using `setBitmap` to render a different character in the font
 		this.DoEffect = function (char, time) {
 			window.customTextEffects.saveOriginalChar(char);
 			if (char.original.match(/\s|\0/)) {
