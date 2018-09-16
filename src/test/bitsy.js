@@ -42,6 +42,11 @@ let browser;
 let page;
 let recording = false;
 
+// simple delay helper
+export function delay(ms) {
+	return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 // start pupeteer
 // and configure it for testing a bitsy game
 export async function start({
