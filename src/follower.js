@@ -25,6 +25,9 @@ import bitsy from "bitsy";
 import {
 	getImage
 } from "./helpers/utils";
+import {
+	after
+} from "./helpers/kitsy-script-toolkit";
 
 export var hackOptions = {
 	allowFollowerCollision: false, // if true, the player can walk into the follower and talk to them (possible to get stuck this way)
@@ -32,12 +35,7 @@ export var hackOptions = {
 };
 
 var follower;
-var _startExportedGame = bitsy.startExportedGame;
-bitsy.startExportedGame = function () {
-	if (_startExportedGame) {
-		_startExportedGame();
-	}
-
+after('startExportedGame', function () {
 	follower = getImage(hackOptions.follower, bitsy.sprite);
 
 	// remove + add player to sprite list to force rendering them on top of follower
@@ -46,15 +44,10 @@ bitsy.startExportedGame = function () {
 	bitsy.sprite[bitsy.playerId] = p;
 
 	lastRoom = bitsy.player().room;
-}
+});
 
 var lastRoom;
-var _onPlayerMoved = bitsy.onPlayerMoved;
-bitsy.onPlayerMoved = function () {
-	if (_onPlayerMoved) {
-		_onPlayerMoved();
-	}
-
+after('onPlayerMoved', function () {
 	// detect room change
 	if (lastRoom !== bitsy.player().room) {
 		// on room change, warp to player
@@ -85,7 +78,7 @@ bitsy.onPlayerMoved = function () {
 		}
 		follower.walkingPath.push(step);
 	}
-};
+});
 
 function filterFollowing(id) {
 	return follower === bitsy.sprite[id] ? null : id;
