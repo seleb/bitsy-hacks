@@ -3,7 +3,7 @@
 @file multi-sprite avatar
 @summary make the player big
 @license MIT
-@version 2.0.2
+@version 2.0.3
 @author Sean S. LeBlanc
 
 @description
@@ -160,13 +160,6 @@ var repeats = [
 	'isWallUp',
 	'isWallDown'
 ];
-for (var i = 0; i < repeats.length; ++i) {
-	var r = repeats[i];
-	var _fn = bitsy[r];
-	bitsy[r] = function (fn) {
-		return enabled ? repeat(fn) : fn();
-	}.bind(undefined, _fn);
-}
 
 // prevent player from colliding with their own pieces
 function filterPieces(id) {
@@ -177,7 +170,17 @@ function filterPieces(id) {
 	}
 	return id;
 }
-var _getSpriteAt = bitsy.getSpriteAt;
-bitsy.getSpriteAt = function () {
-	return filterPieces(_getSpriteAt.apply(this, arguments));
-}
+
+after('startExportedGame', function () {
+	for (var i = 0; i < repeats.length; ++i) {
+		var r = repeats[i];
+		var _fn = bitsy[r];
+		bitsy[r] = function (fn) {
+			return enabled ? repeat(fn) : fn();
+		}.bind(undefined, _fn);
+	}
+	var _getSpriteAt = bitsy.getSpriteAt;
+	bitsy.getSpriteAt = function () {
+		return filterPieces(_getSpriteAt.apply(this, arguments));
+	}
+});
