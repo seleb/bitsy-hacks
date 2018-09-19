@@ -3,7 +3,7 @@
 @file multi-sprite avatar
 @summary make the player big
 @license MIT
-@version 2.0.2
+@version 2.0.3
 @author Sean S. LeBlanc
 
 @description
