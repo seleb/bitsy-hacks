@@ -47,6 +47,7 @@ function build(src) {
 }
 
 Promise.all([
+	"avatar by room",
 	"basic sfx",
 	"bitsymuse",
 	"canvas replacement",
