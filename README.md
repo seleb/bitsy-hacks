@@ -3,6 +3,7 @@
 A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamledoux)'s [Bitsy Game Maker](https://ledoux.itch.io/bitsy).
 
 ## contents
+ - 👥 [avatar by room](/dist/avatar%20by%20room.js): change the avatar in certain rooms
  - 🔈 [basic sfx](/dist/basic%20sfx.js): "walk" and "talk" sound effect support
  - 😌 [bitsymuse](/dist/bitsymuse.js): A variety of Bitsy sound and music handlers
  - 😴 [canvas replacement](/dist/canvas%20replacement.js): WebGLazy bitsy integration (this one's mostly just for me)
