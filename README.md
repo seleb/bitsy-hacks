@@ -9,12 +9,14 @@ A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamled
  - 😴 [canvas replacement](/dist/canvas%20replacement.js): WebGLazy bitsy integration (this one's mostly just for me)
  - ➿ [corrupt](/dist/corrupt.js): corrupts gamedata at runtime
  - 🅰 [custom text effect](/dist/custom%20text%20effect.js): make {custom}text effects{custom}
+ - 🔝 [direction in dialog](/dist/direction%20in%20dialog.js): provides a variable with player direction
  - ↔ [directional avatar](/dist/directional%20avatar.js): flips the player's sprite based on directional movement
  - 🖼 [dynamic background](/dist/dynamic%20background.js): HTML background matching bitsy background
  - 📝 [edit dialog from dialog](/dist/edit%20dialog%20from%20dialog.js): edit dialog from dialog (yes really)
  - 🖌 [edit image from dialog](/dist/edit%20image%20from%20dialog.js): edit sprites, items, and tiles from dialog
  - 🔚 [end-from-dialog](/dist/end-from-dialog.js): trigger an ending from dialog, including narration text
  - 🚪 [exit-from-dialog](/dist/exit-from-dialog.js): exit to another room from dialog, including conditionals
+ - 🔡 [expose variables](/dist/expose%20variables.js): exposes the bitsy variable map globally
  - 🛰 [external-game-data](/dist/external-game-data.js): separate Bitsy game data from your (modded) HTML for easier development
  - 🌐 [favicon-from-sprite](/dist/favicon-from-sprite.js): generate a browser favicon (tab icon) from a Bitsy sprite, including animation!
  - 💕 [follower](/dist/follower.js): makes a single sprite follow the player
