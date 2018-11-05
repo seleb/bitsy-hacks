@@ -59,6 +59,7 @@ Promise.all([
 	"edit image from dialog",
 	"end-from-dialog",
 	"exit-from-dialog",
+	"expose variables",
 	"external-game-data",
 	"favicon-from-sprite",
 	"follower",
