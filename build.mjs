@@ -53,6 +53,7 @@ Promise.all([
 	"canvas replacement",
 	"corrupt",
 	"custom text effect",
+	"direction in dialog",
 	"directional avatar",
 	"dynamic background",
 	"edit dialog from dialog",
