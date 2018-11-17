@@ -3,7 +3,7 @@
 @file transitions
 @summary customizable WebGL transitions
 @license MIT
-@version 1.0.0
+@version 1.1.0
 @author Sean S. LeBlanc
 
 @description
@@ -59,6 +59,8 @@ NOTES:
 var hackOptions$1 = {
 	// transition duration
 	duration: 1000,
+	// whether to transition title screen
+	includeTitle: true,
 	// function which defines when a transition occured
 	// return true to indicate a transition; false otherwise
 	// example implementation is transition on room change
@@ -329,6 +331,9 @@ after('update', function () {
 hackOptions.disableFeedbackTexture = false;
 hackOptions.init = function () {
 	glazy.glLocations.transitionTime = glazy.gl.getUniformLocation(glazy.shader.program, 'transitionTime');
+	if (!hackOptions$1.includeTitle) {
+		glazy.gl.uniform1f(glazy.glLocations.transitionTime, glazy.curTime - hackOptions$1.duration);
+	}
 
 	// hack textureFeedback update
 	// so we can update it as-needed rather than every frame
