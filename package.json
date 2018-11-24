@@ -12,7 +12,7 @@
 	},
 	"devDependencies": {
 		"babel-preset-env": "^1.7.0",
-		"doctrine": "^2.1.0",
+		"doctrine": "^3.0.0",
 		"input-gamepads.js": "^1.0.0",
 		"jest": "^23.6.0",
 		"jest-image-snapshot": "^2.6.0",
