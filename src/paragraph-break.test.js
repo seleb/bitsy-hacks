@@ -8,7 +8,7 @@ import {
 
 test('p', async () => {
 	await start({
-		catDialog: '\\(p\\)1(p)\\(p\\)2',
+		catDialog: 'paragraph 1(p)paragraph 2',
 		hacks: ['paragraph-break'],
 	});
 	await walkToCat();
