@@ -7,6 +7,7 @@ A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamled
  - 🔈 [basic sfx](/dist/basic%20sfx.js): "walk" and "talk" sound effect support
  - 😌 [bitsymuse](/dist/bitsymuse.js): A variety of Bitsy sound and music handlers
  - 😴 [canvas replacement](/dist/canvas%20replacement.js): WebGLazy bitsy integration (this one's mostly just for me)
+ - ⛔️ [close on ending](/dist/close%20on%20ending.js): Prevents from playing past an ending
  - ➿ [corrupt](/dist/corrupt.js): corrupts gamedata at runtime
  - 🅰 [custom text effect](/dist/custom%20text%20effect.js): make {custom}text effects{custom}
  - 🔝 [direction in dialog](/dist/direction%20in%20dialog.js): provides a variable with player direction
