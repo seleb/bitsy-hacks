@@ -27,6 +27,9 @@ and they simply won't draw if they're not loaded or have errored out.
 All standard browser image formats are supported, but keep filesize in mind!
 
 Note: The hack is called "character portraits", but this can easily be used to show images of any sort
+
+HOW TO USE:
+Copy-paste into a script tag after the bitsy source
 */
 (function (bitsy) {
 'use strict';
