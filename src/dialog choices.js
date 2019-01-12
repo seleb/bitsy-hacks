@@ -47,6 +47,9 @@ constant part of answer{
 }
 """
 
+Note: it's recommended you combine this hack
+with the dialog jump hack for complex cases.
+
 Limitations:
 Each option must fit on a single line, or the interaction will break.
 

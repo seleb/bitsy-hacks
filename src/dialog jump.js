@@ -12,9 +12,15 @@ This can be used to simplify complex dialog
 by moving portions to self-contained dialog entries,
 and then jumping to the appropriate id when necessary.
 
+You can also provide raw dialog text instead of an id;
+Functionally this isn't much different from writing raw dialog text,
+but it has some uses for advanced cases (e.g. when combined with dialog choices)
+
 Usage:
 	(jump "dialogId")
 	(jumpNow "dialogId")
+	(jump "dialog to print")
+	(jumpNow "dialog to print")
 
 Note: be careful of infinite loops, e.g.
 DLG_infinite_loop
@@ -70,5 +76,8 @@ function jump(targetDialog) {
 		return;
 	}
 	var dialogStr = bitsy.dialog[targetDialog];
+	if (!dialogStr) {
+		dialogStr = targetDialog;
+	}
 	bitsy.startDialog(dialogStr);
 }
