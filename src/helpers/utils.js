@@ -104,3 +104,22 @@ export function printDialog(environment, text, onReturn) {
 		onReturn(null);
 	});
 }
+
+/**
+ * Helper for printing a paragraph break inside of a dialog function.
+ * automatically add an appropriate number of line breaks
+ * based on the current dialogue buffer size rather than the user having to count;
+ * Intended to be called using the environment parameters of the original function;
+ * e.g.
+ * addDialogTag('myTag', function (environment, parameters, onReturn) {
+ * 	paragraphBreak(environment);
+ * 	onReturn(null);
+ * });
+ * @param {Environment} environment Bitsy environment object; first param to a dialog function
+ */
+export function addParagraphBreak(environment) {
+    var a = environment.GetDialogBuffer().CurRowCount();
+    for (var i = 0; i < 3 - a; ++i) {
+        environment.GetDialogBuffer().AddLinebreak();
+    }
+}
