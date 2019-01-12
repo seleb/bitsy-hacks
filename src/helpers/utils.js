@@ -112,7 +112,7 @@ export function printDialog(environment, text, onReturn) {
  * Intended to be called using the environment parameters of the original function;
  * e.g.
  * addDialogTag('myTag', function (environment, parameters, onReturn) {
- * 	paragraphBreak(environment);
+ * 	addParagraphBreak(environment);
  * 	onReturn(null);
  * });
  * @param {Environment} environment Bitsy environment object; first param to a dialog function
