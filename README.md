@@ -11,6 +11,8 @@ A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamled
  - ⛔️ [close on ending](/dist/close%20on%20ending.js): Prevents from playing past an ending
  - ➿ [corrupt](/dist/corrupt.js): corrupts gamedata at runtime
  - 🅰 [custom text effect](/dist/custom%20text%20effect.js): make {custom}text effects{custom}
+ - 🔀 [dialog choices](/dist/dialog%20choices.js): binary dialog choices
+ - 🚀 [dialog jump](/dist/dialog%20jump.js): jump from one dialog entry to another
  - 💬 [dialog pause](/dist/dialog%20pause.js): add pauses in between printing text
  - 🔝 [direction in dialog](/dist/direction%20in%20dialog.js): provides a variable with player direction
  - ↔ [directional avatar](/dist/directional%20avatar.js): flips the player's sprite based on directional movement

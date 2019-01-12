@@ -1,34 +1,83 @@
 /**
-📃
-@file paragraph-break
-@summary Adds paragraph breaks to the dialogue parser
-@license WTFPL (do WTF you want)
-@version 1.0.3
-@requires Bitsy Version: 5.0, 5.1
-@author Sean S. LeBlanc, David Mowatt
+🔀
+@file dialog choices
+@summary binary dialog choices
+@license MIT
+@version 1.0.0
+@requires 5.3
+@author Sean S. LeBlanc
 
 @description
-Adds a (p) tag to the dialogue parser that forces the following text to 
-start on a fresh dialogue screen, eliminating the need to spend hours testing
-line lengths or adding multiple line breaks that then have to be reviewed
-when you make edits or change the font size.
+Adds a dialog tag which allows you to present the player with binary dialog choices.
 
-Usage: (p)
-       
-Example: I am a cat(p)and my dialogue contains multitudes
+Usage:
+{choice
+	- option one
+	  result of picking option
+	- option two
+	  result of picking option
+}
+
+Recommended uses:
+DLG_simple_response
+"""
+Greeting text
+{choice
+	- Response one
+	  answer to response one
+	- Response two
+	  answer to response two
+}
+"""
+
+DLG_complex_response
+"""
+Greeting text
+{choice
+	- Response one
+	  {a = 1}
+	- Response two
+	  {a = 2}
+}
+constant part of answer{
+	- a == 1 ?
+	  custom part based on response one
+	- a == 2 ?
+	  custom part based on response two
+}
+"""
+
+Note: it's recommended you combine this hack
+with the dialog jump hack for complex cases.
+
+Limitations:
+Each option must fit on a single line, or the interaction will break.
+
+Checking the value of a variable set in an option
+*immediately after the choice* will not work,
+as it will evaluate before the player has selected
+an option if there is no text inbetween the two.
+e.g.
+"""
+{a = 1}
+{choice
+	- Response one
+	  {a = 2}
+	- Response two
+	  {a = 3}
+}
+{
+	- a == 1 ?
+	  this will print
+	- a == 2 ?
+	  these will not
+	- a == 3 ?
+	  these will not
+}
+"""
 
 HOW TO USE:
-  1. Copy-paste this script into a new script tag after the Bitsy source code.
-     It should appear *before* any other mods that handle loading your game
-     data so it executes *after* them (last-in first-out).
-
-NOTE: This uses parentheses "()" instead of curly braces "{}" around function
-      calls because the Bitsy editor's fancy dialog window strips unrecognized
-      curly-brace functions from dialog text. To keep from losing data, write
-      these function calls with parentheses like the examples above.
-
-      For full editor integration, you'd *probably* also need to paste this
-      code at the end of the editor's `bitsy.js` file. Untested.
+Copy-paste into a script tag after the bitsy source
 */
 (function (bitsy) {
 'use strict';
@@ -139,15 +188,6 @@ function inject$1(searchRegex, replaceString) {
 	});
 }
 
-// Ex: before('load_game', function run() { alert('Loading!'); });
-//     before('show_text', function run(text) { return text.toUpperCase(); });
-//     before('show_text', function run(text, done) { done(text.toUpperCase()); });
-function before(targetFuncName, beforeFn) {
-	var kitsy = kitsyInit();
-	kitsy.queuedBeforeScripts[targetFuncName] = kitsy.queuedBeforeScripts[targetFuncName] || [];
-	kitsy.queuedBeforeScripts[targetFuncName].push(beforeFn);
-}
-
 function kitsyInit() {
 	// return already-initialized kitsy
 	if (bitsy.kitsy) {
@@ -246,62 +286,159 @@ function _reinitEngine() {
 	bitsy.dialogBuffer = bitsy.dialogModule.CreateBuffer();
 }
 
-// Rewrite custom functions' parentheses to curly braces for Bitsy's
-// interpreter. Unescape escaped parentheticals, too.
-function convertDialogTags(input, tag) {
-	return input
-		.replace(new RegExp('\\\\?\\((' + tag + '(\\s+(".+?"|.+?))?)\\\\?\\)', 'g'), function(match, group){
-			if(match.substr(0,1) === '\\') {
-				return '('+ group + ')'; // Rewrite \(tag "..."|...\) to (tag "..."|...)
+
+
+var dialogChoices = {
+	choice: 0,
+	choices: [],
+	choicesActive: false,
+	addParagraphBreak: addParagraphBreak,
+	handleInput: function (dialogBuffer) {
+		// navigate
+		if (
+			bitsy.input.isKeyDown(bitsy.key.up) ||
+			bitsy.input.isKeyDown(bitsy.key.w) ||
+			bitsy.input.swipeUp() ||
+			bitsy.input.isKeyDown(bitsy.key.down) ||
+			bitsy.input.isKeyDown(bitsy.key.s) ||
+			bitsy.input.swipeDown()
+		) {
+			this.choice = this.choice ? 0 : 1;
+			return false;
+		}
+		// select
+		if (
+			this.choicesActive &&
+			(
+				bitsy.input.isKeyDown(bitsy.key.right) ||
+				bitsy.input.isKeyDown(bitsy.key.d) ||
+				bitsy.input.isKeyDown(bitsy.key.enter) ||
+				bitsy.input.isKeyDown(bitsy.key.space) ||
+				bitsy.input.swipeRight()
+			)
+		) {
+			// evaluate choice
+			this.choices[this.choice]();
+			// reset
+			this.choice = 0;
+			this.choices = [];
+			this.choicesActive = false;
+			// get back into the regular dialog flow
+			if (dialogBuffer.Continue()) {
+				dialogBuffer.Update(0);
+				// make sure to close dialog if there's nothing to say
+				// after the choice has been made
+				if (!dialogBuffer.CurCharCount()) {
+					dialogBuffer.Continue();
+				}
 			}
-			return '{'+ group + '}'; // Rewrite (tag "..."|...) to {tag "..."|...}
-		});
-}
-
-
-function addDialogFunction(tag, fn) {
-	var kitsy = kitsyInit();
-	kitsy.dialogFunctions = kitsy.dialogFunctions || {};
-	if (kitsy.dialogFunctions[tag]) {
-		throw new Error('The dialog function "' + tag + '" already exists.');
+			return true;
+		}
+		return false;
 	}
+};
 
-	// Hook into game load and rewrite custom functions in game data to Bitsy format.
-	before('parseWorld', function (game_data) {
-		return [convertDialogTags(game_data, tag)];
+bitsy.dialogChoices = dialogChoices;
+
+// parsing
+// (adds a new sequence node type)
+inject$1(/(\|\| str === "shuffle")/, '$1 || str === "choice"');
+inject$1(/(state\.curNode\.AddChild\( new ShuffleNode\( options \) \);)/, `$1
+else if(sequenceType === "choice")
+	state.curNode.AddChild( new ChoiceNode( options ) );
+`);
+
+inject$1(/(var ShuffleNode = )/,`
+var ChoiceNode = function(options) {
+	Object.assign( this, new TreeRelationship() );
+	Object.assign( this, new SequenceBase() );
+	this.type = "choice";
+	this.options = options;
+	options.forEach(function(option){
+		var br = option.children.find(function(child){ return child.name === 'br'; });
+		if (!br) {
+			option.onSelect = [];
+			return;
+		}
+		var idx = option.children.indexOf(br);
+		option.onSelect = option.children.slice(idx+1);
+		option.children = option.children.slice(0, idx);
 	});
 
-	kitsy.dialogFunctions[tag] = fn;
+	this.Eval = function(environment,onReturn) {
+		var lastVal = null;
+		var i = 0;
+		function evalChildren(children,done) {
+			if(i < children.length) {
+				children[i].Eval(environment, function(val) {
+					environment.GetDialogBuffer().AddLinebreak();
+					lastVal = val;
+					i++;
+					evalChildren(children,done);
+				});
+			}
+			else {
+				done();
+			}
+		}
+		window.dialogChoices.choices = this.options.map(function(option){
+			return function(){
+				option.onSelect.forEach(function(child){
+					child.Eval(environment, function(){});
+				});
+			};
+		});
+		window.dialogChoices.addParagraphBreak(environment);
+		evalChildren(this.options, function() {
+			onReturn(lastVal);
+			window.dialogChoices.choicesActive = true;
+		});
+	}
 }
+$1`);
 
-/**
- * Adds a custom dialog tag which executes the provided function.
- * For ease-of-use with the bitsy editor, tags can be written as
- * (tagname "parameters") in addition to the standard {tagname "parameters"}
- * 
- * Function is executed immediately when the tag is reached.
- *
- * @param {string}   tag Name of tag
- * @param {Function} fn  Function to execute, with signature `function(environment, parameters, onReturn){}`
- *                       environment: provides access to SetVariable/GetVariable (among other things, see Environment in the bitsy source for more info)
- *                       parameters: array containing parameters as string in first element (i.e. `parameters[0]`)
- *                       onReturn: function to call with return value (just call `onReturn(null);` at the end of your function if your tag doesn't interact with the logic system)
- */
-function addDialogTag(tag, fn) {
-	addDialogFunction(tag, fn);
-	inject$1(
-		/(var functionMap = new Map\(\);)/,
-		'$1functionMap.set("' + tag + '", kitsy.dialogFunctions.' + tag + ');'
-	);
+
+// rendering
+// (re-uses existing arrow image data,
+// but draws rotated to point at text)
+inject$1(/(this\.DrawNextArrow = )/, `
+this.DrawChoiceArrow = function() {
+	var top = (3 + window.dialogChoices.choice * 6) * scale;
+	var left = 1 * scale;
+	for (var y = 0; y < 3; y++) {
+		for (var x = 0; x < 5; x++) {
+			var i = (y * 5) + x;
+			if (arrowdata[i] == 1) {
+				//scaling nonsense
+				for (var sy = 0; sy < scale; sy++) {
+					for (var sx = 0; sx < scale; sx++) {
+						var pxl = 4 * ( ((top+(x*scale)+sy) * (textboxInfo.width*scale)) + (left+(y*scale)+sx) );
+						textboxInfo.img.data[pxl+0] = 255;
+						textboxInfo.img.data[pxl+1] = 255;
+						textboxInfo.img.data[pxl+2] = 255;
+						textboxInfo.img.data[pxl+3] = 255;
+					}
+				}
+			}
+		}
+	}
+};
+$1`);
+inject$1(/(this\.DrawTextbox\(\);)/, `
+if (window.dialogChoices.choicesActive) {
+	this.DrawChoiceArrow();
 }
+$1`);
 
-
-
-//Adds the actual dialogue tag. No deferred version is required.
-addDialogTag('p', function(environment, parameters, onReturn){
-    addParagraphBreak(environment);
-    onReturn(null);
-});
-// End of (p) paragraph break mod
+// interaction
+// (overrides the dialog skip/page flip)
+inject$1(/(\/\* CONTINUE DIALOG \*\/)/, `$1
+if(window.dialogChoices.handleInput(dialogBuffer)) {
+	return;
+} else `);
+inject$1(/(this\.CanContinue = function\(\) {)/, `$1
+if(window.dialogChoices.choicesActive){
+	return false;
+}`);
 
 }(window));

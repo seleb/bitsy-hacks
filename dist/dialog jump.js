@@ -1,34 +1,57 @@
 /**
-📃
-@file paragraph-break
-@summary Adds paragraph breaks to the dialogue parser
-@license WTFPL (do WTF you want)
-@version 1.0.3
-@requires Bitsy Version: 5.0, 5.1
-@author Sean S. LeBlanc, David Mowatt
+🚀
+@file dialog jump
+@summary jump from one dialog entry to another
+@license MIT
+@version 1.0.0
+@requires 5.3
+@author Sean S. LeBlanc
 
 @description
-Adds a (p) tag to the dialogue parser that forces the following text to 
-start on a fresh dialogue screen, eliminating the need to spend hours testing
-line lengths or adding multiple line breaks that then have to be reviewed
-when you make edits or change the font size.
+This can be used to simplify complex dialog
+by moving portions to self-contained dialog entries,
+and then jumping to the appropriate id when necessary.
 
-Usage: (p)
-       
-Example: I am a cat(p)and my dialogue contains multitudes
+You can also provide raw dialog text instead of an id;
+Functionally this isn't much different from writing raw dialog text,
+but it has some uses for advanced cases (e.g. when combined with dialog choices)
+
+Usage:
+	(jump "dialogId")
+	(jumpNow "dialogId")
+	(jump "dialog to print")
+	(jumpNow "dialog to print")
+
+Note: be careful of infinite loops, e.g.
+DLG_infinite_loop
+"""
+this will print forever(jump "DLG_infinite_loop")
+"""
+
+Lets you exit to another room from dialog (including inside conditionals). Use
+it to make an invisible sprite that acts as a conditional exit, use it to warp
+somewhere after a conversation, use it to put a guard at your gate who only
+lets you in once you're disguised, use it to require payment before the
+ferryman will take you across the river.
+
+Using the (exit) function in any part of a series of dialog will make the
+game exit to the new room after the dialog is finished. Using (exitNow) will
+immediately warp to the new room, but the current dialog will continue.
+
+WARNING: In exit coordinates, the TOP LEFT tile is (0,0). In sprite coordinates,
+         the BOTTOM LEFT tile is (0,0). If you'd like to use sprite coordinates,
+         add the word "sprite" as the fourth parameter to the exit function.
+
+Usage: (exit "<room name>,<x>,<y>")
+       (exit "<room name>,<x>,<y>,sprite")
+       (exitNow "<room name>,<x>,<y>")
+       (exitNow "<room name>,<x>,<y>,sprite")
+
+Example: (exit "FinalRoom,8,4")
+         (exitNow "FinalRoom,8,11,sprite")
 
 HOW TO USE:
-  1. Copy-paste this script into a new script tag after the Bitsy source code.
-     It should appear *before* any other mods that handle loading your game
-     data so it executes *after* them (last-in first-out).
-
-NOTE: This uses parentheses "()" instead of curly braces "{}" around function
-      calls because the Bitsy editor's fancy dialog window strips unrecognized
-      curly-brace functions from dialog text. To keep from losing data, write
-      these function calls with parentheses like the examples above.
-
-      For full editor integration, you'd *probably* also need to paste this
-      code at the end of the editor's `bitsy.js` file. Untested.
+Copy-paste into a script tag after the bitsy source
 */
 (function (bitsy) {
 'use strict';
@@ -88,25 +111,6 @@ function unique(array) {
 }
 
 /**
- * Helper for printing a paragraph break inside of a dialog function.
- * automatically add an appropriate number of line breaks
- * based on the current dialogue buffer size rather than the user having to count;
- * Intended to be called using the environment parameters of the original function;
- * e.g.
- * addDialogTag('myTag', function (environment, parameters, onReturn) {
- * 	addParagraphBreak(environment);
- * 	onReturn(null);
- * });
- * @param {Environment} environment Bitsy environment object; first param to a dialog function
- */
-function addParagraphBreak(environment) {
-    var a = environment.GetDialogBuffer().CurRowCount();
-    for (var i = 0; i < 3 - a; ++i) {
-        environment.GetDialogBuffer().AddLinebreak();
-    }
-}
-
-/**
 
 @file kitsy-script-toolkit
 @summary makes it easier and cleaner to run code before and after Bitsy functions or to inject new code into Bitsy script tags
@@ -146,6 +150,13 @@ function before(targetFuncName, beforeFn) {
 	var kitsy = kitsyInit();
 	kitsy.queuedBeforeScripts[targetFuncName] = kitsy.queuedBeforeScripts[targetFuncName] || [];
 	kitsy.queuedBeforeScripts[targetFuncName].push(beforeFn);
+}
+
+// Ex: after('load_game', function run() { alert('Loaded!'); });
+function after(targetFuncName, afterFn) {
+	var kitsy = kitsyInit();
+	kitsy.queuedAfterScripts[targetFuncName] = kitsy.queuedAfterScripts[targetFuncName] || [];
+	kitsy.queuedAfterScripts[targetFuncName].push(afterFn);
 }
 
 function kitsyInit() {
@@ -295,13 +306,61 @@ function addDialogTag(tag, fn) {
 	);
 }
 
+/**
+ * Adds a custom dialog tag which executes the provided function.
+ * For ease-of-use with the bitsy editor, tags can be written as
+ * (tagname "parameters") in addition to the standard {tagname "parameters"}
+ * 
+ * Function is executed after the dialog box.
+ *
+ * @param {string}   tag Name of tag
+ * @param {Function} fn  Function to execute, with signature `function(environment, parameters){}`
+ *                       environment: provides access to SetVariable/GetVariable (among other things, see Environment in the bitsy source for more info)
+ *                       parameters: array containing parameters as string in first element (i.e. `parameters[0]`)
+ */
+function addDeferredDialogTag(tag, fn) {
+	addDialogFunction(tag, fn);
+	bitsy.kitsy.deferredDialogFunctions = bitsy.kitsy.deferredDialogFunctions || {};
+	var deferred = bitsy.kitsy.deferredDialogFunctions[tag] = [];
+	inject$1(
+		/(var functionMap = new Map\(\);)/,
+		'$1functionMap.set("' + tag + '", function(e, p, o){ kitsy.deferredDialogFunctions.' + tag + '.push({e:e,p:p}); o(null); });'
+	);
+	// Hook into the dialog finish event and execute the actual function
+	after('onExitDialog', function () {
+		while (deferred.length) {
+			var args = deferred.shift();
+			bitsy.kitsy.dialogFunctions[tag](args.e, args.p, args.o);
+		}
+	});
+	// Hook into the game reset and make sure data gets cleared
+	after('clearGameData', function () {
+		deferred.length = 0;
+	});
+}
 
 
-//Adds the actual dialogue tag. No deferred version is required.
-addDialogTag('p', function(environment, parameters, onReturn){
-    addParagraphBreak(environment);
-    onReturn(null);
+
+addDeferredDialogTag('jump', function (environment, parameters) {
+	jump(parameters[0]);
 });
-// End of (p) paragraph break mod
+
+addDialogTag('jumpNow', function (environment, parameters, onReturn) {
+	jump(parameters[0]);
+	onReturn(null);
+});
+
+// jump function
+function jump(targetDialog) {
+	if (!targetDialog) {
+		console.warn('Tried to jump to dialog, but no target dialog provided');
+		return;
+	}
+	var dialogStr = bitsy.dialog[targetDialog];
+	if (!dialogStr) {
+		dialogStr = targetDialog;
+	}
+	bitsy.startDialog(dialogStr);
+}
 
 }(window));
