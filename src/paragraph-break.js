@@ -3,7 +3,7 @@
 @file paragraph-break
 @summary Adds paragraph breaks to the dialogue parser
 @license WTFPL (do WTF you want)
-@version 1.0.2
+@version 1.0.3
 @requires Bitsy Version: 5.0, 5.1
 @author Sean S. LeBlanc, David Mowatt
 
@@ -35,20 +35,11 @@ NOTE: This uses parentheses "()" instead of curly braces "{}" around function
 import {
 	addDialogTag,
 } from "./helpers/kitsy-script-toolkit";
-
-
-//The actual function. Makes use of the existing AddLinebreak function within
-//the dialogue parser to automatically add an appropriate number of line breaks
-//based on the current dialogue buffer size rather than the user having to count
-
-function paragraphbreakFunc(environment, parameters, onReturn) {
-    var a = environment.GetDialogBuffer().CurRowCount();
-    for (var i = 0; i < 3 - a; ++i) {
-        environment.GetDialogBuffer().AddLinebreak();
-    }
-    onReturn(null);
-}
+import { addParagraphBreak } from "./helpers/utils";
 
 //Adds the actual dialogue tag. No deferred version is required.
-addDialogTag('p', paragraphbreakFunc);
+addDialogTag('p', function(environment, parameters, onReturn){
+    addParagraphBreak(environment);
+    onReturn(null);
+});
 // End of (p) paragraph break mod
