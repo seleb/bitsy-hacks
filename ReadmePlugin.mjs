@@ -35,7 +35,7 @@ export default {
 			for (var i in jsdoc.tags) {
 				o[jsdoc.tags[i].title] = jsdoc.tags[i].description;
 			}
-			o.url = `/dist/${encodeURI(o.file)}.js`;
+			o.url = `/dist/${encodeURI(o.file.replace(/\s/g, '-'))}.js`;
 			return o;
 		});
 	},

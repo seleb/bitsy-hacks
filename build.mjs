@@ -34,7 +34,7 @@ function build(src) {
 	};
 
 	const outputOptions = {
-		file: `${outputDir}${src}`,
+		file: `${outputDir}${src.replace(/\s/g, '-')}`,
 		format: "iife",
 		globals: {
 			bitsy: 'window'
