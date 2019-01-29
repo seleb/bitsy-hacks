@@ -77,7 +77,7 @@ export async function start({
 <script>
 ${
 	// make sure not to screw up the regex in the process
-	hackDist[hack].replace(/\$([0-9]+)/g, '$$$$$1')
+	hackDist[hack.replace(/\s/g, '-')].replace(/\$([0-9]+)/g, '$$$$$1')
 }
 </script>
 `).join('\n')
