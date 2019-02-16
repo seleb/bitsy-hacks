@@ -21,7 +21,6 @@ A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamled
  - 🖌 [edit image from dialog](/dist/edit-image-from-dialog.js): edit sprites, items, and tiles from dialog
  - 🔚 [end-from-dialog](/dist/end-from-dialog.js): trigger an ending from dialog, including narration text
  - 🚪 [exit-from-dialog](/dist/exit-from-dialog.js): exit to another room from dialog, including conditionals
- - 🔡 [expose variables](/dist/expose-variables.js): exposes the bitsy variable map globally
  - 🛰 [external-game-data](/dist/external-game-data.js): separate Bitsy game data from your (modded) HTML for easier development
  - 🌐 [favicon-from-sprite](/dist/favicon-from-sprite.js): generate a browser favicon (tab icon) from a Bitsy sprite, including animation!
  - 💕 [follower](/dist/follower.js): makes a single sprite follow the player
@@ -41,6 +40,7 @@ A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamled
  - 🎞 [transitions](/dist/transitions.js): customizable WebGL transitions
  - 👁️‍🗨️ [transparent dialog](/dist/transparent-dialog.js): makes the dialog box have a transparent background
  - 🏁 [transparent sprites](/dist/transparent-sprites.js): makes all sprites have transparent backgrounds
+ - 💱 [twine bitsy comms](/dist/twine-bitsy-comms.js): interprocess communication for twine and bitsy
  - ❄ [unique items](/dist/unique-items.js): items which, when picked up, remove all other instances of that item from the game
 
 ![Imgur](https://i.imgur.com/peRLLHn.gif)![Imgur](https://i.imgur.com/yg81aH2.gif)![Imgur](https://i.imgur.com/r7AUHX4.gif)
