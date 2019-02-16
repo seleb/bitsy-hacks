@@ -1,7 +1,7 @@
 /**
 @summary twine-bitsy-comms Snowman
 @license MIT
-@version 1.0 .0
+@version 1.0.0
 @author Sean S.LeBlanc
 
 @description
@@ -54,7 +54,7 @@ story.bitsy = function (src) {
 		window.removeEventListener("message", handleBitsyMessage, false);
 	});
 
-	$(window).one('showpassage:after', function (e, data) {
+	$(window).one('showpassage:after', function () {
 		document.getElementById('passage').appendChild(iframe);
 		// make sure the iframe keeps focus
 		// so that bitsy can capture key events
