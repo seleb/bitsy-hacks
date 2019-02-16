@@ -1,3 +1,17 @@
+/**
+@summary twine-bitsy-comms Harlowe script
+@license MIT
+@version 1.0.0
+@author Sean S. LeBlanc
+
+@description
+example: <script>window.bitsy('./my bitsy.html');</script>
+
+the bitsy game will render as an iframe with the class "bitsy"
+inside of the passage that includes it;
+you can use this to customize its CSS
+(e.g. `border: none;`, `image-rendering: pixelated;`)
+*/
 var sendMessage;
 
 // setup listeners
@@ -38,7 +52,7 @@ window.bitsy = function (src) {
 	iframe.src = src;
 	iframe.className = 'bitsy';
 
-	sendMessage = function(message) {
+	sendMessage = function (message) {
 		iframe.contentWindow.postMessage(message, '*');
 	}
 
