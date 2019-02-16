@@ -27,7 +27,6 @@ import bitsy from "bitsy";
 import {
 	before,
 } from "./helpers/kitsy-script-toolkit";
-import "./expose variables";
 
 var keys = {};
 keys[bitsy.Direction.Up] = "up";
@@ -39,6 +38,6 @@ keys[bitsy.Direction.None] = null;
 before('startDialog', function () {
 	var direction = keys[bitsy.curPlayerDirection];
 	if (direction) {
-		bitsy.kitsy.variableMap.set('playerDirection', direction);
+		bitsy.scriptInterpreter.SetVariable('playerDirection', direction);
 	}
 });

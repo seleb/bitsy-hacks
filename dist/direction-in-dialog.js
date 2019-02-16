@@ -103,16 +103,6 @@ HOW TO USE:
   https://github.com/seleb/bitsy-hacks/wiki/Coding-with-kitsy
 */
 
-
-// Ex: inject(/(names.sprite.set\( name, id \);)/, '$1console.dir(names)');
-function inject$1(searchRegex, replaceString) {
-	var kitsy = kitsyInit();
-	kitsy.queuedInjectScripts.push({
-		searchRegex: searchRegex,
-		replaceString: replaceString
-	});
-}
-
 // Ex: before('load_game', function run() { alert('Loading!'); });
 //     before('show_text', function run(text) { return text.toUpperCase(); });
 //     before('show_text', function run(text, done) { done(text.toUpperCase()); });
@@ -220,29 +210,6 @@ function _reinitEngine() {
 	bitsy.dialogBuffer = bitsy.dialogModule.CreateBuffer();
 }
 
-/**
-🔡
-@file expose variables
-@summary exposes the bitsy variable map globally
-@license MIT
-@version 1.0.0
-@requires 5.3
-@author Sean S. LeBlanc
-
-@description
-Exposes the bitsy variable map globally as a kitsy variable.
-It can be accessed with `window.kitsy.variableMap`,
-or `bitsy.kitsy.variableMap` in other hack source code.
-
-Note that it is a Map object, not a plain object,
-and so has `.get` and `.set` functions instead of regular read/write syntax.
-
-HOW TO USE:
-Copy-paste into a script tag after the bitsy source
-*/
-
-inject$1(/(var variableMap = new Map\(\);)/, '$1window.kitsy.variableMap = variableMap;');
-
 
 
 var keys = {};
@@ -255,7 +222,7 @@ keys[bitsy.Direction.None] = null;
 before('startDialog', function () {
 	var direction = keys[bitsy.curPlayerDirection];
 	if (direction) {
-		bitsy.kitsy.variableMap.set('playerDirection', direction);
+		bitsy.scriptInterpreter.SetVariable('playerDirection', direction);
 	}
 });
 
