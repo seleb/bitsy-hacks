@@ -30,7 +30,12 @@ Dialog command list:
 Note that eval support is commented out by default twine integration.
 
 HOW TO USE:
-Copy-paste into a script tag after the bitsy source
+1. Copy-paste this script into a script tag after the bitsy source
+2. Copy-paste the twine script into the Story JavaScript section of your twine game
+(optional)
+3. Add `.bitsy { ... }` CSS to the Story Stylesheet of your twine game
+4. Edit the variable naming functions below as needed
+   (shared variables have prefixed names by default to avoid accidental overwriting)
 */
 import bitsy from "bitsy";
 import {
