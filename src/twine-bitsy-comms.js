@@ -78,6 +78,7 @@ after('startExportedGame', function() {
 
 // hook up dialog commands
 [
+	'eval',
 	'play',
 	'back'
 ].forEach(function(command){
