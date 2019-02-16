@@ -106,7 +106,14 @@ after('onInventoryChanged', function(id) {
 });
 
 // say when bitsy has started
+// and initialize variables
 after('startExportedGame', function() {
+	bitsy.scriptInterpreter.GetVariableNames().forEach(function(name) {
+		sendVariable(hackOptions.variableNameOut(name), bitsy.scriptInterpreter.GetVariable(name));
+	});
+	Object.values(bitsy.item).forEach(function(item) {
+		sendVariable(hackOptions.itemNameOut(item.id), 0);
+	});
 	hackOptions.send('start', bitsy.title);
 });
 
