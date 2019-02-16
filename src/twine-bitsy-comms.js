@@ -1,3 +1,37 @@
+/**
+💱
+@file twine bitsy comms
+@summary interprocess communication for twine and bitsy
+@license MIT
+@version 1.0.0
+@requires 5.4
+@author Sean S. LeBlanc
+
+@description
+Provides a method of easily integrating bitsy games into twine games.
+Variables are automatically shared between the two engines,
+and dialog commands are provided which allow basic twine commands
+to be executed from inside of a bitsy game.
+
+Note that twine has multiple story formats which function in different ways,
+and this hack requires integration code on both engines to work properly.
+It's likely possible to integrate against any of the common story formats,
+but currently only a single integration is provided:
+	SugarCube v2 macro: https://github.com/seleb/bitsy-hacks/blob/master/src/twine-bitsy-comms/SugarCube-v2.js
+
+Dialog command list:
+	(twinePlay "<twine passage title>")
+	(twinePlayNow "<twine passage title>")
+	(twineBack)
+	(twineBackNow)
+	(twineEval "<javascript directly evaluated in macro context>")
+	(twineEvalNow "<javascript directly evaluated in macro context>")
+
+Note that eval support is commented out by default twine integration.
+
+HOW TO USE:
+Copy-paste into a script tag after the bitsy source
+*/
 import bitsy from "bitsy";
 import {
 	addDialogTag,

@@ -1,3 +1,17 @@
+/**
+@summary twine-bitsy-comms SugarCube v2 Macro
+@license MIT
+@version 1.0.0
+@author Sean S. LeBlanc
+
+@description
+example: <<bitsy>>./my bitsy.html<</bitsy>>
+
+the bitsy game will render as an iframe with the class "bitsy"
+inside of the passage that includes it;
+you can use this to customize its CSS
+(e.g. `border: none;`, `image-rendering: pixelated;`)
+*/
 Macro.add('bitsy', {
 	tags: null,
 	handler: function () {
