@@ -1,5 +1,5 @@
 /**
-@summary twine-bitsy-comms Sugarcane macro
+@summary twine-bitsy-comms Sugarcane/Responsive macro
 @license MIT
 @version 1.0.0
 @author Sean S. LeBlanc
