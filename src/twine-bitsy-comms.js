@@ -3,39 +3,47 @@
 @file twine bitsy comms
 @summary interprocess communication for twine and bitsy
 @license MIT
-@version 1.0.0
+@version 1.0.1
 @requires 5.4
 @author Sean S. LeBlanc
 
 @description
-Provides a method of easily integrating bitsy games into twine games.
+Provides a method of easily integrating bitsy games into Twine games.
 Variables are automatically shared between the two engines,
-and dialog commands are provided which allow basic twine commands
+and dialog commands are provided which allow basic Twine commands
 to be executed from inside of a bitsy game.
 
-Note that twine has multiple story formats which function in different ways,
-and this hack requires integration code on both engines to work properly.
-It's likely possible to integrate against any of the common story formats,
-but currently only a single integration is provided:
+Twine has multiple story formats which function in different ways,
+and this hack requires integration code in both engines to work properly.
+Integrations for each of the default Twine 2 story formats are provided:
 	SugarCube v2 macro: https://github.com/seleb/bitsy-hacks/blob/master/src/twine-bitsy-comms/SugarCube-v2.js
+	SugarCube v1 macro: https://github.com/seleb/bitsy-hacks/blob/master/src/twine-bitsy-comms/SugarCube-v1.js
+	Harlowe (1 and 2) script: https://github.com/seleb/bitsy-hacks/blob/master/src/twine-bitsy-comms/Harlowe.js
+	Snowman script: https://github.com/seleb/bitsy-hacks/blob/master/src/twine-bitsy-comms/Snowman.js
+
+Feel free to request integrations for formats not provided here.
 
 Dialog command list:
-	(twinePlay "<twine passage title>")
-	(twinePlayNow "<twine passage title>")
+	(twinePlay "<Twine passage title>")
+	(twinePlayNow "<Twine passage title>")
 	(twineBack)
 	(twineBackNow)
 	(twineEval "<javascript directly evaluated in macro context>")
 	(twineEvalNow "<javascript directly evaluated in macro context>")
 
-Note that eval support is commented out by default twine integration.
+Notes:
+	- eval support is commented out by default in the Twine integrations
+	- Snowman's history is handled differently from other formats;
+	  see: https://twinery.org/forum/discussion/3141/adding-an-undo-button-to-snowman-1-0-2
+	- shared variables have prefixed names by default to avoid accidental overwriting;
+	  see the hackOptions below for details
 
 HOW TO USE:
 1. Copy-paste this script into a script tag after the bitsy source
-2. Copy-paste the twine script into the Story JavaScript section of your twine game
+2. Copy-paste the relevant story format integration script into the Story JavaScript section of your Twine game
 (optional)
-3. Add `.bitsy { ... }` CSS to the Story Stylesheet of your twine game
+3. Add `.bitsy { ... }` CSS to the Story Stylesheet of your Twine game
 4. Edit the variable naming functions below as needed
-   (shared variables have prefixed names by default to avoid accidental overwriting)
 */
 import bitsy from "bitsy";
 import {
@@ -64,7 +72,7 @@ var hackOptions = {
 	},
 
 	// the options below are for customizing the integration;
-	// if you're using the provided macro, you can safely ignore them
+	// if you're using one of the provided integrations, you can safely ignore them
 
 	// how info will be posted to external process
 	// default implementation is for iframe postMessage-ing to parent page
