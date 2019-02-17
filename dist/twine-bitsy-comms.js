@@ -3,7 +3,7 @@
 @file twine bitsy comms
 @summary interprocess communication for twine and bitsy
 @license MIT
-@version 1.0.1
+@version 1.0.2
 @requires 5.4
 @author Sean S. LeBlanc
 
@@ -15,11 +15,13 @@ to be executed from inside of a bitsy game.
 
 Twine has multiple story formats which function in different ways,
 and this hack requires integration code in both engines to work properly.
-Integrations for each of the default Twine 2 story formats are provided:
+Integrations for all the default Twine story formats are provided:
 	SugarCube v2 macro: https://github.com/seleb/bitsy-hacks/blob/master/src/twine-bitsy-comms/SugarCube-v2.js
 	SugarCube v1 macro: https://github.com/seleb/bitsy-hacks/blob/master/src/twine-bitsy-comms/SugarCube-v1.js
 	Harlowe (1 and 2) script: https://github.com/seleb/bitsy-hacks/blob/master/src/twine-bitsy-comms/Harlowe.js
 	Snowman script: https://github.com/seleb/bitsy-hacks/blob/master/src/twine-bitsy-comms/Snowman.js
+	Sugarcane/Responsive macro: https://github.com/seleb/bitsy-hacks/blob/master/src/twine-bitsy-comms/Sugarcane-Responsive.js
+	Jonah macro: https://github.com/seleb/bitsy-hacks/blob/master/src/twine-bitsy-comms/Jonah.js
 
 Feel free to request integrations for formats not provided here.
 
