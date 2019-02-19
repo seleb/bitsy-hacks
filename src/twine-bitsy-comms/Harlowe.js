@@ -1,11 +1,11 @@
 /**
 @summary twine-bitsy-comms Harlowe script
 @license MIT
-@version 1.0.0
+@version 1.0.1
 @author Sean S. LeBlanc
 
 @description
-example: <script>window.bitsy('./my bitsy.html');</script>
+example (inside of script tag): window.bitsy('./my bitsy.html');
 
 the bitsy game will render as an iframe with the class "bitsy"
 inside of the passage that includes it;
@@ -20,9 +20,15 @@ function handleBitsyMessage(event) {
 	var data = event.data.data;
 	switch (type) {
 		case 'start':
+			var variables = {};
+			for (var i in State.variables) {
+				if (!i.startsWith('TwineScript_')) {
+					variables[i] = State.variables[i];
+				}
+			}
 			sendMessage({
 				type: 'variables',
-				data: State.variables.__proto__, // hmm
+				data: variables,
 			});
 			break;
 		case 'play':

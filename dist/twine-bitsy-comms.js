@@ -3,7 +3,7 @@
 @file twine bitsy comms
 @summary interprocess communication for twine and bitsy
 @license MIT
-@version 1.0.2
+@version 1.0.3
 @requires 5.4
 @author Sean S. LeBlanc
 
@@ -374,16 +374,21 @@ function addDeferredDialogTag(tag, fn) {
 
 
 
+var sending = true;
+
 // hook up incoming listener
 hackOptions.receive();
 function receiveMessage(type, data) {
 	switch (type) {
 		case 'variables':
+			var state = sending;
+			sending = false;
 			Object.entries(data).forEach(function (entry) {
 				var name = entry[0];
 				var value = entry[1];
 				bitsy.scriptInterpreter.SetVariable(hackOptions.variableNameIn(name), value);
 			});
+			sending = state;
 			break;
 		default:
 			console.warn('Unhandled message from outside Bitsy:', type, data);
@@ -396,10 +401,14 @@ function sendVariable(name, value) {
 	hackOptions.send('variable', { name: name, value: value });
 }
 after('onVariableChanged', function(name) {
-	sendVariable(hackOptions.variableNameOut(name), bitsy.scriptInterpreter.GetVariable(name));
+	if (sending) {
+		sendVariable(hackOptions.variableNameOut(name), bitsy.scriptInterpreter.GetVariable(name));
+	}
 });
 after('onInventoryChanged', function(id) {
-	sendVariable(hackOptions.itemNameOut(id), bitsy.player().inventory[id]);
+	if (sending) {
+		sendVariable(hackOptions.itemNameOut(id), bitsy.player().inventory[id]);
+	}
 });
 
 // say when bitsy has started
