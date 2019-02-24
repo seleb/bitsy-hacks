@@ -2,8 +2,9 @@
 	"name": "bitsy-hacks",
 	"description": "a collection of re-usable scripts for bitsy game maker",
 	"version": "1.0.0",
+	"main": "index.mjs",
 	"scripts": {
-		"build": "node --experimental-modules build.mjs",
+		"build": "node --experimental-modules cli.mjs",
 		"test": "jest --runInBand"
 	},
 	"author": "Sean S. LeBlanc",
