@@ -81,8 +81,8 @@ export var hackOptions = {
 	transition: 'result = mix(start, end, t);',
 };
 
-canvasReplacementHackOptions.disableFeedbackTexture = false;
 canvasReplacementHackOptions.init = function () {
+canvasReplacementHackOptions.glazyOptions.disableFeedbackTexture = false;
 	glazy.glLocations.transitionTime = glazy.gl.getUniformLocation(glazy.shader.program, 'transitionTime');
 	if (!hackOptions.includeTitle) {
 		glazy.gl.uniform1f(glazy.glLocations.transitionTime, glazy.curTime - hackOptions.duration);
