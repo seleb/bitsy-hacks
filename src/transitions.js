@@ -3,7 +3,7 @@
 @file transitions
 @summary customizable WebGL transitions
 @license MIT
-@version 1.1.0
+@version 2.0.0
 @author Sean S. LeBlanc
 
 @description
@@ -56,8 +56,7 @@ NOTES:
 */
 import bitsy from "bitsy";
 import {
-	hackOptions as canvasReplacementHackOptions,
-	glazy
+	hackOptions as canvasReplacementHackOptions
 } from "./canvas replacement";
 
 export var hackOptions = {
@@ -81,8 +80,8 @@ export var hackOptions = {
 	transition: 'result = mix(start, end, t);',
 };
 
-canvasReplacementHackOptions.disableFeedbackTexture = false;
-canvasReplacementHackOptions.init = function () {
+canvasReplacementHackOptions.glazyOptions.disableFeedbackTexture = false;
+canvasReplacementHackOptions.init = function (glazy) {
 	glazy.glLocations.transitionTime = glazy.gl.getUniformLocation(glazy.shader.program, 'transitionTime');
 	if (!hackOptions.includeTitle) {
 		glazy.gl.uniform1f(glazy.glLocations.transitionTime, glazy.curTime - hackOptions.duration);
@@ -93,7 +92,7 @@ canvasReplacementHackOptions.init = function () {
 	glazy.textureFeedback.oldUpdate = glazy.textureFeedback.update;
 	glazy.textureFeedback.update = function () {};
 };
-canvasReplacementHackOptions.update = function () {
+canvasReplacementHackOptions.update = function (glazy) {
 	if (hackOptions.checkTransition()) {
 		// transition occurred; update feedback texture to capture frame
 		glazy.gl.uniform1f(glazy.glLocations.transitionTime, glazy.curTime);
