@@ -3,7 +3,7 @@
 @file favicon-from-sprite
 @summary generate a browser favicon (tab icon) from a Bitsy sprite, including animation!
 @license WTFPL (do WTF you want)
-@version 2.0.3
+@version 2.1.0
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
