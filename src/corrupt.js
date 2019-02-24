@@ -3,7 +3,7 @@
 @file corrupt
 @summary corrupts gamedata at runtime
 @license MIT
-@version 1.0.1
+@version 2.0.0
 @requires 5.3
 @author Sean S. LeBlanc
 

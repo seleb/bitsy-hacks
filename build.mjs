@@ -1,57 +1,37 @@
-﻿import { readdirSync } from "fs";
+import {
+	basename
+} from "path";
+
 import rollup from "rollup";
-import clear from "rollup-plugin-clear";
-import eslint from "rollup-plugin-eslint";
 import nodeResolve from "rollup-plugin-node-resolve";
 import commonjs from "rollup-plugin-commonjs";
 
-import headerComment from "./HeaderCommentPlugin";
-import topLevelOptions from "./TopLevelOptionsPlugin";
-import readme from "./ReadmePlugin";
-import stripExportsPlugin from "./StripExportsPlugin";
-
-const inputDir = "./src/";
-const outputDir = "./dist/";
-
-function build(src) {
+export async function buildOne(src = '', plugins = []) {
 	const inputOptions = {
-		input: `${inputDir}${src}`,
+		input: src,
 		external: [
 			'bitsy'
 		],
 		plugins: [
-			clear({
-				targets: [outputDir]
-			}),
 			nodeResolve(),
-			commonjs(),
-			stripExportsPlugin(),
-			readme.plugin(),
-			headerComment(),
-			topLevelOptions(),
-			eslint({})
-		]
+			commonjs()
+		].concat(plugins)
 	};
 
 	const outputOptions = {
-		file: `${outputDir}${src.replace(/\s/g, '-')}`,
 		format: "iife",
 		globals: {
 			bitsy: 'window'
-		}
+		},
+		name: `hacks.${basename(src, '.js').replace(/\s/g,'_')}`,
 	};
 
-	return rollup.rollup(inputOptions)
-		.then(bundle => {
-			return bundle.write(outputOptions);
-		});
+	const bundle = await rollup.rollup(inputOptions)
+	const output = await bundle.generate(outputOptions);
+	return output.code;
 }
 
-Promise.all(
-	readdirSync(inputDir)
-		.filter(file => file.match(/^.*?(?<!\.test)\.js$/))
-		.map(build)
-).then(() => {
-	readme.parse();
-	readme.write();
-});
+export async function build(hacks = [], plugins) {
+	const output = await Promise.all(hacks.map(hack => buildOne(hack, plugins)));
+	return output;
+}

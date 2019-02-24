@@ -3,7 +3,7 @@
 @file tracery processing
 @summary process all dialog text with a tracery grammar
 @license MIT
-@version 1.0.0
+@version 1.1.0
 @author Sean S. LeBlanc
 
 @description
@@ -39,7 +39,8 @@ can create
 
 See http://www.crystalcodepalace.com/traceryTut.html for more on how to use tracery
 */
-(function (bitsy) {
+this.hacks = this.hacks || {};
+this.hacks.tracery_processing = (function (exports,bitsy) {
 'use strict';
 var hackOptions = {
 	// put your grammar entries here
@@ -918,4 +919,8 @@ bitsy.startDialog = function (dialogStr) {
 	}
 };
 
-}(window));
+exports.hackOptions = hackOptions;
+
+return exports;
+
+}({},window));

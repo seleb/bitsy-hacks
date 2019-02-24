@@ -3,7 +3,7 @@
 @file avatar by room
 @summary change the avatar in certain rooms
 @license MIT
-@version 1.0
+@version 1.1.0
 @requires 5.3
 @author Sean S. LeBlanc
 
@@ -17,7 +17,8 @@ HOW TO USE:
 By default, the avatar will reset to the default if you enter a room without a sprite defined.
 This can also be changed in the hackOptions below to instead apply avatar changes permanently.
 */
-(function (bitsy) {
+this.hacks = this.hacks || {};
+this.hacks.avatar_by_room = (function (exports,bitsy) {
 'use strict';
 var hackOptions = {
 	permanent: false, // If true, avatar changes will persist across rooms without sprites defined
@@ -293,4 +294,8 @@ before('update', function () {
 	}
 });
 
-}(window));
+exports.hackOptions = hackOptions;
+
+return exports;
+
+}({},window));

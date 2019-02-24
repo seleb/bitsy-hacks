@@ -3,7 +3,7 @@
 @file itsy-bitsy
 @summary for when bitsy's not small enough
 @license MIT
-@version 1.0.3
+@version 1.1.0
 @requires Bitsy Version: 5.1
 @author Sean S. LeBlanc
 
@@ -24,7 +24,8 @@ The number of rows is the only provided hack option,
 but most of the numbers being replaced can be easily
 customized if you want slightly different sizes/positions.
 */
-(function (bitsy) {
+this.hacks = this.hacks || {};
+this.hacks['itsy-bitsy'] = (function (exports,bitsy) {
 'use strict';
 var hackOptions = {
 	rows: 2, // number of rows per text box (bitsy default is 2)
@@ -253,4 +254,8 @@ var style = document.createElement('style');
 style.innerText = '#game{ -ms-interpolation-mode: nearest-neighbor;image-rendering: -webkit-optimize-contrast;image-rendering: -moz-crisp-edges;image-rendering: -o-pixelated;image-rendering: pixelated; }';
 document.head.appendChild(style);
 
-}(window));
+exports.hackOptions = hackOptions;
+
+return exports;
+
+}({},window));

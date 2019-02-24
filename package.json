@@ -1,8 +1,10 @@
 {
-	"name": "bitsy_hacks",
+	"name": "bitsy-hacks",
 	"description": "a collection of re-usable scripts for bitsy game maker",
+	"version": "1.0.0",
+	"main": "index.mjs",
 	"scripts": {
-		"build": "node --experimental-modules build.mjs",
+		"build": "node --experimental-modules cli.mjs",
 		"test": "jest --runInBand"
 	},
 	"author": "Sean S. LeBlanc",
@@ -11,10 +13,12 @@
 		"url": "git://github.com/seleb/bitsy-hacks.git"
 	},
 	"devDependencies": {
-		"babel-preset-env": "^1.7.0",
+		"@babel/runtime": "^7.3.1",
+		"@babel/plugin-transform-runtime": "^7.2.0",
+		"@babel/preset-env": "^7.2.3",
 		"doctrine": "^3.0.0",
 		"input-gamepads.js": "^1.0.0",
-		"jest": "^23.6.0",
+		"jest": "^24.1.0",
 		"jest-image-snapshot": "^2.8.1",
 		"puppeteer": "^1.12.2",
 		"rollup": "^0.56.5",
@@ -27,6 +31,8 @@
 	},
 	"jest": {
 		"testEnvironment": "node",
-		"setupTestFrameworkScriptFile": "<rootDir>/src/test/setupTests.js"
+		"setupFilesAfterEnv": [
+			"<rootDir>/src/test/setupTests.js"
+		]
 	}
 }

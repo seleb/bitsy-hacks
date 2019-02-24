@@ -3,7 +3,7 @@
 @file transparent dialog
 @summary makes the dialog box have a transparent background
 @license MIT
-@version 1.0.3
+@version 1.1.0
 @author Sean S. LeBlanc
 
 @description
@@ -14,6 +14,7 @@ Note: this one's ~pretty hacky~.
 HOW TO USE:
 Copy-paste into a script tag after the bitsy source
 */
+this.hacks = this.hacks || {};
 (function (bitsy) {
 'use strict';
 

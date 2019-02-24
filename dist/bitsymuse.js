@@ -3,7 +3,7 @@
 @file bitsymuse
 @summary A variety of Bitsy sound and music handlers
 @license MIT
-@version 2.1.2
+@version 2.2.0
 @requires 4.8, 4.9
 @author David Mowatt
 
@@ -33,7 +33,8 @@ You can also use a special ID ("S" by default) to Silence the music.
 By default, music tracks automatically restart from the beginning if you go back to a previous track.
 This can also be changed in the hackOptions below.
 */
-(function (bitsy) {
+this.hacks = this.hacks || {};
+this.hacks.bitsymuse = (function (exports,bitsy) {
 'use strict';
 var hackOptions = {
 	// You need to put an entry in this list for every room ID or name that is accessible by the player,
@@ -443,4 +444,8 @@ addDialogTag('soundeffect', function (environment, parameters, onReturn) {
 });
 // End of (music) dialog function mod
 
-}(window));
+exports.hackOptions = hackOptions;
+
+return exports;
+
+}({},window));

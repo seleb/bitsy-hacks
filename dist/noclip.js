@@ -3,7 +3,7 @@
 @file noclip
 @summary walk through wall tiles, sprites, items, exits, and endings
 @license MIT
-@version 1.0.1
+@version 1.1.0
 @author Sean S. LeBlanc
 
 @description
@@ -15,6 +15,7 @@ HOW TO USE:
 2. Press 'space' to toggle noclip
 3. Press 'r' while noclip is enabled to cycle rooms
 */
+this.hacks = this.hacks || {};
 (function (bitsy) {
 'use strict';
 

@@ -3,7 +3,7 @@
 @file unique items
 @summary items which, when picked up, remove all other instances of that item from the game
 @license MIT
-@version 1.0.0
+@version 1.1.0
 @author Sean S. LeBlanc
 
 @description
@@ -14,7 +14,8 @@ HOW TO USE:
 1. Copy-paste this script into a script tag after the bitsy source
 2. Update the `itemIsUnique` function to match your needs
 */
-(function (bitsy) {
+this.hacks = this.hacks || {};
+this.hacks.unique_items = (function (exports,bitsy) {
 'use strict';
 var hackOptions = {
 	itemIsUnique: function (item) {
@@ -49,4 +50,8 @@ bitsy.onInventoryChanged = function (id) {
 	}
 };
 
-}(window));
+exports.hackOptions = hackOptions;
+
+return exports;
+
+}({},window));

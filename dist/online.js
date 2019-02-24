@@ -3,7 +3,7 @@
 @file online
 @summary multiplayer bitsy
 @license MIT
-@version 2.0.3
+@version 2.1.0
 @requires 5.3
 @author Sean S. LeBlanc
 @description
@@ -29,7 +29,8 @@ HOW TO USE:
 2. Edit `hackOptions.host` below to point to your server (depending on hosting, you may need to use `ws://` instead of `wss://`)
 3. Edit other hackOptions as needed
 */
-(function (bitsy) {
+this.hacks = this.hacks || {};
+this.hacks.online = (function (exports,bitsy) {
 'use strict';
 var hackOptions = {
 	host: "wss://your signalling server",
@@ -343,7 +344,7 @@ function addDeferredDialogTag(tag, fn) {
 @file javascript dialog
 @summary execute arbitrary javascript from dialog
 @license MIT
-@version 3.1.2
+@version 3.2.0
 @requires Bitsy Version: 4.5, 4.6
 @author Sean S. LeBlanc
 
@@ -450,7 +451,7 @@ function setSpriteData(id, frame, newData) {
 @file edit image from dialog
 @summary edit sprites, items, and tiles from dialog
 @license MIT
-@version 1.1.3
+@version 1.2.0
 @requires 5.3
 @author Sean S. LeBlanc
 
@@ -610,7 +611,7 @@ addDialogTag('imagePalNow', editPalette);
 @file edit dialog from dialog
 @summary edit dialog from dialog (yes really)
 @license MIT
-@version 1.0.2
+@version 1.1.0
 @author Sean S. LeBlanc
 
 @description
@@ -835,4 +836,8 @@ function getSpriteUpdate() {
 	};
 });
 
-}(window));
+exports.hackOptions = hackOptions;
+
+return exports;
+
+}({},window));

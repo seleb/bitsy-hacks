@@ -3,7 +3,7 @@
 @file close on ending
 @summary Prevents from playing past an ending
 @license MIT
-@version 1.0.0
+@version 1.1.0
 @author Sean S. LeBlanc
 
 @description
@@ -19,6 +19,7 @@ but players will still be able to manually refresh or close/re-open the page to 
 HOW TO USE:
 Copy-paste this script into a script tag after the bitsy source
 */
+this.hacks = this.hacks || {};
 (function (bitsy) {
 'use strict';
 

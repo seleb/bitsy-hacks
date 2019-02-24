@@ -3,7 +3,7 @@
 @file corrupt
 @summary corrupts gamedata at runtime
 @license MIT
-@version 1.0.1
+@version 2.0.0
 @requires 5.3
 @author Sean S. LeBlanc
 
@@ -36,20 +36,9 @@ e.g.
 	2.0 = will corrupt twice
 	3.5 = will corrupt thrice, and corrupt a fourth time with a probability of one in two
 */
-(function (bitsy) {
+this.hacks = this.hacks || {};
+this.hacks.corrupt = (function (exports,bitsy) {
 'use strict';
-var hackOptions = {
-	tilemapFreq: 1,
-	tilePixelsFreq: 1,
-	spritePixelsFreq: 1,
-	itemPixelsFreq: 1,
-	fontPixelsFreq: 1,
-	paletteFreq: 1,
-	globalFreq: 1, // multiplier for all the other `Freq` options
-
-	paletteAmplitude: 10, // how much to corrupt palette by (0-128)
-	immediatePaletteUpdate: false // set this to true to make all images update to match palette corruptions; not recommended because it's an expensive operation
-};
 
 bitsy = bitsy && bitsy.hasOwnProperty('default') ? bitsy['default'] : bitsy;
 
@@ -164,7 +153,18 @@ function setItemData(id, frame, newData) {
 ///////////
 // setup //
 ///////////
+exports.hackOptions = {
+	tilemapFreq: 1,
+	tilePixelsFreq: 1,
+	spritePixelsFreq: 1,
+	itemPixelsFreq: 1,
+	fontPixelsFreq: 1,
+	paletteFreq: 1,
+	globalFreq: 1, // multiplier for all the other `Freq` options
 
+	paletteAmplitude: 10, // how much to corrupt palette by (0-128)
+	immediatePaletteUpdate: false // set this to true to make all images update to match palette corruptions; not recommended because it's an expensive operation
+};
 
 // hook corruption to player movement
 var _onPlayerMoved = bitsy.onPlayerMoved;
@@ -187,7 +187,7 @@ bitsy.dialogRenderer.set('font', font);
 
 // reset font and hackOptions when the game resets
 var originalFontData = fontdata.slice();
-var originalhackOptions = JSON.parse(JSON.stringify(hackOptions));
+var originalhackOptions = JSON.parse(JSON.stringify(exports.hackOptions));
 var _reset_cur_game = bitsy.reset_cur_game;
 bitsy.reset_cur_game = function () {
 	if (_reset_cur_game) {
@@ -196,7 +196,7 @@ bitsy.reset_cur_game = function () {
 	for (var i = 0; i < fontdata.length; ++i) {
 		fontdata[i] = originalFontData[i];
 	}
-	hackOptions = JSON.parse(JSON.stringify(originalhackOptions));
+	exports.hackOptions = JSON.parse(JSON.stringify(originalhackOptions));
 };
 
 
@@ -213,7 +213,7 @@ function corrupt() {
 	delete visibleTiles["0"]; // empty tile doesn't actually exist
 	visibleTiles = Object.keys(visibleTiles);
 	if (visibleTiles.length > 0) {
-		iterate(hackOptions.tilePixelsFreq * hackOptions.globalFreq, function () {
+		iterate(exports.hackOptions.tilePixelsFreq * exports.hackOptions.globalFreq, function () {
 			var t = rndItem(visibleTiles);
 			var frame = Math.floor(Math.random() * bitsy.tile[t].animation.frameCount);
 			var tdata = getTileData(t, frame);
@@ -234,7 +234,7 @@ function corrupt() {
 		}
 	}
 	visibleSprites = Object.keys(visibleSprites);
-	iterate(hackOptions.spritePixelsFreq * hackOptions.globalFreq, function () {
+	iterate(exports.hackOptions.spritePixelsFreq * exports.hackOptions.globalFreq, function () {
 		var t = rndItem(visibleSprites);
 		var frame = Math.floor(Math.random() * bitsy.sprite[t].animation.frameCount);
 		var tdata = getSpriteData(t, frame);
@@ -251,7 +251,7 @@ function corrupt() {
 	}
 	visibleItems = Object.keys(visibleItems);
 	if (visibleItems.length > 0) {
-		iterate(hackOptions.itemPixelsFreq * hackOptions.globalFreq, function () {
+		iterate(exports.hackOptions.itemPixelsFreq * exports.hackOptions.globalFreq, function () {
 			var t = rndItem(visibleItems);
 			var frame = Math.floor(Math.random() * bitsy.item[t].animation.frameCount);
 			var tdata = getItemData(t, frame);
@@ -265,7 +265,7 @@ function corrupt() {
 	// corrupt current room's tilemap
 	var possibleTiles = Object.keys(bitsy.tile);
 	possibleTiles.push("0"); // empty tile
-	iterate(hackOptions.tilemapFreq * hackOptions.globalFreq, function () {
+	iterate(exports.hackOptions.tilemapFreq * exports.hackOptions.globalFreq, function () {
 		// pick a tile at random in the current room and assign it a random tile
 		y = Math.floor(Math.random() * bitsy.mapsize);
 		x = Math.floor(Math.random() * bitsy.mapsize);
@@ -274,17 +274,17 @@ function corrupt() {
 
 	// corrupt visible palette colours
 	var visibleColors = bitsy.getPal(bitsy.curPal());
-	iterate(hackOptions.paletteFreq * hackOptions.globalFreq, function () {
+	iterate(exports.hackOptions.paletteFreq * exports.hackOptions.globalFreq, function () {
 		var c = rndItem(visibleColors);
 		var i = rndIndex(c);
-		c[i] = Math.round((c[i] + (Math.random() * 2 - 1) * hackOptions.paletteAmplitude) % 256);
+		c[i] = Math.round((c[i] + (Math.random() * 2 - 1) * exports.hackOptions.paletteAmplitude) % 256);
 	});
-	if (hackOptions.paletteImmediate) {
+	if (exports.hackOptions.paletteImmediate) {
 		bitsy.renderImages();
 	}
 
 	// corrupt pixels of font data
-	iterate(hackOptions.fontPixelsFreq * hackOptions.globalFreq, function () {
+	iterate(exports.hackOptions.fontPixelsFreq * exports.hackOptions.globalFreq, function () {
 		var i = rndIndex(fontdata);
 		fontdata[i] = Math.abs(fontdata[i] - 1);
 	});
@@ -310,4 +310,6 @@ function rndItem(array) {
 	return array[rndIndex(array)];
 }
 
-}(window));
+return exports;
+
+}({},window));

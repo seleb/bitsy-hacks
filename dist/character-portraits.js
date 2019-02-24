@@ -3,7 +3,7 @@
 @file character portraits
 @summary high quality anime jpegs (or pngs i guess)
 @license MIT
-@version 1.0.0
+@version 1.1.0
 @requires Bitsy Version: 5.3
 @author Sean S. LeBlanc
 
@@ -31,6 +31,7 @@ Note: The hack is called "character portraits", but this can easily be used to s
 HOW TO USE:
 Copy-paste into a script tag after the bitsy source
 */
+this.hacks = this.hacks || {};
 (function (bitsy) {
 'use strict';
 var hackOptions = {
