@@ -1,6 +1,7 @@
 {
 	"name": "bitsy-hacks",
 	"description": "a collection of re-usable scripts for bitsy game maker",
+	"version": "1.0.0",
 	"scripts": {
 		"build": "node --experimental-modules build.mjs",
 		"test": "jest --runInBand"
