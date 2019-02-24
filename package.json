@@ -22,7 +22,6 @@
 		"jest-image-snapshot": "^2.8.1",
 		"puppeteer": "^1.12.2",
 		"rollup": "^0.56.5",
-		"rollup-plugin-clear": "^2.0.7",
 		"rollup-plugin-commonjs": "^9.2.0",
 		"rollup-plugin-eslint": "^4.0.0",
 		"rollup-plugin-node-resolve": "^3.4.0",
