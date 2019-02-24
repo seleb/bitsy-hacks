@@ -41,28 +41,28 @@ import {
 } from "./helpers/kitsy-script-toolkit";
 
 export var hackOptions = {
-	init: function() {
 	glazyOptions: {
 		background: "black",
 		scaleMode: "MULTIPLES", // use "FIT" if you prefer size to pixel accuracy
 		allowDownscaling: true,
 		disableFeedbackTexture: true, // set this to false if you want to use the feedback texture
 	},
+	init: function(glazy) {
 		// you can set up any custom uniforms you have here if needed
 		// e.g. glazy.glLocations.myUniform = glazy.gl.getUniformLocation(glazy.shader.program, 'myUniform');
 	},
-	update: function() {
+	update: function(glazy) {
 		// you can update any custom uniforms you have here if needed
 		// e.g. glazy.gl.uniform1f(glazy.glLocations.myUniform, 0);
 	},
 };
 
-export var glazy;
+var glazy;
 after('startExportedGame', function () {
-	hackOptions.init();
 	glazy = new WebGLazy(hackOptions.glazyOptions);
+	hackOptions.init(glazy);
 });
 
 after('update', function () {
-	hackOptions.update();
+	hackOptions.update(glazy);
 });
