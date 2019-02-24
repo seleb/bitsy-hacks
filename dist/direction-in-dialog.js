@@ -3,7 +3,7 @@
 @file direction in dialog
 @summary provides a variable with player direction
 @license MIT
-@version 1.0.0
+@version 1.1.0
 @requires 5.3
 @author Sean S. LeBlanc
 
@@ -23,6 +23,7 @@ i.e. if the player moves into a sprite from the left, the variable will be "righ
 HOW TO USE:
 Copy-paste into a script tag after the bitsy source
 */
+this.hacks = this.hacks || {};
 (function (bitsy) {
 'use strict';
 

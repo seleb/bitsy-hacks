@@ -3,7 +3,7 @@
 @file permanent items
 @summary prevent some items from being picked up
 @license MIT
-@version 2.0.2
+@version 2.1.0
 @author Sean S. LeBlanc
 
 @description
@@ -13,7 +13,8 @@ HOW TO USE:
 1. Copy-paste this script into a script tag after the bitsy source
 2. Update the `itemIsPermanent` function below to match your needs
 */
-(function (bitsy) {
+this.hacks = this.hacks || {};
+this.hacks.permanent_items = (function (exports,bitsy) {
 'use strict';
 var hackOptions = {
 	itemIsPermanent: function (item) {
@@ -254,4 +255,8 @@ after("movePlayer", function () {
 	});
 });
 
-}(window));
+exports.hackOptions = hackOptions;
+
+return exports;
+
+}({},window));

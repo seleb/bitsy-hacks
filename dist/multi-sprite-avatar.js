@@ -3,7 +3,7 @@
 @file multi-sprite avatar
 @summary make the player big
 @license MIT
-@version 2.0.3
+@version 2.1.0
 @author Sean S. LeBlanc
 
 @description
@@ -22,7 +22,8 @@ HOW TO USE:
 2. Edit `pieces` below to customize the multi-sprite avatar
 	Pieces must have an x,y offset and a sprite id
 */
-(function (bitsy) {
+this.hacks = this.hacks || {};
+this.hacks['multi-sprite_avatar'] = (function (exports,bitsy) {
 'use strict';
 var hackOptions = {
 	pieces: [{
@@ -389,4 +390,8 @@ after('startExportedGame', function () {
 	};
 });
 
-}(window));
+exports.hackOptions = hackOptions;
+
+return exports;
+
+}({},window));

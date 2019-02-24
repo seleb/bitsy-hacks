@@ -3,7 +3,7 @@
 @file exit-from-dialog
 @summary exit to another room from dialog, including conditionals
 @license WTFPL (do WTF you want)
-@version 5.1.2
+@version 5.2.0
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
@@ -43,6 +43,7 @@ NOTE: This uses parentheses "()" instead of curly braces "{}" around function
       For full editor integration, you'd *probably* also need to paste this
       code at the end of the editor's `bitsy.js` file. Untested.
 */
+this.hacks = this.hacks || {};
 (function (bitsy) {
 'use strict';
 

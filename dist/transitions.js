@@ -3,7 +3,7 @@
 @file transitions
 @summary customizable WebGL transitions
 @license MIT
-@version 2.0.0
+@version 2.1.0
 @author Sean S. LeBlanc
 
 @description
@@ -54,7 +54,8 @@ NOTES:
 		start += mix(0.0, rand(sUv-vec2(t)), t);
 		result = mix(start, end, step(.5,t));
 */
-(function (bitsy) {
+this.hacks = this.hacks || {};
+this.hacks.transitions = (function (exports,bitsy) {
 'use strict';
 var hackOptions$1 = {
 	// transition duration
@@ -266,7 +267,7 @@ function _reinitEngine() {
 @file canvas replacement
 @summary WebGLazy bitsy integration (this one's mostly just for me)
 @license MIT
-@version 2.0.0
+@version 2.1.0
 @author Sean S. LeBlanc
 
 @description
@@ -380,4 +381,8 @@ shader.textContent = `
 `;
 document.head.appendChild(shader);
 
-}(window));
+exports.hackOptions = hackOptions$1;
+
+return exports;
+
+}({},window));

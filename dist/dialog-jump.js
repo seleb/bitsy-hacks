@@ -3,7 +3,7 @@
 @file dialog jump
 @summary jump from one dialog entry to another
 @license MIT
-@version 1.0.0
+@version 1.1.0
 @requires 5.3
 @author Sean S. LeBlanc
 
@@ -53,6 +53,7 @@ Example: (exit "FinalRoom,8,4")
 HOW TO USE:
 Copy-paste into a script tag after the bitsy source
 */
+this.hacks = this.hacks || {};
 (function (bitsy) {
 'use strict';
 

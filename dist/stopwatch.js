@@ -3,7 +3,7 @@
 @file stopwatch
 @summary time player actions
 @license MIT
-@version 1.1.2
+@version 1.2.0
 @author Lenny Magner
 
 @description
@@ -39,7 +39,8 @@ NOTE: This uses parentheses "()" instead of curly braces "{}" around function
       For full editor integration, you'd *probably* also need to paste this
       code at the end of the editor's `bitsy.js` file. Untested.
 */
-(function (bitsy) {
+this.hacks = this.hacks || {};
+this.hacks.stopwatch = (function (exports,bitsy) {
 'use strict';
 var hackOptions = {
 	// function which returns the string which bitsy will print
@@ -448,4 +449,8 @@ addDialogTag('sayWatch', function (environment, parameters, onReturn) {
 	printDialog(environment, hackOptions.timeToString(timer), onReturn);
 });
 
-}(window));
+exports.hackOptions = hackOptions;
+
+return exports;
+
+}({},window));

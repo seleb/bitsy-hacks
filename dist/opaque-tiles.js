@@ -3,7 +3,7 @@
 @file opaque tiles
 @summary tiles which hide the player
 @license MIT
-@version 1.0.0
+@version 1.1.0
 @author Sean S. LeBlanc
 
 @description
@@ -16,7 +16,8 @@ HOW TO USE:
 1. Copy-paste this script into a script tag after the bitsy source
 2. Update the `tileIsOpaque` function below to match your needs
 */
-(function (bitsy) {
+this.hacks = this.hacks || {};
+this.hacks.opaque_tiles = (function (exports,bitsy) {
 'use strict';
 var hackOptions = {
 	tileIsOpaque: function (tile) {
@@ -259,4 +260,8 @@ after("drawRoom", function () {
 // draw player underneath opaque tile
 inject$1(/(\/\/draw tiles)/, 'drawTile(getSpriteImage(player(), getRoomPal(room.id), frameIndex), player().x, player().y, context);\n$1');
 
-}(window));
+exports.hackOptions = hackOptions;
+
+return exports;
+
+}({},window));

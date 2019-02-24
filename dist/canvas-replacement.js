@@ -3,7 +3,7 @@
 @file canvas replacement
 @summary WebGLazy bitsy integration (this one's mostly just for me)
 @license MIT
-@version 2.0.0
+@version 2.1.0
 @author Sean S. LeBlanc
 
 @description
@@ -35,7 +35,8 @@ e.g.
 	}
 (closing script tag omitted in comment to avoid confusing browser)
 */
-(function (bitsy) {
+this.hacks = this.hacks || {};
+this.hacks.canvas_replacement = (function (exports,bitsy) {
 'use strict';
 var hackOptions = {
 	glazyOptions: {
@@ -252,4 +253,8 @@ after('update', function () {
 	hackOptions.update(glazy);
 });
 
-}(window));
+exports.hackOptions = hackOptions;
+
+return exports;
+
+}({},window));

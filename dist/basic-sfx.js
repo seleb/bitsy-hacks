@@ -3,7 +3,7 @@
 @file basic sfx
 @summary "walk" and "talk" sound effect support
 @license MIT
-@version 1.0.0
+@version 1.1.0
 @author Sean S. LeBlanc
 
 @description
@@ -22,7 +22,8 @@ HOW TO USE:
 
 Additional sounds can be added by by including more <audio> tags with different ids and calling `sounds.<sound id>()` as needed.
 */
-(function (bitsy) {
+this.hacks = this.hacks || {};
+this.hacks.basic_sfx = (function (exports,bitsy) {
 'use strict';
 var hackOptions = {
 	beNiceToEars: true // if `true`, reduces volume of recently played sound effects
@@ -95,4 +96,8 @@ bitsy.dialogBuffer.FlipPage = function () {
 	sounds.talk();
 };
 
-}(window));
+exports.hackOptions = hackOptions;
+
+return exports;
+
+}({},window));
