@@ -3,7 +3,7 @@
 @file bitsymuse
 @summary A variety of Bitsy sound and music handlers
 @license MIT
-@version 2.2.0
+@version 3.0.0
 @requires 4.8, 4.9
 @author David Mowatt
 
@@ -22,11 +22,12 @@ HOW TO USE:
 In addition to the track list, which will play audio based on the room number/name,
 you have access to the following commands you can add to dialogue:
 
-1. (soundeffect "<sound ID>") will play a sound without interrupting the music
-2. (music "<sound ID>") will change the music as soon as it is called in the dialogue
-3. (musicEnd "<sound ID>") will change the music once the dialogue box closes
+1. (soundeffectNow "<sound ID>") will play a sound without interrupting the music as soon as it is called in the dialogue
+2. (soundeffect "<sound ID>") will play a sound without interrupting the music once the dialogue box closes
+3. (musicNow "<sound ID>") will change the music as soon as it is called in the dialogue
+4. (music "<sound ID>") will change the music once the dialogue box closes
 
-You can call both music and musicEnd in the same dialogue, to e.g. change the music while you speak to a character
+You can call both musicNow and music in the same dialogue, to e.g. change the music while you speak to a character
 and then restart the regular room music once you stop speaking to them.
 You can also use a special ID ("S" by default) to Silence the music.
 
@@ -41,8 +42,7 @@ import {
 } from "./helpers/utils";
 import {
 	after,
-	addDialogTag,
-	addDeferredDialogTag
+	addDualDialogTag
 } from "./helpers/kitsy-script-toolkit";
 
 export var hackOptions = {
@@ -128,30 +128,18 @@ after('drawRoom', function () {
 	}
 });
 
-// Implement the {music} dialog function.
-// It changes the music track as soon as it is called.
-addDialogTag('music', function (environment, parameters, onReturn) {
+// Implement the dialog functions
+addDualDialogTag('music', function (environment, parameters) {
 	if (!parameters[0]) {
-		throw new Error('{music} was missing parameters! Usage: {music "track name"}');
-	}
-	changeMusic(parameters[0]);
-	onReturn(null);
-});
-
-// Implement the {musicEnd} dialog function.
-// It changes the music track once the dialog closes.
-addDeferredDialogTag('musicEnd', function (environment, parameters) {
-	if (!parameters[0]) {
-		throw new Error('{musicEnd} was missing parameters! Usage: {musicEnd "track name"}');
+		throw new Error('{music/musicNow} was missing parameters! Usage: {music/musicNow "track name"}');
 	}
 	changeMusic(parameters[0]);
 });
 
-addDialogTag('soundeffect', function (environment, parameters, onReturn) {
+addDualDialogTag('soundeffect', function (environment, parameters) {
 	if (!parameters[0]) {
-		throw new Error('{soundeffect} was missing parameters! Usage: {soundeffect "track name"}');
+		throw new Error('{soundeffect/soundeffectNow} was missing parameters! Usage: {soundeffect/soundeffectNow "track name"}');
 	}
 	playSound(parameters[0]);
-	onReturn(null);
 });
 // End of (music) dialog function mod
