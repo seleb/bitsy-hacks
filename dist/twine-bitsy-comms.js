@@ -3,7 +3,7 @@
 @file twine bitsy comms
 @summary interprocess communication for twine and bitsy
 @license MIT
-@version 1.1.0
+@version 1.1.1
 @requires 5.4
 @author Sean S. LeBlanc
 
@@ -53,19 +53,19 @@ this.hacks = this.hacks || {};
 var hackOptions = {
 	// how dialog variables will be named when they are sent out
 	// default implementation is bitsy_<name>
-	variableNameOut: function(name) {
+	variableNameOut: function (name) {
 		return 'bitsy_' + name;
 	},
 	// how item variables will be named when they are sent out
 	// default implementation is bitsy_item_<name or id>
 	// Note: items names in bitsy don't have to be unique,
 	// so be careful of items overwriting each other if you use this!
-	itemNameOut: function(id) {
+	itemNameOut: function (id) {
 		return 'bitsy_item_' + (bitsy.item[id].name || id);
 	},
 	// how dialog variables will be named when they are sent in
 	// default implementation is twine_<name>
-	variableNameIn: function(name) {
+	variableNameIn: function (name) {
 		return 'twine_' + name;
 	},
 
@@ -74,12 +74,15 @@ var hackOptions = {
 
 	// how info will be posted to external process
 	// default implementation is for iframe postMessage-ing to parent page
-	send: function(type, data) {
-		window.parent.postMessage({ type: type, data: data }, '*');
+	send: function (type, data) {
+		window.parent.postMessage({
+			type: type,
+			data: data
+		}, '*');
 	},
 	// how info will be received from external process
 	// default implementation is for parent page postMessage-ing into iframe
-	receive: function() {
+	receive: function () {
 		window.addEventListener("message", function (event) {
 			var type = event.data.type;
 			var data = event.data.data;
@@ -147,7 +150,7 @@ function unique(array) {
 @file kitsy-script-toolkit
 @summary makes it easier and cleaner to run code before and after Bitsy functions or to inject new code into Bitsy script tags
 @license WTFPL (do WTF you want)
-@version 3.2.2
+@version 3.3.0
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
@@ -371,6 +374,26 @@ function addDeferredDialogTag(tag, fn) {
 	});
 }
 
+/**
+ * Adds two custom dialog tags which execute the provided function,
+ * one with the provided tagname executed after the dialog box,
+ * and one suffixed with 'Now' executed immediately when the tag is reached.
+ *
+ * i.e. helper for the (exit)/(exitNow) pattern.
+ *
+ * @param {string}   tag Name of tag
+ * @param {Function} fn  Function to execute, with signature `function(environment, parameters){}`
+ *                       environment: provides access to SetVariable/GetVariable (among other things, see Environment in the bitsy source for more info)
+ *                       parameters: array containing parameters as string in first element (i.e. `parameters[0]`)
+ */
+function addDualDialogTag(tag, fn) {
+	addDialogTag(tag + 'Now', function(environment, parameters, onReturn) {
+		fn(environment, parameters);
+		onReturn(null);
+	});
+	addDeferredDialogTag(tag, fn);
+}
+
 
 
 
@@ -379,6 +402,7 @@ var sending = true;
 
 // hook up incoming listener
 hackOptions.receive();
+
 function receiveMessage(type, data) {
 	switch (type) {
 		case 'variables':
@@ -399,14 +423,17 @@ function receiveMessage(type, data) {
 
 // hook up outgoing var/item change listeners
 function sendVariable(name, value) {
-	hackOptions.send('variable', { name: name, value: value });
+	hackOptions.send('variable', {
+		name: name,
+		value: value
+	});
 }
-after('onVariableChanged', function(name) {
+after('onVariableChanged', function (name) {
 	if (sending) {
 		sendVariable(hackOptions.variableNameOut(name), bitsy.scriptInterpreter.GetVariable(name));
 	}
 });
-after('onInventoryChanged', function(id) {
+after('onInventoryChanged', function (id) {
 	if (sending) {
 		sendVariable(hackOptions.itemNameOut(id), bitsy.player().inventory[id]);
 	}
@@ -414,11 +441,11 @@ after('onInventoryChanged', function(id) {
 
 // say when bitsy has started
 // and initialize variables
-after('startExportedGame', function() {
-	bitsy.scriptInterpreter.GetVariableNames().forEach(function(name) {
+after('startExportedGame', function () {
+	bitsy.scriptInterpreter.GetVariableNames().forEach(function (name) {
 		sendVariable(hackOptions.variableNameOut(name), bitsy.scriptInterpreter.GetVariable(name));
 	});
-	Object.values(bitsy.item).forEach(function(item) {
+	Object.values(bitsy.item).forEach(function (item) {
 		sendVariable(hackOptions.itemNameOut(item.id), 0);
 	});
 	hackOptions.send('start', bitsy.title);
@@ -429,15 +456,11 @@ after('startExportedGame', function() {
 	'eval',
 	'play',
 	'back'
-].forEach(function(command){
-	function doCommand(environment, parameters, onReturn) {
+].forEach(function (command) {
+	function doCommand(environment, parameters) {
 		hackOptions.send(command, parameters[0]);
-		if (onReturn) {
-			onReturn(null);
-		}
 	}
-	addDeferredDialogTag('twine'+command.substr(0,1).toUpperCase()+command.substr(1), doCommand);
-	addDialogTag('twine'+command.substr(0,1).toUpperCase()+command.substr(1)+'Now', doCommand);
+	addDualDialogTag('twine' + command.substr(0, 1).toUpperCase() + command.substr(1), doCommand);
 });
 
 }(window));
