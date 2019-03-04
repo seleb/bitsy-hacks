@@ -34,6 +34,7 @@ A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamled
  - ⬛ [opaque tiles](/dist/opaque-tiles.js): tiles which hide the player
  - 📃 [paragraph-break](/dist/paragraph-break.js): Adds paragraph breaks to the dialogue parser
  - ⏳ [permanent items](/dist/permanent-items.js): prevent some items from being picked up
+ - 💾 [save](/dist/save.js): save/load your game
  - 🛑 [solid items](/dist/solid-items.js): treat some items like sprites that can be placed multiple times
  - ⏱️ [stopwatch](/dist/stopwatch.js): time player actions
  - 🏰 [tracery processing](/dist/tracery-processing.js): process all dialog text with a tracery grammar
