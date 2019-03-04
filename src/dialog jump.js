@@ -3,7 +3,7 @@
 @file dialog jump
 @summary jump from one dialog entry to another
 @license MIT
-@version 1.1.0
+@version 1.1.1
 @requires 5.3
 @author Sean S. LeBlanc
 
@@ -56,18 +56,8 @@ Copy-paste into a script tag after the bitsy source
 'use strict';
 import bitsy from "bitsy";
 import {
-	addDialogTag,
-	addDeferredDialogTag
+	addDualDialogTag
 } from "./helpers/kitsy-script-toolkit";
-
-addDeferredDialogTag('jump', function (environment, parameters) {
-	jump(parameters[0]);
-});
-
-addDialogTag('jumpNow', function (environment, parameters, onReturn) {
-	jump(parameters[0]);
-	onReturn(null);
-});
 
 // jump function
 function jump(targetDialog) {
@@ -81,3 +71,7 @@ function jump(targetDialog) {
 	}
 	bitsy.startDialog(dialogStr);
 }
+
+addDualDialogTag('jump', function (environment, parameters) {
+	jump(parameters[0]);
+});

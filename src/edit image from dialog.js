@@ -3,7 +3,7 @@
 @file edit image from dialog
 @summary edit sprites, items, and tiles from dialog
 @license MIT
-@version 1.2.0
+@version 1.2.1
 @requires 5.3
 @author Sean S. LeBlanc
 
@@ -57,9 +57,8 @@ NOTE: This uses parentheses "()" instead of curly braces "{}" around function
 */
 import bitsy from "bitsy";
 import {
-  addDialogTag,
-  addDeferredDialogTag,
-  after
+  after,
+  addDualDialogTag
 } from "./helpers/kitsy-script-toolkit";
 import {
   getImage
@@ -82,7 +81,7 @@ after('load_game', function () {
 	};
 });
 
-function editImage(environment, parameters, onReturn) {
+function editImage(environment, parameters) {
   var i;
 
   // parse parameters
@@ -119,14 +118,9 @@ function editImage(environment, parameters, onReturn) {
   for (i = 0; i < srcObj.animation.frameCount; ++i) {
     setImageData(tgtId, i, mapObj, getImageData(srcId, i, mapObj));
   }
-
-  // done
-  if (onReturn) {
-    onReturn(null);
-  }
 }
 
-function editPalette(environment, parameters, onReturn) {
+function editPalette(environment, parameters) {
   // parse parameters
   var params = parameters[0].split(/,\s?/);
   params[0] = (params[0] || "").toLowerCase();
@@ -157,16 +151,8 @@ function editPalette(environment, parameters, onReturn) {
 
   // update images in cache
   bitsy.renderImageForAllPalettes(tgtObj);
-
-  // done
-  if (onReturn) {
-    onReturn(null);
-  }
 }
 
 // hook up the dialog tags
-addDeferredDialogTag('image', editImage);
-addDialogTag('imageNow', editImage);
-
-addDeferredDialogTag('imagePal', editPalette);
-addDialogTag('imagePalNow', editPalette);
+addDualDialogTag('image', editImage);
+addDualDialogTag('imagePal', editPalette);

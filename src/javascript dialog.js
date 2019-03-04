@@ -3,7 +3,7 @@
 @file javascript dialog
 @summary execute arbitrary javascript from dialog
 @license MIT
-@version 3.2.0
+@version 3.2.1
 @requires Bitsy Version: 4.5, 4.6
 @author Sean S. LeBlanc
 
@@ -40,18 +40,13 @@ NOTE: This uses parentheses "()" instead of curly braces "{}" around function
 */
 "use strict";
 import {
-	addDialogTag,
-	addDeferredDialogTag
+	addDualDialogTag
 } from "./helpers/kitsy-script-toolkit";
 
 var indirectEval = eval;
 
-function executeJs(environment, parameters, onReturn) {
+function executeJs(environment, parameters) {
 	indirectEval(parameters[0]);
-	if (onReturn) {
-		onReturn(null);
-	}
 }
 
-addDeferredDialogTag('js', executeJs);
-addDialogTag('jsNow', executeJs);
+addDualDialogTag('js', executeJs);

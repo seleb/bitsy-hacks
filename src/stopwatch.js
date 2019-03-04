@@ -3,7 +3,7 @@
 @file stopwatch
 @summary time player actions
 @license MIT
-@version 1.2.0
+@version 1.2.1
 @author Lenny Magner
 
 @description
@@ -42,10 +42,12 @@ NOTE: This uses parentheses "()" instead of curly braces "{}" around function
 "use strict";
 import {
 	addDialogTag,
-	addDeferredDialogTag,
+	addDualDialogTag,
 	before
 } from "./helpers/kitsy-script-toolkit";
-import { printDialog } from "./helpers/utils";
+import {
+	printDialog
+} from "./helpers/utils";
 
 export var hackOptions = {
 	// function which returns the string which bitsy will print
@@ -73,26 +75,22 @@ function getTimeDifferenceInMs(timer) {
 // map of timers
 var timers;
 
-function startWatch(environment, parameters, onReturn) {
+function startWatch(environment, parameters) {
 	var id = parameters[0];
 	timers[id] = {
 		start: Date.now(),
 		end: undefined
 	};
-
-	if (onReturn) {
-		onReturn(null);
-	}
 }
 
 // note: this updates start time directly
-function resumeWatch(environment, parameters, onReturn) {
+function resumeWatch(environment, parameters) {
 	var id = parameters[0];
 	var timer = timers[id];
 
 	// just start the timer if there isn't one
 	if (!timer) {
-		return startWatch(environment, parameters, onReturn);
+		return startWatch(environment, parameters);
 	}
 
 	// don't do anything if the timer's not running
@@ -103,13 +101,9 @@ function resumeWatch(environment, parameters, onReturn) {
 	// resume timer
 	timer.start = Date.now() - (timer.end - timer.start);
 	timer.end = undefined;
-
-	if (onReturn) {
-		onReturn(null);
-	}
 }
 
-function stopWatch(environment, parameters, onReturn) {
+function stopWatch(environment, parameters) {
 	var id = parameters[0];
 	var timer = timers[id];
 	// don't do anything if there's no timer
@@ -122,10 +116,6 @@ function stopWatch(environment, parameters, onReturn) {
 	}
 	// end timer
 	timer.end = Date.now();
-
-	if (onReturn) {
-		onReturn(null);
-	}
 }
 
 // clear timers on game-load
@@ -134,12 +124,9 @@ before('load_game', function () {
 });
 
 // add control functions
-addDeferredDialogTag('startWatch', startWatch);
-addDeferredDialogTag('stopWatch', stopWatch);
-addDeferredDialogTag('resumeWatch', resumeWatch);
-addDialogTag('startWatchNow', startWatch);
-addDialogTag('stopWatchNow', stopWatch);
-addDialogTag('resumeWatchNow', resumeWatch);
+addDualDialogTag('startWatch', startWatch);
+addDualDialogTag('stopWatch', stopWatch);
+addDualDialogTag('resumeWatch', resumeWatch);
 
 // add display function
 addDialogTag('sayWatch', function (environment, parameters, onReturn) {

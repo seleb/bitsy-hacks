@@ -3,7 +3,7 @@
 @file save
 @summary save/load your game
 @license MIT
-@version 1.0.0
+@version 1.0.1
 @requires 5.4
 @author Sean S. LeBlanc
 
@@ -41,8 +41,7 @@ HOW TO USE:
 import bitsy from "bitsy";
 import {
 	after,
-	addDialogTag,
-	addDeferredDialogTag,
+	addDualDialogTag,
 	before,
 } from "./helpers/kitsy-script-toolkit";
 import {
@@ -187,31 +186,11 @@ before('startExportedGame', function () {
 });
 
 // hook up dialog functions
-function dialogSave(environment, parameters, onReturn) {
-	save();
-	if (onReturn) {
-		onReturn(null);
-	}
-}
-
-function dialogLoad(environment, parameters, onReturn) {
+function dialogLoad(environment, parameters) {
 	bitsy.reset_cur_game();
 	bitsy.dialogBuffer.EndDialog();
 	bitsy.startNarrating(parameters[0] || '');
-	if (onReturn) {
-		onReturn(null);
-	}
 }
-
-function dialogClear(environment, parameters, onReturn) {
-	clear();
-	if (onReturn) {
-		onReturn(null);
-	}
-}
-addDeferredDialogTag('save', dialogSave);
-addDeferredDialogTag('load', dialogLoad);
-addDeferredDialogTag('clear', dialogClear);
-addDialogTag('saveNow', dialogSave);
-addDialogTag('loadNow', dialogLoad);
-addDialogTag('clearNow', dialogClear);
+addDualDialogTag('save', save);
+addDualDialogTag('load', dialogLoad);
+addDualDialogTag('clear', clear);
