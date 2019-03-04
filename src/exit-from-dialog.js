@@ -3,7 +3,7 @@
 @file exit-from-dialog
 @summary exit to another room from dialog, including conditionals
 @license WTFPL (do WTF you want)
-@version 5.2.0
+@version 5.2.1
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
@@ -49,14 +49,12 @@ import {
 	getRoom
 } from "./helpers/utils";
 import {
-	addDialogTag,
-	addDeferredDialogTag
+	addDualDialogTag
 } from "./helpers/kitsy-script-toolkit";
 
-// Implement the {exit} dialog function. It saves the room name and
-// destination X/Y coordinates so we can travel there after the dialog is over.
-addDeferredDialogTag('exit', function (environment, parameters) {
-	var exitParams = _getExitParams('exit', parameters);
+// Implement the dialog functions
+addDualDialogTag('exit', function (environment, parameters) {
+	var exitParams = _getExitParams(parameters);
 	if (!exitParams) {
 		return;
 	}
@@ -64,19 +62,7 @@ addDeferredDialogTag('exit', function (environment, parameters) {
 	doPlayerExit(exitParams);
 });
 
-// Implement the {exitNow} dialog function. It exits to the destination room
-// and X/Y coordinates right damn now.
-addDialogTag('exitNow', function (environment, parameters, onReturn) {
-	var exitParams = _getExitParams('exitNow', parameters);
-	if (!exitParams) {
-		return;
-	}
-
-	doPlayerExit(exitParams);
-	onReturn(null);
-});
-
-function _getExitParams(exitFuncName, parameters) {
+function _getExitParams(parameters) {
 	var params = parameters[0].split(',');
 	var roomName = params[0];
 	var x = params[1];
@@ -86,13 +72,12 @@ function _getExitParams(exitFuncName, parameters) {
 	var roomId = getRoom(roomName).id;
 
 	if (!roomName || x === undefined || y === undefined) {
-		console.warn('{' + exitFuncName + '} was missing parameters! Usage: {' +
-			exitFuncName + ' "roomname,x,y"}');
+		console.warn('{exit/exitNow} was missing parameters! Usage: {exit/exitNow "roomname,x,y"}');
 		return null;
 	}
 
 	if (roomId === undefined) {
-		console.warn("Bad {" + exitFuncName + "} parameter: Room '" + roomName + "' not found!");
+		console.warn("Bad {exit/exitNow} parameter: Room '" + roomName + "' not found!");
 		return null;
 	}
 

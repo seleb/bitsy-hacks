@@ -3,7 +3,7 @@
 @file save
 @summary save/load your game
 @license MIT
-@version 1.0.0
+@version 1.0.1
 @requires 5.4
 @author Sean S. LeBlanc
 
@@ -27,11 +27,12 @@ Notes:
 	- Storage is implemented through browser localStorage: https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage
 	  Remember to clear storage while working on a game, otherwise loading may prevent you from seeing your changes!
 	  You can use the `clearOnStart` option to do this for you when testing.
-	- Compatability with other hacks varies; most things will work,
-	  but you may need to modify save/load to include/exclude data if the other hack maintains/modifies game state
+	- This hack only tracks state which could be modified via vanilla bitsy features,
+	  i.e. compatability with other hacks that modify state varies;
+	  you may need to modify save/load to include/exclude things for compatability.
 	  (feel free to ask for help tailoring these to your needs!)
-	- There is only one "save slot"; it would not be too difficult to add more,
-	  but it adds complexity that most folks probably don't need.
+	- There is only one "save slot"; it would not be too difficult to implement more,
+	  but it adds a lot of complexity that most folks probably don't need.
 
 HOW TO USE:
 1. Copy-paste this script into a script tag after the bitsy source
@@ -113,7 +114,7 @@ function unique(array) {
 @file kitsy-script-toolkit
 @summary makes it easier and cleaner to run code before and after Bitsy functions or to inject new code into Bitsy script tags
 @license WTFPL (do WTF you want)
-@version 3.2.2
+@version 3.3.0
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
@@ -337,6 +338,26 @@ function addDeferredDialogTag(tag, fn) {
 	});
 }
 
+/**
+ * Adds two custom dialog tags which execute the provided function,
+ * one with the provided tagname executed after the dialog box,
+ * and one suffixed with 'Now' executed immediately when the tag is reached.
+ *
+ * i.e. helper for the (exit)/(exitNow) pattern.
+ *
+ * @param {string}   tag Name of tag
+ * @param {Function} fn  Function to execute, with signature `function(environment, parameters){}`
+ *                       environment: provides access to SetVariable/GetVariable (among other things, see Environment in the bitsy source for more info)
+ *                       parameters: array containing parameters as string in first element (i.e. `parameters[0]`)
+ */
+function addDualDialogTag(tag, fn) {
+	addDialogTag(tag + 'Now', function(environment, parameters, onReturn) {
+		fn(environment, parameters);
+		onReturn(null);
+	});
+	addDeferredDialogTag(tag, fn);
+}
+
 
 
 
@@ -465,34 +486,14 @@ before('startExportedGame', function () {
 });
 
 // hook up dialog functions
-function dialogSave(environment, parameters, onReturn) {
-	save();
-	if (onReturn) {
-		onReturn(null);
-	}
-}
-
-function dialogLoad(environment, parameters, onReturn) {
+function dialogLoad(environment, parameters) {
 	bitsy.reset_cur_game();
 	bitsy.dialogBuffer.EndDialog();
 	bitsy.startNarrating(parameters[0] || '');
-	if (onReturn) {
-		onReturn(null);
-	}
 }
-
-function dialogClear(environment, parameters, onReturn) {
-	clear();
-	if (onReturn) {
-		onReturn(null);
-	}
-}
-addDeferredDialogTag('save', dialogSave);
-addDeferredDialogTag('load', dialogLoad);
-addDeferredDialogTag('clear', dialogClear);
-addDialogTag('saveNow', dialogSave);
-addDialogTag('loadNow', dialogLoad);
-addDialogTag('clearNow', dialogClear);
+addDualDialogTag('save', save);
+addDualDialogTag('load', dialogLoad);
+addDualDialogTag('clear', clear);
 
 exports.hackOptions = hackOptions;
 

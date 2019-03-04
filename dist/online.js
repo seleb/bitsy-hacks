@@ -3,7 +3,7 @@
 @file online
 @summary multiplayer bitsy
 @license MIT
-@version 2.1.0
+@version 2.1.1
 @requires 5.3
 @author Sean S. LeBlanc
 @description
@@ -115,7 +115,7 @@ function unique(array) {
 @file kitsy-script-toolkit
 @summary makes it easier and cleaner to run code before and after Bitsy functions or to inject new code into Bitsy script tags
 @license WTFPL (do WTF you want)
-@version 3.2.2
+@version 3.3.0
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
@@ -340,11 +340,31 @@ function addDeferredDialogTag(tag, fn) {
 }
 
 /**
+ * Adds two custom dialog tags which execute the provided function,
+ * one with the provided tagname executed after the dialog box,
+ * and one suffixed with 'Now' executed immediately when the tag is reached.
+ *
+ * i.e. helper for the (exit)/(exitNow) pattern.
+ *
+ * @param {string}   tag Name of tag
+ * @param {Function} fn  Function to execute, with signature `function(environment, parameters){}`
+ *                       environment: provides access to SetVariable/GetVariable (among other things, see Environment in the bitsy source for more info)
+ *                       parameters: array containing parameters as string in first element (i.e. `parameters[0]`)
+ */
+function addDualDialogTag(tag, fn) {
+	addDialogTag(tag + 'Now', function(environment, parameters, onReturn) {
+		fn(environment, parameters);
+		onReturn(null);
+	});
+	addDeferredDialogTag(tag, fn);
+}
+
+/**
 ☕
 @file javascript dialog
 @summary execute arbitrary javascript from dialog
 @license MIT
-@version 3.2.0
+@version 3.2.1
 @requires Bitsy Version: 4.5, 4.6
 @author Sean S. LeBlanc
 
@@ -382,15 +402,11 @@ NOTE: This uses parentheses "()" instead of curly braces "{}" around function
 
 var indirectEval$1 = eval;
 
-function executeJs(environment, parameters, onReturn) {
+function executeJs(environment, parameters) {
 	indirectEval$1(parameters[0]);
-	if (onReturn) {
-		onReturn(null);
-	}
 }
 
-addDeferredDialogTag('js', executeJs);
-addDialogTag('jsNow', executeJs);
+addDualDialogTag('js', executeJs);
 
 /**
 @file edit image at runtime
@@ -451,7 +467,7 @@ function setSpriteData(id, frame, newData) {
 @file edit image from dialog
 @summary edit sprites, items, and tiles from dialog
 @license MIT
-@version 1.2.0
+@version 1.2.1
 @requires 5.3
 @author Sean S. LeBlanc
 
@@ -517,7 +533,7 @@ after('load_game', function () {
 	};
 });
 
-function editImage(environment, parameters, onReturn) {
+function editImage(environment, parameters) {
   var i;
 
   // parse parameters
@@ -554,14 +570,9 @@ function editImage(environment, parameters, onReturn) {
   for (i = 0; i < srcObj.animation.frameCount; ++i) {
     setImageData(tgtId, i, mapObj, getImageData(srcId, i, mapObj));
   }
-
-  // done
-  if (onReturn) {
-    onReturn(null);
-  }
 }
 
-function editPalette(environment, parameters, onReturn) {
+function editPalette(environment, parameters) {
   // parse parameters
   var params = parameters[0].split(/,\s?/);
   params[0] = (params[0] || "").toLowerCase();
@@ -592,19 +603,11 @@ function editPalette(environment, parameters, onReturn) {
 
   // update images in cache
   bitsy.renderImageForAllPalettes(tgtObj);
-
-  // done
-  if (onReturn) {
-    onReturn(null);
-  }
 }
 
 // hook up the dialog tags
-addDeferredDialogTag('image', editImage);
-addDialogTag('imageNow', editImage);
-
-addDeferredDialogTag('imagePal', editPalette);
-addDialogTag('imagePalNow', editPalette);
+addDualDialogTag('image', editImage);
+addDualDialogTag('imagePal', editPalette);
 
 /**
 📝

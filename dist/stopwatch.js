@@ -3,7 +3,7 @@
 @file stopwatch
 @summary time player actions
 @license MIT
-@version 1.2.0
+@version 1.2.1
 @author Lenny Magner
 
 @description
@@ -137,7 +137,7 @@ function printDialog(environment, text, onReturn) {
 @file kitsy-script-toolkit
 @summary makes it easier and cleaner to run code before and after Bitsy functions or to inject new code into Bitsy script tags
 @license WTFPL (do WTF you want)
-@version 3.2.2
+@version 3.3.0
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
@@ -361,6 +361,26 @@ function addDeferredDialogTag(tag, fn) {
 	});
 }
 
+/**
+ * Adds two custom dialog tags which execute the provided function,
+ * one with the provided tagname executed after the dialog box,
+ * and one suffixed with 'Now' executed immediately when the tag is reached.
+ *
+ * i.e. helper for the (exit)/(exitNow) pattern.
+ *
+ * @param {string}   tag Name of tag
+ * @param {Function} fn  Function to execute, with signature `function(environment, parameters){}`
+ *                       environment: provides access to SetVariable/GetVariable (among other things, see Environment in the bitsy source for more info)
+ *                       parameters: array containing parameters as string in first element (i.e. `parameters[0]`)
+ */
+function addDualDialogTag(tag, fn) {
+	addDialogTag(tag + 'Now', function(environment, parameters, onReturn) {
+		fn(environment, parameters);
+		onReturn(null);
+	});
+	addDeferredDialogTag(tag, fn);
+}
+
 
 
 
@@ -372,26 +392,22 @@ function getTimeDifferenceInMs(timer) {
 // map of timers
 var timers;
 
-function startWatch(environment, parameters, onReturn) {
+function startWatch(environment, parameters) {
 	var id = parameters[0];
 	timers[id] = {
 		start: Date.now(),
 		end: undefined
 	};
-
-	if (onReturn) {
-		onReturn(null);
-	}
 }
 
 // note: this updates start time directly
-function resumeWatch(environment, parameters, onReturn) {
+function resumeWatch(environment, parameters) {
 	var id = parameters[0];
 	var timer = timers[id];
 
 	// just start the timer if there isn't one
 	if (!timer) {
-		return startWatch(environment, parameters, onReturn);
+		return startWatch(environment, parameters);
 	}
 
 	// don't do anything if the timer's not running
@@ -402,13 +418,9 @@ function resumeWatch(environment, parameters, onReturn) {
 	// resume timer
 	timer.start = Date.now() - (timer.end - timer.start);
 	timer.end = undefined;
-
-	if (onReturn) {
-		onReturn(null);
-	}
 }
 
-function stopWatch(environment, parameters, onReturn) {
+function stopWatch(environment, parameters) {
 	var id = parameters[0];
 	var timer = timers[id];
 	// don't do anything if there's no timer
@@ -421,10 +433,6 @@ function stopWatch(environment, parameters, onReturn) {
 	}
 	// end timer
 	timer.end = Date.now();
-
-	if (onReturn) {
-		onReturn(null);
-	}
 }
 
 // clear timers on game-load
@@ -433,12 +441,9 @@ before('load_game', function () {
 });
 
 // add control functions
-addDeferredDialogTag('startWatch', startWatch);
-addDeferredDialogTag('stopWatch', stopWatch);
-addDeferredDialogTag('resumeWatch', resumeWatch);
-addDialogTag('startWatchNow', startWatch);
-addDialogTag('stopWatchNow', stopWatch);
-addDialogTag('resumeWatchNow', resumeWatch);
+addDualDialogTag('startWatch', startWatch);
+addDualDialogTag('stopWatch', stopWatch);
+addDualDialogTag('resumeWatch', resumeWatch);
 
 // add display function
 addDialogTag('sayWatch', function (environment, parameters, onReturn) {
