@@ -3,7 +3,7 @@
 @file transitions
 @summary customizable WebGL transitions
 @license MIT
-@version 2.1.0
+@version 2.1.1
 @author Sean S. LeBlanc
 
 @description
@@ -100,11 +100,7 @@ canvasReplacementHackOptions.update = function (glazy) {
 	}
 };
 
-var shader = document.createElement("script");
-
-shader.id = "shader-frag";
-shader.type = "x-shader/x-fragment";
-shader.textContent = `
+canvasReplacementHackOptions.glazyOptions.fragment = `
 	precision mediump float;
 	uniform sampler2D tex0;
 	uniform sampler2D tex1;
@@ -128,4 +124,3 @@ shader.textContent = `
 		gl_FragColor = vec4(result, 1.0);
 	}
 `;
-document.head.appendChild(shader);
