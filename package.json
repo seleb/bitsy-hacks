@@ -18,7 +18,7 @@
 		"rollup-plugin-commonjs": "^9.2.0",
 		"rollup-plugin-node-resolve": "^3.4.0",
 		"tracery-grammar": "^2.7.2",
-		"webglazy": "^2.1.3"
+		"webglazy": "^3.0.0"
 	},
 	"devDependencies": {
 		"@babel/runtime": "^7.3.1",
