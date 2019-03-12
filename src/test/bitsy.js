@@ -33,7 +33,7 @@ async function getHackDist() {
 }
 
 async function getHackTemplate() {
-	return readFile(resolve(__dirname, 'bitsy 5.3.html'), {
+	return readFile(resolve(__dirname, 'bitsy 5.5.html'), {
 		encoding: 'utf8'
 	});
 }
