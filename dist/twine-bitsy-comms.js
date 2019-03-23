@@ -3,7 +3,7 @@
 @file twine bitsy comms
 @summary interprocess communication for twine and bitsy
 @license MIT
-@version 1.1.1
+@version 1.1.2
 @requires 5.4
 @author Sean S. LeBlanc
 
@@ -150,7 +150,7 @@ function unique(array) {
 @file kitsy-script-toolkit
 @summary makes it easier and cleaner to run code before and after Bitsy functions or to inject new code into Bitsy script tags
 @license WTFPL (do WTF you want)
-@version 3.3.0
+@version 3.4.0
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
@@ -237,7 +237,13 @@ function applyAllHooks() {
 }
 
 function applyHook(functionName) {
-	var superFn = bitsy[functionName];
+	var functionNameSegments = functionName.split('.');
+	var obj = bitsy;
+	while (functionNameSegments.length > 1) {
+		obj = obj[functionNameSegments.shift()];
+	}
+	var lastSegment = functionNameSegments[0];
+	var superFn = obj[lastSegment];
 	var superFnLength = superFn ? superFn.length : 0;
 	var functions = [];
 	// start with befores
@@ -250,7 +256,7 @@ function applyHook(functionName) {
 	functions = functions.concat(bitsy.kitsy.queuedAfterScripts[functionName] || []);
 
 	// overwrite original with one which will call each in order
-	bitsy[functionName] = function () {
+	obj[lastSegment] = function () {
 		var args = [].slice.call(arguments);
 		var i = 0;
 		runBefore.apply(this, arguments);

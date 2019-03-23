@@ -3,8 +3,8 @@
 @file corrupt
 @summary corrupts gamedata at runtime
 @license MIT
-@version 2.0.0
-@requires 5.3
+@version 3.0.0
+@requires 5.5
 @author Sean S. LeBlanc
 
 @description
@@ -39,6 +39,17 @@ e.g.
 this.hacks = this.hacks || {};
 this.hacks.corrupt = (function (exports,bitsy) {
 'use strict';
+var hackOptions = {
+	tilemapFreq: 1,
+	tilePixelsFreq: 1,
+	spritePixelsFreq: 1,
+	itemPixelsFreq: 1,
+	fontPixelsFreq: 1,
+	paletteFreq: 1,
+	globalFreq: 1, // multiplier for all the other `Freq` options
+
+	paletteAmplitude: 10, // how much to corrupt palette by (0-128)
+};
 
 bitsy = bitsy && bitsy.hasOwnProperty('default') ? bitsy['default'] : bitsy;
 
@@ -48,14 +59,39 @@ bitsy = bitsy && bitsy.hasOwnProperty('default') ? bitsy['default'] : bitsy;
 @author Sean S. LeBlanc
 */
 
-/*helper for exposing getter/setter for private vars*/
-var indirectEval = eval;
-function expose(target) {
-	var code = target.toString();
-	code = code.substring(0, code.lastIndexOf("}"));
-	code += "this.get = function(name) {return eval(name);};";
-	code += "this.set = function(name, value) {eval(name+'=value');};";
-	return indirectEval("[" + code + "}]")[0];
+/*
+Helper used to replace code in a script tag based on a search regex
+To inject code without erasing original string, using capturing groups; e.g.
+	inject(/(some string)/,'injected before $1 injected after')
+*/
+function inject(searchRegex, replaceString) {
+	// find the relevant script tag
+	var scriptTags = document.getElementsByTagName('script');
+	var scriptTag;
+	var code;
+	for (var i = 0; i < scriptTags.length; ++i) {
+		scriptTag = scriptTags[i];
+		var matchesSearch = scriptTag.textContent.search(searchRegex) !== -1;
+		var isCurrentScript = scriptTag === document.currentScript;
+		if (matchesSearch && !isCurrentScript) {
+			code = scriptTag.textContent;
+			break;
+		}
+	}
+
+	// error-handling
+	if (!code) {
+		throw 'Couldn\'t find "' + searchRegex + '" in script tags';
+	}
+
+	// modify the content
+	code = code.replace(searchRegex, replaceString);
+
+	// replace the old script tag with a new one using our modified code
+	var newScriptTag = document.createElement('script');
+	newScriptTag.textContent = code;
+	scriptTag.insertAdjacentElement('afterend', newScriptTag);
+	scriptTag.remove();
 }
 
 /*
@@ -72,6 +108,17 @@ function getImage(name, map) {
 		return map[e].name == name;
 	});
 	return map[id];
+}
+
+/**
+ * Helper for getting an array with unique elements 
+ * @param  {Array} array Original array
+ * @return {Array}       Copy of array, excluding duplicates
+ */
+function unique(array) {
+	return array.filter(function (item, idx) {
+		return array.indexOf(item) === idx;
+	});
 }
 
 /**
@@ -148,57 +195,159 @@ function setItemData(id, frame, newData) {
 	setImageData(id, frame, bitsy.item, newData);
 }
 
+/**
+
+@file kitsy-script-toolkit
+@summary makes it easier and cleaner to run code before and after Bitsy functions or to inject new code into Bitsy script tags
+@license WTFPL (do WTF you want)
+@version 3.4.0
+@requires Bitsy Version: 4.5, 4.6
+@author @mildmojo
+
+@description
+HOW TO USE:
+  import {before, after, inject, addDialogTag, addDeferredDialogTag} from "./helpers/kitsy-script-toolkit";
+
+  before(targetFuncName, beforeFn);
+  after(targetFuncName, afterFn);
+  inject(searchRegex, replaceString);
+  addDialogTag(tagName, dialogFn);
+  addDeferredDialogTag(tagName, dialogFn);
+
+  For more info, see the documentation at:
+  https://github.com/seleb/bitsy-hacks/wiki/Coding-with-kitsy
+*/
+
+// Ex: after('load_game', function run() { alert('Loaded!'); });
+function after(targetFuncName, afterFn) {
+	var kitsy = kitsyInit();
+	kitsy.queuedAfterScripts[targetFuncName] = kitsy.queuedAfterScripts[targetFuncName] || [];
+	kitsy.queuedAfterScripts[targetFuncName].push(afterFn);
+}
+
+function kitsyInit() {
+	// return already-initialized kitsy
+	if (bitsy.kitsy) {
+		return bitsy.kitsy;
+	}
+
+	// Initialize kitsy
+	bitsy.kitsy = {
+		queuedInjectScripts: [],
+		queuedBeforeScripts: {},
+		queuedAfterScripts: {}
+	};
+
+	var oldStartFunc = bitsy.startExportedGame;
+	bitsy.startExportedGame = function doAllInjections() {
+		// Only do this once.
+		bitsy.startExportedGame = oldStartFunc;
+
+		// Rewrite scripts and hook everything up.
+		doInjects();
+		applyAllHooks();
+
+		// Start the game
+		bitsy.startExportedGame.apply(this, arguments);
+	};
+
+	return bitsy.kitsy;
+}
+
+
+function doInjects() {
+	bitsy.kitsy.queuedInjectScripts.forEach(function (injectScript) {
+		inject(injectScript.searchRegex, injectScript.replaceString);
+	});
+	_reinitEngine();
+}
+
+function applyAllHooks() {
+	var allHooks = unique(Object.keys(bitsy.kitsy.queuedBeforeScripts).concat(Object.keys(bitsy.kitsy.queuedAfterScripts)));
+	allHooks.forEach(applyHook);
+}
+
+function applyHook(functionName) {
+	var functionNameSegments = functionName.split('.');
+	var obj = bitsy;
+	while (functionNameSegments.length > 1) {
+		obj = obj[functionNameSegments.shift()];
+	}
+	var lastSegment = functionNameSegments[0];
+	var superFn = obj[lastSegment];
+	var superFnLength = superFn ? superFn.length : 0;
+	var functions = [];
+	// start with befores
+	functions = functions.concat(bitsy.kitsy.queuedBeforeScripts[functionName] || []);
+	// then original
+	if (superFn) {
+		functions.push(superFn);
+	}
+	// then afters
+	functions = functions.concat(bitsy.kitsy.queuedAfterScripts[functionName] || []);
+
+	// overwrite original with one which will call each in order
+	obj[lastSegment] = function () {
+		var args = [].slice.call(arguments);
+		var i = 0;
+		runBefore.apply(this, arguments);
+
+		// Iterate thru sync & async functions. Run each, finally run original.
+		function runBefore() {
+			// All outta functions? Finish
+			if (i === functions.length) {
+				return;
+			}
+
+			// Update args if provided.
+			if (arguments.length > 0) {
+				args = [].slice.call(arguments);
+			}
+
+			if (functions[i].length > superFnLength) {
+				// Assume funcs that accept more args than the original are
+				// async and accept a callback as an additional argument.
+				functions[i++].apply(this, args.concat(runBefore.bind(this)));
+			} else {
+				// run synchronously
+				var newArgs = functions[i++].apply(this, args);
+				newArgs = newArgs && newArgs.length ? newArgs : args;
+				runBefore.apply(this, newArgs);
+			}
+		}
+	};
+}
+
+function _reinitEngine() {
+	// recreate the script and dialog objects so that they'll be
+	// referencing the code with injections instead of the original
+	bitsy.scriptModule = new bitsy.Script();
+	bitsy.scriptInterpreter = bitsy.scriptModule.CreateInterpreter();
+
+	bitsy.dialogModule = new bitsy.Dialog();
+	bitsy.dialogRenderer = bitsy.dialogModule.CreateRenderer();
+	bitsy.dialogBuffer = bitsy.dialogModule.CreateBuffer();
+}
+
 
 
 ///////////
 // setup //
 ///////////
-exports.hackOptions = {
-	tilemapFreq: 1,
-	tilePixelsFreq: 1,
-	spritePixelsFreq: 1,
-	itemPixelsFreq: 1,
-	fontPixelsFreq: 1,
-	paletteFreq: 1,
-	globalFreq: 1, // multiplier for all the other `Freq` options
 
-	paletteAmplitude: 10, // how much to corrupt palette by (0-128)
-	immediatePaletteUpdate: false // set this to true to make all images update to match palette corruptions; not recommended because it's an expensive operation
-};
 
 // hook corruption to player movement
-var _onPlayerMoved = bitsy.onPlayerMoved;
-bitsy.onPlayerMoved = function () {
-	if (_onPlayerMoved) {
-		_onPlayerMoved.apply(this, arguments);
-	}
-	corrupt();
-};
+after('onPlayerMoved', corrupt);
 
 //////////////////
 // corrupt code //
 //////////////////
 
 // get a reference to the fontdata
-bitsy.dialogRenderer = new(expose(bitsy.dialogRenderer.constructor))();
-var font = new(expose(bitsy.dialogRenderer.get('font').constructor))();
-var fontdata = font.get('fontdata');
-bitsy.dialogRenderer.set('font', font);
-
-// reset font and hackOptions when the game resets
-var originalFontData = fontdata.slice();
-var originalhackOptions = JSON.parse(JSON.stringify(exports.hackOptions));
-var _reset_cur_game = bitsy.reset_cur_game;
-bitsy.reset_cur_game = function () {
-	if (_reset_cur_game) {
-		_reset_cur_game.apply(this, arguments);
-	}
-	for (var i = 0; i < fontdata.length; ++i) {
-		fontdata[i] = originalFontData[i];
-	}
-	exports.hackOptions = JSON.parse(JSON.stringify(originalhackOptions));
-};
-
+var fontdata;
+after('dialogRenderer.SetFont', function(font) {
+	fontdata = Object.values(font.getData()).map(function(char){ return char.data; });
+});
 
 function corrupt() {
 	var i;
@@ -213,7 +362,7 @@ function corrupt() {
 	delete visibleTiles["0"]; // empty tile doesn't actually exist
 	visibleTiles = Object.keys(visibleTiles);
 	if (visibleTiles.length > 0) {
-		iterate(exports.hackOptions.tilePixelsFreq * exports.hackOptions.globalFreq, function () {
+		iterate(hackOptions.tilePixelsFreq * hackOptions.globalFreq, function () {
 			var t = rndItem(visibleTiles);
 			var frame = Math.floor(Math.random() * bitsy.tile[t].animation.frameCount);
 			var tdata = getTileData(t, frame);
@@ -234,7 +383,7 @@ function corrupt() {
 		}
 	}
 	visibleSprites = Object.keys(visibleSprites);
-	iterate(exports.hackOptions.spritePixelsFreq * exports.hackOptions.globalFreq, function () {
+	iterate(hackOptions.spritePixelsFreq * hackOptions.globalFreq, function () {
 		var t = rndItem(visibleSprites);
 		var frame = Math.floor(Math.random() * bitsy.sprite[t].animation.frameCount);
 		var tdata = getSpriteData(t, frame);
@@ -251,7 +400,7 @@ function corrupt() {
 	}
 	visibleItems = Object.keys(visibleItems);
 	if (visibleItems.length > 0) {
-		iterate(exports.hackOptions.itemPixelsFreq * exports.hackOptions.globalFreq, function () {
+		iterate(hackOptions.itemPixelsFreq * hackOptions.globalFreq, function () {
 			var t = rndItem(visibleItems);
 			var frame = Math.floor(Math.random() * bitsy.item[t].animation.frameCount);
 			var tdata = getItemData(t, frame);
@@ -265,7 +414,7 @@ function corrupt() {
 	// corrupt current room's tilemap
 	var possibleTiles = Object.keys(bitsy.tile);
 	possibleTiles.push("0"); // empty tile
-	iterate(exports.hackOptions.tilemapFreq * exports.hackOptions.globalFreq, function () {
+	iterate(hackOptions.tilemapFreq * hackOptions.globalFreq, function () {
 		// pick a tile at random in the current room and assign it a random tile
 		y = Math.floor(Math.random() * bitsy.mapsize);
 		x = Math.floor(Math.random() * bitsy.mapsize);
@@ -274,19 +423,20 @@ function corrupt() {
 
 	// corrupt visible palette colours
 	var visibleColors = bitsy.getPal(bitsy.curPal());
-	iterate(exports.hackOptions.paletteFreq * exports.hackOptions.globalFreq, function () {
+	iterate(hackOptions.paletteFreq * hackOptions.globalFreq, function () {
 		var c = rndItem(visibleColors);
 		var i = rndIndex(c);
-		c[i] = Math.round((c[i] + (Math.random() * 2 - 1) * exports.hackOptions.paletteAmplitude) % 256);
+		c[i] = Math.round((c[i] + (Math.random() * 2 - 1) * hackOptions.paletteAmplitude) % 256);
 	});
-	if (exports.hackOptions.paletteImmediate) {
+	if (hackOptions.paletteImmediate) {
 		bitsy.renderImages();
 	}
 
 	// corrupt pixels of font data
-	iterate(exports.hackOptions.fontPixelsFreq * exports.hackOptions.globalFreq, function () {
-		var i = rndIndex(fontdata);
-		fontdata[i] = Math.abs(fontdata[i] - 1);
+	iterate(hackOptions.fontPixelsFreq * hackOptions.globalFreq, function () {
+		var char = rndItem(fontdata);
+		var i = rndIndex(char);
+		char[i] = Math.abs(char[i] - 1);
 	});
 }
 
@@ -309,6 +459,8 @@ function rndIndex(array) {
 function rndItem(array) {
 	return array[rndIndex(array)];
 }
+
+exports.hackOptions = hackOptions;
 
 return exports;
 
