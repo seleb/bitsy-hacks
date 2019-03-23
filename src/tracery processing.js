@@ -39,19 +39,16 @@ can create
 
 See http://www.crystalcodepalace.com/traceryTut.html for more on how to use tracery
 */
-import bitsy from "bitsy";
-
 import tracery from "tracery-grammar";
+import {
+	before
+} from "./helpers/kitsy-script-toolkit";
 
 export var hackOptions = {
 	// put your grammar entries here
 };
 
 var bitsyGrammar = tracery.createGrammar(hackOptions);
-var _startDialog = bitsy.startDialog;
-bitsy.startDialog = function (dialogStr) {
-	dialogStr = bitsyGrammar.flatten(dialogStr);
-	if (_startDialog) {
-		_startDialog(dialogStr);
-	}
-};
+before('startDialog', function (dialogStr) {
+	return [bitsyGrammar.flatten(dialogStr)];
+});
