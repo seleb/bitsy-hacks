@@ -4,7 +4,7 @@
 @summary corrupts gamedata at runtime
 @license MIT
 @version 2.0.0
-@requires 5.3
+@requires 5.5
 @author Sean S. LeBlanc
 
 @description
@@ -38,9 +38,6 @@ e.g.
 */
 import bitsy from "bitsy";
 import {
-	expose
-} from "./helpers/utils";
-import {
 	getSpriteData,
 	getTileData,
 	getItemData,
@@ -48,6 +45,7 @@ import {
 	setTileData,
 	setItemData
 } from "./helpers/edit image at runtime";
+import { after } from "./helpers/kitsy-script-toolkit";
 
 ///////////
 // setup //
@@ -62,42 +60,20 @@ export var hackOptions = {
 	globalFreq: 1, // multiplier for all the other `Freq` options
 
 	paletteAmplitude: 10, // how much to corrupt palette by (0-128)
-	immediatePaletteUpdate: false // set this to true to make all images update to match palette corruptions; not recommended because it's an expensive operation
 };
 
 // hook corruption to player movement
-var _onPlayerMoved = bitsy.onPlayerMoved;
-bitsy.onPlayerMoved = function () {
-	if (_onPlayerMoved) {
-		_onPlayerMoved.apply(this, arguments);
-	}
-	corrupt();
-};
+after('onPlayerMoved', corrupt);
 
 //////////////////
 // corrupt code //
 //////////////////
 
 // get a reference to the fontdata
-bitsy.dialogRenderer = new(expose(bitsy.dialogRenderer.constructor))();
-var font = new(expose(bitsy.dialogRenderer.get('font').constructor))();
-var fontdata = font.get('fontdata');
-bitsy.dialogRenderer.set('font', font);
-
-// reset font and hackOptions when the game resets
-var originalFontData = fontdata.slice();
-var originalhackOptions = JSON.parse(JSON.stringify(hackOptions));
-var _reset_cur_game = bitsy.reset_cur_game;
-bitsy.reset_cur_game = function () {
-	if (_reset_cur_game) {
-		_reset_cur_game.apply(this, arguments);
-	}
-	for (var i = 0; i < fontdata.length; ++i) {
-		fontdata[i] = originalFontData[i];
-	}
-	hackOptions = JSON.parse(JSON.stringify(originalhackOptions));
-};
-
+var fontdata;
+after('dialogRenderer.SetFont', function(font) {
+	fontdata = Object.values(font.getData()).map(function(char){ return char.data; });
+});
 
 function corrupt() {
 	var i;
@@ -184,8 +160,9 @@ function corrupt() {
 
 	// corrupt pixels of font data
 	iterate(hackOptions.fontPixelsFreq * hackOptions.globalFreq, function () {
-		var i = rndIndex(fontdata);
-		fontdata[i] = Math.abs(fontdata[i] - 1);
+		var char = rndItem(fontdata);
+		var i = rndIndex(char);
+		char[i] = Math.abs(char[i] - 1);
 	});
 }
 
