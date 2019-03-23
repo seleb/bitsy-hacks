@@ -15,6 +15,9 @@ HOW TO USE:
 2. Update the `itemIsUnique` function to match your needs
 */
 import bitsy from "bitsy";
+import {
+	after
+} from "./helpers/kitsy-script-toolkit";
 
 export var hackOptions = {
 	itemIsUnique: function (item) {
@@ -25,12 +28,8 @@ export var hackOptions = {
 	}
 };
 
-var _onInventoryChanged = bitsy.onInventoryChanged;
-bitsy.onInventoryChanged = function (id) {
+after('onInventoryChanged', function (id) {
 	var r;
-	if (_onInventoryChanged) {
-		_onInventoryChanged(id);
-	}
 	if (hackOptions.itemIsUnique(bitsy.item[id])) {
 		for (r in bitsy.room) {
 			if (bitsy.room.hasOwnProperty(r)) {
@@ -41,4 +40,4 @@ bitsy.onInventoryChanged = function (id) {
 			}
 		}
 	}
-};
+});
