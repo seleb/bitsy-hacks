@@ -16,6 +16,9 @@ HOW TO USE:
 3. Press 'r' while noclip is enabled to cycle rooms
 */
 import bitsy from "bitsy";
+import {
+	after
+} from "./helpers/kitsy-script-toolkit";
 
 var noClip = false;
 
@@ -43,7 +46,7 @@ var toggleNoClip = function () {
 		function () {
 			return null;
 		};
-		bitsy.getItemIndex = function() {
+		bitsy.getItemIndex = function () {
 			return -1;
 		};
 		console.log("noclip enabled");
@@ -61,9 +64,7 @@ var toggleNoClip = function () {
 	}
 };
 
-var _onready = bitsy.onready;
-bitsy.onready = function (startWithTitle) {
-	_onready(startWithTitle);
+after('onready', function () {
 	bitsy.isPlayerEmbeddedInEditor = true; // HACK: prevent keydown from consuming all key events
 
 	// add key handler
@@ -79,4 +80,4 @@ bitsy.onready = function (startWithTitle) {
 			toggleNoClip();
 		}
 	});
-};
+});
