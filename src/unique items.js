@@ -35,7 +35,7 @@ after('onInventoryChanged', function (id) {
 			if (bitsy.room.hasOwnProperty(r)) {
 				r = bitsy.room[r];
 				r.items = r.items.filter(function (i) {
-					return i.id != id;
+					return i.id !== id;
 				});
 			}
 		}
