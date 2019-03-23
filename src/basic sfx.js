@@ -23,15 +23,18 @@ HOW TO USE:
 Additional sounds can be added by by including more <audio> tags with different ids and calling `sounds.<sound id>()` as needed.
 */
 import bitsy from "bitsy";
+import {
+	before,
+	after
+} from "./helpers/kitsy-script-toolkit";
 
 export var hackOptions = {
 	beNiceToEars: true // if `true`, reduces volume of recently played sound effects
 };
 
 var sounds = {};
-var _startExportedGame = bitsy.startExportedGame;
-bitsy.startExportedGame = function () {
-	var playSound = function (sound) {
+before('startExportedGame', function () {
+	function playSound(sound) {
 		if (hackOptions.beNiceToEars) {
 			// reduce volume if played recently
 			sound.volume = Math.min(1.0, Math.max(0.25, Math.pow((bitsy.prevTime - sound.lastPlayed) * .002, .5)));
@@ -44,7 +47,7 @@ bitsy.startExportedGame = function () {
 		} else {
 			sound.currentTime = 0;
 		}
-	};
+	}
 
 	// get sound elements
 	var s = document.getElementsByTagName("audio");
@@ -56,35 +59,17 @@ bitsy.startExportedGame = function () {
 			sounds[i.id] = playSound.bind(undefined, i);
 		}
 	}
-
-	// start game after sound setup
-	// so that title text can use it too
-	if (_startExportedGame) {
-		_startExportedGame();
-	}
-};
+});
 
 // walk hook
-var _onPlayerMoved = bitsy.onPlayerMoved;
-bitsy.onPlayerMoved = function () {
-	if (_onPlayerMoved) {
-		_onPlayerMoved();
-	}
+after('onPlayerMoved', function () {
 	sounds.walk();
-}
+});
 
 // talk hooks
-var _startDialog = bitsy.startDialog;
-bitsy.startDialog = function () {
-	if (_startDialog) {
-		_startDialog.apply(this, arguments);
-	}
+after('startDialog', function () {
 	sounds.talk();
-}
-var _FlipPage = bitsy.dialogBuffer.FlipPage;
-bitsy.dialogBuffer.FlipPage = function () {
-	if (_FlipPage) {
-		_FlipPage.call(this);
-	}
+});
+after('dialogBuffer.FlipPage', function () {
 	sounds.talk();
-}
+});
