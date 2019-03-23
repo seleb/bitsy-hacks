@@ -21,6 +21,7 @@ HOW TO USE:
 4. Copy-paste this script into a script tag after the bitsy source
 
 Additional sounds can be added by by including more <audio> tags with different ids and calling `sounds.<sound id>()` as needed.
+If you'd like to trigger sounds from dialog, check out the bitsymuse hack!
 */
 import bitsy from "bitsy";
 import {
