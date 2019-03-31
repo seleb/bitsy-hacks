@@ -82,7 +82,7 @@ var tracery = function() {
         this.isExpanded = false;
 
         if (!this.grammar) {
-            console.warn("No grammar specified for this node", this);
+            this.errors.push("No grammar specified for this node " + this);
         }
 
     };
@@ -120,7 +120,6 @@ var tracery = function() {
         } else {
             // In normal operation, this shouldn't ever happen
             this.errors.push("No child rule provided, can't expand children");
-            console.warn("No child rule provided, can't expand children");
         }
     };
 
