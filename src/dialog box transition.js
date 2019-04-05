@@ -44,7 +44,7 @@ return;`;
 
 var functionEasing = `
 	function easingDialog(tbox, easing, targetY) {
-		var vy = (targetY - tbox.y) * easing || 0.025;
+		var vy = (targetY - tbox.y) * easing;
 		tbox.y += vy;
 		context.putImageData(tbox.img,tbox.left*scale,tbox.y);
 	}
