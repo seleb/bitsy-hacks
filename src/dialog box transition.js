@@ -1,4 +1,5 @@
 /**
+🔁
 @file dialog box transition
 @summary Smooth transition for Dialog Box
 @license MIT
@@ -6,7 +7,7 @@
 @author Delacannon
 
 @description
-A hack that adds a easing transition to display dialog box text
+A hack that adds an easing transition animation to display the dialog box text
 
 HOW TO USE:
 1. Copy-paste this script into a script tag after the bitsy source.

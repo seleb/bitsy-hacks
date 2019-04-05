@@ -11,7 +11,7 @@ A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamled
  - ⛔️ [close on ending](/dist/close-on-ending.js): Prevents from playing past an ending
  - ➿ [corrupt](/dist/corrupt.js): corrupts gamedata at runtime
  - 🅰 [custom text effect](/dist/custom-text-effect.js): make {custom}text effects{custom}
- -  [dialog box transition](/dist/dialog-box-transition.js): Smooth transition for Dialog Box
+ - 🔁 [dialog box transition](/dist/dialog-box-transition.js): Smooth transition for Dialog Box
  - 🔀 [dialog choices](/dist/dialog-choices.js): binary dialog choices
  - 🚀 [dialog jump](/dist/dialog-jump.js): jump from one dialog entry to another
  - 💬 [dialog pause](/dist/dialog-pause.js): add pauses in between printing text
