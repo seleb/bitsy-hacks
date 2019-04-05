@@ -1,9 +1,10 @@
 /**
 🔁
 @file dialog box transition
-@summary Smooth transition for Dialog Box
+@summary adds an easing transition animation to display the dialog box text
 @license MIT
 @version 1.0.0
+@requires 4.8, 4.9
 @author Delacannon
 
 @description
