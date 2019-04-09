@@ -15,19 +15,19 @@
 	"dependencies": {
 		"input-gamepads.js": "^1.0.0",
 		"rollup": "^0.56.5",
-		"rollup-plugin-commonjs": "^9.2.0",
+		"rollup-plugin-commonjs": "^9.3.4",
 		"rollup-plugin-node-resolve": "^3.4.0",
-		"tracery-grammar": "^2.7.2",
+		"tracery-grammar": "^2.7.4",
 		"webglazy": "^3.0.0"
 	},
 	"devDependencies": {
-		"@babel/runtime": "^7.3.1",
-		"@babel/plugin-transform-runtime": "^7.2.0",
-		"@babel/preset-env": "^7.2.3",
+		"@babel/plugin-transform-runtime": "^7.4.3",
+		"@babel/preset-env": "^7.4.3",
+		"@babel/runtime": "^7.4.3",
 		"doctrine": "^3.0.0",
-		"jest": "^24.1.0",
+		"jest": "^24.7.1",
 		"jest-image-snapshot": "^2.8.1",
-		"puppeteer": "^1.12.2",
+		"puppeteer": "^1.14.0",
 		"rollup-plugin-eslint": "^4.0.0"
 	},
 	"jest": {
