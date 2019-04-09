@@ -12,13 +12,23 @@ Makes all sprites have transparent backgrounds.
 i.e. tiles can be seen underneath the player, sprites, and items.
 
 HOW TO USE:
-Copy-paste this script into a script tag after the bitsy source
+1. Copy-paste this script into a script tag after the bitsy source
+2. Edit hackOptions below as needed
 */
 import bitsy from "bitsy";
 import {
 	before,
 	after,
 } from "./helpers/kitsy-script-toolkit";
+
+export var hackOptions = {
+	isTransparent: function (drawing) {
+		//return drawing.name == 'tea'; // specific solid drawing
+		//return ['tea', 'flower', 'hat'].indexOf(drawing.name) !== -1; // specific solid drawing list
+		//return drawing.name.indexOf('TRANSPARENT') !== -1; // transparent drawing flag in name
+		return true; // all drawings are solid
+	},
+};
 
 // override renderer.GetImage to create + cache
 // and always give it the player to prevent it from drawing the original assets
@@ -35,6 +45,7 @@ before('renderer.GetImage', function (drawing, paletteId, frameOverride) {
 	}
 
 	// get the vars we need
+	var alpha = hackOptions.isTransparent(drawing) ? 0 : 255;
 	var bg = bitsy.getPal(paletteId)[0];
 	var col = bitsy.getPal(paletteId)[drawing.col];
 	var imageSource = bitsy.renderer.GetImageSource(drawing.drw)[frameOverride || 0];
@@ -58,7 +69,7 @@ before('renderer.GetImage', function (drawing, paletteId, frameOverride) {
 					img.data[idx] = pixel ? col[0] : bg[0];
 					img.data[idx + 1] = pixel ? col[1] : bg[1];
 					img.data[idx + 2] = pixel ? col[2] : bg[2];
-					img.data[idx + 3] = pixel ? 255 : 0;
+					img.data[idx + 3] = pixel ? 255 : alpha;
 				}
 			}
 		}
