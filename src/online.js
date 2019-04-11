@@ -3,8 +3,8 @@
 @file online
 @summary multiplayer bitsy
 @license MIT
-@version 2.1.2
-@requires 5.3
+@version 2.1.3
+@requires 5.5
 @author Sean S. LeBlanc
 @description
 Provides the groundwork for running a small online multiplayer bitsy game.
@@ -115,7 +115,7 @@ function onData(event) {
 				room: data.room
 			};
 			bitsy.dialog[longname] = data.dlg;
-			bitsy.imageStore.source[longname] = data.data;
+			bitsy.renderer.SetImageSource(longname, data.data);
 
 			for (var frame = 0; frame < data.data.length; ++frame) {
 				setSpriteData(event.from, frame, data.data[frame]);
@@ -182,7 +182,7 @@ function getSpriteUpdate() {
 	var p = bitsy.player();
 	return {
 		e: "sprite",
-		data: bitsy.imageStore.source[p.drw],
+		data: bitsy.renderer.GetImageSource(p.drw),
 		x: p.x,
 		y: p.y,
 		room: p.room,
