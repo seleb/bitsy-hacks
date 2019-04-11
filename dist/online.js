@@ -3,8 +3,8 @@
 @file online
 @summary multiplayer bitsy
 @license MIT
-@version 2.1.2
-@requires 5.3
+@version 2.1.3
+@requires 5.5
 @author Sean S. LeBlanc
 @description
 Provides the groundwork for running a small online multiplayer bitsy game.
@@ -115,7 +115,7 @@ function unique(array) {
 @file kitsy-script-toolkit
 @summary makes it easier and cleaner to run code before and after Bitsy functions or to inject new code into Bitsy script tags
 @license WTFPL (do WTF you want)
-@version 3.4.0
+@version 4.0.0
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
@@ -222,15 +222,14 @@ function applyHook(functionName) {
 
 	// overwrite original with one which will call each in order
 	obj[lastSegment] = function () {
-		var args = [].slice.call(arguments);
+		var returnVal;
+		var args;
 		var i = 0;
-		runBefore.apply(this, arguments);
 
-		// Iterate thru sync & async functions. Run each, finally run original.
 		function runBefore() {
 			// All outta functions? Finish
 			if (i === functions.length) {
-				return;
+				return returnVal;
 			}
 
 			// Update args if provided.
@@ -241,14 +240,18 @@ function applyHook(functionName) {
 			if (functions[i].length > superFnLength) {
 				// Assume funcs that accept more args than the original are
 				// async and accept a callback as an additional argument.
-				functions[i++].apply(this, args.concat(runBefore.bind(this)));
+				return functions[i++].apply(this, args.concat(runBefore.bind(this)));
 			} else {
 				// run synchronously
-				var newArgs = functions[i++].apply(this, args);
-				newArgs = newArgs && newArgs.length ? newArgs : args;
-				runBefore.apply(this, newArgs);
+				returnVal = functions[i++].apply(this, args);
+				if (returnVal && returnVal.length) {
+					args = returnVal;
+				}
+				return runBefore.apply(this, args);
 			}
 		}
+
+		return runBefore.apply(this, arguments);
 	};
 }
 
@@ -754,7 +757,7 @@ function onData(event) {
 				room: data.room
 			};
 			bitsy.dialog[longname] = data.dlg;
-			bitsy.imageStore.source[longname] = data.data;
+			bitsy.renderer.SetImageSource(longname, data.data);
 
 			for (var frame = 0; frame < data.data.length; ++frame) {
 				setSpriteData(event.from, frame, data.data[frame]);
@@ -821,7 +824,7 @@ function getSpriteUpdate() {
 	var p = bitsy.player();
 	return {
 		e: "sprite",
-		data: bitsy.imageStore.source[p.drw],
+		data: bitsy.renderer.GetImageSource(p.drw),
 		x: p.x,
 		y: p.y,
 		room: p.room,
