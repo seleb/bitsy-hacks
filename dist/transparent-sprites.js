@@ -20,10 +20,10 @@ this.hacks.transparent_sprites = (function (exports,bitsy) {
 'use strict';
 var hackOptions = {
 	isTransparent: function (drawing) {
-		//return drawing.name == 'tea'; // specific solid drawing
-		//return ['tea', 'flower', 'hat'].indexOf(drawing.name) !== -1; // specific solid drawing list
+		//return drawing.name == 'tea'; // specific transparent drawing
+		//return ['tea', 'flower', 'hat'].indexOf(drawing.name) !== -1; // specific transparent drawing list
 		//return drawing.name.indexOf('TRANSPARENT') !== -1; // transparent drawing flag in name
-		return true; // all drawings are solid
+		return true; // all drawings are transparent
 	},
 };
 

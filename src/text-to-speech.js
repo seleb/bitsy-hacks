@@ -14,7 +14,7 @@ Support is included for both an automatic mode in which all dialog is run throug
 and a manual mode in which TTS can be triggered via dialog commands.
 
 Due to how bitsy handles scripting, the automatic mode is only able to read a segment of dialog *after* it has finished printing.
-This means that by normally you'd often be waiting a long time for text animation to complete before hearing the TTS.
+This means that normally you'd often be waiting a long time for text animation to complete before hearing the TTS.
 Players could manually skip the dialog animations to speed this up, but I've found that this is still quite stilted.
 The hackOption `hurried` is included below, which automatically skips text animation in order to help counteract this.
 
@@ -98,7 +98,7 @@ function queueVoice(params) {
 function queueSpeak(text) {
 	if (!toSpeak.length) {
 		queueVoice();
-	};
+	}
 	toSpeak[toSpeak.length - 1].text.push(text);
 	if (!speaking) {
 		speak();
