@@ -45,9 +45,6 @@ HOW TO USE:
 2. Edit hackOptions below as needed
 */
 
-// 
-// 
-// 
 import bitsy from 'bitsy';
 import {
 	inject,
