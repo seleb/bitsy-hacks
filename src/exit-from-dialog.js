@@ -58,6 +58,7 @@ function _getExitParams(parameters) {
 	var roomName = params[0];
 	var x = params[1];
 	var y = params[2];
+	var transition_effect = params[3];
 	var room = getRoom(roomName).id;
 
 	if (!roomName || x === undefined || y === undefined) {
@@ -76,6 +77,7 @@ function _getExitParams(parameters) {
 			x: Number(x),
 			y: Number(y),
 		},
+		transition_effect,
 	};
 }
 // End of (exit) dialog function mod
