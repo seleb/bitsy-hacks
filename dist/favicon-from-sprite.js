@@ -3,8 +3,8 @@
 @file favicon-from-sprite
 @summary generate a browser favicon (tab icon) from a Bitsy sprite, including animation!
 @license WTFPL (do WTF you want)
-@version 2.1.1
-@requires Bitsy Version: 4.5, 4.6
+@version 3.0.0
+@requires Bitsy Version: 5.5
 @author @mildmojo
 
 @description
@@ -327,7 +327,7 @@ function updateBrowserFavicon(dataURL) {
 }
 
 function getFrames(spriteName) {
-	var frames = bitsy.renderer.GetImageSource(getImage(spriteName || bitsy.playerId).drw);
+	var frames = bitsy.renderer.GetImageSource(getImage(spriteName || bitsy.playerId, bitsy.sprite).drw);
 	return frames;
 }
 

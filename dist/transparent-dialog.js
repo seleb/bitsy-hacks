@@ -77,7 +77,7 @@ function unique(array) {
 @file kitsy-script-toolkit
 @summary makes it easier and cleaner to run code before and after Bitsy functions or to inject new code into Bitsy script tags
 @license WTFPL (do WTF you want)
-@version 3.4.0
+@version 4.0.0
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
@@ -168,15 +168,14 @@ function applyHook(functionName) {
 
 	// overwrite original with one which will call each in order
 	obj[lastSegment] = function () {
-		var args = [].slice.call(arguments);
+		var returnVal;
+		var args;
 		var i = 0;
-		runBefore.apply(this, arguments);
 
-		// Iterate thru sync & async functions. Run each, finally run original.
 		function runBefore() {
 			// All outta functions? Finish
 			if (i === functions.length) {
-				return;
+				return returnVal;
 			}
 
 			// Update args if provided.
@@ -187,14 +186,18 @@ function applyHook(functionName) {
 			if (functions[i].length > superFnLength) {
 				// Assume funcs that accept more args than the original are
 				// async and accept a callback as an additional argument.
-				functions[i++].apply(this, args.concat(runBefore.bind(this)));
+				return functions[i++].apply(this, args.concat(runBefore.bind(this)));
 			} else {
 				// run synchronously
-				var newArgs = functions[i++].apply(this, args);
-				newArgs = newArgs && newArgs.length ? newArgs : args;
-				runBefore.apply(this, newArgs);
+				returnVal = functions[i++].apply(this, args);
+				if (returnVal && returnVal.length) {
+					args = returnVal;
+				}
+				return runBefore.apply(this, args);
 			}
 		}
+
+		return runBefore.apply(this, arguments);
 	};
 }
 
