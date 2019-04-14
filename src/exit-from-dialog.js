@@ -3,8 +3,8 @@
 @file exit-from-dialog
 @summary exit to another room from dialog, including conditionals
 @license WTFPL (do WTF you want)
-@version 5.2.2
-@requires Bitsy Version: 4.5, 4.6
+@version 6.0.0
+@requires Bitsy Version: 6.0
 @author @mildmojo
 
 @description
@@ -58,8 +58,7 @@ addDualDialogTag('exit', function (environment, parameters) {
 	if (!exitParams) {
 		return;
 	}
-
-	doPlayerExit(exitParams);
+	bitsy.movePlayerThroughExit({ dest: exitParams });
 });
 
 function _getExitParams(parameters) {
@@ -86,13 +85,5 @@ function _getExitParams(parameters) {
 		x: Number(x),
 		y: useSpriteCoords ? 15 - Number(y) : Number(y)
 	};
-}
-
-// dest === {room: Room, x: Int, y: Int}
-function doPlayerExit(dest) {
-	bitsy.player().room = dest.room;
-	bitsy.player().x = dest.x;
-	bitsy.player().y = dest.y;
-	bitsy.curRoom = dest.room;
 }
 // End of (exit) dialog function mod
