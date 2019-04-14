@@ -18,17 +18,10 @@ Using the (exit) function in any part of a series of dialog will make the
 game exit to the new room after the dialog is finished. Using (exitNow) will
 immediately warp to the new room, but the current dialog will continue.
 
-WARNING: In exit coordinates, the TOP LEFT tile is (0,0). In sprite coordinates,
-         the BOTTOM LEFT tile is (0,0). If you'd like to use sprite coordinates,
-         add the word "sprite" as the fourth parameter to the exit function.
-
 Usage: (exit "<room name>,<x>,<y>")
-       (exit "<room name>,<x>,<y>,sprite")
        (exitNow "<room name>,<x>,<y>")
-       (exitNow "<room name>,<x>,<y>,sprite")
 
 Example: (exit "FinalRoom,8,4")
-         (exitNow "FinalRoom,8,11,sprite")
 
 HOW TO USE:
   1. Copy-paste this script into a new script tag after the Bitsy source code.
@@ -43,7 +36,6 @@ NOTE: This uses parentheses "()" instead of curly braces "{}" around function
       For full editor integration, you'd *probably* also need to paste this
       code at the end of the editor's `bitsy.js` file. Untested.
 */
-'use strict';
 import bitsy from "bitsy";
 import {
 	getRoom
@@ -54,11 +46,11 @@ import {
 
 // Implement the dialog functions
 addDualDialogTag('exit', function (environment, parameters) {
-	var exitParams = _getExitParams(parameters);
-	if (!exitParams) {
+	var exit = _getExitParams(parameters);
+	if (!exit) {
 		return;
 	}
-	bitsy.movePlayerThroughExit({ dest: exitParams });
+	bitsy.movePlayerThroughExit(exit);
 });
 
 function _getExitParams(parameters) {
@@ -66,24 +58,24 @@ function _getExitParams(parameters) {
 	var roomName = params[0];
 	var x = params[1];
 	var y = params[2];
-	var coordsType = (params[3] || 'exit').toLowerCase();
-	var useSpriteCoords = coordsType === 'sprite';
-	var roomId = getRoom(roomName).id;
+	var room = getRoom(roomName).id;
 
 	if (!roomName || x === undefined || y === undefined) {
 		console.warn('{exit/exitNow} was missing parameters! Usage: {exit/exitNow "roomname,x,y"}');
 		return null;
 	}
 
-	if (roomId === undefined) {
+	if (room === undefined) {
 		console.warn("Bad {exit/exitNow} parameter: Room '" + roomName + "' not found!");
 		return null;
 	}
 
 	return {
-		room: roomId,
-		x: Number(x),
-		y: useSpriteCoords ? 15 - Number(y) : Number(y)
+		dest: {
+			room,
+			x: Number(x),
+			y: Number(y),
+		},
 	};
 }
 // End of (exit) dialog function mod
