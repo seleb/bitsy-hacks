@@ -8,8 +8,8 @@
 @author @mildmojo
 
 @description
-Lets you exit to another room from dialog (including inside conditionals). Use
-it to make an invisible sprite that acts as a conditional exit, use it to warp
+Lets you exit to another room from dialog (including inside conditionals).
+Use it to make an invisible sprite that acts as a conditional exit, use it to warp
 somewhere after a conversation, use it to put a guard at your gate who only
 lets you in once you're disguised, use it to require payment before the
 ferryman will take you across the river.
@@ -18,23 +18,27 @@ Using the (exit) function in any part of a series of dialog will make the
 game exit to the new room after the dialog is finished. Using (exitNow) will
 immediately warp to the new room, but the current dialog will continue.
 
-Usage: (exit "<room name>,<x>,<y>")
-       (exitNow "<room name>,<x>,<y>")
+Usage:
+	(exit "<room name>,<x>,<y>,<optional transition_effect>")
+	(exitNow "<room name>,<x>,<y>,<optional transition_effect>")
 
-Example: (exit "FinalRoom,8,4")
+Example:
+	(exit "FinalRoom,8,4")
+	(exit "FinalRoom,8,4,tunnel")
 
 HOW TO USE:
-  1. Copy-paste this script into a new script tag after the Bitsy source code.
-     It should appear *before* any other mods that handle loading your game
-     data so it executes *after* them (last-in first-out).
+1. Copy-paste this script into a new script tag after the Bitsy source code.
+   It should appear *before* any other mods that handle loading your game
+   data so it executes *after* them (last-in first-out).
 
-NOTE: This uses parentheses "()" instead of curly braces "{}" around function
-      calls because the Bitsy editor's fancy dialog window strips unrecognized
-      curly-brace functions from dialog text. To keep from losing data, write
-      these function calls with parentheses like the examples above.
+NOTE:
+This uses parentheses "()" instead of curly braces "{}" around function
+calls because the Bitsy editor's fancy dialog window strips unrecognized
+curly-brace functions from dialog text. To keep from losing data, write
+these function calls with parentheses like the examples above.
 
-      For full editor integration, you'd *probably* also need to paste this
-      code at the end of the editor's `bitsy.js` file. Untested.
+For full editor integration, you'd *probably* also need to paste this
+code at the end of the editor's `bitsy.js` file. Untested.
 */
 import bitsy from "bitsy";
 import {
