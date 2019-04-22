@@ -3,7 +3,7 @@
 @file transparent sprites
 @summary makes all sprites have transparent backgrounds
 @license MIT
-@version 3.0.0
+@version 3.0.1
 @requires Bitsy Version: 5.5
 @author Sean S. LeBlanc
 
@@ -39,7 +39,8 @@ before('renderer.GetImage', function (drawing, paletteId, frameOverride) {
 	// check cache first
 	var cache = drawing.cache = drawing.cache || {};
 	var p = cache[paletteId] = cache[paletteId] || {};
-	imgToDraw = p[frameOverride];
+	var frameIndex = frameOverride || drawing.animation.frameIndex;
+	imgToDraw = p[frameIndex];
 	if (imgToDraw) {
 		return returnVal;
 	}
@@ -48,7 +49,7 @@ before('renderer.GetImage', function (drawing, paletteId, frameOverride) {
 	var alpha = hackOptions.isTransparent(drawing) ? 0 : 255;
 	var bg = bitsy.getPal(paletteId)[0];
 	var col = bitsy.getPal(paletteId)[drawing.col];
-	var imageSource = bitsy.renderer.GetImageSource(drawing.drw)[frameOverride || 0];
+	var imageSource = bitsy.renderer.GetImageSource(drawing.drw)[frameIndex];
 	var x, y, i, j, pixel, idx;
 	var size = bitsy.tilesize * bitsy.scale;
 
@@ -81,7 +82,7 @@ before('renderer.GetImage', function (drawing, paletteId, frameOverride) {
 	document.body.appendChild(spriteCanvas);
 
 	// save it in our cache
-	imgToDraw = p[frameOverride] = spriteCanvas;
+	imgToDraw = p[frameIndex] = spriteCanvas;
 	return imgToDraw;
 });
 // return our custom image instead of the original image data
