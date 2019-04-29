@@ -1,4 +1,4 @@
-# @bitsy/hacks
+# @bitsy/hecks
 
 A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamledoux)'s [Bitsy Game Maker](https://ledoux.itch.io/bitsy).
 
