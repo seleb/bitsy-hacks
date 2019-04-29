@@ -8,6 +8,7 @@
 		"test": "jest --runInBand"
 	},
 	"author": "Sean S. LeBlanc",
+	"license": "MIT (individual hacks have their own license specified)",
 	"repository": {
 		"type": "git",
 		"url": "git://github.com/seleb/bitsy-hacks.git"
