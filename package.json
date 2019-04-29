@@ -1,13 +1,18 @@
 {
-	"name": "bitsy-hacks",
+	"name": "@bitsy/hacks",
 	"description": "a collection of re-usable scripts for bitsy game maker",
-	"version": "1.0.0",
+	"keywords": [
+		"bitsy",
+		"hacks"
+	],
 	"main": "index.mjs",
+	"version": "0.0.0",
 	"scripts": {
 		"build": "node --experimental-modules cli.mjs",
-		"test": "jest --runInBand"
+		"test": "jest --runInBand",
+		"prepare": "npm run build"
 	},
-	"author": "Sean S. LeBlanc",
+	"author": "Sean S. LeBlanc <sean.s.leblanc@gmail.com>",
 	"license": "MIT (individual hacks have their own license specified)",
 	"repository": {
 		"type": "git",
