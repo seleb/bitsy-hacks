@@ -21,13 +21,13 @@
 		"webglazy": "^3.0.0"
 	},
 	"devDependencies": {
-		"@babel/plugin-transform-runtime": "^7.4.3",
-		"@babel/preset-env": "^7.4.3",
-		"@babel/runtime": "^7.4.3",
+		"@babel/plugin-transform-runtime": "^7.4.4",
+		"@babel/preset-env": "^7.4.4",
+		"@babel/runtime": "^7.4.4",
 		"doctrine": "^3.0.0",
 		"jest": "^24.7.1",
 		"jest-image-snapshot": "^2.8.1",
-		"puppeteer": "^1.14.0",
+		"puppeteer": "^1.15.0",
 		"rollup-plugin-eslint": "^4.0.0"
 	},
 	"jest": {
