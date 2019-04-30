@@ -3,6 +3,7 @@
 
 import doctrine from "doctrine";
 import fs from "fs";
+import pkg from "./package.json";
 
 export default {
 	headers: [],
@@ -43,13 +44,14 @@ export default {
 		var contents = this.headers.sort((a, b) => {
 			return a.file < b.file ? -1 : a.file > b.file ? 1 : 0;
 		});
-		fs.writeFileSync("README.md", `
-# bitsy-hacks
+		fs.writeFileSync("README.md", `# ${pkg.name}
+
 A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamledoux)'s [Bitsy Game Maker](https://ledoux.itch.io/bitsy).
 
 ## contents
+
 ${contents.map(hack => 
-	` - ${hack.emoji} [${hack.file}](${hack.url}): ${hack.summary}`
+	`- ${hack.emoji} [${hack.file}](${hack.url}): ${hack.summary}`
 ).join('\n')}
 
 ![Imgur](https://i.imgur.com/peRLLHn.gif)![Imgur](https://i.imgur.com/yg81aH2.gif)![Imgur](https://i.imgur.com/r7AUHX4.gif)
@@ -58,7 +60,9 @@ ${contents.map(hack =>
 
 
 ## how to use
+
 Each script has a short "HOW TO USE" section included in the comments. For steps which say to \`Copy-paste this script into a script tag after the bitsy source \`, open your exported bitsy game and scroll to the bottom of the file (at the time of writing, it looks like this):
+
 \`\`\`html
 </script>
 
@@ -98,6 +102,7 @@ then edit it to look like this:
 \`\`\`
 
 ## Further reading
+
 - [Writing hacks with this repo's source code](https://github.com/seleb/bitsy-hacks/wiki)
 - [Claire Morley's "A Bitsy Tutorial"](http://www.shimmerwitch.space/bitsyTutorial)
 - [Bitsy games!](https://itch.io/games/tag-bitsy)

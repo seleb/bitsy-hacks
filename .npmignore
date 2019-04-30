@@ -1,0 +1,6 @@
+*.test.js
+**/test
+**/__snapshots__
+**/__image_snapshots__
+**/__mocks__
+coverage/
