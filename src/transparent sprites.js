@@ -3,7 +3,7 @@
 @file transparent sprites
 @summary makes all sprites have transparent backgrounds
 @license MIT
-@version 3.0.1
+@version 3.0.2
 @requires Bitsy Version: 5.5
 @author Sean S. LeBlanc
 
@@ -33,11 +33,12 @@ export var hackOptions = {
 // override renderer.GetImage to create + cache
 // and always give it the player to prevent it from drawing the original assets
 var imgToDraw;
+var imgCache = {};
 before('renderer.GetImage', function (drawing, paletteId, frameOverride) {
 	var returnVal = [window.player(), 0]; // consistent bitsy getter to reduce rendering costs
 
 	// check cache first
-	var cache = drawing.cache = drawing.cache || {};
+	var cache = imgCache[drawing.drw] = imgCache[drawing.drw] || {};
 	var p = cache[paletteId] = cache[paletteId] || {};
 	var frameIndex = frameOverride || drawing.animation.frameIndex;
 	imgToDraw = p[frameIndex];
