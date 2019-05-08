@@ -94,7 +94,7 @@ after('renderer.GetImage', function () {
 // override drawTile to draw from our custom image cache
 // and give it a mock context to prevent the original drawing
 var mockContext = {
-	putImageData: function () {},
+	drawImage: function () {},
 };
 before('drawTile', function (img, x, y, context) {
 	if (!context) { //optional pass in context; otherwise, use default
