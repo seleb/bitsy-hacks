@@ -3,8 +3,8 @@
 @file transparent sprites
 @summary makes all sprites have transparent backgrounds
 @license MIT
-@version 3.0.2
-@requires Bitsy Version: 5.5
+@version 4.0.0
+@requires Bitsy Version: 6.1
 @author Sean S. LeBlanc
 
 @description
