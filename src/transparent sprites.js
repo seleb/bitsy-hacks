@@ -29,8 +29,12 @@ export var hackOptions = {
 	},
 };
 
-var madeTransparent = {};
-var makeTransparent = false;
+var madeTransparent;
+var makeTransparent;
+before('onready', function() {
+	madeTransparent = {};
+	makeTransparent = false;
+});
 before('renderer.GetImage', function (drawing, paletteId, frameOverride) {
 	// check cache first
 	var cache = madeTransparent[drawing.drw] = madeTransparent[drawing.drw] || {};
