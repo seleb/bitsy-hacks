@@ -3,7 +3,7 @@
 @file transparent sprites
 @summary makes all sprites have transparent backgrounds
 @license MIT
-@version 4.0.0
+@version 4.0.1
 @requires Bitsy Version: 6.1
 @author Sean S. LeBlanc
 
@@ -29,8 +29,12 @@ export var hackOptions = {
 	},
 };
 
-var madeTransparent = {};
-var makeTransparent = false;
+var madeTransparent;
+var makeTransparent;
+before('onready', function() {
+	madeTransparent = {};
+	makeTransparent = false;
+});
 before('renderer.GetImage', function (drawing, paletteId, frameOverride) {
 	// check cache first
 	var cache = madeTransparent[drawing.drw] = madeTransparent[drawing.drw] || {};
@@ -50,7 +54,7 @@ before('drawTile', function (canvas) {
 		// redraw with all bg pixels transparent
 		var ctx = canvas.getContext('2d');
 		var data = ctx.getImageData(0, 0, canvas.width, canvas.height);
-		var bg = bitsy.getPal(bitsy.curPal())[0];
+		var bg = bitsy.getPal(bitsy.getRoomPal(bitsy.player().room))[0];
 		for (let i = 0; i < data.data.length; i += 4) {
 			var r = data.data[i];
 			var g = data.data[i + 1];
