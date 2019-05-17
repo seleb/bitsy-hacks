@@ -61,12 +61,14 @@ var hackOptions = {
 
 // preload images into a cache
 var imgs = {};
-for (var i in hackOptions.portraits) {
-	if(hackOptions.portraits.hasOwnProperty(i)) {
-		imgs[i] = new Image();
-		imgs[i].src = hackOptions.portraits[i];
+after('startExportedGame', function() {
+	for (var i in hackOptions.portraits) {
+		if(hackOptions.portraits.hasOwnProperty(i)) {
+			imgs[i] = new Image();
+			imgs[i].src = hackOptions.portraits[i];
+		}
 	}
-}
+});
 
 // hook up dialog tag
 var portrait = '';
