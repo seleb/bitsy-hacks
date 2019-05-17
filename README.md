@@ -9,6 +9,7 @@ A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamled
 - 😌 [bitsymuse](/dist/bitsymuse.js): A variety of Bitsy sound and music handlers
 - 😴 [canvas replacement](/dist/canvas-replacement.js): WebGLazy bitsy integration (this one's mostly just for me)
 - 😽 [character portraits](/dist/character-portraits.js): high quality anime jpegs (or pngs i guess)
+- 🙀 [character portraits animated](/dist/character-portraits-animated.js): high quality anime gifs
 - ⛔️ [close on ending](/dist/close-on-ending.js): Prevents from playing past an ending
 - ➿ [corrupt](/dist/corrupt.js): corrupts gamedata at runtime
 - 🅰 [custom text effect](/dist/custom-text-effect.js): make {custom}text effects{custom}
