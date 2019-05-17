@@ -93,6 +93,7 @@ after('drawRoom', function () {
 	}
 	if (!context) {
 		context = bitsy.canvas.getContext('2d');
+		context.imageSmoothingEnabled = false;
 	}
 	try {
 		context.drawImage(state.portrait, 0, 0, bitsy.width * hackOptions.scale, bitsy.height * hackOptions.scale, 0, 0, bitsy.width * bitsy.scale, bitsy.height * bitsy.scale);
