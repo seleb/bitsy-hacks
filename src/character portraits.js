@@ -52,6 +52,7 @@ var hackOptions = {
 	portraits: {
 		'cat': './cat.png',
 	},
+	autoReset: true, // if true, automatically resets the portrait to blank when dialog is exited
 };
 
 // preload images into a cache
@@ -90,5 +91,11 @@ after('drawRoom', function () {
 		// log and ignore errors
 		// so broken images don't break the game
 		console.error('Portrait error', error);
+	}
+});
+
+after('onExitDialog', function() {
+	if (hackOptions.autoReset) {
+		portrait = '';
 	}
 });
