@@ -1,3 +1,31 @@
+/**
+🙀
+@file character portraits animated
+@summary high quality anime gifs
+@license MIT
+@version 1.0.0
+@requires Bitsy Version: 5.3
+@author Sean S. LeBlanc
+
+@description
+An expanded version of the character portraits hack
+that includes support for animated GIFs.
+
+See base character portraits hack for more info.
+
+Notes:
+	- Individual frame delays are respected
+	  (you can use frame delays instead of duplicated frames to optimize pauses)
+	- Non-looping GIFs are supported
+	- Non-GIFs which work with the base hack are supported
+	- This hack is larger, more complicated, and less performant
+	  than the base portrait hack, so if you're not using animations
+	  make sure to use the base one instead
+
+HOW TO USE:
+1. Copy-paste this script into a script tag after the bitsy source
+2. Edit the hackOptions object as needed
+*/
 import {
 	GifReader,
 } from 'omggif';
@@ -21,6 +49,8 @@ hackOptions.portraits = {
 	'png': './test.gif',
 };
 
+// convert portrait state to new format supporting multiple frames
+// and load the frames of animated gifs
 after('startExportedGame', function () {
 	for (var portrait in state.portraits) {
 		if (state.portraits.hasOwnProperty(portrait)) {
@@ -84,6 +114,7 @@ after('startExportedGame', function () {
 	}
 });
 
+// override portrait drawing to use frames
 var animation;
 var animationStart = 0;
 before('drawRoom', function () {
