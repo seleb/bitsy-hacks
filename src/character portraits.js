@@ -41,7 +41,7 @@ import {
 	after
 } from "./helpers/kitsy-script-toolkit";
 
-var hackOptions = {
+export var hackOptions = {
 	// influences the resolution of the drawn image
 	// `bitsy.scale` (4 by default) is the max and will match bitsy's internal scale (i.e. 512x512)
 	// 1 will match bitsy's in-game virtual scale (i.e. 128x128)
@@ -59,40 +59,43 @@ var hackOptions = {
 	autoReset: true, // if true, automatically resets the portrait to blank when dialog is exited
 };
 
+export var state = {
+	portraits: {},
+	portrait: null,
+};
+
 // preload images into a cache
-var imgs = {};
 after('startExportedGame', function() {
 	for (var i in hackOptions.portraits) {
 		if(hackOptions.portraits.hasOwnProperty(i)) {
-			imgs[i] = new Image();
-			imgs[i].src = hackOptions.portraits[i];
+			state.portraits[i] = new Image();
+			state.portraits[i].src = hackOptions.portraits[i];
 		}
 	}
 });
 
 // hook up dialog tag
-var portrait = '';
 addDialogTag('portrait', function (environment, parameters, onReturn) {
 	var newPortrait = parameters[0];
-	var image = imgs[newPortrait];
-	if (portrait === image) {
+	var image = state.portraits[newPortrait];
+	if (state.portrait === image) {
 		return;
 	}
-	portrait = image;
+	state.portrait = image;
 	onReturn(null);
 });
 
 // hook up drawing
 var context;
 after('drawRoom', function () {
-	if ((!bitsy.isDialogMode && !bitsy.isNarrating) || !portrait) {
+	if ((!bitsy.isDialogMode && !bitsy.isNarrating) || !state.portrait) {
 		return;
 	}
 	if (!context) {
 		context = bitsy.canvas.getContext('2d');
 	}
 	try {
-		context.drawImage(portrait, 0, 0, bitsy.width * hackOptions.scale, bitsy.height * hackOptions.scale, 0, 0, bitsy.width * bitsy.scale, bitsy.height * bitsy.scale);
+		context.drawImage(state.portrait, 0, 0, bitsy.width * hackOptions.scale, bitsy.height * hackOptions.scale, 0, 0, bitsy.width * bitsy.scale, bitsy.height * bitsy.scale);
 	} catch (error) {
 		// log and ignore errors
 		// so broken images don't break the game
@@ -102,6 +105,6 @@ after('drawRoom', function () {
 
 after('onExitDialog', function() {
 	if (hackOptions.autoReset) {
-		portrait = '';
+		state.portrait = '';
 	}
 });
