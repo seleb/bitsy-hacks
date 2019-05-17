@@ -16,6 +16,9 @@ Examples:
 	(portrait "")
 		resets the portrait to not draw
 
+By default, the portrait will clear when dialog is exited,
+but this can be customized in the hackOptions below.
+
 All portraits are drawn from the top-left corner, on top of the game and below the dialog box.
 They are scaled uniformly according to the hackOptions below,
 and are cropped to bitsy's canvas width/height.
@@ -29,7 +32,8 @@ All standard browser image formats are supported, but keep filesize in mind!
 Note: The hack is called "character portraits", but this can easily be used to show images of any sort
 
 HOW TO USE:
-Copy-paste into a script tag after the bitsy source
+1. Copy-paste this script into a script tag after the bitsy source
+2. Edit the hackOptions object as needed
 */
 import bitsy from "bitsy";
 import {
