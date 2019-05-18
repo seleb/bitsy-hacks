@@ -3,7 +3,7 @@
 @file character portraits
 @summary high quality anime jpegs (or pngs i guess)
 @license MIT
-@version 1.1.1
+@version 2.0.0
 @requires Bitsy Version: 5.3
 @author Sean S. LeBlanc
 
@@ -15,6 +15,9 @@ Examples:
 		draws the image named "cat" in the hackOptions
 	(portrait "")
 		resets the portrait to not draw
+
+By default, the portrait will clear when dialog is exited,
+but this can be customized in the hackOptions below.
 
 All portraits are drawn from the top-left corner, on top of the game and below the dialog box.
 They are scaled uniformly according to the hackOptions below,
@@ -29,10 +32,11 @@ All standard browser image formats are supported, but keep filesize in mind!
 Note: The hack is called "character portraits", but this can easily be used to show images of any sort
 
 HOW TO USE:
-Copy-paste into a script tag after the bitsy source
+1. Copy-paste this script into a script tag after the bitsy source
+2. Edit the hackOptions object as needed
 */
 this.hacks = this.hacks || {};
-(function (bitsy) {
+this.hacks.character_portraits = (function (exports,bitsy) {
 'use strict';
 var hackOptions = {
 	// influences the resolution of the drawn image
@@ -49,6 +53,7 @@ var hackOptions = {
 	portraits: {
 		'cat': './cat.png',
 	},
+	autoReset: true, // if true, automatically resets the portrait to blank when dialog is exited
 };
 
 bitsy = bitsy && bitsy.hasOwnProperty('default') ? bitsy['default'] : bitsy;
@@ -314,38 +319,44 @@ function addDialogTag(tag, fn) {
 
 
 
+var state = {
+	portraits: {},
+	portrait: null,
+};
+
 // preload images into a cache
-var imgs = {};
-for (var i in hackOptions.portraits) {
-	if(hackOptions.portraits.hasOwnProperty(i)) {
-		imgs[i] = new Image();
-		imgs[i].src = hackOptions.portraits[i];
+after('startExportedGame', function() {
+	for (var i in hackOptions.portraits) {
+		if(hackOptions.portraits.hasOwnProperty(i)) {
+			state.portraits[i] = new Image();
+			state.portraits[i].src = hackOptions.portraits[i];
+		}
 	}
-}
+});
 
 // hook up dialog tag
-var portrait = '';
 addDialogTag('portrait', function (environment, parameters, onReturn) {
 	var newPortrait = parameters[0];
-	var image = imgs[newPortrait];
-	if (portrait === image) {
+	var image = state.portraits[newPortrait];
+	if (state.portrait === image) {
 		return;
 	}
-	portrait = image;
+	state.portrait = image;
 	onReturn(null);
 });
 
 // hook up drawing
 var context;
 after('drawRoom', function () {
-	if ((!bitsy.isDialogMode && !bitsy.isNarrating) || !portrait) {
+	if ((!bitsy.isDialogMode && !bitsy.isNarrating) || !state.portrait) {
 		return;
 	}
 	if (!context) {
 		context = bitsy.canvas.getContext('2d');
+		context.imageSmoothingEnabled = false;
 	}
 	try {
-		context.drawImage(portrait, 0, 0, bitsy.width * hackOptions.scale, bitsy.height * hackOptions.scale, 0, 0, bitsy.width * bitsy.scale, bitsy.height * bitsy.scale);
+		context.drawImage(state.portrait, 0, 0, bitsy.width * hackOptions.scale, bitsy.height * hackOptions.scale, 0, 0, bitsy.width * bitsy.scale, bitsy.height * bitsy.scale);
 	} catch (error) {
 		// log and ignore errors
 		// so broken images don't break the game
@@ -353,4 +364,15 @@ after('drawRoom', function () {
 	}
 });
 
-}(window));
+after('onExitDialog', function() {
+	if (hackOptions.autoReset) {
+		state.portrait = '';
+	}
+});
+
+exports.hackOptions = hackOptions;
+exports.state = state;
+
+return exports;
+
+}({},window));

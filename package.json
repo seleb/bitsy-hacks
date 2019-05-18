@@ -20,6 +20,7 @@
 	},
 	"dependencies": {
 		"input-gamepads.js": "^2.0.2",
+		"omggif": "^1.0.9",
 		"rollup": "^0.56.5",
 		"rollup-plugin-commonjs": "^9.3.4",
 		"rollup-plugin-node-resolve": "^3.4.0",
