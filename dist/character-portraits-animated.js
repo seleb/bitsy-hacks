@@ -14,6 +14,8 @@ that includes support for animated GIFs.
 See base character portraits hack for more info.
 
 Notes:
+	- GIFs have to be fetched asynchronously, which means they won't work by default
+	  when running from a local file in chrome. They will work in firefox or when run from a server.
 	- Individual frame delays are respected
 	  (you can use frame delays instead of duplicated frames to optimize pauses)
 	- Non-looping GIFs are supported
