@@ -18,13 +18,21 @@ Using the (exit) function in any part of a series of dialog will make the
 game exit to the new room after the dialog is finished. Using (exitNow) will
 immediately warp to the new room, but the current dialog will continue.
 
+The (exitHere) and (exitHereNow) functions work the same, except without
+the requirement to specify the coordinates, instead using the current
+coordinates of the player sprite.
+
 Usage:
 	(exit "<room name>,<x>,<y>,<optional transition_effect>")
 	(exitNow "<room name>,<x>,<y>,<optional transition_effect>")
+	(exitHere "<room name>,<optional transition_effect>")
+	(exitHereNow "<room name>,<optional transition_effect>")
 
 Example:
 	(exit "FinalRoom,8,4")
 	(exit "FinalRoom,8,4,tunnel")
+	(exitHere "FinalRoom")
+	(exitHere "FinalRoom,tunnel")
 
 HOW TO USE:
 1. Copy-paste this script into a new script tag after the Bitsy source code.
@@ -392,6 +400,43 @@ function _getExitParams(parameters) {
 
 	if (room === undefined) {
 		console.warn("Bad {exit/exitNow} parameter: Room '" + roomName + "' not found!");
+		return null;
+	}
+
+	return {
+		dest: {
+			room,
+			x: Number(x),
+			y: Number(y),
+		},
+		transition_effect,
+	};
+}
+
+addDualDialogTag('exitHere', function (environment, parameters) {
+	var exit = _getExitHereParams(parameters);
+	if (!exit) {
+		return;
+	}
+	bitsy.movePlayerThroughExit(exit);
+});
+
+function _getExitHereParams(parameters) {
+	var params = parameters[0].split(',');
+	var roomName = params[0];
+	var transition_effect = params[1];
+	var room = getRoom(roomName).id
+	
+	var x = player().x;
+	var y = player().y;
+
+	if (!roomName || x === undefined || y === undefined) {
+		console.warn('{exitHere/exitHereNow} was missing parameters! Usage: {exitHere/exitHereNow "roomname,transition(optional)"}');
+		return null;
+	}
+
+	if (room === undefined) {
+		console.warn("Bad {exitHere/exitHereNow} parameter: Room '" + roomName + "' not found!");
 		return null;
 	}
 
