@@ -425,12 +425,12 @@ function _getExitHereParams(parameters) {
 	var params = parameters[0].split(',');
 	var roomName = params[0];
 	var transition_effect = params[1];
-	var room = getRoom(roomName).id
+	var room = getRoom(roomName).id;
 	
-	var x = player().x;
-	var y = player().y;
+	var x = bitsy.player().x;
+	var y = bitsy.player().y;
 
-	if (!roomName || x === undefined || y === undefined) {
+	if (!roomName) {
 		console.warn('{exitHere/exitHereNow} was missing parameters! Usage: {exitHere/exitHereNow "roomname,transition(optional)"}');
 		return null;
 	}
