@@ -5,9 +5,7 @@ import {
 	snapshot,
 } from './test/bitsy';
 
-test('directional avatar', async () => {
-	await start({
-		gamedata: `
+const gamedata = `
 Write your game's title here
 
 # BITSY VERSION 5.1
@@ -81,7 +79,11 @@ VAR a
 42
 
 
-`,
+`;
+
+test('directional avatar', async () => {
+	await start({
+		gamedata,
 		hacks: ['directional avatar'],
 	});
 	await press('Enter'); // complete title dialog
@@ -90,6 +92,23 @@ VAR a
 	await press('ArrowLeft'); // move
 	await snapshot();
 	await press('ArrowRight'); // move
+	await snapshot();
+	await end();
+});
+
+test('compatible with transparency', async () => {
+	await start({
+		gamedata,
+		hacks: ['directional avatar', 'transparent sprites'],
+	});
+	await press('Enter'); // complete title dialog
+	await press('Enter'); // end dialog
+	await press('ArrowLeft');
+	await press('ArrowLeft');
+	await press('ArrowLeft'); // walk on top of tile border
+	await snapshot();
+	await press('ArrowLeft');
+	await press('ArrowRight'); // walk on top of tile border from other side
 	await snapshot();
 	await end();
 });

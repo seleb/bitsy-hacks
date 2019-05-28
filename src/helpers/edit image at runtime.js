@@ -63,7 +63,7 @@ Args:
 export function setImageData(id, frame, map, newData) {
 	var drawing = getImage(id, map);
 	var drw = drawing.drw;
-	var img = bitsy.renderer.GetImageSource(drw);
+	var img = bitsy.renderer.GetImageSource(drw).slice();
 	img[frame] = newData;
 	bitsy.renderer.SetImageSource(drw, img);
 }

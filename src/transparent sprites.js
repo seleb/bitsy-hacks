@@ -3,7 +3,7 @@
 @file transparent sprites
 @summary makes all sprites have transparent backgrounds
 @license MIT
-@version 4.0.1
+@version 4.0.2
 @requires Bitsy Version: 6.1
 @author Sean S. LeBlanc
 
@@ -24,7 +24,7 @@ export var hackOptions = {
 	isTransparent: function (drawing) {
 		//return drawing.name == 'tea'; // specific transparent drawing
 		//return ['tea', 'flower', 'hat'].indexOf(drawing.name) !== -1; // specific transparent drawing list
-		//return drawing.name.indexOf('TRANSPARENT') !== -1; // transparent drawing flag in name
+		//return drawing.name && drawing.name.indexOf('TRANSPARENT') !== -1; // transparent drawing flag in name
 		return true; // all drawings are transparent
 	},
 };
@@ -40,13 +40,15 @@ before('renderer.GetImage', function (drawing, paletteId, frameOverride) {
 	var cache = madeTransparent[drawing.drw] = madeTransparent[drawing.drw] || {};
 	var p = cache[paletteId] = cache[paletteId] || {};
 	var frameIndex = frameOverride || drawing.animation.frameIndex;
-	if (p[frameIndex]) {
+	var source = bitsy.renderer.GetImageSource(drawing.drw);
+	if (p[frameIndex] === source) {
 		// already made this transparent
 		return;
 	}
 
 	// flag the next draw as needing to be made transparent
-	p[frameIndex] = makeTransparent = hackOptions.isTransparent(drawing);
+	p[frameIndex] = source;
+	makeTransparent = hackOptions.isTransparent(drawing);
 });
 
 before('drawTile', function (canvas) {

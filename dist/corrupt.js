@@ -3,7 +3,7 @@
 @file corrupt
 @summary corrupts gamedata at runtime
 @license MIT
-@version 3.0.0
+@version 3.0.1
 @requires 5.5
 @author Sean S. LeBlanc
 
@@ -178,7 +178,7 @@ Args:
 function setImageData(id, frame, map, newData) {
 	var drawing = getImage(id, map);
 	var drw = drawing.drw;
-	var img = bitsy.renderer.GetImageSource(drw);
+	var img = bitsy.renderer.GetImageSource(drw).slice();
 	img[frame] = newData;
 	bitsy.renderer.SetImageSource(drw, img);
 }
