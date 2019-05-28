@@ -40,13 +40,15 @@ before('renderer.GetImage', function (drawing, paletteId, frameOverride) {
 	var cache = madeTransparent[drawing.drw] = madeTransparent[drawing.drw] || {};
 	var p = cache[paletteId] = cache[paletteId] || {};
 	var frameIndex = frameOverride || drawing.animation.frameIndex;
-	if (p[frameIndex]) {
+	var source = bitsy.renderer.GetImageSource(drawing.drw);
+	if (p[frameIndex] === source) {
 		// already made this transparent
 		return;
 	}
 
 	// flag the next draw as needing to be made transparent
-	p[frameIndex] = makeTransparent = hackOptions.isTransparent(drawing);
+	p[frameIndex] = source;
+	makeTransparent = hackOptions.isTransparent(drawing);
 });
 
 before('drawTile', function (canvas) {
