@@ -24,7 +24,7 @@ export var hackOptions = {
 	isTransparent: function (drawing) {
 		//return drawing.name == 'tea'; // specific transparent drawing
 		//return ['tea', 'flower', 'hat'].indexOf(drawing.name) !== -1; // specific transparent drawing list
-		//return drawing.name.indexOf('TRANSPARENT') !== -1; // transparent drawing flag in name
+		//return drawing.name && drawing.name.indexOf('TRANSPARENT') !== -1; // transparent drawing flag in name
 		return true; // all drawings are transparent
 	},
 };
