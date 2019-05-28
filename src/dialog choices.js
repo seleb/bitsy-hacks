@@ -83,13 +83,12 @@ import bitsy from "bitsy";
 import {
 	inject,
 } from "./helpers/kitsy-script-toolkit";
-import { addParagraphBreak } from "./helpers/utils";
+import "./helpers/addParagraphBreak";
 
 var dialogChoices = {
 	choice: 0,
 	choices: [],
 	choicesActive: false,
-	addParagraphBreak: addParagraphBreak,
 	handleInput: function (dialogBuffer) {
 		// navigate
 		if (
@@ -185,7 +184,7 @@ var ChoiceNode = function(options) {
 				});
 			};
 		});
-		window.dialogChoices.addParagraphBreak(environment);
+			environment.GetDialogBuffer().AddParagraphBreak();
 		evalChildren(this.options, function() {
 			onReturn(lastVal);
 			window.dialogChoices.choicesActive = true;
