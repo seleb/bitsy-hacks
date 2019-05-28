@@ -3,7 +3,7 @@
 @file online
 @summary multiplayer bitsy
 @license MIT
-@version 2.1.3
+@version 2.1.4
 @requires 5.5
 @author Sean S. LeBlanc
 @description
@@ -462,7 +462,7 @@ Args:
 function setImageData(id, frame, map, newData) {
 	var drawing = getImage(id, map);
 	var drw = drawing.drw;
-	var img = bitsy.renderer.GetImageSource(drw);
+	var img = bitsy.renderer.GetImageSource(drw).slice();
 	img[frame] = newData;
 	bitsy.renderer.SetImageSource(drw, img);
 }
@@ -476,7 +476,7 @@ function setSpriteData(id, frame, newData) {
 @file edit image from dialog
 @summary edit sprites, items, and tiles from dialog
 @license MIT
-@version 1.2.2
+@version 1.2.3
 @requires 5.3
 @author Sean S. LeBlanc
 
