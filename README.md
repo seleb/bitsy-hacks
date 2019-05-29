@@ -32,6 +32,7 @@ A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamled
 - 🕷 [itsy-bitsy](/dist/itsy-bitsy.js): for when bitsy's not small enough
 - ☕ [javascript dialog](/dist/javascript-dialog.js): execute arbitrary javascript from dialog
 - 🔀 [logic-operators-extended](/dist/logic-operators-extended.js): adds conditional logic operators
+- 📜 [long dialog](/dist/long-dialog.js): put more words onscreen
 - 👨‍👨‍👧‍👧 [multi-sprite avatar](/dist/multi-sprite-avatar.js): make the player big
 - 📎 [noclip](/dist/noclip.js): walk through wall tiles, sprites, items, exits, and endings
 - 🔄 [online](/dist/online.js): multiplayer bitsy

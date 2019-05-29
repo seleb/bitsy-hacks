@@ -3,7 +3,7 @@
 @file dialog choices
 @summary binary dialog choices
 @license MIT
-@version 1.1.1
+@version 2.0.0
 @requires 5.3
 @author Sean S. LeBlanc
 
@@ -135,25 +135,6 @@ function unique(array) {
 	return array.filter(function (item, idx) {
 		return array.indexOf(item) === idx;
 	});
-}
-
-/**
- * Helper for printing a paragraph break inside of a dialog function.
- * automatically add an appropriate number of line breaks
- * based on the current dialogue buffer size rather than the user having to count;
- * Intended to be called using the environment parameters of the original function;
- * e.g.
- * addDialogTag('myTag', function (environment, parameters, onReturn) {
- * 	addParagraphBreak(environment);
- * 	onReturn(null);
- * });
- * @param {Environment} environment Bitsy environment object; first param to a dialog function
- */
-function addParagraphBreak(environment) {
-    var a = environment.GetDialogBuffer().CurRowCount();
-    for (var i = 0; i < 3 - a; ++i) {
-        environment.GetDialogBuffer().AddLinebreak();
-    }
 }
 
 /**
@@ -296,24 +277,38 @@ function _reinitEngine() {
 	bitsy.dialogBuffer = bitsy.dialogModule.CreateBuffer();
 }
 
+/**
+ * Helper for printing a paragraph break inside of a dialog function.
+ * Adds the function `AddParagraphBreak` to `DialogBuffer`
+ */
+
+inject$1(/(this\.AddLinebreak = )/, 'this.AddParagraphBreak = function() { buffer.push( [[]] ); isActive = true; };\n$1');
+
 
 
 var dialogChoices = {
 	choice: 0,
 	choices: [],
 	choicesActive: false,
-	addParagraphBreak: addParagraphBreak,
 	handleInput: function (dialogBuffer) {
 		// navigate
 		if (
 			bitsy.input.isKeyDown(bitsy.key.up) ||
 			bitsy.input.isKeyDown(bitsy.key.w) ||
-			bitsy.input.swipeUp() ||
+			bitsy.input.swipeUp()
+		) {
+			this.choice -= 1;
+			if (this.choice < 0) {
+				this.choice += this.choices.length;
+			}
+			return false;
+		}
+		if (
 			bitsy.input.isKeyDown(bitsy.key.down) ||
 			bitsy.input.isKeyDown(bitsy.key.s) ||
 			bitsy.input.swipeDown()
 		) {
-			this.choice = this.choice ? 0 : 1;
+			this.choice = (this.choice + 1) % this.choices.length;
 			return false;
 		}
 		// select
@@ -398,8 +393,11 @@ var ChoiceNode = function(options) {
 				});
 			};
 		});
-		window.dialogChoices.addParagraphBreak(environment);
+		if (environment.GetDialogBuffer().CurCharCount() > 0) {
+			environment.GetDialogBuffer().AddParagraphBreak();
+		}
 		evalChildren(this.options, function() {
+			environment.GetDialogBuffer().AddParagraphBreak();
 			onReturn(lastVal);
 			window.dialogChoices.choicesActive = true;
 		});

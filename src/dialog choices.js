@@ -3,7 +3,7 @@
 @file dialog choices
 @summary binary dialog choices
 @license MIT
-@version 1.1.1
+@version 2.0.0
 @requires 5.3
 @author Sean S. LeBlanc
 
@@ -83,24 +83,31 @@ import bitsy from "bitsy";
 import {
 	inject,
 } from "./helpers/kitsy-script-toolkit";
-import { addParagraphBreak } from "./helpers/utils";
+import "./helpers/addParagraphBreak";
 
 var dialogChoices = {
 	choice: 0,
 	choices: [],
 	choicesActive: false,
-	addParagraphBreak: addParagraphBreak,
 	handleInput: function (dialogBuffer) {
 		// navigate
 		if (
 			bitsy.input.isKeyDown(bitsy.key.up) ||
 			bitsy.input.isKeyDown(bitsy.key.w) ||
-			bitsy.input.swipeUp() ||
+			bitsy.input.swipeUp()
+		) {
+			this.choice -= 1;
+			if (this.choice < 0) {
+				this.choice += this.choices.length;
+			}
+			return false;
+		}
+		if (
 			bitsy.input.isKeyDown(bitsy.key.down) ||
 			bitsy.input.isKeyDown(bitsy.key.s) ||
 			bitsy.input.swipeDown()
 		) {
-			this.choice = this.choice ? 0 : 1;
+			this.choice = (this.choice + 1) % this.choices.length;
 			return false;
 		}
 		// select
@@ -185,8 +192,11 @@ var ChoiceNode = function(options) {
 				});
 			};
 		});
-		window.dialogChoices.addParagraphBreak(environment);
+		if (environment.GetDialogBuffer().CurCharCount() > 0) {
+			environment.GetDialogBuffer().AddParagraphBreak();
+		}
 		evalChildren(this.options, function() {
+			environment.GetDialogBuffer().AddParagraphBreak();
 			onReturn(lastVal);
 			window.dialogChoices.choicesActive = true;
 		});
