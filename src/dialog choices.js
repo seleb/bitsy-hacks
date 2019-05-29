@@ -3,12 +3,13 @@
 @file dialog choices
 @summary binary dialog choices
 @license MIT
-@version 2.0.0
+@version 2.1.0
 @requires 5.3
 @author Sean S. LeBlanc
 
 @description
 Adds a dialog tag which allows you to present the player with binary dialog choices.
+Uses as an arrow cursor by default, but this can be changed in the hackOptions to use a custom bitsy sprite instead.
 
 Usage:
 {choice
@@ -77,13 +78,31 @@ e.g.
 """
 
 HOW TO USE:
-Copy-paste into a script tag after the bitsy source
+1. Copy-paste into a script tag after the bitsy source
+2. Edit hackOptions below as needed
 */
 import bitsy from "bitsy";
 import {
 	inject,
 } from "./helpers/kitsy-script-toolkit";
 import "./helpers/addParagraphBreak";
+
+var hackOptions = {
+	// if defined, the cursor is drawn as the sprite with the given id
+	// e.g. use 'A' to use the player's avatar as a cursor
+	// if not defined, uses an arrow graphic similar to the continue arrow
+	cursor: undefined,
+	// modifies the scale/position of the cursor
+	// recommended combinations:
+	// 	- scale: 4, y: 1, x: 0
+	// 	- scale: 2, y: 3, x: 1
+	// 	- scale: 2, y: 4, x: 0 + custom cursor
+	transform: {
+		scale: bitsy.scale,
+		y: 1,
+		x: 0,
+	}
+};
 
 var dialogChoices = {
 	choice: 0,
@@ -141,6 +160,17 @@ var dialogChoices = {
 		return false;
 	}
 };
+
+var choiceCursorDefault = `[
+	[0, 0, 0, 0, 0, 0, 0, 0],
+	[0, 0, 0, 0, 0, 0, 0, 0],
+	[0, 1, 0, 0, 0, 0, 0, 0],
+	[0, 1, 1, 0, 0, 0, 0, 0],
+	[0, 1, 1, 1, 0, 0, 0, 0],
+	[0, 1, 1, 0, 0, 0, 0, 0],
+	[0, 1, 0, 0, 0, 0, 0, 0],
+	[0, 0, 0, 0, 0, 0, 0, 0]
+]`;
 
 bitsy.dialogChoices = dialogChoices;
 
@@ -210,16 +240,17 @@ $1`);
 // but draws rotated to point at text)
 inject(/(this\.DrawNextArrow = )/, `
 this.DrawChoiceArrow = function() {
-	var top = (3 + window.dialogChoices.choice * 6) * scale;
-	var left = 1 * scale;
-	for (var y = 0; y < 3; y++) {
-		for (var x = 0; x < 5; x++) {
-			var i = (y * 5) + x;
-			if (arrowdata[i] == 1) {
+	var rows = ${hackOptions.cursor ? `renderer.GetImageSource(sprite['${hackOptions.cursor}'].drw)[sprite['${hackOptions.cursor}'].animation.frameIndex]` : choiceCursorDefault};
+	var top = (${hackOptions.transform.y} + window.dialogChoices.choice * (textboxInfo.padding_vert + relativeFontHeight())) * scale;
+	var left = ${hackOptions.transform.x}*scale;
+	for (var y = 0; y < rows.length; y++) {
+		var cols = rows[y];
+		for (var x = 0; x < cols.length; x++) {
+			if (cols[x]) {
 				//scaling nonsense
-				for (var sy = 0; sy < scale; sy++) {
-					for (var sx = 0; sx < scale; sx++) {
-						var pxl = 4 * ( ((top+(x*scale)+sy) * (textboxInfo.width*scale)) + (left+(y*scale)+sx) );
+				for (var sy = 0; sy < ${hackOptions.transform.scale}; sy++) {
+					for (var sx = 0; sx < ${hackOptions.transform.scale}; sx++) {
+						var pxl = 4 * ( ((top+(y*${hackOptions.transform.scale})+sy) * (textboxInfo.width*scale)) + (left+(x*${hackOptions.transform.scale})+sx) );
 						textboxInfo.img.data[pxl+0] = 255;
 						textboxInfo.img.data[pxl+1] = 255;
 						textboxInfo.img.data[pxl+2] = 255;
