@@ -442,7 +442,7 @@ $1`);
 // but draws rotated to point at text)
 inject$1(/(this\.DrawNextArrow = )/, `
 this.DrawChoiceArrow = function() {
-	var rows = ${hackOptions.cursor ? `renderer.GetImageSource(sprite['${hackOptions.cursor}'].drw)[0]` : choiceCursorDefault};
+	var rows = ${hackOptions.cursor ? `renderer.GetImageSource(sprite['${hackOptions.cursor}'].drw)[sprite['${hackOptions.cursor}'].animation.frameIndex]` : choiceCursorDefault};
 	var top = (${hackOptions.transform.y} + window.dialogChoices.choice * (textboxInfo.padding_vert + relativeFontHeight())) * scale;
 	var left = ${hackOptions.transform.x}*scale;
 	for (var y = 0; y < rows.length; y++) {
