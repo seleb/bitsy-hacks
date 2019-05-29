@@ -3,7 +3,7 @@
 @file save
 @summary save/load your game
 @license MIT
-@version 1.0.2
+@version 1.0.3
 @requires 5.4
 @author Sean S. LeBlanc
 
@@ -479,7 +479,7 @@ after('onready', function () {
 });
 
 // hook up clear on end
-after('reset_cur_game', function () {
+before('reset_cur_game', function () {
 	if (hackOptions.clearOnEnd) {
 		if (bitsy.isEnding) {
 			clear();
