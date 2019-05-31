@@ -112,6 +112,7 @@ var dialogChoices = {
 		if (!this.choicesActive) {
 			return false;
 		}
+		var l = Math.max(this.choices.length, 1);
 		// navigate
 		if (
 			bitsy.input.isKeyDown(bitsy.key.up) ||
@@ -120,7 +121,7 @@ var dialogChoices = {
 		) {
 			this.choice -= 1;
 			if (this.choice < 0) {
-				this.choice += this.choices.length;
+				this.choice += l;
 			}
 			return false;
 		}
@@ -129,7 +130,7 @@ var dialogChoices = {
 			bitsy.input.isKeyDown(bitsy.key.s) ||
 			bitsy.input.swipeDown()
 		) {
-			this.choice = (this.choice + 1) % this.choices.length;
+			this.choice = (this.choice + 1) % l;
 			return false;
 		}
 		// select
