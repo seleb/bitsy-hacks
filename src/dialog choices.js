@@ -109,6 +109,9 @@ var dialogChoices = {
 	choices: [],
 	choicesActive: false,
 	handleInput: function (dialogBuffer) {
+		if (!this.choicesActive) {
+			return false;
+		}
 		// navigate
 		if (
 			bitsy.input.isKeyDown(bitsy.key.up) ||
@@ -228,7 +231,6 @@ var ChoiceNode = function(options) {
 		evalChildren(this.options, function() {
 			environment.GetDialogBuffer().AddParagraphBreak();
 			onReturn(lastVal);
-			window.dialogChoices.choicesActive = true;
 		});
 	}
 }
@@ -275,6 +277,9 @@ if(window.dialogChoices.handleInput(dialogBuffer)) {
 	return;
 } else `);
 inject(/(this\.CanContinue = function\(\) {)/, `$1
-if(window.dialogChoices.choicesActive){
+if(window.dialogChoices.choices.length){
+	window.dialogChoices.choicesActive = isDialogReadyToContinue;
 	return false;
-}`);
+}
+window.dialogChoices.choicesActive = false;
+`);
