@@ -419,6 +419,7 @@ var ChoiceNode = function(options) {
 			}
 			else {
 				done();
+				window.dialogChoices.choicesActive = true;
 			}
 		}
 		window.dialogChoices.choices = this.options.map(function(option){
@@ -480,11 +481,9 @@ if(window.dialogChoices.handleInput(dialogBuffer)) {
 	return;
 } else `);
 inject$1(/(this\.CanContinue = function\(\) {)/, `$1
-if(window.dialogChoices.choices.length){
-	window.dialogChoices.choicesActive = isDialogReadyToContinue;
+if(window.dialogChoices.choicesActive){
 	return false;
 }
-window.dialogChoices.choicesActive = false;
 `);
 
 }(window));
