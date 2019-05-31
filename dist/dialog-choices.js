@@ -3,7 +3,7 @@
 @file dialog choices
 @summary binary dialog choices
 @license MIT
-@version 2.1.0
+@version 2.1.1
 @requires 5.3
 @author Sean S. LeBlanc
 
@@ -311,6 +311,10 @@ var dialogChoices = {
 	choices: [],
 	choicesActive: false,
 	handleInput: function (dialogBuffer) {
+		if (!this.choicesActive) {
+			return false;
+		}
+		var l = Math.max(this.choices.length, 1);
 		// navigate
 		if (
 			bitsy.input.isKeyDown(bitsy.key.up) ||
@@ -319,7 +323,7 @@ var dialogChoices = {
 		) {
 			this.choice -= 1;
 			if (this.choice < 0) {
-				this.choice += this.choices.length;
+				this.choice += l;
 			}
 			return false;
 		}
@@ -328,7 +332,7 @@ var dialogChoices = {
 			bitsy.input.isKeyDown(bitsy.key.s) ||
 			bitsy.input.swipeDown()
 		) {
-			this.choice = (this.choice + 1) % this.choices.length;
+			this.choice = (this.choice + 1) % l;
 			return false;
 		}
 		// select
@@ -430,7 +434,6 @@ var ChoiceNode = function(options) {
 		evalChildren(this.options, function() {
 			environment.GetDialogBuffer().AddParagraphBreak();
 			onReturn(lastVal);
-			window.dialogChoices.choicesActive = true;
 		});
 	}
 }
@@ -477,8 +480,11 @@ if(window.dialogChoices.handleInput(dialogBuffer)) {
 	return;
 } else `);
 inject$1(/(this\.CanContinue = function\(\) {)/, `$1
-if(window.dialogChoices.choicesActive){
+if(window.dialogChoices.choices.length){
+	window.dialogChoices.choicesActive = isDialogReadyToContinue;
 	return false;
-}`);
+}
+window.dialogChoices.choicesActive = false;
+`);
 
 }(window));
