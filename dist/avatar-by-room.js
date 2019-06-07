@@ -3,7 +3,7 @@
 @file avatar by room
 @summary change the avatar in certain rooms
 @license MIT
-@version 1.1.1
+@version 1.1.2
 @requires 5.3
 @author Sean S. LeBlanc
 
@@ -25,6 +25,7 @@ var hackOptions = {
 	// You need to put an entry in this list for every room ID or name that you want to change the avatar,
 	// and then specify the sprite ID or name of what to change to. Expand this list to as many rooms as you need.
 	avatarByRoom: {
+		// Note: the entries below are examples that should be removed and replaced with your own room -> sprite mappings
 		0: 'sprite ID',
 		1: 'A', // note that 'A' is the player sprite, so this does nothing by default, but will reset the player if permanent == true
 		2: 'another sprite ID',

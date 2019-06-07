@@ -3,7 +3,7 @@
 @file bitsymuse
 @summary A variety of Bitsy sound and music handlers
 @license MIT
-@version 3.0.1
+@version 3.0.2
 @requires 4.8, 4.9
 @author David Mowatt
 
@@ -43,6 +43,7 @@ var hackOptions = {
 	// If the player moves between rooms with the same audio ID the music keeps playing seamlessly.
 	// Undefined rooms will keep playing whatever music they were last playing
 	musicByRoom: {
+		// Note: the entries below are examples that should be removed and replaced with your own room -> audio id mappings
 		0: 'song ID',
 		1: 'S', // This room is silent - it will stop music when you enter (see `silenceId` below)
 		2: 'another song ID',
