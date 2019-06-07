@@ -3,7 +3,7 @@
 @file end-from-dialog
 @summary trigger an ending from dialog, including narration text
 @license WTFPL (do WTF you want)
-@version 3.2.2
+@version 3.3.0
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
@@ -14,6 +14,10 @@ Using the (end) function in any part of a series of dialog will make the
 game end after the dialog is finished. Ending the game resets it back to the
 intro.
 
+If the text provided as an argument is a valid ending id,
+the corresponding ending text will be shown.
+If not, the text provided will be used directly as ending text.
+
 Using (endNow) at the end of a sentence will display the whole sentence and
 immediately clear the background. No further dialog from that passage will
 display, and the game will reset when you proceed. Using (endNow) with
@@ -21,8 +25,10 @@ narration text will immediately exit the dialog, clear the background, and
 show the ending narration in an ending-style centered dialog box.
 
 Usage: (end)
+       (end "<ending id>")
        (end "<ending narration>")
        (endNow)
+       (endNow "<ending id>")
        (endNow "<ending narration>")
 
 Example: (end)
@@ -363,7 +369,7 @@ function addDualDialogTag(tag, fn) {
 // Implement the dialog functions
 addDualDialogTag('end', function (environment, parameters) {
   bitsy.dialogBuffer.EndDialog();
-	bitsy.startNarrating(parameters[0] || null, true);
+	bitsy.startNarrating(bitsy.ending[parameters[0]] || parameters[0] || null, true);
 });
 // End of (end) dialog function mod
 
