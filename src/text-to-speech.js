@@ -3,7 +3,7 @@
 @file text-to-speech
 @summary text-to-speech for bitsy dialog
 @license MIT
-@version 1.0.0
+@version 1.0.1
 @requires 5.5
 @author Sean S. LeBlanc
 
@@ -57,11 +57,6 @@ export var hackOptions = {
 	hurried: true, // disable this to let bitsy text animations play out normally (not recommended for automatic mode)
 };
 
-var speechSynthesis = window.speechSynthesis;
-if (!speechSynthesis) {
-	console.error('TTS not available!');
-}
-
 var speaking = false;
 var toSpeak = [];
 var latestUtterance; // we need to maintain a reference to this, or a bug in the GC will prevent events from firing
@@ -71,13 +66,19 @@ var lastVoice = '';
 
 var voices = {};
 
-speechSynthesis.addEventListener('voiceschanged', function () {
-	var v = speechSynthesis.getVoices();
-	voices = v.reduce(function (result, voice) {
-		result[voice.name] = voice;
-		return result;
-	}, {});
-});
+var speechSynthesis = window.speechSynthesis;
+if (!speechSynthesis) {
+	console.error('TTS not available!');
+} else {
+	speechSynthesis.onvoiceschanged = function () {
+		var v = speechSynthesis.getVoices();
+		voices = v.reduce(function (result, voice) {
+			result[voice.name] = voice;
+			return result;
+		}, {});
+	};
+}
+
 
 function queueVoice(params) {
 	params = params || [];
@@ -103,6 +104,9 @@ function queueSpeak(text) {
 }
 
 function speak() {
+	if (!speechSynthesis) {
+		return;
+	}
 	if (!toSpeak.length) {
 		return;
 	}
