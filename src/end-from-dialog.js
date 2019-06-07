@@ -51,6 +51,6 @@ import {
 // Implement the dialog functions
 addDualDialogTag('end', function (environment, parameters) {
   bitsy.dialogBuffer.EndDialog();
-	bitsy.startNarrating(parameters[0] || null, true);
+	bitsy.startNarrating(bitsy.ending[parameters[0]] || parameters[0] || null, true);
 });
 // End of (end) dialog function mod
