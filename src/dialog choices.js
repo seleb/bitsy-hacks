@@ -3,7 +3,7 @@
 @file dialog choices
 @summary binary dialog choices
 @license MIT
-@version 2.1.1
+@version 2.1.2
 @requires 5.3
 @author Sean S. LeBlanc
 
@@ -108,16 +108,24 @@ var dialogChoices = {
 	choice: 0,
 	choices: [],
 	choicesActive: false,
+	swiped: false,
 	handleInput: function (dialogBuffer) {
 		if (!this.choicesActive) {
+			this.swiped = false;
 			return false;
+		}
+		var pswiped = this.swiped;
+		var swiped = !pswiped && (bitsy.input.swipeUp() || bitsy.input.swipeDown() || bitsy.input.swipeRight());
+		if (swiped) {
+			this.swiped = true;
+		} else if (!bitsy.input.swipeUp() && !bitsy.input.swipeDown() && !bitsy.input.swipeRight()) {
+			this.swiped = false;
 		}
 		var l = Math.max(this.choices.length, 1);
 		// navigate
 		if (
-			bitsy.input.isKeyDown(bitsy.key.up) ||
-			bitsy.input.isKeyDown(bitsy.key.w) ||
-			bitsy.input.swipeUp()
+			(bitsy.input.anyKeyPressed() && (bitsy.input.isKeyDown(bitsy.key.up) || bitsy.input.isKeyDown(bitsy.key.w))) ||
+			(swiped && bitsy.input.swipeUp())
 		) {
 			this.choice -= 1;
 			if (this.choice < 0) {
@@ -126,23 +134,22 @@ var dialogChoices = {
 			return false;
 		}
 		if (
-			bitsy.input.isKeyDown(bitsy.key.down) ||
-			bitsy.input.isKeyDown(bitsy.key.s) ||
-			bitsy.input.swipeDown()
+			(bitsy.input.anyKeyPressed() && (bitsy.input.isKeyDown(bitsy.key.down) || bitsy.input.isKeyDown(bitsy.key.s))) ||
+			(swiped && bitsy.input.swipeDown())
 		) {
 			this.choice = (this.choice + 1) % l;
 			return false;
 		}
 		// select
 		if (
-			this.choicesActive &&
-			(
-				bitsy.input.isKeyDown(bitsy.key.right) ||
-				bitsy.input.isKeyDown(bitsy.key.d) ||
-				bitsy.input.isKeyDown(bitsy.key.enter) ||
-				bitsy.input.isKeyDown(bitsy.key.space) ||
-				bitsy.input.swipeRight()
-			)
+			((bitsy.input.anyKeyPressed() && (
+					bitsy.input.isKeyDown(bitsy.key.right) ||
+					bitsy.input.isKeyDown(bitsy.key.d) ||
+					bitsy.input.isKeyDown(bitsy.key.enter) ||
+					bitsy.input.isKeyDown(bitsy.key.space)
+				)
+			) ||
+			(swiped && bitsy.input.swipeRight()))
 		) {
 			// evaluate choice
 			this.choices[this.choice]();
@@ -186,7 +193,7 @@ else if(sequenceType === "choice")
 	state.curNode.AddChild( new ChoiceNode( options ) );
 `);
 
-inject(/(var ShuffleNode = )/,`
+inject(/(var ShuffleNode = )/, `
 var ChoiceNode = function(options) {
 	Object.assign( this, new TreeRelationship() );
 	Object.assign( this, new SequenceBase() );
@@ -274,7 +281,7 @@ $1`);
 
 // interaction
 // (overrides the dialog skip/page flip)
-inject(/(\/\* CONTINUE DIALOG \*\/)/, `$1
+inject(/(if\( dialogBuffer\.IsActive\(\) \) {)/, `$1
 if(window.dialogChoices.handleInput(dialogBuffer)) {
 	return;
 } else `);
