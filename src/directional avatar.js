@@ -3,7 +3,7 @@
 @file directional avatar
 @summary flips the player's sprite based on directional movement
 @license MIT
-@version 1.1.2
+@version 1.1.3
 @requires 5.3
 @author Sean S. LeBlanc
 
@@ -64,7 +64,7 @@ var hflip = false;
 var vflip = false;
 var originalAnimation;
 
-after('onPlayerMoved', function () {
+after('updateInput', function () {
 	var i;
 	// save the original frames
 	if (!originalAnimation || originalAnimation.referenceFrame !== getSpriteData(bitsy.playerId, 0)) {
