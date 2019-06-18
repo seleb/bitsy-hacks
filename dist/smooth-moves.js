@@ -239,7 +239,7 @@ var toX;
 var toY;
 var lastMove;
 before('movePlayer', function () {
-	if (toX) {
+	if (toX !== undefined) {
 		bitsy.player().x = toX;
 		bitsy.player().y = toY;
 	}
@@ -252,7 +252,7 @@ after('movePlayer', function () {
 	lastMove = bitsy.prevTime;
 });
 before('drawRoom', function () {
-	if (toX) {
+	if (toX !== undefined) {
 		var t = Math.min(1, (bitsy.prevTime - lastMove) / hackOptions.duration);
 		bitsy.player().x = fromX + (toX - fromX) * hackOptions.ease(t);
 		bitsy.player().y = fromY + (toY - fromY) * hackOptions.ease(t);

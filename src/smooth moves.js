@@ -37,11 +37,14 @@ var fromY;
 var toX;
 var toY;
 var lastMove;
+before('onready', function() {
+	fromX = toX = bitsy.player().x;
+	fromY = toY = bitsy.player().y;
+	lastMove = bitsy.prevTime;
+});
 before('movePlayer', function () {
-	if (toX) {
-		bitsy.player().x = toX;
-		bitsy.player().y = toY;
-	}
+	bitsy.player().x = toX;
+	bitsy.player().y = toY;
 	fromX = bitsy.player().x;
 	fromY = bitsy.player().y;
 });
@@ -51,9 +54,7 @@ after('movePlayer', function () {
 	lastMove = bitsy.prevTime;
 });
 before('drawRoom', function () {
-	if (toX) {
-		var t = Math.min(1, (bitsy.prevTime - lastMove) / hackOptions.duration);
-		bitsy.player().x = fromX + (toX - fromX) * hackOptions.ease(t);
-		bitsy.player().y = fromY + (toY - fromY) * hackOptions.ease(t);
-	}
+	var t = Math.min(1, (bitsy.prevTime - lastMove) / hackOptions.duration);
+	bitsy.player().x = fromX + (toX - fromX) * hackOptions.ease(t);
+	bitsy.player().y = fromY + (toY - fromY) * hackOptions.ease(t);
 });
