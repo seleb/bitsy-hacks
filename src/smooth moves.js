@@ -36,6 +36,7 @@ var fromX;
 var fromY;
 var toX;
 var toY;
+var dir;
 var lastMove;
 before('onready', function() {
 	fromX = toX = bitsy.player().x;
@@ -49,12 +50,31 @@ before('movePlayer', function () {
 	fromY = bitsy.player().y;
 });
 after('movePlayer', function () {
+	dir = bitsy.curPlayerDirection;
 	toX = bitsy.player().x;
 	toY = bitsy.player().y;
 	lastMove = bitsy.prevTime;
 });
 before('drawRoom', function () {
 	var t = Math.min(1, (bitsy.prevTime - lastMove) / hackOptions.duration);
-	bitsy.player().x = fromX + (toX - fromX) * hackOptions.ease(t);
-	bitsy.player().y = fromY + (toY - fromY) * hackOptions.ease(t);
+	var dx = 0;
+	var dy = 0;
+	if (Math.abs(toX - fromX) > 0) {
+		if(dir === bitsy.Direction.Left) {
+			dx -= 1;
+		}
+		if(dir === bitsy.Direction.Right) {
+			dx += 1;
+		}
+	}
+	if (Math.abs(toY - fromY) > 0) {
+		if(dir === bitsy.Direction.Up) {
+			dy -= 1;
+		}
+		if(dir === bitsy.Direction.Down) {
+			dy += 1;
+		}
+	}
+	bitsy.player().x = toX - Math.sign(dx) * (1.0 - hackOptions.ease(t));
+	bitsy.player().y = toY - Math.sign(dy) * (1.0 - hackOptions.ease(t));
 });
