@@ -4,6 +4,7 @@ A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamled
 
 ## contents
 
+- 📦 [3d](/dist/3d.js): bitsy in three dee
 - 👥 [avatar by room](/dist/avatar-by-room.js): change the avatar in certain rooms
 - 🔈 [basic sfx](/dist/basic-sfx.js): "walk" and "talk" sound effect support
 - 😌 [bitsymuse](/dist/bitsymuse.js): A variety of Bitsy sound and music handlers
