@@ -77,7 +77,7 @@ export var hackOptions = {
 		// makeOrthographic(camera); // makes the camera use orthographic projection
 		makeFollowPlayer(scene.activeCamera); // locks the camera to the player
 		addControls(scene.activeCamera); // adds rotate/zoom controls (also pan if not following player)
-		addFog(0.1, 1.0); // adds fog in the range (start, end)
+		// addFog(0.5, 1.0); // adds fog in the range (start, end)
 		// addShader(`shader source`, 1.0); // adds a post-processing shader (shader source, downscale factor)
 	},
 	// If true, dialog renders at the top
