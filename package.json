@@ -19,6 +19,7 @@
 		"url": "git://github.com/seleb/bitsy-hacks.git"
 	},
 	"dependencies": {
+		"babylonjs": "^4.0.3",
 		"input-gamepads.js": "^2.0.2",
 		"omggif": "^1.0.9",
 		"rollup": "^0.56.5",
