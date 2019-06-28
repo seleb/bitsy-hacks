@@ -66,7 +66,7 @@ var hackOptions$2 = {
 	// but the only necessary thing is to create a camera and assign it to the scene
 	init: function (scene) {
 		scene.activeCamera = makeBaseCamera(); // creates a camera with some basic presets
-		// makeOrthographic(camera); // makes the camera use orthographic projection
+		// makeOrthographic(camera, bitsy.mapsize); // makes the camera use orthographic projection (camera, size)
 		makeFollowPlayer(scene.activeCamera); // locks the camera to the player
 		addControls(scene.activeCamera); // adds rotate/zoom controls (also pan if not following player)
 		// addFog(0.5, 1.0); // adds fog in the range (start, end)
@@ -514,16 +514,16 @@ function makeBaseCamera() {
 	camera.lowerRadiusLimit = 1;
 	return camera;
 }
-function makeOrthographic(camera) {
+function makeOrthographic(camera, size) {
 	camera.mode = BABYLON$1.Camera.ORTHOGRAPHIC_CAMERA;
-	camera.orthoBottom = -bitsy.mapsize / 2;
-	camera.orthoTop = bitsy.mapsize / 2;
-	camera.orthoLeft = -bitsy.mapsize / 2;
-	camera.orthoRight = bitsy.mapsize / 2;
-	camera.minZ = -bitsy.mapsize * 2;
-	camera.maxZ = bitsy.mapsize * 2;
-	camera.upperRadiusLimit = 1;
-	camera.lowerRadiusLimit = 1;
+	camera.orthoBottom = -size / 2;
+	camera.orthoTop = size / 2;
+	camera.orthoLeft = -size / 2;
+	camera.orthoRight = size / 2;
+	camera.minZ = -size * 2;
+	camera.maxZ = size * 2;
+	camera.upperRadiusLimit = 0.0001;
+	camera.lowerRadiusLimit = 0.0001;
 }
 function makeFollowPlayer(camera) {
 	var oldUpdate = camera.update;
