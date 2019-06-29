@@ -3,7 +3,7 @@
 @file character portraits animated
 @summary high quality anime gifs
 @license MIT
-@version 1.0.0
+@version 1.0.1
 @requires Bitsy Version: 5.3
 @author Sean S. LeBlanc
 
@@ -33,7 +33,7 @@ import {
 } from 'omggif';
 import bitsy from 'bitsy';
 import {
-	hackOptions,
+	hackOptions as portraitHackOptions,
 	state,
 } from './character portraits';
 import {
@@ -41,15 +41,22 @@ import {
 	before,
 } from './helpers/kitsy-script-toolkit';
 
-export {
-	hackOptions,
+export var hackOptions = {
+	// overrides for the base hack
+	scale: bitsy.scale,
+	autoReset: true,
+	portraits: {
+		'earth': './GIF.gif',
+		'cat': './test-export.gif',
+		'png': './test.gif',
+	},
 };
 
-hackOptions.portraits = {
-	'earth': './GIF.gif',
-	'cat': './test-export.gif',
-	'png': './test.gif',
-};
+before('startExportedGame', function () {
+	portraitHackOptions.portraits = hackOptions.portraits;
+	portraitHackOptions.scale = hackOptions.scale;
+	portraitHackOptions.autoReset = hackOptions.autoReset;
+});
 
 // convert portrait state to new format supporting multiple frames
 // and load the frames of animated gifs

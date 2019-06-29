@@ -3,7 +3,7 @@
 @file character portraits animated
 @summary high quality anime gifs
 @license MIT
-@version 1.0.0
+@version 1.0.1
 @requires Bitsy Version: 5.3
 @author Sean S. LeBlanc
 
@@ -31,22 +31,15 @@ HOW TO USE:
 this.hacks = this.hacks || {};
 this.hacks.character_portraits_animated = (function (exports,bitsy) {
 'use strict';
-var hackOptions = {
-	// influences the resolution of the drawn image
-	// `bitsy.scale` (4 by default) is the max and will match bitsy's internal scale (i.e. 512x512)
-	// 1 will match bitsy's in-game virtual scale (i.e. 128x128)
-	// it's best to decide this up-front and make portrait images that match this resolution
+var hackOptions$1 = {
+	// overrides for the base hack
 	scale: bitsy.scale,
-	// a list of portrait files
-	// the format is: 'id for portrait tag': 'file path'
-	// these may be:
-	// - local files (in which case you need to include them with your html when publishing)
-	// - online urls (which are not guaranteed to work as they are network-dependent)
-	// - base64-encoded images (the most reliable but unwieldy)
+	autoReset: true,
 	portraits: {
-		'cat': './cat.png',
+		'earth': './GIF.gif',
+		'cat': './test-export.gif',
+		'png': './test.gif',
 	},
-	autoReset: true, // if true, automatically resets the portrait to blank when dialog is exited
 };
 
 bitsy = bitsy && bitsy.hasOwnProperty('default') ? bitsy['default'] : bitsy;
@@ -1135,7 +1128,23 @@ HOW TO USE:
 2. Edit the hackOptions object as needed
 */
 
-
+var hackOptions = {
+	// influences the resolution of the drawn image
+	// `bitsy.scale` (4 by default) is the max and will match bitsy's internal scale (i.e. 512x512)
+	// 1 will match bitsy's in-game virtual scale (i.e. 128x128)
+	// it's best to decide this up-front and make portrait images that match this resolution
+	scale: bitsy.scale,
+	// a list of portrait files
+	// the format is: 'id for portrait tag': 'file path'
+	// these may be:
+	// - local files (in which case you need to include them with your html when publishing)
+	// - online urls (which are not guaranteed to work as they are network-dependent)
+	// - base64-encoded images (the most reliable but unwieldy)
+	portraits: {
+		'cat': './cat.png',
+	},
+	autoReset: true, // if true, automatically resets the portrait to blank when dialog is exited
+};
 
 var state = {
 	portraits: {},
@@ -1190,11 +1199,13 @@ after('onExitDialog', function() {
 
 
 
-hackOptions.portraits = {
-	'earth': './GIF.gif',
-	'cat': './test-export.gif',
-	'png': './test.gif',
-};
+
+
+before('startExportedGame', function () {
+	hackOptions.portraits = hackOptions$1.portraits;
+	hackOptions.scale = hackOptions$1.scale;
+	hackOptions.autoReset = hackOptions$1.autoReset;
+});
 
 // convert portrait state to new format supporting multiple frames
 // and load the frames of animated gifs
@@ -1294,7 +1305,7 @@ after('drawRoom', function () {
 	state.portrait = animation;
 });
 
-exports.hackOptions = hackOptions;
+exports.hackOptions = hackOptions$1;
 
 return exports;
 
