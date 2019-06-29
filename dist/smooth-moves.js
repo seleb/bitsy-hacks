@@ -3,7 +3,7 @@
 @file smooth moves
 @summary ease the player's movement
 @license MIT
-@version 1.0.0
+@version 1.0.1
 @requires Bitsy Version: 6.3
 @author Sean S. LeBlanc
 
@@ -256,7 +256,19 @@ after('movePlayer', function () {
 	toY = bitsy.player().y;
 	lastMove = bitsy.prevTime;
 });
+var px;
+var py;
+after('update', function() {
+	px = bitsy.player().x;
+	py = bitsy.player().y;
+});
 before('drawRoom', function () {
+	if (bitsy.player().x !== px || bitsy.player().y !== py) {
+		if (bitsy.player().x % 1 === 0 && bitsy.player().y % 1 === 0) {
+			toX = bitsy.player().x;
+			toY = bitsy.player().y;
+		}
+	}
 	var t = Math.min(1, (bitsy.prevTime - lastMove) / hackOptions.duration);
 	var dx = 0;
 	var dy = 0;

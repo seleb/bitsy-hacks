@@ -3,7 +3,7 @@
 @file 3d
 @summary bitsy in three dee
 @license MIT
-@version 1.0.0
+@version 1.0.1
 @requires 6.3
 @author Sean S. LeBlanc
 
@@ -321,7 +321,7 @@ function _reinitEngine() {
 @file smooth moves
 @summary ease the player's movement
 @license MIT
-@version 1.0.0
+@version 1.0.1
 @requires Bitsy Version: 6.3
 @author Sean S. LeBlanc
 
@@ -368,7 +368,19 @@ after('movePlayer', function () {
 	toY = bitsy.player().y;
 	lastMove = bitsy.prevTime;
 });
+var px;
+var py;
+after('update', function() {
+	px = bitsy.player().x;
+	py = bitsy.player().y;
+});
 before('drawRoom', function () {
+	if (bitsy.player().x !== px || bitsy.player().y !== py) {
+		if (bitsy.player().x % 1 === 0 && bitsy.player().y % 1 === 0) {
+			toX = bitsy.player().x;
+			toY = bitsy.player().y;
+		}
+	}
 	var t = Math.min(1, (bitsy.prevTime - lastMove) / hackOptions.duration);
 	var dx = 0;
 	var dy = 0;
@@ -572,13 +584,13 @@ var fakeContext = {
 bitsy.renderer = new bitsy.Renderer(bitsy.tilesize, 1);
 
 // prevent dialog box from using position-based rendering
-var py;
+var py$1;
 before('dialogRenderer.DrawTextbox', function () {
-	py = bitsy.player().y;
+	py$1 = bitsy.player().y;
 	bitsy.player().y = hackOptions$2.topDialog ? bitsy.mapsize : 0;
 });
 after('dialogRenderer.DrawTextbox', function () {
-	bitsy.player().y = py;
+	bitsy.player().y = py$1;
 });
 
 // setup
