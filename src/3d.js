@@ -3,7 +3,7 @@
 @file 3d
 @summary bitsy in three dee
 @license MIT
-@version 1.0.1
+@version 1.0.2
 @requires 6.3
 @author Sean S. LeBlanc
 
@@ -45,6 +45,7 @@ import {
 import {
 	hackOptions as transparentSprites,
 } from './transparent sprites';
+import 'array-flat-polyfill'; // polyfill array.flat for babylon
 import BABYLON from 'babylonjs';
 import bitsy from 'bitsy';
 
