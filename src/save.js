@@ -3,7 +3,7 @@
 @file save
 @summary save/load your game
 @license MIT
-@version 1.0.3
+@version 1.0.4
 @requires 5.4
 @author Sean S. LeBlanc
 

@@ -3,7 +3,7 @@
 @file 3d
 @summary bitsy in three dee
 @license MIT
-@version 1.0.2
+@version 1.0.3
 @requires 6.3
 @author Sean S. LeBlanc
 
@@ -175,7 +175,7 @@ function unique(array) {
 @file kitsy-script-toolkit
 @summary makes it easier and cleaner to run code before and after Bitsy functions or to inject new code into Bitsy script tags
 @license WTFPL (do WTF you want)
-@version 4.0.0
+@version 4.0.1
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
@@ -273,7 +273,7 @@ function applyHook(functionName) {
 	// overwrite original with one which will call each in order
 	obj[lastSegment] = function () {
 		var returnVal;
-		var args;
+		var args = [].slice.call(arguments);
 		var i = 0;
 
 		function runBefore() {
@@ -321,7 +321,7 @@ function _reinitEngine() {
 @file smooth moves
 @summary ease the player's movement
 @license MIT
-@version 1.0.1
+@version 1.0.2
 @requires Bitsy Version: 6.3
 @author Sean S. LeBlanc
 
@@ -409,7 +409,7 @@ before('drawRoom', function () {
 @file transparent sprites
 @summary makes all sprites have transparent backgrounds
 @license MIT
-@version 4.0.2
+@version 4.0.3
 @requires Bitsy Version: 6.1
 @author Sean S. LeBlanc
 

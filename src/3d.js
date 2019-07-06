@@ -3,7 +3,7 @@
 @file 3d
 @summary bitsy in three dee
 @license MIT
-@version 1.0.2
+@version 1.0.3
 @requires 6.3
 @author Sean S. LeBlanc
 
