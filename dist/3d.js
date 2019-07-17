@@ -5,7 +5,7 @@
 @license MIT
 @version 1.0.3
 @requires 6.3
-@author Sean S. LeBlanc
+@author Sean S. LeBlanc & Elkie Nova
 
 @description
 Re-renders games in 3D instead of 2D.
@@ -32,6 +32,74 @@ If you need help customizing the hack to achieve a different style, feel free to
 The hackOptions below have relatively thorough documentation,
 but make sure to check out https://github.com/seleb/bitsy-hacks/wiki/3D-Hack-Examples 
 for examples of different setups if you're new to 3D.
+
+additional features to help make more fancy 3d scenes from bitsy editor:
+* make arcs, bridges, ceilings, multiple floors, and such by layering
+bitsy rooms on top of each other. add #tags to the names of the rooms
+you want to render together
+for example you can have rooms named 'theater #a0', 'stage #a1' and
+'catwalks #a4' and they will be displayd together, the 'stage'
+right on top of the 'theater', and 'catwalks' three tiles higher than the
+'stage'
+tags should be in this format: '#fjk12' where '#' comes first,
+then 'fjk' is the string of letters (no numbers and special characters
+please) of any length specifying the room stack.
+(rooms in the same stack will be rendered on top of each others, in layers)
+and '12' is the hight at which you want to display a
+specific room. you can use negative numbers and floating points too like
+'#fjk-3.5' (the size of one bitsy tile is 1)
+
+* use wedges to add variety to your scene with stuff like slopes
+and diagonal walls. add the tag to the drawing's name if you want it to
+be displayed in the ⊿ wedge-form ⊿
+for example:
+'#wdg2s' stands for ceiling wedge facing south (with its slanted side)
+'#wdg1nw' for wall wedge facing north-west (with its slanted side)
+0/1/2 stands for the floor/wall/ceiling wedge.
+then to specify direction n/e/s/w for a floor/ceiling wedge,
+and se/sw/nw/ne for a wall wedge
+make sure to read about the next feature that allows for convinient
+use of wedges from the bitsy editor!!!
+
+* repalce drawings with other drawings before they are rendered in 3d
+by appending their names with the tag in this format:
+'#draw_TIL_a'
+where TIL/SPR/ITM is followed by the drawing's id (exactly how you can see it
+in bitsy game data panel. id is a combination of letters and numbers that follows
+'TIL' 'SPR' or 'ITM' like avatar is 'SPR A' in bitsy data and 'A' is the id)
+'#drawTILa' also works
+this is very useful for making gizmo-like drawings that can look different in
+bitsy editor and when rendered in 3d.
+12 variations of wedges can be confusing to work with in bitsy editor, 
+if you can't tell how exactly each wedge is facing based on its drawing.
+with this tag you can have useful descriptive drawings for wedges rotated
+in different directions and then specify drawings you want to use as
+actual textures when rendering your wedges in 3d
+here is a temaplate game data chunk with 12 wedge gizmos that are going to use
+'TIL a' (as it is called in bitsy data) as their texture in 3d instead of their original drawings
+https://gist.github.com/aloelazoe/f1a3b998362a7160cbd74ac31135296a
+just paste it into you game data to use in your bitsy game (add, don't replace existing data)
+or open it in the text editor first and search-replace '#drawTILa'
+to set another drawing you would like to use as a texture on wedges
+if you have a big project with lots of drawings make sure to check that wedges ids
+don't overlap with the ids of the drawings you already have
+
+* move, rotate and scale by adding tags to the drawing's name
+useful for making more complex shapes and more organic silhouettes by shifting
+models a bit off the grid, and configuring plane-type meshes to face a specific direction
+#m(x,y,z) for moving, #r(x,y,z) for rotation (in degrees), #s(x,y,z) for scaling.
+#m(1,0,0.5') and '#m(1,,.5)' are both examples of valid input
+omiting the number is the same as writing 0 for rotation and movement and 1 for scaling
+i.e. it won't change anything on the given axis
+
+* add '#invisible' to the drawing name and it won't be added to the scene,
+useful for making invisible walls
+
+if you have questions, suggestions or constructive feedback about these additional features
+introduced in my fork, feel free to reach out on bitsy discord or twitter (aloelazoe)
+
+enjoy have fun with verticality triangularity and whatnot!!!
+✧*[๑⌒ ᴗ ⌒๑]✧*
 
 HOW TO USE:
 1. Copy-paste into a script tag after the bitsy source
@@ -61,6 +129,9 @@ var hackOptions$2 = {
 	// this requires `cameraRelativeMovement: true` to be usable,
 	// and it's recommended to not add camera controls if used
 	tankControls: false,
+	// should be true if you want to use '#draw_SPR_a' kind of tags to replace drawings
+	// used for wedge gizmos
+	replaceDrawingTag: true,
 	// scene setup
 	// a number of helper functions are provided to make this easier
 	// but the only necessary thing is to create a camera and assign it to the scene
@@ -78,7 +149,8 @@ var hackOptions$2 = {
 	topDialog: true,
 	// Function used in transparent sprites hack
 	isTransparent: function (drawing) {
-		return !drawing.drw.includes('TIL');
+        var name = drawing.name || '';
+		return !drawing.drw.includes('TIL') || name.includes('#transparent');
 	},
 	// Function used to determine how a bitsy drawing is translated into a 3D object
 	// available types are:
@@ -87,15 +159,43 @@ var hackOptions$2 = {
 	// 	- 'box': standard cube
 	// 	- 'floor': plane flat on the ground
 	//  - 'tower1', 'tower2', etc: box variations that are taller and tiled
+    //  - 'wedgeFloor': base mesh for wedges, facing left with its slanted side
 	getType: function (drawing) {
 		var drw = drawing.drw;
+		var name = drawing.name || '';
+		// specific
+		if (name.includes('#invisible')) {
+			return null;
+		}
+		if (name.includes('#box')) {
+			return 'box';
+		}
+		if (name.includes('#wdg')) {
+            return 'wedgeFloor';
+        }
+        if (name.includes('#floor')) {
+            return 'floor';
+        }
+        if (name.includes('#plane')) {
+            return 'plane';
+        }
+        // towers
+        var twrMatch = name.match(/#twr([0-9]+)/);
+        if (twrMatch) {
+        	var i = Number(twrMatch[1]);
+        	return `tower${1 <= i && i <= bitsy.mapsize ? i : 1}`;
+        }
+
+		// player
 		if (drawing.id === bitsy.playerId) {
-			return 'plane';
+			return 'billboard';
 		}
+
+		// general
 		if (drw.startsWith('ITM')) {
-			return 'plane';
+			return 'billboard';
 		}
-		if (drw.startsWith('SPR')) {
+		if (drw.startsWith('SPR') || name.includes('#board')) {
 			return 'billboard';
 		}
 		if (drawing.isWall) {
@@ -114,6 +214,80 @@ var hackOptions$2 = {
 	// but if you have a big, highly branching game with lots of art,
 	// you may want to disable it
 	preloadTextures: true,
+
+    // function used to adjust mesh instances after they have been added to the scene
+	meshExtraSetup: function (drawing, mesh) {
+        var name = drawing.name || '';
+
+        // transform tags. #m(x,y,z): move, #r(x,y,z): rotate, #s(x,y,z): scale
+        // #m(1,0,0.5) and #m(1,,.5) are both examples of valid input
+        // scale
+        var scaleTag = name.match(/#s\((-?[\.?\d+]\.?\d*)?,(-?[\.?\d+]\.?\d*)?,(-?[\.?\d+]\.?\d*)?\)/);
+        if (scaleTag) {
+            mesh.scaling = new BABYLON$1.Vector3(Number(scaleTag[1]) || 1,
+                                               Number(scaleTag[2]) || 1,
+                                               Number(scaleTag[3]) || 1);
+        }
+        // rotate. input in degrees
+        var rotateTag = name.match(/#r\((-?[\.?\d+]\.?\d*)?,(-?[\.?\d+]\.?\d*)?,(-?[\.?\d+]\.?\d*)?\)/);
+        if (rotateTag) {
+            mesh.rotation.x += radians(Number(rotateTag[1]) || 0);
+            mesh.rotation.y += radians(Number(rotateTag[2]) || 0);
+            mesh.rotation.z += radians(Number(rotateTag[3]) || 0);
+        }
+        // move
+        var moveTag = name.match(/#m\((-?[\.?\d+]\.?\d*)?,(-?[\.?\d+]\.?\d*)?,(-?[\.?\d+]\.?\d*)?\)/);
+        if (moveTag) {
+            mesh.position.x += (Number(moveTag[1]) || 0);
+            mesh.position.y += (Number(moveTag[2]) || 0);
+            mesh.position.z += (Number(moveTag[3]) || 0);
+        }
+
+        // position wedges
+        var wdgTag = name.match(/#wdg([02](?=([nesw]))|1(?=([sn][ew])))/);
+        if (wdgTag) {
+        	// 1st capturing group returns wedge type
+        	var type = wdgTag[1];
+        	// either 2nd or 3rd capturing group was returned, it determines direction
+        	var direction = wdgTag[2] || wdgTag[3];
+        	if (type === '1') {
+        		// adjust wall wedges
+                mesh.rotation.x += -Math.PI/2;
+                switch (direction) {
+                    // 'sw' is default direction for wall wedges
+                    case 'se':
+                        mesh.rotation.y += Math.PI/2*3;
+                        break;
+                    case 'nw':
+                        mesh.rotation.y += Math.PI/2;
+                        break;
+                    case 'ne':
+                        mesh.rotation.y += Math.PI;
+                        break;
+                }
+        	} else {
+        		// floor and ceiling wedges
+                if (type === '2') {
+                	// adjust ceiling wedges
+                    mesh.rotation.x += Math.PI;
+                }
+                switch (direction) {
+                    // 'w' is default direction for floor and celing wedges
+                    case 's':
+                        mesh.rotation.y += Math.PI/2*3;
+                        break;
+                    case 'e':
+                        mesh.rotation.y += Math.PI;
+                        break;
+                    case 'n':
+                        mesh.rotation.y += Math.PI/2;
+                        break;
+                }
+        	}
+        }
+
+        // and you can add more stuff like this!
+    },
 };
 
 bitsy = bitsy && bitsy.hasOwnProperty('default') ? bitsy['default'] : bitsy;
@@ -511,6 +685,9 @@ var babylon_1 = babylon.babylonjs;
 
 
 
+function radians(degrees) {
+  return degrees * Math.PI / 180;
+}
 // forward transparent sprites hack option
 hackOptions$1.isTransparent = function (drawing) {
 	return hackOptions$2.isTransparent(drawing);
@@ -541,10 +718,11 @@ function makeOrthographic(camera, size) {
 }
 function makeFollowPlayer(camera) {
 	var oldUpdate = camera.update;
+	// replace playerRef with copyCat to fix billboard crash
 	camera.update = function () {
-		if (playerRef && camera.lockedTarget !== playerRef) {
-			camera.lockedTarget = playerRef;
-		} else if (!playerRef && camera.lockedTarget) {
+		if (copyCat && camera.lockedTarget !== copyCat) {
+			camera.lockedTarget = copyCat;
+		} else if (!copyCat && camera.lockedTarget) {
 			camera.lockedTarget = null;
 		}
 		oldUpdate.apply(this, arguments);
@@ -625,7 +803,8 @@ canvas:focus { outline: none; }
 	exports.scene.freezeActiveMeshes();
 
 	// create basic resources
-	for (var i = 1; i < bitsy.mapsize; ++i) {
+	// box and towers
+	for (var i = 1; i <= bitsy.mapsize; ++i) {
 		var boxMesh = BABYLON$1.MeshBuilder.CreateBox('tower' + i, {
 			size: 1,
 			height: i,
@@ -643,21 +822,30 @@ canvas:focus { outline: none; }
 		boxMesh.setVerticesData(BABYLON$1.VertexBuffer.UVKind, uvs);
 		boxMesh.isVisible = false;
 		boxMesh.doNotSyncBoundingInfo = true;
-		boxMesh.position.y = i / 2 - 0.5;
+		// won't work cause i'm setting y position for instances later
+		// boxMesh.position.y = i / 2 - 0.5;
+		transformGeometry(boxMesh, BABYLON$1.Matrix.Translation(0.0, i / 2 - 0.5, 0.0));
 		meshTemplates['tower' + i] = boxMesh;
 	}
 	meshTemplates.box = meshTemplates.tower1;
 
+	// floor
 	var floorMesh = BABYLON$1.MeshBuilder.CreatePlane(`floor`, {
 		width: 1,
 		height: 1,
 	}, exports.scene);
-	floorMesh.position.y = -0.5;
+	// won't work cause i'm setting y position for instances
+	// floorMesh.position.y = -0.5;
+	// babylon's pivot points also don't work for some reason [~ _ ~]
+	// so i would have to modify geometry i guess
+    // or maybe add to values instead of setting them when positioning instances idk
+	transformGeometry(floorMesh, BABYLON$1.Matrix.Translation(0.0,0.0,0.5));
 	floorMesh.rotation.x = Math.PI / 2;
 	floorMesh.isVisible = false;
 	floorMesh.doNotSyncBoundingInfo = true;
 	meshTemplates.floor = floorMesh;
 
+	// plane
 	var planeMesh = BABYLON$1.MeshBuilder.CreatePlane('plane', {
 		width: 1,
 		height: 1,
@@ -666,11 +854,48 @@ canvas:focus { outline: none; }
 		backUVs: new BABYLON$1.Vector4(0, 1, 1, 0),
 	}, exports.scene);
 	planeMesh.rotation.x = Math.PI;
+    // transformGeometry(planeMesh, BABYLON.Matrix.RotationAxis(
 	planeMesh.isVisible = false;
 	meshTemplates.plane = planeMesh;
 	planeMesh.doNotSyncBoundingInfo = true;
 	meshTemplates.billboard = planeMesh.clone('billboard');
 
+	 // ✨magical wedges here✨
+    var wedgeFloorMesh = new BABYLON$1.Mesh("wedgeFloorMesh", exports.scene);
+    var wedgeFloorMeshPos = [-1,0,0, 0,0,0, 0,1,0,   0,0,1, -1,0,1, 0,1,1, // 0,1,2, 3,4,5,
+                      -1,0,1, -1,0,0, 0,1,0, 0,1,1, // 6,7,8,9
+                      0,0,0, 0,0,1, 0,1,1, 0,1,0, // 10,11,12,13
+                      0,0,1, 0,0,0, -1,0,0, -1,0,1 // 14,15,16,17
+                      ];
+    var wedgeFloorMeshInd = [0,1,2, 3,4,5, //triangles on the front and the back
+                      6,7,8, 8,9,6, // tris that make up the sliding face at the top
+                      10,11,12, 12,13,10, // right face
+                      14,15,16, 16,17,14  // bottom face
+                      ];
+    var wedgeFloorMeshUvs = [0,0, 1,0, 1,1,   0,0, 1,0, 0,1,
+                      0,0, 1,0, 1,1, 0,1,
+                      0,0, 1,0, 1,1, 0,1,
+                      0,0, 1,0, 1,1, 0,1
+                      ];
+    var wedgeFloorMeshVertData = new BABYLON$1.VertexData();
+    wedgeFloorMeshVertData.positions = wedgeFloorMeshPos;
+    wedgeFloorMeshVertData.indices = wedgeFloorMeshInd;
+    wedgeFloorMeshVertData.uvs = wedgeFloorMeshUvs;
+
+    var translation = BABYLON$1.Matrix.Translation(0.5,-0.5,-0.5);
+    wedgeFloorMeshVertData.transform(translation);
+    
+    wedgeFloorMeshVertData.applyToMesh(wedgeFloorMesh);
+    wedgeFloorMesh.isVisible = false; // but newly created copies or instances will be visible by default
+    wedgeFloorMesh.doNotSyncBoundingInfo = true;
+
+    meshTemplates.wedgeFloor = wedgeFloorMesh;
+
+    // add transform node for copyCat that's going to copy avatar's position so that the
+    // camera can follow them without crashing when the avatar is rendered as billboard
+    copyCat = new BABYLON$1.TransformNode("copyCat");
+
+	// material
 	baseMat = new BABYLON$1.StandardMaterial('base material', exports.scene);
 	baseMat.ambientColor = new BABYLON$1.Color3(1, 1, 1);
 	baseMat.maxSimultaneousLights = 0;
@@ -695,9 +920,53 @@ canvas:focus { outline: none; }
 		});
 	}
 
+	// register room stacks here
+	Object.values(bitsy.room).forEach(function (room) {
+		var name = room.name || '';
+		var stackId = '-' + room.id + '-';
+		var stackPos = 0;
+		var tag = name.match(/#([a-zA-Z]+)(-?[0-9]+\.?[0-9]*)/);
+		if (tag) {
+			stackId = tag[1];
+			stackPos = Number(tag[2]);
+		}
+		if (!roomsInStack.hasOwnProperty(stackId)) {
+			roomsInStack[stackId] = [];
+		}
+		roomsInStack[stackId].push(room.id);
+
+		stackPosOfRoom[room.id] = {};
+		stackPosOfRoom[room.id].stack = stackId;
+		stackPosOfRoom[room.id].pos = stackPos;
+	});
+
+	// console.log("bitsy.room");
+	// console.log(bitsy.room);
+
+	// console.log("stackPosOfRoom");
+	// console.log(stackPosOfRoom);
+
+	// console.log("roomsInStack");
+	// console.log(roomsInStack);
+
+	// create tile arrays for stacks
+	// entry[0] is stackId, entry[1] is an array of roomsIds in the stack
+	Object.entries(roomsInStack).forEach(function (entry) {
+		tilesInStack[entry[0]] = makeTilesArray (entry[1].length);
+	});
+
+	// console.log("tilesInStack");
+	// console.log(tilesInStack);
+
+    // iterate through all drawings 
 	// fill the texture cache using idle callbacks
 	// to reduce perf issues
-	if (hackOptions$2.preloadTextures) {
+	// swap drawings for editor gizmos here
+	// mb later add category for drawing setup tags that woulnd need to be handled here
+	// and check if there are any tags registred in the list for this category
+	// for now just add hackOptions.replaceDrawingTag for #draw_SPR/TIL/ITM_id
+	// #draw_SPR_A
+	if (hackOptions$2.preloadTextures || hackOptions$2.replaceDrawingTag) {
 		Object.values(bitsy.room).forEach(function (room) {
 			var items = room.items.map(function (item) {
 				return bitsy.item[item.id];
@@ -711,18 +980,58 @@ canvas:focus { outline: none; }
 				return sprite.room === room.id;
 			});
 			[].concat(items, tiles, sprites).forEach(function (drawing) {
-				requestIdleCallback(function () {
-					var f = drawing.animation.frameIndex;
-					for (var i = 0; i < drawing.animation.frameCount; ++i) {
-						drawing.animation.frameIndex = i;
-						getTexture(drawing, room.pal);
+				// replace drawings marked with the #draw tag
+				if (hackOptions$2.replaceDrawingTag) {
+					var name = drawing.name || '';
+					var tag = name.match(/#draw[- _]?(TIL|SPR|ITM)[- _]?([a-zA-Z0-9]+)/);
+					if (tag) {
+						// console.log(tag);
+						var map;
+						// tag[1] is the first capturing group, it can be either TIL, SPR, or ITM
+						switch (tag[1]) {
+							case 'TIL':
+								map = bitsy.tile;
+								break;
+							case 'SPR':
+								map = bitsy.sprite;
+								break;
+							case 'ITM':
+								map = bitsy.item;
+								break;
+						}
+						// tag[2] is the second capturing group which returns drawing id
+						var id = tag[2];
+						drawing.drw = map[id].drw;
+						drawing.animation.frameCount = map[id].animation.frameCount;
+						drawing.animation.isAnimated = map[id].animation.isAnimated;
+						drawing.col = map[id].col;
 					}
-					drawing.animation.frameIndex = f;
-				});
+				}
+				// preload textures
+				// safari, edge and ie don't support requestIdleCallback. make sure to check
+				// or it will throw an error and won't run this function on other drawings
+				// and #draw tags won't have any effect
+				if (hackOptions$2.preloadTextures && window.hasOwnProperty('requestIdleCallback')) {
+					requestIdleCallback(function () {
+						var f = drawing.animation.frameIndex;
+						for (var i = 0; i < drawing.animation.frameCount; ++i) {
+							drawing.animation.frameIndex = i;
+							getTexture(drawing, room.pal);
+						}
+						drawing.animation.frameIndex = f;
+					});
+				}
 			});
 		});
 	}
 });
+
+// to conveniently adjust meshes cause pivot points don't work or they work in some really counterintuitive way
+function transformGeometry(mesh, matrix) {
+	var vertData = BABYLON$1.VertexData.ExtractFromMesh(mesh);
+	vertData.transform(matrix);
+	vertData.applyToMesh(mesh);
+}
 
 // input stuff
 var rotationTable = {};
@@ -811,6 +1120,8 @@ before('drawRoom', function (room, context, frameIndex) {
 	if (playerRef && prevRoom === bitsy.curRoom) {
 		playerRef.position.x = bitsy.player().x;
 		playerRef.position.z = bitsy.mapsize - bitsy.player().y;
+		// mew i'm gonna copy their position mew
+		copyCat.position = playerRef.position;
 	}
 	return [room, fakeContext, frameIndex];
 });
@@ -895,11 +1206,18 @@ var getMeshFromCache = getCache(function (drawing, pal, type) {
 });
 
 function getMesh(drawing, pal) {
+	// for invisible tag
+	var type = hackOptions$2.getType(drawing);
+	if (!type) {
+		return null;
+	}
 	var drw = drawing.drw;
 	var col = drawing.col;
 	var frame = drawing.animation.frameIndex;
-	var key = `${drw},${col},${pal},${frame}`;
-	return getMeshFromCache(key, [drawing, pal, hackOptions$2.getType(drawing)]);
+	// include type in the key to account for cases when drawings that link to
+	// the same 'drw' need to have different types, like wedge gizmos
+	var key = `${drw},${col},${pal},${frame},${type}`;
+	return getMeshFromCache(key, [drawing, pal, type]);
 }
 
 var playerRef;
@@ -913,6 +1231,8 @@ var playerMovement = {
 		playerRef = null;
 	},
 };
+// camera target that will follow the player to fix billboard avatar
+var copyCat;
 
 function applyBehaviours(target) {
 	var isPlayer = target.name === 'player';
@@ -926,39 +1246,69 @@ function applyBehaviours(target) {
 	}
 }
 
+// room stacks stuff
+var roomsInStack = {};
+var stackPosOfRoom = {};
+
+var lastStack;
+var curStack;
+
+var lastRoom;
+
+var tilesInStack = {};
+
 var sprites = {};
 var items = {};
-var tiles = [];
-for (var y = 0; y < bitsy.mapsize; ++y) {
-	var row = [];
-	for (var x = 0; x < bitsy.mapsize; ++x) {
-		row.push(['-1', null]);
+
+function makeTilesArray (stackSize) {
+	var a = [];
+	for (var y = 0; y < bitsy.mapsize; ++y) {
+	    var row = [];
+	    for (var x = 0; x < bitsy.mapsize; ++x) {
+	        var coln = [];
+	        for (var z = 0; z < stackSize; ++z) {
+	            coln.push(['-1', null]);
+	        }
+	        row.push(coln);
+	    }
+	    a.push(row);
 	}
-	tiles.push(row);
+	return a;
 }
 
 function update() {
+	// console.log("update called");
+	curStack = stackPosOfRoom[bitsy.curRoom].stack;
+
 	// sprite changes
 	Object.entries(sprites).forEach(function (entry) {
-		if (bitsy.sprite[entry[0]].room !== bitsy.curRoom) {
+		if (stackPosOfRoom[bitsy.sprite[entry[0]].room].stack !== curStack) {
 			entry[1].dispose();
 			entry[1] = null;
 			delete sprites[entry[0]];
 		}
 	});
 	Object.values(bitsy.sprite).filter(function (sprite) {
-		return sprite.room === bitsy.curRoom;
+		// plz be nice to your sprites
+        // if (!stackPosOfRoom[sprite.room]) {
+        //     console.log(`hiya i'm SPR ${sprite.id} aka ${sprite.name} imma break ur game cause u deleted my room 🗡\\[｡Ծ _ Ծ｡]/🔪`);
+        // }
+        // return stackPosOfRoom[sprite.room].stack === curStack;
+		return stackPosOfRoom[sprite.room] && stackPosOfRoom[sprite.room].stack === curStack;
 	}).forEach(function (sprite) {
 		var id = sprite.id;
 		var oldMesh = sprites[id];
 		var newMesh = getMesh(sprite, bitsy.curPal());
-		if (newMesh !== (oldMesh && oldMesh.sourceMesh)) {
+		// consider newMesh being null as a result of invisible tag
+		if (newMesh && newMesh !== (oldMesh && oldMesh.sourceMesh)) {
 			if (oldMesh) {
 				oldMesh.dispose();
 			}
 			newMesh = newMesh.createInstance();
 			newMesh.position.x = sprite.x;
 			newMesh.position.z = bitsy.mapsize - sprite.y;
+			newMesh.position.y = stackPosOfRoom[sprite.room].pos;
+			hackOptions$2.meshExtraSetup(sprite, newMesh);
 
 			if (id === bitsy.playerId) {
 				newMesh.name = 'player';
@@ -967,67 +1317,127 @@ function update() {
 			sprites[id] = oldMesh = newMesh;
 		}
 	});
-	// item changes
-	Object.entries(items).forEach(function (entry) {
-		if (!bitsy.room[bitsy.curRoom].items.find(function (item) {
-				return `${item.id},${item.x},${item.y}` === entry[0];
-			})) {
-			entry[1].dispose();
-			entry[1] = null;
-			delete items[entry[0]];
-		}
-	});
-	bitsy.room[bitsy.curRoom].items.forEach(function (roomItem) {
-		var key = `${roomItem.id},${roomItem.x},${roomItem.y}`;
-		var item = bitsy.item[roomItem.id];
-		var oldMesh = items[key];
-		var newMesh = getMesh(item, bitsy.curPal());
-		if (newMesh !== (oldMesh && oldMesh.sourceMesh)) {
-			if (oldMesh) {
-				oldMesh.dispose();
-			}
-			newMesh = newMesh.createInstance();
-			newMesh.position.x = roomItem.x;
-			newMesh.position.z = bitsy.mapsize - roomItem.y;
-			applyBehaviours(newMesh);
-			items[key] = newMesh;
-		}
-	});
+	// make sure the avatar is rendered at the correct height
+	// when they enter new rooms in the stack
+	if (lastRoom && lastRoom !== bitsy.curRoom) {
+		sprites[bitsy.playerId].position.y = stackPosOfRoom[bitsy.curRoom].pos;
+	}
 
-	// tile changes
-	var tilemap = bitsy.room[bitsy.curRoom].tilemap;
-	for (var y = 0; y < tilemap.length; ++y) {
-		var row = tilemap[y];
-		for (var x = 0; x < row.length; ++x) {
-			var roomTile = row[x];
-			var tile = tiles[y][x];
-			tile[0] = roomTile;
-			var oldMesh = tile[1];
-			if (roomTile === '0') {
+
+	// item changes
+	// with stacks: add room id to the key also check if it's in the curStack
+	// comment out old code and rewrite loops from scratch
+
+	// ok try again
+	// delete irrelevant items
+	// var t1 = performance.now();
+	Object.entries(items).forEach(function (entry) {
+		var roomId = entry[0].slice(0, entry[0].indexOf(','));
+		if (stackPosOfRoom[roomId].stack === curStack) {
+			// if this item in current stack
+			// check if it is still listed its room
+			// if so keep it as it is and return
+			if (bitsy.room[roomId].items.find(function (item) {
+				return `${roomId},${item.id},${item.x},${item.y}` === entry[0];
+			})) {
+				return;
+			}
+		}
+		// if this item is not in the current stack
+		// or in the current stack but was picked up or stolen by demons
+		// good by item ღ•᷄_•᷄)ノ
+		entry[1].dispose();
+		entry[1] = null;
+		delete items[entry[0]];
+	});
+	// var t2 = performance.now();
+	// console.log(`it took ${t2-t1} ms to delete irrelevant items`);
+
+	// make/update relevant items
+	// t1 = performance.now();
+	roomsInStack[curStack].forEach(function (roomId) {
+		bitsy.room[roomId].items.forEach(function (roomItem) {
+			var key = `${roomId},${roomItem.id},${roomItem.x},${roomItem.y}`;
+			var item = bitsy.item[roomItem.id];
+			var oldMesh = items[key];
+			var newMesh = getMesh(item, bitsy.curPal());
+			// consider newMesh being null as a result of invisible tag
+			if (newMesh && newMesh !== (oldMesh && oldMesh.sourceMesh)) {
 				if (oldMesh) {
 					oldMesh.dispose();
 				}
-				tile[1] = null;
-				continue;
+				newMesh = newMesh.createInstance();
+				newMesh.position.x = roomItem.x;
+				newMesh.position.z = bitsy.mapsize - roomItem.y;
+				newMesh.position.y = stackPosOfRoom[roomId].pos;
+				hackOptions$2.meshExtraSetup(item, newMesh);
+				applyBehaviours(newMesh);
+				items[key] = newMesh;
 			}
-			var newMesh = getMesh(bitsy.tile[roomTile], bitsy.curPal());
-			if (newMesh === (oldMesh && oldMesh.sourceMesh)) {
-				continue;
-			}
-			newMesh = newMesh.createInstance();
-			newMesh.position.x = x;
-			newMesh.position.z = bitsy.mapsize - y;
-			applyBehaviours(newMesh);
-			if (oldMesh) {
-				oldMesh.dispose();
-			}
-			tile[1] = newMesh;
-		}
+		});
+	});
+	// t2 = performance.now();
+	// console.log(`it took ${t2-t1} ms to make/update relevant items`);
+	// YAY I DID IT FINALLY IT WORKS OMG
+
+    // tile changes
+	// check if we entered a new stack
+	// if so make sure tiles from the old stack aren't visible
+	if (lastStack && lastStack !== curStack) {
+		tilesInStack[lastStack].forEach(function (row) {
+			row.forEach(function (coln) {
+				coln.forEach(function (tileEntry) {
+					if (tileEntry[1] !== null) {
+						tileEntry[1].dispose();
+						tileEntry[1] = null;
+					}
+				});
+			});
+		});
 	}
+
+	roomsInStack[curStack].forEach(function (roomId, roomIdIndex) {
+		var tilemap = bitsy.room[roomId].tilemap;
+		for (var y = 0; y < tilemap.length; ++y) {
+			var row = tilemap[y];
+			for (var x = 0; x < row.length; ++x) {
+				var roomTile = row[x];
+				var tile = tilesInStack[curStack][y][x][roomIdIndex];
+				tile[0] = roomTile;
+				var oldMesh = tile[1];
+				if (roomTile === '0') {
+					if (oldMesh) {
+						oldMesh.dispose();
+					}
+					tile[1] = null;
+					continue;
+				}
+				var newMesh = getMesh(bitsy.tile[roomTile], bitsy.curPal());
+				// consider newMesh being null as a result of invisible tag
+				if (!newMesh || newMesh === (oldMesh && oldMesh.sourceMesh)) {
+					continue;
+				}
+				newMesh = newMesh.createInstance();
+				newMesh.position.x = x;
+				newMesh.position.z = bitsy.mapsize - y;
+				newMesh.position.y = stackPosOfRoom[roomId].pos;
+				hackOptions$2.meshExtraSetup(bitsy.tile[roomTile], newMesh);
+				applyBehaviours(newMesh);
+				if (oldMesh) {
+					oldMesh.dispose();
+				}
+				tile[1] = newMesh;
+			}
+		}
+	});
 
 	// bg changes
 	exports.scene.clearColor = getBgColor();
 	exports.scene.fogColor = getBgColor();
+
+	// remember what stack we were in in this frame
+	lastStack = curStack;
+	lastRoom = bitsy.curRoom;
 }
 
 function getBgColor() {
