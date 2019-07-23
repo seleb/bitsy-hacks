@@ -35,17 +35,16 @@ HOW TO USE:
 2. copy-paste this script into a script tag after the bitsy source
 */
 import {
- after,
+	after,
 } from './helpers/kitsy-script-toolkit';
 import bitsy from 'bitsy';
 
 after('parseWorld', function () {
-	[].concat(Object.values(bitsy.item), Object.values(bitsy.tile), Object.values(bitsy.sprite)).forEach( function (drawing) {
+	[].concat(Object.values(bitsy.item), Object.values(bitsy.tile), Object.values(bitsy.sprite)).forEach(function (drawing) {
 		// replace drawings marked with the #draw(TYPE,id) tag
 		var name = drawing.name || '';
 		var tag = name.match(/#draw\((TIL|SPR|ITM),([a-zA-Z0-9]+)\)/);
 		if (tag) {
-			// console.log(tag);
 			var map;
 			// tag[1] is the first capturing group, it can be either TIL, SPR, or ITM
 			switch (tag[1]) {
@@ -58,6 +57,8 @@ after('parseWorld', function () {
 				case 'ITM':
 					map = bitsy.item;
 					break;
+				default:
+					break;
 			}
 			// tag[2] is the second capturing group which returns drawing id
 			var id = tag[2];
@@ -66,7 +67,7 @@ after('parseWorld', function () {
 				drawing.drw = newDrawing.drw;
 				drawing.animation.frameCount = newDrawing.animation.frameCount;
 				drawing.animation.isAnimated = newDrawing.animation.isAnimated;
-				drawing.col = newDrawing.col;    
+				drawing.col = newDrawing.col;
 			} else {
 				console.error(`couldn't replace ${drawing.name}! there is no '${tag[1]} ${id}'`);
 			}

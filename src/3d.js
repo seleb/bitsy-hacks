@@ -168,13 +168,13 @@ export var hackOptions = {
 		var meshMatch = name.match(/#mesh\((.+?)\)/);
 		if (meshMatch) {
 			if (meshTemplates[meshMatch[1]]) {
-				 return meshMatch[1];
-			 } else {
+				return meshMatch[1];
+			} else {
 				// if the specified mesh template doesn't exist,
 				// display error message, but continue execution
 				// to resolve the mesh with default logic
 				console.error(`mesh template '${meshMatch[1]}' wasn't found`);
-			 }
+			}
 		}
 
 		// default
@@ -213,9 +213,11 @@ export var hackOptions = {
 		// scale
 		var scaleTag = name.match(/#s\((-?\.?\d*\.?\d*)?,(-?\.?\d*\.?\d*)?,(-?\.?\d*\.?\d*)?\)/);
 		if (scaleTag) {
-			mesh.scaling = new BABYLON.Vector3(Number(scaleTag[1]) || 0,
-											   Number(scaleTag[2]) || 0,
-											   Number(scaleTag[3]) || 0);
+			mesh.scaling = new BABYLON.Vector3(
+				Number(scaleTag[1]) || 0,
+				Number(scaleTag[2]) || 0,
+				Number(scaleTag[3]) || 0
+			);
 		}
 		// rotate. input in degrees
 		var rotateTag = name.match(/#r\((-?\.?\d*\.?\d*)?,(-?\.?\d*\.?\d*)?,(-?\.?\d*\.?\d*)?\)/);
@@ -235,7 +237,7 @@ export var hackOptions = {
 };
 
 function radians(degrees) {
-  return degrees * Math.PI / 180;
+	return degrees * Math.PI / 180;
 }
 
 // forward transparent sprites hack option
@@ -385,7 +387,7 @@ canvas:focus { outline: none; }
 		height: 1,
 	}, scene);
 	// adjust template position so that the instances will be displated correctly
-	transformGeometry(floorMesh, BABYLON.Matrix.Translation(0.0,0.0,0.5));
+	transformGeometry(floorMesh, BABYLON.Matrix.Translation(0.0, 0.0, 0.5));
 	floorMesh.rotation.x = Math.PI / 2;
 	floorMesh.isVisible = false;
 	floorMesh.doNotSyncBoundingInfo = true;
@@ -407,29 +409,32 @@ canvas:focus { outline: none; }
 
 	// wedge
 	var wedgeMesh = new BABYLON.Mesh("wedgeMesh", scene);
-	var wedgeMeshPos = [-1,0,0, 0,0,0, 0,1,0,   0,0,1, -1,0,1, 0,1,1, // 0,1,2, 3,4,5,
-					  -1,0,1, -1,0,0, 0,1,0, 0,1,1, // 6,7,8,9
-					  0,0,0, 0,0,1, 0,1,1, 0,1,0, // 10,11,12,13
-					  0,0,1, 0,0,0, -1,0,0, -1,0,1 // 14,15,16,17
-					  ];
-	var wedgeMeshInd = [0,1,2, 3,4,5, //triangles on the front and the back
-					  6,7,8, 8,9,6, // tris that make up the sliding face at the top
-					  10,11,12, 12,13,10, // right face
-					  14,15,16, 16,17,14  // bottom face
-					  ];
-	var wedgeMeshUvs = [0,0, 1,0, 1,1,   0,0, 1,0, 0,1,
-					  0,0, 1,0, 1,1, 0,1,
-					  0,0, 1,0, 1,1, 0,1,
-					  0,0, 1,0, 1,1, 0,1
-					  ];
+	var wedgeMeshPos = [
+		-1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 1, 0, 1, 1, // 0,1,2, 3,4,5,
+		-1, 0, 1, -1, 0, 0, 0, 1, 0, 0, 1, 1, // 6,7,8,9
+		0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, // 10,11,12,13
+		0, 0, 1, 0, 0, 0, -1, 0, 0, -1, 0, 1 // 14,15,16,17
+	];
+	var wedgeMeshInd = [
+		0, 1, 2, 3, 4, 5, //triangles on the front and the back
+		6, 7, 8, 8, 9, 6, // tris that make up the sliding face at the top
+		10, 11, 12, 12, 13, 10, // right face
+		14, 15, 16, 16, 17, 14 // bottom face
+	];
+	var wedgeMeshUvs = [
+		0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0, 1,
+		0, 0, 1, 0, 1, 1, 0, 1,
+		0, 0, 1, 0, 1, 1, 0, 1,
+		0, 0, 1, 0, 1, 1, 0, 1
+	];
 	var wedgeMeshVertData = new BABYLON.VertexData();
 	wedgeMeshVertData.positions = wedgeMeshPos;
 	wedgeMeshVertData.indices = wedgeMeshInd;
 	wedgeMeshVertData.uvs = wedgeMeshUvs;
 
-	var translation = BABYLON.Matrix.Translation(0.5,-0.5,-0.5);
+	var translation = BABYLON.Matrix.Translation(0.5, -0.5, -0.5);
 	wedgeMeshVertData.transform(translation);
-	
+
 	wedgeMeshVertData.applyToMesh(wedgeMesh);
 	wedgeMesh.isVisible = false; // but newly created copies and instances will be visible by default
 	wedgeMesh.doNotSyncBoundingInfo = true;
@@ -491,7 +496,7 @@ canvas:focus { outline: none; }
 	// create tile arrays for stacks
 	// entry[0] is stackId, entry[1] is an array of roomsIds in the stack
 	Object.entries(roomsInStack).forEach(function (entry) {
-		tilesInStack[entry[0]] = makeTilesArray (entry[1].length);
+		tilesInStack[entry[0]] = makeTilesArray(entry[1].length);
 	});
 
 	// preload textures
@@ -756,7 +761,7 @@ var tilesInStack = {};
 var sprites = {};
 var items = {};
 
-function makeTilesArray (stackSize) {
+function makeTilesArray(stackSize) {
 	var a = [];
 	for (var y = 0; y < bitsy.mapsize; ++y) {
 		var row = [];
@@ -822,8 +827,8 @@ function update() {
 			// check if it is still listed its room
 			// if so keep it as it is and return
 			if (bitsy.room[roomId].items.find(function (item) {
-				return `${roomId},${item.id},${item.x},${item.y}` === entry[0];
-			})) {
+					return `${roomId},${item.id},${item.x},${item.y}` === entry[0];
+				})) {
 				return;
 			}
 		}
