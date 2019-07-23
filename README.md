@@ -40,6 +40,7 @@ A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamled
 - ⬛ [opaque tiles](/dist/opaque-tiles.js): tiles which hide the player
 - 📃 [paragraph-break](/dist/paragraph-break.js): Adds paragraph breaks to the dialogue parser
 - ⏳ [permanent items](/dist/permanent-items.js): prevent some items from being picked up
+- 🎭 [replace drawing](/dist/replace-drawing.js): add name-tags to replace drawings when the game is loading
 - 💾 [save](/dist/save.js): save/load your game
 - 🏃 [smooth moves](/dist/smooth-moves.js): ease the player's movement
 - 🛑 [solid items](/dist/solid-items.js): treat some items like sprites that can be placed multiple times
