@@ -18,21 +18,23 @@ Using the (exit) function in any part of a series of dialog will make the
 game exit to the new room after the dialog is finished. Using (exitNow) will
 immediately warp to the new room, but the current dialog will continue.
 
-The (exitHere) and (exitHereNow) functions work the same, except without
-the requirement to specify the coordinates, instead using the current
-coordinates of the player sprite.
-
 Usage:
-	(exit "<room name>,<x>,<y>,<optional transition_effect>")
-	(exitNow "<room name>,<x>,<y>,<optional transition_effect>")
-	(exitHere "<room name>,<optional transition_effect>")
-	(exitHereNow "<room name>,<optional transition_effect>")
+	(exit "<room name>,<x>,<y>,<transition_effect>")
+	(exitNow "<room name>,<x>,<y>,<transition_effect>")
 
-Example:
+Parameter notes:
+	- Every paramater is optional
+	- If you omit the room, it will use the current room
+	- If you omit the x or y, it will use the current position
+	- x and y can be written as relative coordinates (e.g. +3, -4, +0)
+	- available transitions at time of writing: fade_w, fade_b, wave, tunnel, slide_u, slide_d, slide_l, slide_r
+
+Examples:
 	(exit "FinalRoom,8,4")
 	(exit "FinalRoom,8,4,tunnel")
-	(exitHere "FinalRoom")
-	(exitHere "FinalRoom,tunnel")
+	(exit "FinalRoom")
+	(exit "FinalRoom,+0,+0,tunnel")
+	(exit ",+1,+1")
 
 HOW TO USE:
 1. Copy-paste this script into a new script tag after the Bitsy source code.
