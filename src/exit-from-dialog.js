@@ -58,73 +58,51 @@ import {
 
 // Implement the dialog functions
 addDualDialogTag('exit', function (environment, parameters) {
-	var exit = _getExitParams(parameters);
+	var exit = getExitParams(parameters);
 	if (!exit) {
 		return;
 	}
 	bitsy.movePlayerThroughExit(exit);
 });
 
-function _getExitParams(parameters) {
+function getExitParams(parameters) {
+	var p = bitsy.player();
 	var params = parameters[0].split(',');
 	var roomName = params[0];
 	var x = params[1];
 	var y = params[2];
 	var transition_effect = params[3];
-	var room = getRoom(roomName).id;
+	var room = getRoom(roomName);
 
-	if (!roomName || x === undefined || y === undefined) {
-		console.warn('{exit/exitNow} was missing parameters! Usage: {exit/exitNow "roomname,x,y"}');
-		return null;
+	if (!room) {
+		room = bitsy.room[p.room];
 	}
 
-	if (room === undefined) {
-		console.warn("Bad {exit/exitNow} parameter: Room '" + roomName + "' not found!");
-		return null;
+	if (!x) {
+		x = p.x;
+	} else if (x.startsWith('+')) {
+		x = p.x + Number(x);
+	} else if (x.startsWith('-')) {
+		x = p.x - Number(x);
+	} else {
+		x = Number(x);
 	}
 
-	return {
-		dest: {
-			room,
-			x: Number(x),
-			y: Number(y),
-		},
-		transition_effect,
-	};
-}
-
-addDualDialogTag('exitHere', function (environment, parameters) {
-	var exit = _getExitHereParams(parameters);
-	if (!exit) {
-		return;
-	}
-	bitsy.movePlayerThroughExit(exit);
-});
-
-function _getExitHereParams(parameters) {
-	var params = parameters[0].split(',');
-	var roomName = params[0];
-	var transition_effect = params[1];
-	var room = getRoom(roomName).id
-	
-	var x = bitsy.player().x;
-	var y = bitsy.player().y;
-
-	if (!roomName) {
-		console.warn('{exitHere/exitHereNow} was missing parameters! Usage: {exitHere/exitHereNow "roomname,transition(optional)"}');
-		return null;
-	}
-
-	if (room === undefined) {
-		console.warn("Bad {exitHere/exitHereNow} parameter: Room '" + roomName + "' not found!");
-		return null;
+	if (!y) {
+		y = p.y;
+	} else if (y.startsWith('+')) {
+		y = p.y + Number(y);
+	} else if (y.startsWith('-')) {
+		y = p.y - Number(y);
+	} else {
+		y = Number(y);
 	}
 
 	return {
 		dest: {
-			room,
-			x: Number(x),
-			y: Number(y),
+			room: room.id,
+			x,
+			y,
 		},
 		transition_effect,
 	};
