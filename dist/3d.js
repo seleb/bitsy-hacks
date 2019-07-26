@@ -1052,7 +1052,7 @@ var getTextureFromCache = getCache(function (drawing, pal) {
 		width: c.width,
 		height: c.height,
 	}, exports.scene, false, BABYLON$1.Texture.NEAREST_NEAREST_MIPNEAREST);
-	tex.wrapU = tex.wrapV = BABYLON$1.Texture.WRAP_ADDRESSMODE;
+	tex.wrapU = tex.wrapV = BABYLON$1.Texture.CLAMP_ADDRESSMODE;
 	if (hackOptions$2.isTransparent(drawing)) {
 		tex.hasAlpha = true;
 	}
@@ -1091,6 +1091,10 @@ var getMeshFromCache = getCache(function (drawing, pal, type) {
 	mesh.makeGeometryUnique();
 	mesh.isVisible = false;
 	mesh.material = getMaterial(drawing, pal);
+	// enable vertical tiling for towers
+	if (type.startsWith('tower')) {
+		mesh.material.diffuseTexture.wrapV = BABYLON$1.Texture.WRAP_ADDRESSMODE;
+	}
 	return mesh;
 });
 
