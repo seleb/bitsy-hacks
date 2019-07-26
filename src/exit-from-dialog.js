@@ -80,20 +80,16 @@ function getExitParams(parameters) {
 
 	if (!x) {
 		x = p.x;
-	} else if (x.startsWith('+')) {
+	} else if (x.startsWith('+') || x.startsWith('-')) {
 		x = p.x + Number(x);
-	} else if (x.startsWith('-')) {
-		x = p.x - Number(x);
 	} else {
 		x = Number(x);
 	}
 
 	if (!y) {
 		y = p.y;
-	} else if (y.startsWith('+')) {
+	} else if (y.startsWith('+') || y.startsWith('-')) {
 		y = p.y + Number(y);
-	} else if (y.startsWith('-')) {
-		y = p.y - Number(y);
 	} else {
 		y = Number(y);
 	}
