@@ -46,9 +46,6 @@ This uses parentheses "()" instead of curly braces "{}" around function
 calls because the Bitsy editor's fancy dialog window strips unrecognized
 curly-brace functions from dialog text. To keep from losing data, write
 these function calls with parentheses like the examples above.
-
-For full editor integration, you'd *probably* also need to paste this
-code at the end of the editor's `bitsy.js` file. Untested.
 */
 import bitsy from "bitsy";
 import {
