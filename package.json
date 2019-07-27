@@ -6,7 +6,7 @@
 		"hacks"
 	],
 	"main": "index.mjs",
-	"version": "4.5.0",
+	"version": "5.0.0",
 	"scripts": {
 		"build": "node --experimental-modules cli.mjs",
 		"test": "jest --runInBand",

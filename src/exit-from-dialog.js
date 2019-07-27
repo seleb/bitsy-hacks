@@ -3,7 +3,7 @@
 @file exit-from-dialog
 @summary exit to another room from dialog, including conditionals
 @license WTFPL (do WTF you want)
-@version 6.1.1
+@version 7.0.0
 @requires Bitsy Version: 6.0
 @author @mildmojo
 
@@ -18,21 +18,23 @@ Using the (exit) function in any part of a series of dialog will make the
 game exit to the new room after the dialog is finished. Using (exitNow) will
 immediately warp to the new room, but the current dialog will continue.
 
-The (exitHere) and (exitHereNow) functions work the same, except without
-the requirement to specify the coordinates, instead using the current
-coordinates of the player sprite.
-
 Usage:
-	(exit "<room name>,<x>,<y>,<optional transition_effect>")
-	(exitNow "<room name>,<x>,<y>,<optional transition_effect>")
-	(exitHere "<room name>,<optional transition_effect>")
-	(exitHereNow "<room name>,<optional transition_effect>")
+	(exit "<room name>,<x>,<y>,<transition_effect>")
+	(exitNow "<room name>,<x>,<y>,<transition_effect>")
 
-Example:
+Parameter notes:
+	- Every paramater is optional
+	- If you omit the room, it will use the current room
+	- If you omit the x or y, it will use the current position
+	- x and y can be written as relative coordinates (e.g. +3, -4, +0)
+	- available transitions at time of writing: fade_w, fade_b, wave, tunnel, slide_u, slide_d, slide_l, slide_r
+
+Examples:
 	(exit "FinalRoom,8,4")
 	(exit "FinalRoom,8,4,tunnel")
-	(exitHere "FinalRoom")
-	(exitHere "FinalRoom,tunnel")
+	(exit "FinalRoom")
+	(exit "FinalRoom,+0,+0,tunnel")
+	(exit ",+1,+1")
 
 HOW TO USE:
 1. Copy-paste this script into a new script tag after the Bitsy source code.
@@ -44,9 +46,6 @@ This uses parentheses "()" instead of curly braces "{}" around function
 calls because the Bitsy editor's fancy dialog window strips unrecognized
 curly-brace functions from dialog text. To keep from losing data, write
 these function calls with parentheses like the examples above.
-
-For full editor integration, you'd *probably* also need to paste this
-code at the end of the editor's `bitsy.js` file. Untested.
 */
 import bitsy from "bitsy";
 import {
@@ -58,73 +57,47 @@ import {
 
 // Implement the dialog functions
 addDualDialogTag('exit', function (environment, parameters) {
-	var exit = _getExitParams(parameters);
+	var exit = getExitParams(parameters);
 	if (!exit) {
 		return;
 	}
 	bitsy.movePlayerThroughExit(exit);
 });
 
-function _getExitParams(parameters) {
+function getExitParams(parameters) {
+	var p = bitsy.player();
 	var params = parameters[0].split(',');
 	var roomName = params[0];
 	var x = params[1];
 	var y = params[2];
 	var transition_effect = params[3];
-	var room = getRoom(roomName).id;
+	var room = getRoom(roomName);
 
-	if (!roomName || x === undefined || y === undefined) {
-		console.warn('{exit/exitNow} was missing parameters! Usage: {exit/exitNow "roomname,x,y"}');
-		return null;
+	if (!room) {
+		room = bitsy.room[p.room];
 	}
 
-	if (room === undefined) {
-		console.warn("Bad {exit/exitNow} parameter: Room '" + roomName + "' not found!");
-		return null;
+	if (!x) {
+		x = p.x;
+	} else if (x.startsWith('+') || x.startsWith('-')) {
+		x = p.x + Number(x);
+	} else {
+		x = Number(x);
 	}
 
-	return {
-		dest: {
-			room,
-			x: Number(x),
-			y: Number(y),
-		},
-		transition_effect,
-	};
-}
-
-addDualDialogTag('exitHere', function (environment, parameters) {
-	var exit = _getExitHereParams(parameters);
-	if (!exit) {
-		return;
-	}
-	bitsy.movePlayerThroughExit(exit);
-});
-
-function _getExitHereParams(parameters) {
-	var params = parameters[0].split(',');
-	var roomName = params[0];
-	var transition_effect = params[1];
-	var room = getRoom(roomName).id
-	
-	var x = bitsy.player().x;
-	var y = bitsy.player().y;
-
-	if (!roomName) {
-		console.warn('{exitHere/exitHereNow} was missing parameters! Usage: {exitHere/exitHereNow "roomname,transition(optional)"}');
-		return null;
-	}
-
-	if (room === undefined) {
-		console.warn("Bad {exitHere/exitHereNow} parameter: Room '" + roomName + "' not found!");
-		return null;
+	if (!y) {
+		y = p.y;
+	} else if (y.startsWith('+') || y.startsWith('-')) {
+		y = p.y + Number(y);
+	} else {
+		y = Number(y);
 	}
 
 	return {
 		dest: {
-			room,
-			x: Number(x),
-			y: Number(y),
+			room: room.id,
+			x,
+			y,
 		},
 		transition_effect,
 	};
