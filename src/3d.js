@@ -3,7 +3,7 @@
 @file 3d
 @summary bitsy in three dee
 @license MIT
-@version 1.1.1
+@version 1.2.0
 @requires 6.3
 @author Sean S. LeBlanc & Elkie Nova
 
@@ -38,7 +38,7 @@ additional features to help make more fancy 3d scenes from bitsy editor:
 bitsy rooms on top of each other. add tag-function '#stack(stackId,position)'
 to the names of the rooms you want to render together
 for example you can have rooms named 'theater #stack(a,0)', 'stage #stack(a,1)' and
-'catwalks #stack(a,4)' and they will be displayd at the same time, the 'stage'
+'catwalks #stack(a,4)' and they will be displayed at the same time, the 'stage'
 right on top of the 'theater', and 'catwalks' three tiles higher than the
 'stage'
 'stackId' should only include letters (no numbers and special characters
@@ -69,11 +69,48 @@ useful for making more complex shapes and more organic silhouettes by shifting
 models a bit off the grid, and configuring plane-type meshes to face a specific direction
 #t(x,y,z) for translation, #r(x,y,z) for rotation (in degrees), #s(x,y,z) for scaling.
 #t(1,0,0.5') and '#t(1,,.5)' are both examples of valid input
-omiting the number is the same as writing 0. note that this won't change anything on the given axis
-for rotation and translation, but it will for scaling
+omiting the number is the same as writing 0. note that this won't change anything on
+the given axis for rotation and translation, but it will for scaling
 
 * add #transparent(true)/#transparent(false) tag to the drawing's name to set
-transparency manually. sprites and items are transparent by defualt, and tiles are not
+transparency manually. sprites and items are transparent by default, and tiles are not
+
+* '#children(TYPE-id, TYPE-id, ...)' tag can be used to combine drawings together.
+add it to the name of the drawing, like this:
+'combo-grass #children(tile-a, tile-b, tile-c, tile-d)'
+'very tall person #children(sprite-a, sprite-b)'
+'multi-colored avatar #children(tile-f, tile-g)'
+TYPE specifies whether the drawing is a tile, an item or a sprite, and id is a group of characters
+that uniquely identifies the drawing among other drawings of this type.
+you can check the id of the drawing in game data or in 'paint' and 'find drawing' panels
+in the bitsy editor when the name of the drawing is blank.
+to quickly check the id of the drawing that already has a name,
+you can just select and cut the name and then paste it back again.
+the drawing that has this tag will become a parent, and the drawings specified inside the tag will
+become its children - that means they will move together with the parent,
+their transforms (position, rotation and scale) will be affected by the transform of the parent
+(keep that in mind when using transform tags!), and when the parent is deleted so are its children.
+this tag is helpful for using more colors on one drawing (together with transparent tag),
+to make more complex objects by combining basic meshes (with transform tag),
+and it also works on the avatar, which is useful because multi-sprite avatar hack
+is not fully compatible with 3d hack.
+note, that although avatar's name isn't displayed in 'paint' and 'find drawing' panels,
+you can specify it and add tags to it in the game data directly.
+you can search for 'SPR A' and add 'NAME <whatever you want to be here>' on the next line
+after the lines with ones and zeroes.
+notes:
+	* for child drawings to display animations correctly, the parent drawing must have
+	at least the same number of frames as the child drawing with most frames
+	e.g. if you add 'sprite b' as a child and it has 2 frames, the parent drawing should also have 2 frames
+	even if you don't need animation on the parent drawing, make sure to enable animation on it
+	(or duplicate its frames in the game data if any of its children has more than 2 frames).
+	* type of drawing is inferred from just the first letter. TYPE and id can be separated by
+	hyphen, underscore or space. you can have 's-a' instead of 'sprite-a', or 'SPR a' as it goes by in game data.
+	you can pick a naming style that suits you best in terms of clarity and conciseness
+	* child drawings only have the visual aspect, they don't have any gameplay properties.
+	the tile with the 'wall' property checked won't actually block the path when added as a child,
+	items won't get picked up and sprites won't start the dialog.
+	* drawings added as children can't be parents.
 
 check this out to learn how to work with wedges conveniently in the bitsy editor:
 https://github.com/aloelazoe/bitsy-hacks/wiki/how-to-use-wedges-with-3d-hack-and-replace-drawing-hack
@@ -145,7 +182,7 @@ export var hackOptions = {
 		var name = drawing.name || '';
 		var match = name.match(/#transparent\(((true)|(false))\)/);
 		if (match) {
-			// 2nd capturing group will be undefined if the input said 'false'
+			// 2nd capturing group reserved for 'true' will be undefined if the input said 'false'
 			return Boolean(match[2]);
 		}
 		return !drawing.drw.includes('TIL');
@@ -232,6 +269,54 @@ export var hackOptions = {
 			mesh.position.x += (Number(translateTag[1]) || 0);
 			mesh.position.y += (Number(translateTag[2]) || 0);
 			mesh.position.z += (Number(translateTag[3]) || 0);
+		}
+
+		// children tag
+		// for now for animation to work gotta make sure that the parent drawing has as many frames as children
+		var childrenTag;
+		// make sure the mesh we are about to add children to doesn't have a parent on its own to avoid ifinite loops
+		// maybe add checking for parents of parents recursively up to a certain number to allow more complex combinations
+		if (!mesh.parent) {
+			childrenTag = name.match(/#children\(([\w-, ]+)\)/);
+		}
+		if (childrenTag) {
+			// parse args and get the actual drawings
+			var children = childrenTag[1].split(/, |,/).map(function(arg) {
+				if (arg) {
+					var type, id, map;
+					[type, id] = arg.split(/[ _-]/);
+					if (type && id) {
+						switch (type[0].toLowerCase()) {
+							case 't':
+								map = bitsy.tile;
+								break;
+							case 'i':
+								map = bitsy.item;
+								break;
+							case 's':
+								map = bitsy.sprite;
+						}
+						if (map) {
+							return map[id];
+						}
+					}
+				}
+			}).filter(Boolean);
+
+			// add specified drawings to the scene as child meshes
+			children.forEach(function(childDrawing) {
+				var childMesh = getMesh(childDrawing, bitsy.curPal());
+				childMesh = childMesh.createInstance();
+				childMesh.position.x = mesh.position.x;
+				childMesh.position.y = mesh.position.y;
+				childMesh.position.z = mesh.position.z;
+				mesh.addChild(childMesh);
+				applyBehaviours(childMesh, childDrawing);
+				// make sure children can move if they are parented to the avatar
+				if (drawing = bitsy.player()) {
+					childMesh.unfreezeWorldMatrix();
+				}
+			});
 		}
 	},
 };
@@ -388,7 +473,9 @@ canvas:focus { outline: none; }
 	}, scene);
 	// adjust template position so that the instances will be displated correctly
 	transformGeometry(floorMesh, BABYLON.Matrix.Translation(0.0, 0.0, 0.5));
-	floorMesh.rotation.x = Math.PI / 2;
+	// have to transform geometry instead of using regular rotation
+	// or it will mess up children transforms when using combine tag
+	transformGeometry(floorMesh, BABYLON.Matrix.RotationX(Math.PI/2));
 	floorMesh.isVisible = false;
 	floorMesh.doNotSyncBoundingInfo = true;
 	meshTemplates.floor = floorMesh;
@@ -401,7 +488,8 @@ canvas:focus { outline: none; }
 		frontUVs: new BABYLON.Vector4(0, 1, 1, 0),
 		backUVs: new BABYLON.Vector4(0, 1, 1, 0),
 	}, scene);
-	planeMesh.rotation.x = Math.PI;
+	// in case of rotation have to transform geometry or it will affect positions of its children
+	transformGeometry(planeMesh, BABYLON.Matrix.RotationX(Math.PI));
 	planeMesh.isVisible = false;
 	meshTemplates.plane = planeMesh;
 	planeMesh.doNotSyncBoundingInfo = true;
