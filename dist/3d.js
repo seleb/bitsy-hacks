@@ -30,7 +30,7 @@ so I focused on covering what I imagined to be some of the most common use cases
 If you need help customizing the hack to achieve a different style, feel free to reach out.
 
 The hackOptions below have relatively thorough documentation,
-but make sure to check out https://github.com/seleb/bitsy-hacks/wiki/3D-Hack-Examples 
+but make sure to check out https://github.com/seleb/bitsy-hacks/wiki/3D-Hack-Examples
 for examples of different setups if you're new to 3D.
 
 additional features to help make more fancy 3d scenes from bitsy editor:
@@ -186,7 +186,7 @@ var hackOptions$2 = {
 	// 	- 'floor': plane flat on the ground
 	// 	- 'tower1', 'tower2', etc: box variations that are taller and tiled
 	// 	- 'wedge': base mesh for wedges, facing left with its slanted side
-	// 	- 'empty': base mesh for wedges, facing left with its slanted side
+	// 	- 'empty': empty mesh for making drawings invisible
 	getType: function (drawing) {
 		var drw = drawing.drw;
 		var name = drawing.name || '';
