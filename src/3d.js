@@ -3,7 +3,7 @@
 @file 3d
 @summary bitsy in three dee
 @license MIT
-@version 1.1.1
+@version 1.1.2
 @requires 6.3
 @author Sean S. LeBlanc & Elkie Nova
 
@@ -179,7 +179,7 @@ export var hackOptions = {
 
 		// default
 		if (drawing.id === bitsy.playerId) {
-			return 'billboard';
+			return 'plane';
 		}
 		if (drw.startsWith('ITM')) {
 			return 'plane';
