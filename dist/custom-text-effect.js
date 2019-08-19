@@ -3,7 +3,7 @@
 @file custom text effect
 @summary make {custom}text effects{custom}
 @license MIT
-@version 2.1.2
+@version 2.1.3
 @requires 5.3
 @author Sean S. LeBlanc
 
@@ -54,7 +54,7 @@ The second argument is `time`, which is the time in milliseconds
 A number of example effects are included
 */
 this.hacks = this.hacks || {};
-this.hacks.custom_text_effect = (function (exports,bitsy) {
+(function (exports, bitsy) {
 'use strict';
 var hackOptions = {
 	"my-effect": function () {
@@ -404,6 +404,4 @@ inject$1(/(var TextEffects = new Map\(\);)/, '$1' + textEffectCode);
 
 exports.hackOptions = hackOptions;
 
-return exports;
-
-}({},window));
+}(this.hacks.custom_text_effect = this.hacks.custom_text_effect || {}, window));

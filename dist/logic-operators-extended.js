@@ -2,7 +2,7 @@
 🔀
 @file logic-operators-extended
 @summary adds conditional logic operators
-@version 1.1.2
+@version 1.1.3
 @author @mildmojo
 
 @description
@@ -27,7 +27,6 @@ NOTE: The combining operators (&&, ||, &&!, ||!) have lower precedence than
       condition, be sure to test every possibility to make sure it behaves
       the way you want.
 */
-this.hacks = this.hacks || {};
 (function (bitsy) {
 'use strict';
 

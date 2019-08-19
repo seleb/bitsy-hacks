@@ -3,7 +3,7 @@
 @file dialog choices
 @summary binary dialog choices
 @license MIT
-@version 2.1.3
+@version 3.0.0
 @requires 5.3
 @author Sean S. LeBlanc
 
@@ -89,9 +89,9 @@ import "./helpers/addParagraphBreak";
 
 var hackOptions = {
 	// if defined, the cursor is drawn as the sprite with the given id
-	// e.g. use 'A' to use the player's avatar as a cursor
+	// e.g. replace with `getCursorSprite('A')` to use the player's avatar as a cursor
 	// if not defined, uses an arrow graphic similar to the continue arrow
-	cursor: undefined,
+	cursor: getCursorSprite(),
 	// modifies the scale/position of the cursor
 	// recommended combinations:
 	// 	- scale: 4, y: 1, x: 0
@@ -172,18 +172,20 @@ var dialogChoices = {
 	}
 };
 
-var choiceCursorDefault = `[
-	[0, 0, 0, 0, 0, 0, 0, 0],
-	[0, 0, 0, 0, 0, 0, 0, 0],
-	[0, 1, 0, 0, 0, 0, 0, 0],
-	[0, 1, 1, 0, 0, 0, 0, 0],
-	[0, 1, 1, 1, 0, 0, 0, 0],
-	[0, 1, 1, 0, 0, 0, 0, 0],
-	[0, 1, 0, 0, 0, 0, 0, 0],
-	[0, 0, 0, 0, 0, 0, 0, 0]
-]`;
-
 bitsy.dialogChoices = dialogChoices;
+
+function getCursorSprite(cursor) {
+	return cursor ? `renderer.GetImageSource(sprite['${cursor}'].drw)[sprite['${cursor}'].animation.frameIndex]` : `[
+		[0, 0, 0, 0, 0, 0, 0, 0],
+		[0, 0, 0, 0, 0, 0, 0, 0],
+		[0, 1, 0, 0, 0, 0, 0, 0],
+		[0, 1, 1, 0, 0, 0, 0, 0],
+		[0, 1, 1, 1, 0, 0, 0, 0],
+		[0, 1, 1, 0, 0, 0, 0, 0],
+		[0, 1, 0, 0, 0, 0, 0, 0],
+		[0, 0, 0, 0, 0, 0, 0, 0]
+	]`;
+}
 
 // parsing
 // (adds a new sequence node type)
@@ -251,7 +253,7 @@ $1`);
 // but draws rotated to point at text)
 inject(/(this\.DrawNextArrow = )/, `
 this.DrawChoiceArrow = function() {
-	var rows = ${hackOptions.cursor ? `renderer.GetImageSource(sprite['${hackOptions.cursor}'].drw)[sprite['${hackOptions.cursor}'].animation.frameIndex]` : choiceCursorDefault};
+	var rows = ${hackOptions.cursor};
 	var top = (${hackOptions.transform.y} + window.dialogChoices.choice * (textboxInfo.padding_vert + relativeFontHeight())) * scale;
 	var left = ${hackOptions.transform.x}*scale;
 	for (var y = 0; y < rows.length; y++) {

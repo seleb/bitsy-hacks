@@ -3,7 +3,7 @@
 @file basic sfx
 @summary "walk" and "talk" sound effect support
 @license MIT
-@version 2.0.1
+@version 2.0.2
 @author Sean S. LeBlanc
 
 @description
@@ -24,7 +24,7 @@ Additional sounds can be added by by including more <audio> tags with different 
 If you'd like to trigger sounds from dialog, check out the bitsymuse hack!
 */
 this.hacks = this.hacks || {};
-this.hacks.basic_sfx = (function (exports,bitsy) {
+(function (exports, bitsy) {
 'use strict';
 var hackOptions = {
 	beNiceToEars: true // if `true`, reduces volume of recently played sound effects
@@ -278,6 +278,4 @@ after('dialogBuffer.FlipPage', function () {
 
 exports.hackOptions = hackOptions;
 
-return exports;
-
-}({},window));
+}(this.hacks.basic_sfx = this.hacks.basic_sfx || {}, window));

@@ -3,7 +3,7 @@
 @file favicon-from-sprite
 @summary generate a browser favicon (tab icon) from a Bitsy sprite, including animation!
 @license WTFPL (do WTF you want)
-@version 3.0.1
+@version 3.0.2
 @requires Bitsy Version: 5.5
 @author @mildmojo
 
@@ -18,7 +18,7 @@ HOW TO USE:
      sprite in the first available palette's colors.
 */
 this.hacks = this.hacks || {};
-this.hacks['favicon-from-sprite'] = (function (exports,bitsy) {
+(function (exports, bitsy) {
 'use strict';
 var hackOptions = {
 	SPRITE_NAME: '', // Sprite name as entered in editor (not case-sensitive). Defaults to player avatar.
@@ -352,6 +352,4 @@ function rgb(values) {
 
 exports.hackOptions = hackOptions;
 
-return exports;
-
-}({},window));
+}(this.hacks['favicon-from-sprite'] = this.hacks['favicon-from-sprite'] || {}, window));

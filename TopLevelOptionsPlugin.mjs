@@ -3,7 +3,7 @@
 // this is hackier than it should be, but gets the job done for now
 export default function () {
 	return {
-		transformBundle(code) {
+		renderChunk(code) {
 			const pattern = /^var\s+hackOptions.*?\s?=\s?{[\s\S]*?^};$/gm;
 			const matches = code.match(pattern);
 			if (!matches) {

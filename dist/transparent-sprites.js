@@ -3,7 +3,7 @@
 @file transparent sprites
 @summary makes all sprites have transparent backgrounds
 @license MIT
-@version 4.0.3
+@version 4.0.4
 @requires Bitsy Version: 6.1
 @author Sean S. LeBlanc
 
@@ -16,7 +16,7 @@ HOW TO USE:
 2. Edit hackOptions below as needed
 */
 this.hacks = this.hacks || {};
-this.hacks.transparent_sprites = (function (exports,bitsy) {
+(function (exports, bitsy) {
 'use strict';
 var hackOptions = {
 	isTransparent: function (drawing) {
@@ -268,6 +268,4 @@ before('drawTile', function (canvas) {
 
 exports.hackOptions = hackOptions;
 
-return exports;
-
-}({},window));
+}(this.hacks.transparent_sprites = this.hacks.transparent_sprites || {}, window));

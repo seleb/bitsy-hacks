@@ -2,7 +2,6 @@
 import {
 	basename
 } from "path";
-import eslint from "rollup-plugin-eslint";
 
 import headerComment from "./HeaderCommentPlugin";
 import topLevelOptions from "./TopLevelOptionsPlugin";
@@ -26,7 +25,6 @@ async function buildHacks(hacks) {
 
 	// build
 	const output = await build(hacks, [
-		eslint({}),
 		readme.plugin(),
 		headerComment(),
 		topLevelOptions()

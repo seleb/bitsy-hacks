@@ -3,7 +3,7 @@
 @file edit dialog from dialog
 @summary edit dialog from dialog (yes really)
 @license MIT
-@version 1.1.2
+@version 1.1.3
 @author Sean S. LeBlanc
 
 @description
@@ -24,7 +24,6 @@ TIPS:
 	- The player avatar is always a sprite with id "A"; you can edit your gamedata to give them a name for clarity
 	- You can use the full names or shorthand of image types (e.g. "SPR" and "sprite" will both work)
 */
-this.hacks = this.hacks || {};
 (function (bitsy) {
 'use strict';
 

@@ -3,7 +3,7 @@
 @file opaque tiles
 @summary tiles which hide the player
 @license MIT
-@version 1.1.2
+@version 1.1.3
 @author Sean S. LeBlanc
 
 @description
@@ -17,7 +17,7 @@ HOW TO USE:
 2. Update the `tileIsOpaque` function below to match your needs
 */
 this.hacks = this.hacks || {};
-this.hacks.opaque_tiles = (function (exports,bitsy) {
+(function (exports, bitsy) {
 'use strict';
 var hackOptions = {
 	tileIsOpaque: function (tile) {
@@ -271,6 +271,4 @@ inject$1(/(\/\/draw tiles)/, 'drawTile(getSpriteImage(player(), getRoomPal(room.
 
 exports.hackOptions = hackOptions;
 
-return exports;
-
-}({},window));
+}(this.hacks.opaque_tiles = this.hacks.opaque_tiles || {}, window));

@@ -3,7 +3,7 @@
 @file character portraits animated
 @summary high quality anime gifs
 @license MIT
-@version 1.0.2
+@version 1.0.3
 @requires Bitsy Version: 5.3
 @author Sean S. LeBlanc
 
@@ -29,7 +29,7 @@ HOW TO USE:
 2. Edit the hackOptions object as needed
 */
 this.hacks = this.hacks || {};
-this.hacks.character_portraits_animated = (function (exports,bitsy) {
+(function (exports, bitsy) {
 'use strict';
 var hackOptions$1 = {
 	// overrides for the base hack
@@ -1095,7 +1095,7 @@ function addDialogTag(tag, fn) {
 @file character portraits
 @summary high quality anime jpegs (or pngs i guess)
 @license MIT
-@version 2.0.1
+@version 2.0.2
 @requires Bitsy Version: 5.3
 @author Sean S. LeBlanc
 
@@ -1307,6 +1307,4 @@ after('drawRoom', function () {
 
 exports.hackOptions = hackOptions$1;
 
-return exports;
-
-}({},window));
+}(this.hacks.character_portraits_animated = this.hacks.character_portraits_animated || {}, window));

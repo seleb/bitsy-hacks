@@ -3,7 +3,7 @@
 @file dialog jump
 @summary jump from one dialog entry to another
 @license MIT
-@version 1.1.4
+@version 1.1.5
 @requires 5.3
 @author Sean S. LeBlanc
 
@@ -31,7 +31,6 @@ this will print forever(jump "DLG_infinite_loop")
 HOW TO USE:
 Copy-paste into a script tag after the bitsy source
 */
-this.hacks = this.hacks || {};
 (function (bitsy) {
 'use strict';
 

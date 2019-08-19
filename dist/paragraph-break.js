@@ -3,7 +3,7 @@
 @file paragraph-break
 @summary Adds paragraph breaks to the dialogue parser
 @license WTFPL (do WTF you want)
-@version 1.1.3
+@version 1.1.4
 @requires Bitsy Version: 5.0, 5.1
 @author Sean S. LeBlanc, David Mowatt
 
@@ -30,7 +30,6 @@ NOTE: This uses parentheses "()" instead of curly braces "{}" around function
       For full editor integration, you'd *probably* also need to paste this
       code at the end of the editor's `bitsy.js` file. Untested.
 */
-this.hacks = this.hacks || {};
 (function (bitsy) {
 'use strict';
 

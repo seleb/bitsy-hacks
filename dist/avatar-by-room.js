@@ -3,7 +3,7 @@
 @file avatar by room
 @summary change the avatar in certain rooms
 @license MIT
-@version 1.1.3
+@version 1.1.4
 @requires 5.3
 @author Sean S. LeBlanc
 
@@ -18,7 +18,7 @@ By default, the avatar will reset to the default if you enter a room without a s
 This can also be changed in the hackOptions below to instead apply avatar changes permanently.
 */
 this.hacks = this.hacks || {};
-this.hacks.avatar_by_room = (function (exports,bitsy) {
+(function (exports, bitsy) {
 'use strict';
 var hackOptions = {
 	permanent: false, // If true, avatar changes will persist across rooms without sprites defined
@@ -306,6 +306,4 @@ before('update', function () {
 
 exports.hackOptions = hackOptions;
 
-return exports;
-
-}({},window));
+}(this.hacks.avatar_by_room = this.hacks.avatar_by_room || {}, window));

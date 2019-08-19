@@ -3,7 +3,7 @@
 @file corrupt
 @summary corrupts gamedata at runtime
 @license MIT
-@version 3.0.2
+@version 3.0.3
 @requires 5.5
 @author Sean S. LeBlanc
 
@@ -37,7 +37,7 @@ e.g.
 	3.5 = will corrupt thrice, and corrupt a fourth time with a probability of one in two
 */
 this.hacks = this.hacks || {};
-this.hacks.corrupt = (function (exports,bitsy) {
+(function (exports, bitsy) {
 'use strict';
 var hackOptions = {
 	tilemapFreq: 1,
@@ -465,6 +465,4 @@ function rndItem(array) {
 
 exports.hackOptions = hackOptions;
 
-return exports;
-
-}({},window));
+}(this.hacks.corrupt = this.hacks.corrupt || {}, window));

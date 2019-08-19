@@ -3,7 +3,7 @@
 @file smooth moves
 @summary ease the player's movement
 @license MIT
-@version 1.0.2
+@version 1.0.3
 @requires Bitsy Version: 6.3
 @author Sean S. LeBlanc
 
@@ -16,7 +16,7 @@ HOW TO USE:
 2. Edit hackOptions below as needed
 */
 this.hacks = this.hacks || {};
-this.hacks.smooth_moves = (function (exports,bitsy) {
+(function (exports, bitsy) {
 'use strict';
 var hackOptions = {
 	// duration of ease in ms
@@ -294,6 +294,4 @@ before('drawRoom', function () {
 
 exports.hackOptions = hackOptions;
 
-return exports;
-
-}({},window));
+}(this.hacks.smooth_moves = this.hacks.smooth_moves || {}, window));

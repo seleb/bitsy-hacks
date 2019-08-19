@@ -3,7 +3,7 @@
 @file dialog box transition
 @summary adds an easing transition animation to display the dialog box text
 @license MIT
-@version 1.0.1
+@version 1.0.2
 @requires 4.8, 4.9
 @author Delacannon
 
@@ -14,7 +14,7 @@ HOW TO USE:
 1. Copy-paste this script into a script tag after the bitsy source.
 */
 this.hacks = this.hacks || {};
-this.hacks.dialog_box_transition = (function (exports,bitsy) {
+(function (exports, bitsy) {
 'use strict';
 var hackOptions = {
 	easing: 0.025 //  easing speed
@@ -268,6 +268,4 @@ inject$1(/(this\.DrawTextbox = function\(\) {)/, `$1${drawOverride}`);
 
 exports.hackOptions = hackOptions;
 
-return exports;
-
-}({},window));
+}(this.hacks.dialog_box_transition = this.hacks.dialog_box_transition || {}, window));
