@@ -3,7 +3,7 @@
 @file bitsymuse
 @summary A variety of Bitsy sound and music handlers
 @license MIT
-@version 3.0.4
+@version 3.0.5
 @requires 4.8, 4.9
 @author David Mowatt
 
@@ -103,7 +103,7 @@ function inject(searchRegex, replaceString) {
  * @return {string} room, or undefined if it doesn't exist
  */
 function getRoom(name) {
-	var id = bitsy.room.hasOwnProperty(name) ? name : bitsy.names.room.get(name);
+	var id = Object.prototype.hasOwnProperty.call(bitsy.room, name) ? name : bitsy.names.room.get(name);
 	return bitsy.room[id];
 }
 
@@ -387,7 +387,7 @@ var roomMusicFlag = null;
 after('load_game', function () {
 	var room;
 	for (var i in hackOptions.musicByRoom) {
-		if (hackOptions.musicByRoom.hasOwnProperty(i)) {
+		if (Object.prototype.hasOwnProperty.call(hackOptions.musicByRoom, i)) {
 			room = getRoom(i);
 			if (room) {
 				hackOptions.musicByRoom[room.id] = hackOptions.musicByRoom[i];

@@ -3,7 +3,7 @@
 @file exit-from-dialog
 @summary exit to another room from dialog, including conditionals
 @license WTFPL (do WTF you want)
-@version 7.0.1
+@version 7.0.2
 @requires Bitsy Version: 6.0
 @author @mildmojo
 
@@ -99,7 +99,7 @@ function inject(searchRegex, replaceString) {
  * @return {string} room, or undefined if it doesn't exist
  */
 function getRoom(name) {
-	var id = bitsy.room.hasOwnProperty(name) ? name : bitsy.names.room.get(name);
+	var id = Object.prototype.hasOwnProperty.call(bitsy.room, name) ? name : bitsy.names.room.get(name);
 	return bitsy.room[id];
 }
 

@@ -61,7 +61,7 @@ Args:
 Returns: the image in the given map with the given name/id
  */
 export function getImage(name, map) {
-	var id = map.hasOwnProperty(name) ? name : Object.keys(map).find(function (e) {
+	var id = Object.prototype.hasOwnProperty.call(map, name) ? name : Object.keys(map).find(function (e) {
 		return map[e].name == name;
 	});
 	return map[id];
@@ -73,7 +73,7 @@ export function getImage(name, map) {
  * @return {string} room, or undefined if it doesn't exist
  */
 export function getRoom(name) {
-	var id = bitsy.room.hasOwnProperty(name) ? name : bitsy.names.room.get(name);
+	var id = Object.prototype.hasOwnProperty.call(bitsy.room, name) ? name : bitsy.names.room.get(name);
 	return bitsy.room[id];
 }
 

@@ -3,7 +3,7 @@
 @file avatar by room
 @summary change the avatar in certain rooms
 @license MIT
-@version 1.1.4
+@version 1.1.5
 @requires 5.3
 @author Sean S. LeBlanc
 
@@ -47,7 +47,7 @@ var originalAvatar;
 after('load_game', function () {
 	var room;
 	for (var i in hackOptions.avatarByRoom) {
-		if (hackOptions.avatarByRoom.hasOwnProperty(i)) {
+		if (Object.prototype.hasOwnProperty.call(hackOptions.avatarByRoom, i)) {
 			room = getRoom(i);
 			if (room) {
 				hackOptions.avatarByRoom[room.id] = hackOptions.avatarByRoom[i];
