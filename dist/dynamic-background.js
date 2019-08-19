@@ -3,7 +3,7 @@
 @file dynamic background
 @summary HTML background matching bitsy background
 @license MIT
-@version 2.1.2
+@version 2.1.3
 @author Sean S. LeBlanc
 
 @description
@@ -12,7 +12,6 @@ Updates the background of the html body to match the background colour of the bi
 HOW TO USE:
 Copy-paste this script into a script tag after the bitsy source
 */
-this.hacks = this.hacks || {};
 (function (bitsy) {
 'use strict';
 

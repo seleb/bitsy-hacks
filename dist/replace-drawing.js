@@ -3,7 +3,7 @@
 @file replace drawing
 @summary add name-tags to replace drawings when the game is loading
 @license MIT
-@version 1.0.0
+@version 1.0.1
 @requires 6.3
 @author Elkie Nova
 
@@ -34,7 +34,6 @@ HOW TO USE:
 1. add '#draw(TYPE,id)' tag to the names of the drawings you want to replace when the game loads
 2. copy-paste this script into a script tag after the bitsy source
 */
-this.hacks = this.hacks || {};
 (function (bitsy) {
 'use strict';
 

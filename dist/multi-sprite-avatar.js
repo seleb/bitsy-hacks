@@ -3,7 +3,7 @@
 @file multi-sprite avatar
 @summary make the player big
 @license MIT
-@version 2.1.3
+@version 2.1.4
 @author Sean S. LeBlanc
 
 @description
@@ -24,7 +24,7 @@ HOW TO USE:
 	Pieces must have an x,y offset and a sprite id
 */
 this.hacks = this.hacks || {};
-this.hacks['multi-sprite_avatar'] = (function (exports,bitsy) {
+(function (exports, bitsy) {
 'use strict';
 var hackOptions = {
 	pieces: [{
@@ -402,6 +402,4 @@ after('startExportedGame', function () {
 
 exports.hackOptions = hackOptions;
 
-return exports;
-
-}({},window));
+}(this.hacks['multi-sprite_avatar'] = this.hacks['multi-sprite_avatar'] || {}, window));

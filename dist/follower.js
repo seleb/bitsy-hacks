@@ -3,7 +3,7 @@
 @file follower
 @summary makes a single sprite follow the player
 @license MIT
-@version 2.1.2
+@version 2.1.3
 @author Sean S. LeBlanc
 
 @description
@@ -22,7 +22,7 @@ HOW TO USE:
 2. Edit `follower` to your intended sprite
 */
 this.hacks = this.hacks || {};
-this.hacks.follower = (function (exports,bitsy) {
+(function (exports, bitsy) {
 'use strict';
 var hackOptions = {
 	allowFollowerCollision: false, // if true, the player can walk into the follower and talk to them (possible to get stuck this way)
@@ -311,6 +311,4 @@ if (!hackOptions.allowFollowerCollision) {
 
 exports.hackOptions = hackOptions;
 
-return exports;
-
-}({},window));
+}(this.hacks.follower = this.hacks.follower || {}, window));

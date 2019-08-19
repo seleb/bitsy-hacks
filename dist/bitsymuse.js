@@ -3,7 +3,7 @@
 @file bitsymuse
 @summary A variety of Bitsy sound and music handlers
 @license MIT
-@version 3.0.3
+@version 3.0.4
 @requires 4.8, 4.9
 @author David Mowatt
 
@@ -35,7 +35,7 @@ By default, music tracks automatically restart from the beginning if you go back
 This can also be changed in the hackOptions below.
 */
 this.hacks = this.hacks || {};
-this.hacks.bitsymuse = (function (exports,bitsy) {
+(function (exports, bitsy) {
 'use strict';
 var hackOptions = {
 	// You need to put an entry in this list for every room ID or name that is accessible by the player,
@@ -465,6 +465,4 @@ addDualDialogTag('soundeffect', function (environment, parameters) {
 
 exports.hackOptions = hackOptions;
 
-return exports;
-
-}({},window));
+}(this.hacks.bitsymuse = this.hacks.bitsymuse || {}, window));

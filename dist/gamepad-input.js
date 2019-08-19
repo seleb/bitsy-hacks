@@ -3,7 +3,7 @@
 @file gamepad input
 @summary HTML5 gamepad support
 @license MIT
-@version 2.1.3
+@version 2.1.4
 @requires Bitsy Version: 5.1
 @author Sean S. LeBlanc
 
@@ -16,7 +16,6 @@ The same hold-to-move logic used for keyboard input is shared with the gamepad i
 HOW TO USE:
 Copy-paste this script into a script tag after the bitsy source
 */
-this.hacks = this.hacks || {};
 (function (bitsy) {
 'use strict';
 

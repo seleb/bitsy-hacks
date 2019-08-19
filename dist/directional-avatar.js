@@ -3,7 +3,7 @@
 @file directional avatar
 @summary flips the player's sprite based on directional movement
 @license MIT
-@version 1.1.4
+@version 1.1.5
 @requires 5.3
 @author Sean S. LeBlanc
 
@@ -15,7 +15,7 @@ HOW TO USE:
 2. Edit `horizontalFlipAllowed` and `verticalFlipAllowed` below as needed
 */
 this.hacks = this.hacks || {};
-this.hacks.directional_avatar = (function (exports,bitsy) {
+(function (exports, bitsy) {
 'use strict';
 var hackOptions = {
 	// If `horizontalFlipAllowed` is true:
@@ -366,6 +366,4 @@ after('updateInput', function () {
 
 exports.hackOptions = hackOptions;
 
-return exports;
-
-}({},window));
+}(this.hacks.directional_avatar = this.hacks.directional_avatar || {}, window));

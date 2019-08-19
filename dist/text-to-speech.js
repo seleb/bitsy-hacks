@@ -3,7 +3,7 @@
 @file text-to-speech
 @summary text-to-speech for bitsy dialog
 @license MIT
-@version 1.0.2
+@version 1.0.3
 @requires 5.5
 @author Sean S. LeBlanc
 
@@ -45,7 +45,7 @@ HOW TO USE:
 2. Edit hackOptions below as needed
 */
 this.hacks = this.hacks || {};
-this.hacks['text-to-speech'] = (function (exports,bitsy) {
+(function (exports, bitsy) {
 'use strict';
 var hackOptions = {
 	automatic: true, // disable this to prevent TTS from playing for all dialog (i.e. you only want to use TTS via commands)
@@ -489,6 +489,4 @@ addDualDialogTag('tts', function (environment, parameters) {
 
 exports.hackOptions = hackOptions;
 
-return exports;
-
-}({},window));
+}(this.hacks['text-to-speech'] = this.hacks['text-to-speech'] || {}, window));

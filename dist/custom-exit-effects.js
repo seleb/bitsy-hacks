@@ -3,7 +3,7 @@
 @file custom-exit-effects
 @summary make custom exit transition effects
 @license MIT
-@version 1.0.1
+@version 1.0.2
 @requires 6.0
 @author Sean S. LeBlanc
 
@@ -49,7 +49,7 @@ HOW TO USE:
 2. Update the `hackOptions` object at the top of the script with your custom effects
 */
 this.hacks = this.hacks || {};
-this.hacks['custom-exit-effects'] = (function (exports,bitsy) {
+(function (exports, bitsy) {
 'use strict';
 var hackOptions = {
 	// a simple crossfade example effect
@@ -270,6 +270,4 @@ before('startExportedGame', function () {
 
 exports.hackOptions = hackOptions;
 
-return exports;
-
-}({},window));
+}(this.hacks['custom-exit-effects'] = this.hacks['custom-exit-effects'] || {}, window));

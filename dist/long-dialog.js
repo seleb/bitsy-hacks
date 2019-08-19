@@ -3,7 +3,7 @@
 @file long dialog
 @summary put more words onscreen
 @license MIT
-@version 1.1.1
+@version 1.1.2
 @requires Bitsy Version: 6.1
 @author Sean S. LeBlanc
 
@@ -27,7 +27,7 @@ HOW TO USE:
 	2. edit hackOptions below as needed
 */
 this.hacks = this.hacks || {};
-this.hacks.long_dialog = (function (exports,bitsy) {
+(function (exports, bitsy) {
 'use strict';
 var hackOptions = {
 	minRows: 2,
@@ -298,7 +298,7 @@ inject$1(/(this\.AddLinebreak = )/, 'this.AddParagraphBreak = function() { buffe
 @file paragraph-break
 @summary Adds paragraph breaks to the dialogue parser
 @license WTFPL (do WTF you want)
-@version 1.1.3
+@version 1.1.4
 @requires Bitsy Version: 5.0, 5.1
 @author Sean S. LeBlanc, David Mowatt
 
@@ -350,6 +350,4 @@ inject$1(/(if\( lastPage\.length) <= 1( \) {)/, '$1 < ' + hackOptions.maxRows + 
 
 exports.hackOptions = hackOptions;
 
-return exports;
-
-}({},window));
+}(this.hacks.long_dialog = this.hacks.long_dialog || {}, window));

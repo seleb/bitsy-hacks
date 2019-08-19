@@ -3,7 +3,7 @@
 @file bitsymuse
 @summary A variety of Bitsy sound and music handlers
 @license MIT
-@version 3.0.3
+@version 3.0.4
 @requires 4.8, 4.9
 @author David Mowatt
 
