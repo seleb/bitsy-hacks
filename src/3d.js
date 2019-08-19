@@ -313,7 +313,7 @@ export var hackOptions = {
 				mesh.addChild(childMesh);
 				applyBehaviours(childMesh, childDrawing);
 				// make sure children can move if they are parented to the avatar
-				if (drawing = bitsy.player()) {
+				if (drawing == bitsy.player()) {
 					childMesh.unfreezeWorldMatrix();
 				}
 			});
