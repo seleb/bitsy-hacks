@@ -11,8 +11,8 @@ export default {
 		const self = this;
 		return {
 			// grab headers
-			transformBundle(code) {
-				const pattern = /^(\/\*\*[\S\s]*?\*\/)$/gm;
+			renderChunk(code) {
+				const pattern = /(\/\*\*[\S\s]*?\*\/)$/gm;
 				const matches = code.match(pattern);
 				if (!matches) {
 					console.warn("Couldn't find jsdoc");

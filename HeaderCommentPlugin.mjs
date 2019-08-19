@@ -5,8 +5,8 @@
 // this is hackier than it should be, but gets the job done for now
 export default function () {
 	return {
-		transformBundle(code) {
-			const pattern = /^(\/\*[\S\s]*?\*\/)$/gm;
+		renderChunk(code) {
+			const pattern = /(\/\*[\S\s]*?\*\/)$/gm;
 			const matches = code.match(pattern);
 			if (!matches) {
 				return {
