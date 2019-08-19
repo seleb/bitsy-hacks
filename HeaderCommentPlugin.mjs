@@ -6,7 +6,7 @@
 export default function () {
 	return {
 		renderChunk(code) {
-			const pattern = /(\/\*[\S\s]*?\*\/)$/gm;
+			const pattern = /^(\/\*[\S\s]*?\*\/)$/gm;
 			const matches = code.match(pattern);
 			if (!matches) {
 				return {
