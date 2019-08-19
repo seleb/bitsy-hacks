@@ -3,7 +3,7 @@
 @file online
 @summary multiplayer bitsy
 @license MIT
-@version 2.1.5
+@version 2.1.7
 @requires 5.5
 @author Sean S. LeBlanc
 @description
@@ -30,7 +30,7 @@ HOW TO USE:
 3. Edit other hackOptions as needed
 */
 this.hacks = this.hacks || {};
-this.hacks.online = (function (exports,bitsy) {
+(function (exports, bitsy) {
 'use strict';
 var hackOptions = {
 	host: "wss://your signalling server",
@@ -93,7 +93,7 @@ Args:
 Returns: the image in the given map with the given name/id
  */
 function getImage(name, map) {
-	var id = map.hasOwnProperty(name) ? name : Object.keys(map).find(function (e) {
+	var id = Object.prototype.hasOwnProperty.call(map, name) ? name : Object.keys(map).find(function (e) {
 		return map[e].name == name;
 	});
 	return map[id];
@@ -373,7 +373,7 @@ function addDualDialogTag(tag, fn) {
 @file javascript dialog
 @summary execute arbitrary javascript from dialog
 @license MIT
-@version 3.2.3
+@version 3.2.4
 @requires Bitsy Version: 4.5, 4.6
 @author Sean S. LeBlanc
 
@@ -409,10 +409,10 @@ NOTE: This uses parentheses "()" instead of curly braces "{}" around function
       code at the end of the editor's `bitsy.js` file. Untested.
 */
 
-var indirectEval$1 = eval;
+var indirectEval = eval;
 
 function executeJs(environment, parameters) {
-	indirectEval$1(parameters[0]);
+	indirectEval(parameters[0]);
 }
 
 addDualDialogTag('js', executeJs);
@@ -476,7 +476,7 @@ function setSpriteData(id, frame, newData) {
 @file edit image from dialog
 @summary edit sprites, items, and tiles from dialog
 @license MIT
-@version 1.2.4
+@version 1.2.6
 @requires 5.3
 @author Sean S. LeBlanc
 
@@ -623,7 +623,7 @@ addDualDialogTag('imagePal', editPalette);
 @file edit dialog from dialog
 @summary edit dialog from dialog (yes really)
 @license MIT
-@version 1.1.2
+@version 1.1.4
 @author Sean S. LeBlanc
 
 @description
@@ -850,6 +850,4 @@ function getSpriteUpdate() {
 
 exports.hackOptions = hackOptions;
 
-return exports;
-
-}({},window));
+}(this.hacks.online = this.hacks.online || {}, window));

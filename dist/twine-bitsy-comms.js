@@ -3,7 +3,7 @@
 @file twine bitsy comms
 @summary interprocess communication for twine and bitsy
 @license MIT
-@version 1.1.3
+@version 1.1.4
 @requires 5.4
 @author Sean S. LeBlanc
 
@@ -47,7 +47,6 @@ HOW TO USE:
 3. Add `.bitsy { ... }` CSS to the Story Stylesheet of your Twine game
 4. Edit the variable naming functions below as needed
 */
-this.hacks = this.hacks || {};
 (function (bitsy) {
 'use strict';
 var hackOptions = {

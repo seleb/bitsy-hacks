@@ -3,7 +3,7 @@
 @file avatar by room
 @summary change the avatar in certain rooms
 @license MIT
-@version 1.1.3
+@version 1.1.5
 @requires 5.3
 @author Sean S. LeBlanc
 
@@ -18,7 +18,7 @@ By default, the avatar will reset to the default if you enter a room without a s
 This can also be changed in the hackOptions below to instead apply avatar changes permanently.
 */
 this.hacks = this.hacks || {};
-this.hacks.avatar_by_room = (function (exports,bitsy) {
+(function (exports, bitsy) {
 'use strict';
 var hackOptions = {
 	permanent: false, // If true, avatar changes will persist across rooms without sprites defined
@@ -87,7 +87,7 @@ Args:
 Returns: the image in the given map with the given name/id
  */
 function getImage(name, map) {
-	var id = map.hasOwnProperty(name) ? name : Object.keys(map).find(function (e) {
+	var id = Object.prototype.hasOwnProperty.call(map, name) ? name : Object.keys(map).find(function (e) {
 		return map[e].name == name;
 	});
 	return map[id];
@@ -99,7 +99,7 @@ function getImage(name, map) {
  * @return {string} room, or undefined if it doesn't exist
  */
 function getRoom(name) {
-	var id = bitsy.room.hasOwnProperty(name) ? name : bitsy.names.room.get(name);
+	var id = Object.prototype.hasOwnProperty.call(bitsy.room, name) ? name : bitsy.names.room.get(name);
 	return bitsy.room[id];
 }
 
@@ -270,7 +270,7 @@ var originalAvatar;
 after('load_game', function () {
 	var room;
 	for (var i in hackOptions.avatarByRoom) {
-		if (hackOptions.avatarByRoom.hasOwnProperty(i)) {
+		if (Object.prototype.hasOwnProperty.call(hackOptions.avatarByRoom, i)) {
 			room = getRoom(i);
 			if (room) {
 				hackOptions.avatarByRoom[room.id] = hackOptions.avatarByRoom[i];
@@ -306,6 +306,4 @@ before('update', function () {
 
 exports.hackOptions = hackOptions;
 
-return exports;
-
-}({},window));
+}(this.hacks.avatar_by_room = this.hacks.avatar_by_room || {}, window));

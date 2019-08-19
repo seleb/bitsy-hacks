@@ -3,7 +3,7 @@
 @file multi-sprite avatar
 @summary make the player big
 @license MIT
-@version 2.1.2
+@version 2.1.5
 @author Sean S. LeBlanc
 
 @description
@@ -16,6 +16,7 @@ but multi-sprite avatar's shape can be arbitrary.
 Notes:
 - will probably break any other hacks involving moving other sprites around (they'll probably use the player's modified collision)
 - the original avatar sprite isn't changed, but will be covered by a piece at x:0,y:0
+- make sure not to include the original avatar sprite in the pieces list (this will cause the syncing to remove the player from the game)
 
 HOW TO USE:
 1. Copy-paste into a script tag after the bitsy source

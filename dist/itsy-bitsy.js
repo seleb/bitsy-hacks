@@ -3,7 +3,7 @@
 @file itsy-bitsy
 @summary for when bitsy's not small enough
 @license MIT
-@version 1.1.2
+@version 1.1.3
 @requires Bitsy Version: 5.1
 @author Sean S. LeBlanc
 
@@ -25,7 +25,7 @@ but most of the numbers being replaced can be easily
 customized if you want slightly different sizes/positions.
 */
 this.hacks = this.hacks || {};
-this.hacks['itsy-bitsy'] = (function (exports,bitsy) {
+(function (exports, bitsy) {
 'use strict';
 var hackOptions = {
 	rows: 2, // number of rows per text box (bitsy default is 2)
@@ -265,6 +265,4 @@ document.head.appendChild(style);
 
 exports.hackOptions = hackOptions;
 
-return exports;
-
-}({},window));
+}(this.hacks['itsy-bitsy'] = this.hacks['itsy-bitsy'] || {}, window));

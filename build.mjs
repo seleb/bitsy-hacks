@@ -24,11 +24,17 @@ export async function buildOne(src = '', plugins = [], externalDeps = {}) {
 			bitsy: 'window'
 		}, externalDeps),
 		name: `hacks.${basename(src, '.js').replace(/\s/g,'_')}`,
+		indent: false,
+		extend: true,
 	};
 
-	const bundle = await rollup.rollup(inputOptions)
-	const output = await bundle.generate(outputOptions);
-	return output.code;
+	const bundle = await rollup.rollup(inputOptions);
+	const {
+		output: [{
+			code,
+		}],
+	} = await bundle.generate(outputOptions);
+	return code;
 }
 
 export async function build(hacks = [], plugins, externalDeps) {

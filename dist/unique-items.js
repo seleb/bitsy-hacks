@@ -3,7 +3,7 @@
 @file unique items
 @summary items which, when picked up, remove all other instances of that item from the game
 @license MIT
-@version 2.0.1
+@version 2.0.3
 @author Sean S. LeBlanc
 
 @description
@@ -15,7 +15,7 @@ HOW TO USE:
 2. Update the `itemIsUnique` function to match your needs
 */
 this.hacks = this.hacks || {};
-this.hacks.unique_items = (function (exports,bitsy) {
+(function (exports, bitsy) {
 'use strict';
 var hackOptions = {
 	itemIsUnique: function (item) {
@@ -225,7 +225,7 @@ after('onInventoryChanged', function (id) {
 	var r;
 	if (hackOptions.itemIsUnique(bitsy.item[id])) {
 		for (r in bitsy.room) {
-			if (bitsy.room.hasOwnProperty(r)) {
+			if (Object.prototype.hasOwnProperty.call(bitsy.room, r)) {
 				r = bitsy.room[r];
 				r.items = r.items.filter(function (i) {
 					return i.id !== id;
@@ -237,6 +237,4 @@ after('onInventoryChanged', function (id) {
 
 exports.hackOptions = hackOptions;
 
-return exports;
-
-}({},window));
+}(this.hacks.unique_items = this.hacks.unique_items || {}, window));

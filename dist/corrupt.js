@@ -3,7 +3,7 @@
 @file corrupt
 @summary corrupts gamedata at runtime
 @license MIT
-@version 3.0.2
+@version 3.0.4
 @requires 5.5
 @author Sean S. LeBlanc
 
@@ -37,7 +37,7 @@ e.g.
 	3.5 = will corrupt thrice, and corrupt a fourth time with a probability of one in two
 */
 this.hacks = this.hacks || {};
-this.hacks.corrupt = (function (exports,bitsy) {
+(function (exports, bitsy) {
 'use strict';
 var hackOptions = {
 	tilemapFreq: 1,
@@ -104,7 +104,7 @@ Args:
 Returns: the image in the given map with the given name/id
  */
 function getImage(name, map) {
-	var id = map.hasOwnProperty(name) ? name : Object.keys(map).find(function (e) {
+	var id = Object.prototype.hasOwnProperty.call(map, name) ? name : Object.keys(map).find(function (e) {
 		return map[e].name == name;
 	});
 	return map[id];
@@ -379,7 +379,7 @@ function corrupt() {
 	// corrupt pixels of visible sprites
 	var visibleSprites = {};
 	for (i in bitsy.sprite) {
-		if (bitsy.sprite.hasOwnProperty(i)) {
+		if (Object.prototype.hasOwnProperty.call(bitsy.sprite, i)) {
 			if (bitsy.sprite[i].room === bitsy.curRoom) {
 				visibleSprites[i] = true;
 			}
@@ -465,6 +465,4 @@ function rndItem(array) {
 
 exports.hackOptions = hackOptions;
 
-return exports;
-
-}({},window));
+}(this.hacks.corrupt = this.hacks.corrupt || {}, window));

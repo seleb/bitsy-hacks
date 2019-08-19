@@ -3,7 +3,7 @@
 @file solid items
 @summary treat some items like sprites that can be placed multiple times
 @license MIT
-@version 2.1.2
+@version 2.1.3
 @author Sean S. LeBlanc
 
 @description
@@ -15,7 +15,7 @@ HOW TO USE:
 2. Update the `itemIsSolid` function below to match your needs
 */
 this.hacks = this.hacks || {};
-this.hacks.solid_items = (function (exports,bitsy) {
+(function (exports, bitsy) {
 'use strict';
 var hackOptions = {
 	itemIsSolid: function (item) {
@@ -273,6 +273,4 @@ after("movePlayer", function () {
 
 exports.hackOptions = hackOptions;
 
-return exports;
-
-}({},window));
+}(this.hacks.solid_items = this.hacks.solid_items || {}, window));

@@ -11,7 +11,7 @@ export default {
 		const self = this;
 		return {
 			// grab headers
-			transformBundle(code) {
+			renderChunk(code) {
 				const pattern = /^(\/\*\*[\S\s]*?\*\/)$/gm;
 				const matches = code.match(pattern);
 				if (!matches) {

@@ -3,7 +3,7 @@
 @file 3d
 @summary bitsy in three dee
 @license MIT
-@version 1.2.0
+@version 1.2.1
 @requires 6.3
 @author Sean S. LeBlanc & Elkie Nova
 
@@ -216,7 +216,7 @@ export var hackOptions = {
 
 		// default
 		if (drawing.id === bitsy.playerId) {
-			return 'billboard';
+			return 'plane';
 		}
 		if (drw.startsWith('ITM')) {
 			return 'plane';
@@ -590,7 +590,7 @@ canvas:focus { outline: none; }
 	// preload textures
 	// safari, edge and ie don't support requestIdleCallback
 	// TODO: add requestIdleCallback shim
-	if (hackOptions.preloadTextures && window.hasOwnProperty('requestIdleCallback')) {
+	if (hackOptions.preloadTextures && Object.prototype.hasOwnProperty.call(window, 'requestIdleCallback')) {
 		Object.values(bitsy.room).forEach(function (room) {
 			var items = room.items.map(function (item) {
 				return bitsy.item[item.id];

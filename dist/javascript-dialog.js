@@ -3,7 +3,7 @@
 @file javascript dialog
 @summary execute arbitrary javascript from dialog
 @license MIT
-@version 3.2.3
+@version 3.2.4
 @requires Bitsy Version: 4.5, 4.6
 @author Sean S. LeBlanc
 
@@ -38,7 +38,6 @@ NOTE: This uses parentheses "()" instead of curly braces "{}" around function
       For full editor integration, you'd *probably* also need to paste this
       code at the end of the editor's `bitsy.js` file. Untested.
 */
-this.hacks = this.hacks || {};
 (function (bitsy) {
 'use strict';
 
@@ -356,10 +355,10 @@ function addDualDialogTag(tag, fn) {
 
 
 
-var indirectEval$1 = eval;
+var indirectEval = eval;
 
 function executeJs(environment, parameters) {
-	indirectEval$1(parameters[0]);
+	indirectEval(parameters[0]);
 }
 
 addDualDialogTag('js', executeJs);

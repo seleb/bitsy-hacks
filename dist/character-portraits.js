@@ -3,7 +3,7 @@
 @file character portraits
 @summary high quality anime jpegs (or pngs i guess)
 @license MIT
-@version 2.0.1
+@version 2.0.3
 @requires Bitsy Version: 5.3
 @author Sean S. LeBlanc
 
@@ -36,7 +36,7 @@ HOW TO USE:
 2. Edit the hackOptions object as needed
 */
 this.hacks = this.hacks || {};
-this.hacks.character_portraits = (function (exports,bitsy) {
+(function (exports, bitsy) {
 'use strict';
 var hackOptions = {
 	// influences the resolution of the drawn image
@@ -327,7 +327,7 @@ var state = {
 // preload images into a cache
 after('startExportedGame', function() {
 	for (var i in hackOptions.portraits) {
-		if(hackOptions.portraits.hasOwnProperty(i)) {
+		if(Object.prototype.hasOwnProperty.call(hackOptions.portraits, i)) {
 			state.portraits[i] = new Image();
 			state.portraits[i].src = hackOptions.portraits[i];
 		}
@@ -373,6 +373,4 @@ after('onExitDialog', function() {
 exports.hackOptions = hackOptions;
 exports.state = state;
 
-return exports;
-
-}({},window));
+}(this.hacks.character_portraits = this.hacks.character_portraits || {}, window));

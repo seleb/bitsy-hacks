@@ -3,7 +3,7 @@
 @file basic sfx
 @summary "walk" and "talk" sound effect support
 @license MIT
-@version 2.0.1
+@version 2.0.3
 @author Sean S. LeBlanc
 
 @description
@@ -53,7 +53,7 @@ before('startExportedGame', function () {
 	// get sound elements
 	var s = document.getElementsByTagName("audio");
 	for (var i in s) {
-		if (s.hasOwnProperty(i)) {
+		if (Object.prototype.hasOwnProperty.call(s, i)) {
 			i = s[i];
 			i.lastPlayed = -Infinity;
 			i.volume = 1;

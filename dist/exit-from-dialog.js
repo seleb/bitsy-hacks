@@ -3,7 +3,7 @@
 @file exit-from-dialog
 @summary exit to another room from dialog, including conditionals
 @license WTFPL (do WTF you want)
-@version 7.0.0
+@version 7.0.2
 @requires Bitsy Version: 6.0
 @author @mildmojo
 
@@ -47,7 +47,6 @@ calls because the Bitsy editor's fancy dialog window strips unrecognized
 curly-brace functions from dialog text. To keep from losing data, write
 these function calls with parentheses like the examples above.
 */
-this.hacks = this.hacks || {};
 (function (bitsy) {
 'use strict';
 
@@ -100,7 +99,7 @@ function inject(searchRegex, replaceString) {
  * @return {string} room, or undefined if it doesn't exist
  */
 function getRoom(name) {
-	var id = bitsy.room.hasOwnProperty(name) ? name : bitsy.names.room.get(name);
+	var id = Object.prototype.hasOwnProperty.call(bitsy.room, name) ? name : bitsy.names.room.get(name);
 	return bitsy.room[id];
 }
 

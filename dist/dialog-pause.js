@@ -3,7 +3,7 @@
 @file dialog pause
 @summary add pauses in between printing text
 @license MIT
-@version 1.1.2
+@version 1.1.3
 @author Sean S. LeBlanc
 
 @description
@@ -16,7 +16,6 @@ Note: pause times are in milliseconds
 HOW TO USE:
 Copy-paste into a script tag after the bitsy source
 */
-this.hacks = this.hacks || {};
 (function (bitsy) {
 'use strict';
 

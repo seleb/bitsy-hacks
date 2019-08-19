@@ -3,7 +3,7 @@
 @file save
 @summary save/load your game
 @license MIT
-@version 1.0.4
+@version 1.0.5
 @requires 5.4
 @author Sean S. LeBlanc
 
@@ -39,7 +39,7 @@ HOW TO USE:
 2. Edit hackOptions below as needed
 */
 this.hacks = this.hacks || {};
-this.hacks.save = (function (exports,bitsy) {
+(function (exports, bitsy) {
 'use strict';
 var hackOptions = {
 	// when to save/load
@@ -506,6 +506,4 @@ addDualDialogTag('clear', clear);
 
 exports.hackOptions = hackOptions;
 
-return exports;
-
-}({},window));
+}(this.hacks.save = this.hacks.save || {}, window));
