@@ -82,7 +82,7 @@ after('startExportedGame', function () {
 					return response.arrayBuffer();
 				})
 				.then(function (arrayBuffer) {
-					var data = new Uint8Array(arrayBuffer);
+					var data = new window.Uint8Array(arrayBuffer);
 					var reader = new GifReader(data);
 					var numFrames = reader.numFrames();
 					var width = reader.width;
