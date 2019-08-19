@@ -6,12 +6,12 @@ import rollup from "rollup";
 import nodeResolve from "rollup-plugin-node-resolve";
 import commonjs from "rollup-plugin-commonjs";
 
-export async function buildOne(src = '', plugins = [], externalDeps = {}) {
+export async function buildOne(src = '', plugins = []) {
 	const inputOptions = {
 		input: src,
 		external: [
 			'bitsy'
-		].concat(Object.keys(externalDeps)),
+		],
 		plugins: [
 			nodeResolve(),
 			commonjs()
@@ -20,9 +20,9 @@ export async function buildOne(src = '', plugins = [], externalDeps = {}) {
 
 	const outputOptions = {
 		format: "iife",
-		globals: Object.assign({
+		globals: {
 			bitsy: 'window'
-		}, externalDeps),
+		},
 		name: `hacks.${basename(src, '.js').replace(/\s/g,'_')}`,
 		indent: false,
 		extend: true,
@@ -37,7 +37,7 @@ export async function buildOne(src = '', plugins = [], externalDeps = {}) {
 	return code;
 }
 
-export async function build(hacks = [], plugins, externalDeps) {
-	const output = await Promise.all(hacks.map(hack => buildOne(hack, plugins, externalDeps)));
+export async function build(hacks = [], plugins) {
+	const output = await Promise.all(hacks.map(hack => buildOne(hack, plugins)));
 	return output;
 }
