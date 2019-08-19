@@ -3,7 +3,7 @@
 @file 3d
 @summary bitsy in three dee
 @license MIT
-@version 1.1.3
+@version 1.1.4
 @requires 6.3
 @author Sean S. LeBlanc & Elkie Nova
 
@@ -887,7 +887,7 @@ canvas:focus { outline: none; }
 	// preload textures
 	// safari, edge and ie don't support requestIdleCallback
 	// TODO: add requestIdleCallback shim
-	if (hackOptions$2.preloadTextures && window.hasOwnProperty('requestIdleCallback')) {
+	if (hackOptions$2.preloadTextures && Object.prototype.hasOwnProperty.call(window, 'requestIdleCallback')) {
 		Object.values(bitsy.room).forEach(function (room) {
 			var items = room.items.map(function (item) {
 				return bitsy.item[item.id];

@@ -3,7 +3,7 @@
 @file character portraits animated
 @summary high quality anime gifs
 @license MIT
-@version 1.0.3
+@version 1.0.4
 @requires Bitsy Version: 5.3
 @author Sean S. LeBlanc
 
@@ -1095,7 +1095,7 @@ function addDialogTag(tag, fn) {
 @file character portraits
 @summary high quality anime jpegs (or pngs i guess)
 @license MIT
-@version 2.0.2
+@version 2.0.3
 @requires Bitsy Version: 5.3
 @author Sean S. LeBlanc
 
@@ -1154,7 +1154,7 @@ var state = {
 // preload images into a cache
 after('startExportedGame', function() {
 	for (var i in hackOptions.portraits) {
-		if(hackOptions.portraits.hasOwnProperty(i)) {
+		if(Object.prototype.hasOwnProperty.call(hackOptions.portraits, i)) {
 			state.portraits[i] = new Image();
 			state.portraits[i].src = hackOptions.portraits[i];
 		}
@@ -1211,7 +1211,7 @@ before('startExportedGame', function () {
 // and load the frames of animated gifs
 after('startExportedGame', function () {
 	for (var portrait in state.portraits) {
-		if (state.portraits.hasOwnProperty(portrait)) {
+		if (Object.prototype.hasOwnProperty.call(state.portraits, portrait)) {
 			var src = state.portraits[portrait].src;
 
 			if (src.substr(-4).toUpperCase() !== '.GIF') {
@@ -1231,7 +1231,7 @@ after('startExportedGame', function () {
 					return response.arrayBuffer();
 				})
 				.then(function (arrayBuffer) {
-					var data = new Uint8Array(arrayBuffer);
+					var data = new window.Uint8Array(arrayBuffer);
 					var reader = new omggif_2(data);
 					var numFrames = reader.numFrames();
 					var width = reader.width;
