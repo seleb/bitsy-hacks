@@ -62,7 +62,7 @@ before('startExportedGame', function () {
 // and load the frames of animated gifs
 after('startExportedGame', function () {
 	for (var portrait in state.portraits) {
-		if (state.portraits.hasOwnProperty(portrait)) {
+		if (Object.prototype.hasOwnProperty.call(state.portraits, portrait)) {
 			var src = state.portraits[portrait].src;
 
 			if (src.substr(-4).toUpperCase() !== '.GIF') {

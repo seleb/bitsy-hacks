@@ -102,7 +102,7 @@ function corrupt() {
 	// corrupt pixels of visible sprites
 	var visibleSprites = {};
 	for (i in bitsy.sprite) {
-		if (bitsy.sprite.hasOwnProperty(i)) {
+		if (Object.prototype.hasOwnProperty.call(bitsy.sprite, i)) {
 			if (bitsy.sprite[i].room === bitsy.curRoom) {
 				visibleSprites[i] = true;
 			}

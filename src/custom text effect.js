@@ -195,7 +195,7 @@ window.customTextEffects = {
 var functionMapCode = '';
 var textEffectCode = '';
 for (var i in hackOptions) {
-	if (hackOptions.hasOwnProperty(i)) {
+	if (Object.prototype.hasOwnProperty.call(hackOptions, i)) {
 		functionMapCode += 'functionMap.set("' + i + '", function (environment, parameters, onReturn) {addOrRemoveTextEffect(environment, "' + i + '");onReturn(null);});';
 		textEffectCode += 'TextEffects["' + i + '"] = new (' + hackOptions[i].toString() + ')();';
 	}

@@ -67,7 +67,7 @@ export var state = {
 // preload images into a cache
 after('startExportedGame', function() {
 	for (var i in hackOptions.portraits) {
-		if(hackOptions.portraits.hasOwnProperty(i)) {
+		if(Object.prototype.hasOwnProperty.call(hackOptions.portraits, i)) {
 			state.portraits[i] = new Image();
 			state.portraits[i].src = hackOptions.portraits[i];
 		}

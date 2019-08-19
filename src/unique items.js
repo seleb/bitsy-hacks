@@ -32,7 +32,7 @@ after('onInventoryChanged', function (id) {
 	var r;
 	if (hackOptions.itemIsUnique(bitsy.item[id])) {
 		for (r in bitsy.room) {
-			if (bitsy.room.hasOwnProperty(r)) {
+			if (Object.prototype.hasOwnProperty.call(bitsy.room, r)) {
 				r = bitsy.room[r];
 				r.items = r.items.filter(function (i) {
 					return i.id !== id;

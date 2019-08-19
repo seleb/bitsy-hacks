@@ -47,7 +47,7 @@ var originalAvatar;
 after('load_game', function () {
 	var room;
 	for (var i in hackOptions.avatarByRoom) {
-		if (hackOptions.avatarByRoom.hasOwnProperty(i)) {
+		if (Object.prototype.hasOwnProperty.call(hackOptions.avatarByRoom, i)) {
 			room = getRoom(i);
 			if (room) {
 				hackOptions.avatarByRoom[room.id] = hackOptions.avatarByRoom[i];
