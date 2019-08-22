@@ -6,9 +6,9 @@
 		"hacks"
 	],
 	"main": "index.mjs",
-	"version": "6.0.1",
+	"version": "7.0.0",
 	"scripts": {
-		"build": "node --experimental-modules cli.mjs",
+		"build": "rollup -c",
 		"test": "jest --runInBand",
 		"lint": "eslint ./src/*.js --ignore-pattern **/*.test.js",
 		"prepare": "npm run build"

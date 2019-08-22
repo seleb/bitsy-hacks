@@ -1,0 +1,13 @@
+{
+	"external": [
+		"bitsy"
+	],
+	"output": {
+		"format": "iife",
+		"globals": {
+			"bitsy": "window"
+		},
+		"indent": false,
+		"extend": true
+	}
+}
