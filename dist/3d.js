@@ -143,6 +143,10 @@ var hackOptions$2 = {
 		width: 128,
 		height: 128,
 	},
+	// set clear color and fog color
+	// default is 0: background color in the current bitsy pallete
+	clearColor: 0,
+	fogColor: 0,
 	// If true, inputs are rotated to match the current camera direction
 	// if you're using a camera that can be freely rotated,
 	// this will generally be preferable,
@@ -1387,16 +1391,16 @@ function update() {
 	});
 
 	// bg changes
-	exports.scene.clearColor = getBgColor();
-	exports.scene.fogColor = getBgColor();
+	exports.scene.clearColor = getColor(hackOptions$2.clearColor);
+	exports.scene.fogColor = getColor(hackOptions$2.fogColor);
 
 	// remember what stack we were in in this frame
 	lastStack = curStack;
 	lastRoom = bitsy.curRoom;
 }
 
-function getBgColor() {
-	var col = bitsy.palette[bitsy.curPal()].colors[0];
+function getColor(colorId) {
+	var col = bitsy.palette[bitsy.curPal()].colors[colorId];
 	return new BABYLON$1.Color3(
 		col[0] / 255,
 		col[1] / 255,
