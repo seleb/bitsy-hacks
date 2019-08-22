@@ -4,54 +4,39 @@
 import doctrine from "doctrine";
 import fs from "fs";
 import pkg from "./package.json";
+import getHacks from './getHacks';
 
-export default {
-	headers: [],
-	plugin: function (options = {}) {
-		const self = this;
-		return {
-			// grab headers
-			renderChunk(code) {
-				const pattern = /^(\/\*\*[\S\s]*?\*\/)$/gm;
-				const matches = code.match(pattern);
-				if (!matches) {
-					console.warn("Couldn't find jsdoc");
-					return code;
-				}
-				const header = matches[matches.length - 1];
-				self.headers.push(header);
-				return code;
-			}
-		};
-	},
-	parse: function () {
-		this.headers = this.headers.map(header => {
-			return doctrine.parse(header, {
-				unwrap: true,
-				recoverable: true
-			});
-		}).map(jsdoc => {
+const l = getHacks().length;
+const headers = [];
+
+function write() {
+	var contents = headers
+		.filter(h => h)
+		.map(header => doctrine.parse(header, {
+			unwrap: true,
+			recoverable: true
+		}))
+		.map(jsdoc => {
 			var o = {};
 			o.emoji = jsdoc.description;
 			for (var i in jsdoc.tags) {
 				o[jsdoc.tags[i].title] = jsdoc.tags[i].description;
 			}
+			o.file = o.file || '';
 			o.url = `/dist/${encodeURI(o.file.replace(/\s/g, '-'))}.js`;
 			return o;
-		});
-	},
-	write: function () {
-		var contents = this.headers.sort((a, b) => {
+		})
+		.sort((a, b) => {
 			return a.file < b.file ? -1 : a.file > b.file ? 1 : 0;
 		});
-		fs.writeFileSync("README.md", `# ${pkg.name}
+	fs.writeFileSync("README.md", `# ${pkg.name}
 
 A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamledoux)'s [Bitsy Game Maker](https://ledoux.itch.io/bitsy).
 
 ## contents
 
 ${contents.map(hack => 
-	`- ${hack.emoji} [${hack.file}](${hack.url}): ${hack.summary}`
+`- ${hack.emoji} [${hack.file}](${hack.url}): ${hack.summary}`
 ).join('\n')}
 
 ![Imgur](https://i.imgur.com/peRLLHn.gif)![Imgur](https://i.imgur.com/yg81aH2.gif)![Imgur](https://i.imgur.com/r7AUHX4.gif)
@@ -112,5 +97,27 @@ then edit it to look like this:
 - [Fontsy](https://seansleblanc.itch.io/Fontsy): Typographic tool
 
 If you have any issues, feel free to ping me or ask for help on the [bitsy discord](https://discordapp.com/invite/9rAjhtr)!`);
-	}
-};
+}
+
+export default function (options = {}) {
+	return {
+		// grab headers
+		renderChunk(code) {
+			const pattern = /^(\/\*\*[\S\s]*?\*\/)$/gm;
+			const matches = code.match(pattern);
+			if (!matches) {
+				console.warn("Couldn't find jsdoc");
+				headers.push(null);
+				return code;
+			}
+			const header = matches[matches.length - 1];
+			headers.push(header);
+			return code;
+		},
+		writeBundle() {
+			if (headers.length === l) {
+				write();
+			}
+		},
+	};
+}
