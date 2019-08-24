@@ -3,7 +3,7 @@
 @file 3d
 @summary bitsy in three dee
 @license MIT
-@version 1.1.4
+@version 1.1.5
 @requires 6.3
 @author Sean S. LeBlanc & Elkie Nova
 
@@ -92,7 +92,7 @@ HOW TO USE:
 2. Add the tags described above to the names of the rooms and drawings in bitsy editor to use additional features
 3. Edit hackOptions below as needed
 */
-import './smooth moves';
+import { hackOptions as smoothMoves } from './smooth moves';
 import {
 	after,
 	before,
@@ -234,6 +234,16 @@ export var hackOptions = {
 			mesh.position.z += (Number(translateTag[3]) || 0);
 		}
 	},
+	// smooth moves hack options
+	// duration of ease in ms
+	duration: 100,
+	// max distance to allow tweens
+	delta: 1.5,
+	// easing function
+	ease: function(t) {
+		t = 1 - Math.pow(1 - t, 2);
+		return t;
+	},
 };
 
 function radians(degrees) {
@@ -243,6 +253,9 @@ function radians(degrees) {
 // forward transparent sprites hack option
 transparentSprites.isTransparent = function (drawing) {
 	return hackOptions.isTransparent(drawing);
+};
+smoothMoves.ease = function(t) {
+	return hackOptions.ease(t);
 };
 
 // scene init helpers
@@ -328,6 +341,10 @@ after('dialogRenderer.DrawTextbox', function () {
 
 // setup
 after('startExportedGame', function () {
+	// apply smooth moves hack options
+	smoothMoves.delta = hackOptions.delta;
+	smoothMoves.duration = hackOptions.duration;
+
 	// hide the original canvas and add a stylesheet
 	// to make the 3D render in its place
 	bitsy.canvas.parentElement.removeChild(bitsy.canvas);
