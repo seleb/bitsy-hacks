@@ -3,7 +3,7 @@
 @file 3d
 @summary bitsy in three dee
 @license MIT
-@version 1.2.1
+@version 1.2.0
 @requires 6.3
 @author Sean S. LeBlanc & Elkie Nova
 
@@ -314,6 +314,16 @@ var hackOptions$2 = {
 			});
 		}
 	},
+	// smooth moves hack options
+	// duration of ease in ms
+	duration: 100,
+	// max distance to allow tweens
+	delta: 1.5,
+	// easing function
+	ease: function(t) {
+		t = 1 - Math.pow(1 - t, 2);
+		return t;
+	},
 };
 
 bitsy = bitsy && bitsy.hasOwnProperty('default') ? bitsy['default'] : bitsy;
@@ -521,7 +531,7 @@ function _reinitEngine() {
 @file smooth moves
 @summary ease the player's movement
 @license MIT
-@version 1.0.3
+@version 2.0.0
 @requires Bitsy Version: 6.3
 @author Sean S. LeBlanc
 
@@ -537,6 +547,8 @@ HOW TO USE:
 var hackOptions = {
 	// duration of ease in ms
 	duration: 100,
+	// max distance to allow tweens
+	delta: 1.5,
 	// easing function
 	ease: function(t) {
 		t = 1 - Math.pow(1 - t, 2);
@@ -545,63 +557,66 @@ var hackOptions = {
 };
 
 // smooth move
-var fromX;
-var fromY;
-var toX;
-var toY;
-var dir;
-var lastMove;
+var tweens = {};
+var sprites = {};
+function addTween(spr, fromX, fromY, toX, toY) {
+	if (Math.abs(toX - fromX) + Math.abs(toY - fromY) > hackOptions.delta) {
+		delete tweens[spr];
+	} else {
+		var t = tweens[spr] = tweens[spr] || {};
+		t.fromX = fromX;
+		t.fromY = fromY;
+		t.toX = toX;
+		t.toY = toY;
+		t.start = bitsy.prevTime;
+	}
+}
 before('onready', function() {
-	fromX = toX = bitsy.player().x;
-	fromY = toY = bitsy.player().y;
-	lastMove = bitsy.prevTime;
+	tweens = {};
+	sprites = {};
 });
-before('movePlayer', function () {
-	bitsy.player().x = toX;
-	bitsy.player().y = toY;
-	fromX = bitsy.player().x;
-	fromY = bitsy.player().y;
+
+// listen for changes in sprite positions to add tweens
+before('update', function() {
+	Object.values(bitsy.sprite).forEach(spr => {
+		if (spr.room === bitsy.curRoom) {
+			var s = sprites[spr.id] = sprites[spr.id] || {};
+			s.x = spr.x;
+			s.y = spr.y;
+		} else {
+			delete sprites[spr.id];
+		}
+	});
 });
-after('movePlayer', function () {
-	dir = bitsy.curPlayerDirection;
-	toX = bitsy.player().x;
-	toY = bitsy.player().y;
-	lastMove = bitsy.prevTime;
-});
-var px;
-var py;
-after('update', function() {
-	px = bitsy.player().x;
-	py = bitsy.player().y;
-});
+function addTweens() {
+	Object.entries(sprites).forEach(function (entry) {
+		var spr = bitsy.sprite[entry[0]];
+		var pos = entry[1];
+		if (pos.x !== spr.x || pos.y !== spr.y) {
+			addTween(spr.id, pos.x, pos.y, spr.x, spr.y);
+		}
+	});
+}
+after('updateInput', addTweens);
+after('update', addTweens);
+// before drawing, update sprite positions to tweened values
 before('drawRoom', function () {
-	if (bitsy.player().x !== px || bitsy.player().y !== py) {
-		if (bitsy.player().x % 1 === 0 && bitsy.player().y % 1 === 0) {
-			toX = bitsy.player().x;
-			toY = bitsy.player().y;
-		}
-	}
-	var t = Math.min(1, (bitsy.prevTime - lastMove) / hackOptions.duration);
-	var dx = 0;
-	var dy = 0;
-	if (Math.abs(toX - fromX) > 0) {
-		if(dir === bitsy.Direction.Left) {
-			dx -= 1;
-		}
-		if(dir === bitsy.Direction.Right) {
-			dx += 1;
-		}
-	}
-	if (Math.abs(toY - fromY) > 0) {
-		if(dir === bitsy.Direction.Up) {
-			dy -= 1;
-		}
-		if(dir === bitsy.Direction.Down) {
-			dy += 1;
-		}
-	}
-	bitsy.player().x = toX - Math.sign(dx) * (1.0 - hackOptions.ease(t));
-	bitsy.player().y = toY - Math.sign(dy) * (1.0 - hackOptions.ease(t));
+	Object.entries(tweens).forEach(function (entry) {
+		var tween = entry[1];
+		var t = hackOptions.ease(Math.min(1, (bitsy.prevTime - tween.start) / hackOptions.duration));
+		var sprite = bitsy.sprite[entry[0]];
+		sprite.x = tween.fromX + (tween.toX - tween.fromX) * t;
+		sprite.y = tween.fromY + (tween.toY - tween.fromY) * t;
+	});
+});
+// after drawing, update sprite positions back to normal
+after('drawRoom', function () {
+	Object.entries(tweens).forEach(function (entry) {
+		var tween = entry[1];
+		var sprite = bitsy.sprite[entry[0]];
+		sprite.x = tween.toX;
+		sprite.y = tween.toY;
+	});
 });
 
 /**
@@ -719,6 +734,9 @@ function radians(degrees) {
 hackOptions$1.isTransparent = function (drawing) {
 	return hackOptions$2.isTransparent(drawing);
 };
+hackOptions.ease = function(t) {
+	return hackOptions$2.ease(t);
+};
 
 // scene init helpers
 function makeBaseCamera() {
@@ -791,17 +809,21 @@ var fakeContext = {
 bitsy.renderer = new bitsy.Renderer(bitsy.tilesize, 1);
 
 // prevent dialog box from using position-based rendering
-var py$1;
+var py;
 before('dialogRenderer.DrawTextbox', function () {
-	py$1 = bitsy.player().y;
+	py = bitsy.player().y;
 	bitsy.player().y = hackOptions$2.topDialog ? bitsy.mapsize : 0;
 });
 after('dialogRenderer.DrawTextbox', function () {
-	bitsy.player().y = py$1;
+	bitsy.player().y = py;
 });
 
 // setup
 after('startExportedGame', function () {
+	// apply smooth moves hack options
+	hackOptions.delta = hackOptions$2.delta;
+	hackOptions.duration = hackOptions$2.duration;
+
 	// hide the original canvas and add a stylesheet
 	// to make the 3D render in its place
 	bitsy.canvas.parentElement.removeChild(bitsy.canvas);
@@ -1239,7 +1261,7 @@ var lastRoom;
 
 var tilesInStack = {};
 
-var sprites = {};
+var sprites$1 = {};
 var items = {};
 
 function makeTilesArray(stackSize) {
@@ -1263,11 +1285,11 @@ function update() {
 	curStack = stackPosOfRoom[bitsy.curRoom].stack;
 
 	// sprite changes
-	Object.entries(sprites).forEach(function (entry) {
+	Object.entries(sprites$1).forEach(function (entry) {
 		if (stackPosOfRoom[bitsy.sprite[entry[0]].room].stack !== curStack) {
 			entry[1].dispose();
 			entry[1] = null;
-			delete sprites[entry[0]];
+			delete sprites$1[entry[0]];
 		}
 	});
 	Object.values(bitsy.sprite).filter(function (sprite) {
@@ -1276,7 +1298,7 @@ function update() {
 		return stackPosOfRoom[sprite.room] && stackPosOfRoom[sprite.room].stack === curStack;
 	}).forEach(function (sprite) {
 		var id = sprite.id;
-		var oldMesh = sprites[id];
+		var oldMesh = sprites$1[id];
 		var newMesh = getMesh(sprite, bitsy.curPal());
 		if (newMesh !== (oldMesh && oldMesh.sourceMesh)) {
 			if (oldMesh) {
@@ -1290,13 +1312,13 @@ function update() {
 				newMesh.name = 'player';
 			}
 			applyBehaviours(newMesh, sprite);
-			sprites[id] = oldMesh = newMesh;
+			sprites$1[id] = oldMesh = newMesh;
 		}
 	});
 	// make sure the avatar is rendered at the correct height
 	// when they enter new rooms in the stack
 	if (lastRoom && lastRoom !== bitsy.curRoom) {
-		sprites[bitsy.playerId].position.y = stackPosOfRoom[bitsy.curRoom].pos;
+		sprites$1[bitsy.playerId].position.y = stackPosOfRoom[bitsy.curRoom].pos;
 	}
 
 	// item changes
