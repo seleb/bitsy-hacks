@@ -24,8 +24,8 @@
 		"babylonjs": "^4.0.3",
 		"input-gamepads.js": "^2.0.2",
 		"omggif": "^1.0.10",
-		"rollup": "^1.19.4",
-		"rollup-plugin-commonjs": "^10.0.2",
+		"rollup": "^1.20.3",
+		"rollup-plugin-commonjs": "^10.1.0",
 		"rollup-plugin-node-resolve": "^5.2.0",
 		"tracery-grammar": "^2.7.4",
 		"webglazy": "^3.0.2"
@@ -35,9 +35,9 @@
 		"@babel/preset-env": "^7.5.5",
 		"@babel/runtime": "^7.5.5",
 		"doctrine": "^3.0.0",
-		"eslint": "^6.2.0",
+		"eslint": "^6.2.2",
 		"jest": "^24.9.0",
-		"jest-image-snapshot": "^2.9.0",
+		"jest-image-snapshot": "^2.10.0",
 		"puppeteer": "^1.19.0"
 	},
 	"jest": {
