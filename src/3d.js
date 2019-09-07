@@ -833,7 +833,7 @@ function getMesh(drawing, pal) {
 	return getMeshFromCache(key, [drawing, pal, type]);
 }
 
-var playerRef;
+export var playerRef;
 var playerMovement = {
 	name: 'player-movement',
 	init: function () {},

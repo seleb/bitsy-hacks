@@ -1119,12 +1119,12 @@ after('update', function () {
 before('drawRoom', function (room, context, frameIndex) {
 	// note: player movement has to happen here
 	// in order to be compatible with smooth moves
-	if (playerRef && prevRoom === bitsy.curRoom) {
-		playerRef.position.x = bitsy.player().x;
-		playerRef.position.z = bitsy.mapsize - bitsy.player().y;
+	if (exports.playerRef && prevRoom === bitsy.curRoom) {
+		exports.playerRef.position.x = bitsy.player().x;
+		exports.playerRef.position.z = bitsy.mapsize - bitsy.player().y;
 		// make sure playerPosNode moves with the player so that the camera can
 		// use it as a target to prevent crashing whith billboard-avatar
-		playerPosNode.position = playerRef.position;
+		playerPosNode.position = exports.playerRef.position;
 	}
 	return [room, fakeContext, frameIndex];
 });
@@ -1222,16 +1222,14 @@ function getMesh(drawing, pal) {
 	var key = `${drw},${col},${pal},${frame},${type}`;
 	return getMeshFromCache(key, [drawing, pal, type]);
 }
-
-var playerRef;
 var playerMovement = {
 	name: 'player-movement',
 	init: function () {},
 	attach: function (target) {
-		playerRef = target;
+		exports.playerRef = target;
 	},
 	detach: function () {
-		playerRef = null;
+		exports.playerRef = null;
 	},
 };
 // camera target that will follow the player to fix billboard avatar
