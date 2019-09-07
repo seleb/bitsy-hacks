@@ -3,7 +3,7 @@
 @file end-from-dialog
 @summary trigger an ending from dialog, including narration text
 @license WTFPL (do WTF you want)
-@version 3.3.2
+@version 3.3.3
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
@@ -57,6 +57,6 @@ import {
 // Implement the dialog functions
 addDualDialogTag('end', function (environment, parameters) {
   bitsy.dialogBuffer.EndDialog();
-	bitsy.startNarrating(bitsy.ending[parameters[0]] || parameters[0] || null, true);
+	bitsy.startNarrating(bitsy.ending[parameters[0]] || parameters[0] || '', true);
 });
 // End of (end) dialog function mod
