@@ -2,7 +2,7 @@
 🔀
 @file logic-operators-extended
 @summary adds conditional logic operators
-@version 1.1.3
+@version 1.1.4
 @author @mildmojo
 
 @description
@@ -226,58 +226,58 @@ function _reinitEngine() {
 
 
 
-inject$1(/(operatorMap\.set\("-", subExp\);)/,[
-	'$1',
-	'operatorMap.set("&&", andExp);',
-	'operatorMap.set("||", orExp);',
-	'operatorMap.set("&&!", andNotExp);',
-	'operatorMap.set("||!", orNotExp);',
-	'operatorMap.set("!==", notEqExp);'
-].join('\n'));
-inject$1(
-	/(var operatorSymbols = \["-", "\+", "\/", "\*", "<=", ">=", "<", ">", "=="\];)/,
-	'$1operatorSymbols.unshift("!==", "&&", "||", "&&!", "||!");'
-);
-
-bitsy.andExp = function andExp(environment, left, right, onReturn) {
+function andExp(environment, left, right, onReturn) {
 	right.Eval(environment, function (rVal) {
 		left.Eval(environment, function (lVal) {
 			onReturn(lVal && rVal);
 		});
 	});
-};
+}
 
-bitsy.orExp = function orExp(environment, left, right, onReturn) {
+function orExp(environment, left, right, onReturn) {
 	right.Eval(environment, function (rVal) {
 		left.Eval(environment, function (lVal) {
 			onReturn(lVal || rVal);
 		});
 	});
-};
+}
 
-bitsy.notEqExp = function notEqExp(environment, left, right, onReturn) {
+function notEqExp(environment, left, right, onReturn) {
 	right.Eval(environment, function (rVal) {
 		left.Eval(environment, function (lVal) {
 			onReturn(lVal !== rVal);
 		});
 	});
-};
+}
 
-bitsy.andNotExp = function andNotExp(environment, left, right, onReturn) {
+function andNotExp(environment, left, right, onReturn) {
 	right.Eval(environment, function (rVal) {
 		left.Eval(environment, function (lVal) {
 			onReturn(lVal && !rVal);
 		});
 	});
-};
+}
 
-bitsy.orNotExp = function orNotExp(environment, left, right, onReturn) {
+function orNotExp(environment, left, right, onReturn) {
 	right.Eval(environment, function (rVal) {
 		left.Eval(environment, function (lVal) {
 			onReturn(lVal || !rVal);
 		});
 	});
-};
+}
+
+inject$1(/(operatorMap\.set\("-", subExp\);)/,`
+	$1
+	operatorMap.set("&&", ${andExp.toString()});
+	operatorMap.set("||", ${orExp.toString()});
+	operatorMap.set("&&!", ${andNotExp.toString()});
+	operatorMap.set("||!", ${orNotExp.toString()});
+	operatorMap.set("!==", ${notEqExp.toString()});
+`);
+inject$1(
+	/(var operatorSymbols = \[.+\];)/,
+	'$1operatorSymbols.unshift("!==", "&&", "||", "&&!", "||!");'
+);
 // End of logic operators mod
 
 }(window));
