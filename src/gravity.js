@@ -25,15 +25,15 @@ are converted into down presses
 Dialog Tags
 
 - (toggleGravity) Toggle gravity on/off
-- (setJumpPower "NUM") Sets how many tiles the player can jump straight up.
-Replace NUM with a whole number (setJumpPower "1"). JumpPower is refreshed every time
-they player lands on the ground.
+- (setJumpPower NUM) Sets how many tiles the player can move/jump straight up.
+Replace NUM with a whole number (setJumpPower 1). JumpPower is refreshed every time
+the player lands on the ground.
 - (toggleJetpack) Allows player to "jetpack"/jump upwards while already in the air.
-Player is still limited by how much JumpPower they have.
+Moving upwards still consumes JumpPower, which is only refreshed upon landing.
+- (setGravityDirection "DIRECTION") Makes gravity flow in DIRECTION.
+Replace DIRECTION with "up", "down", "left", or "right".
 - (forceGravity "DIRECTION") Forces the player to move in the given DIRECTION until
 they hit something. Replace DIRECTION with "up", "down", "left", or "right".
-- (invertGravity "DIRECTION") Makes gravity flow in DIRECTION.
-Replace DIRECTION with "up", "down", "left", or "right".
 
 HOW TO USE:
 1. Copy-paste into a script tag after the bitsy source
@@ -44,7 +44,9 @@ import bitsy from "bitsy";
 import {
   after, before, addDualDialogTag, inject
 } from "./helpers/kitsy-script-toolkit";
-
+import {
+	transformAvatar
+} from "./helpers/transform-avatar";
 import {
   getSpriteData,
   setSpriteData
@@ -57,10 +59,10 @@ export var hackOptions = {
   activeOnLoad: true,
 
   // Configure how much JumpPower the player has after landing
-  // Leave this set to 1 and player can jump 1 tile high any time they are on the ground
-  // Set this to 0 for no jumping (only falling?)
+  // Set this to 1 and player can jump 1 tile high any time they are on the ground
+  // Set this to 0 for no jumping/only falling
   // Player can only jump straight up from a solid object, they cannot jump while
-  // falling or after moving horizontally (unless `jetpack` is active)
+  // falling or after moving horizontally unless `jetpack` is active
   jumpPower: 0,
 
   // If true, then the player can jump while falling/in mid-air
@@ -72,7 +74,7 @@ export var hackOptions = {
   // Player will be able to move upward while standing on those tiles.
   // Useful for making ladders, ropes, trampolines, etc.
   isClimbable: function (tile) {
-    return tile.name.indexOf('CLIMB') !== -1; // climbable tile flag in name
+    return tile.name && tile.name.indexOf('CLIMB') !== -1; // climbable tile flag in name
     //return tile.name == 'ladder'; // specific climbable tile
     //return ['ladder', 'rope', 'trampoline'].indexOf(tile.name) !== -1; // specific climbable tile list
   },
@@ -81,24 +83,29 @@ export var hackOptions = {
   // Player will be able to walk horizontally across this tile even if it's not a wall/sprite.
   // Useful for making a ladder/rope that connect to a standable surface at it's top.
   isStandable: function (tile) {
-    return tile.name.indexOf('STAND') !== -1; // standable tile flag in name
+    return tile.name && tile.name.indexOf('STAND') !== -1; // standable tile flag in name
     //return tile.name == 'ledge'; // specific standable tile
     //return ['ledge', 'overhang', 'trapdoor'].indexOf(tile.name) !== -1; // specific standable tile list
   },
 
-  // If true, player avatar will be rotated whenever the gravity is inverted
-  flipAvatarOnInversion: true,
+  // Sets the direction that gravity initially flows in
+  // Can be changed with the `setGravityDirection` dialog tag
+  initialGravityDir: 'down',
+
+  // If true, player avatar will be rotated whenever `setGravityDirection` is used
+  // TODO: how does this interact with initialGravityDir?
+  flipAvatarOnGravityChange: true,
 
   // Runs any time the player "lands" on something solid,
   // `tilesFallen` is the number of tiles they fell.
   // Grabbing a ladder or using the "jetpack" will reset the fall counter.
   // If you don't want any fall damage, leave this function empty
   // Contains examples for decreasing a variable or ending the game
-  fallDamage: function (tilesFallen) {
-		console.log('landed', tilesFallen)
+  landed: function (tilesFallen) {
+    console.log('landed', tilesFallen)
     // // Decrease a variable in your game called `health`
     // var health = bitsy.scriptInterpreter.GetVariable('health');
-    // bitsy.scriptInterpreter.SetVariable('health', ~~health - tilesFallen);
+    // bitsy.scriptInterpreter.SetVariable('health', health - tilesFallen);
 
     // // or maybe just end the game if the fall was high enough?
     // if (tilesFallen > 5) {
@@ -116,9 +123,6 @@ export var hackOptions = {
   maxHorizontalFallingRatio: 0.51,
 };
 
-/* GLOBAL VARS
-*/
-
 var active = hackOptions.activeOnLoad;
 var wasStandingOnSomething = false;
 var wasClimbing = false; //
@@ -126,7 +130,7 @@ var isOnClimbableTile = false; //
 var isClimbing = false; //
 var fallCounter = 0; // how many tiles player has been falling for
 var horizontalFallingMoves = 0; // how many times player has moved horizontally during current fall
-var gravityDir = 'down'; // which arrow key does the user press to move downward relative to gravity
+var gravityDir = hackOptions.initialGravityDir; // which arrow key does the user press to move downward relative to gravity
 var lastMoveMapped = 'down'; // last direction that the player moved in (relative to gravity)
 var forceGravityDir = undefined; // if played is being forced, this is the direction they are being pushed in
 var wasJetpacking = false; // whether or not player used any jumpPower on their last move
@@ -139,15 +143,13 @@ var originalAnimation; // caches player avatar for use in rotation logic
 var gravityMap = {
    // "normal" gravity
   down: {up: 'up', down: 'down', left: 'left', right: 'right' },
-  // inverted
+  // upside down
   up: { up: 'down', down: 'up',  left: 'left', right: 'right' },
   // right is the floor
   right: { up: 'left', down: 'right', left: 'up', right: 'down' },
   // left is the floor
   left: { up: 'right', down: 'left', left: 'down', right: 'up' }
 }
-var lr = ['left',  'right'];
-var ud = ['up',  'down'];
 var dirs = ['up', 'down', 'left', 'right'];
 var offsets = {
   up: [0, -1],
@@ -156,9 +158,6 @@ var offsets = {
   right: [0, 1],
 }
 
-/* THE MAGIC
-*/
-
 after("onPlayerMoved", function () {
   if (!active) return;
   var player = bitsy.player();
@@ -166,7 +165,7 @@ after("onPlayerMoved", function () {
   wasStandingOnSomething = isSolid(gravityDir, player.x, player.y);
 
   // if player is standing on something and has a fallCounter > 0, then they just landed
-  if (wasStandingOnSomething && fallCounter && hackOptions.fallDamage) hackOptions.fallDamage(fallCounter);
+  if (wasStandingOnSomething && fallCounter && hackOptions.landed) hackOptions.landed(fallCounter);
 })
 
 before("movePlayer", function () {
@@ -193,13 +192,10 @@ before("movePlayer", function () {
     fallCounter += 1;
   }
 
-
-
   if (forceGravityDir && isSolid(forceGravityDir, player.x, player.y)) {
     // if played was being pushed, and hit a wall in that direction, turn off the push
     forceGravityDir = undefined;
   }
-
 });
 
 
@@ -225,30 +221,31 @@ window.advanceGravity = function () {
 window.movePlayerWithGravity = function (dir, axis, amt) {
   var player = bitsy.player();
   if (!active) {
+    // if the hack is not active, just move the player in the direction they pressed
     player[axis] += amt;
     return;
   }
 
-  // if player is being pushed, just push em and skip everything else
+  // if player is being pushed, just push them in that direction and skip everything else
   if (forceGravityDir) {
     reallyMovePlayer(player, forceGravityDir)
     lastMoveMapped = forceGravityDir;
     return;
   }
 
-  // dir is the arrow pressed. realDir is what that arrow translates to in the current gravity inversion...
+  // dir is the arrow pressed. realDir is what that arrow translates to in the current gravity direction...
   var realDir = mapDir(dir)
   var horizontal = realDir === 'left' || realDir === 'right';
 
-  var canJetpack = !!jumpPower;
-  // if set to jetpack false, only let them jump if they are standing on something or used jetpack last move
+  var canJetpack = jumpPower != 0;
+
+  // if jetpack is false, only let them jump if they are standing on something
   if (!jetpack && !wasStandingOnSomething && !wasJetpacking) canJetpack = false
 
-// reset vars and stuff
+  // reset vars and stuff
   wasJetpacking = false;
   isClimbing = false;
 
-  // THE BIG MAMA
   if (realDir === 'up' && (isOnClimbableTile || canJetpack)) {
 
     if (!isOnClimbableTile) {
@@ -263,7 +260,7 @@ window.movePlayerWithGravity = function (dir, axis, amt) {
 
   } else if (horizontal && (wasStandingOnSomething || wasClimbing || isOnClimbableTile || isOnStandableTile(player, dir))){
 
-  // u can always move horizontally if yr standing on smth
+    // u can always move horizontally if yr standing on a tile
     reallyMovePlayer(player, dir);
     lastMoveMapped = realDir;
 
@@ -276,41 +273,35 @@ window.movePlayerWithGravity = function (dir, axis, amt) {
 
   } else if (!wasStandingOnSomething) {
 
-    // if none of the other options are valid, and they are falling, then make em fall!
+    // if none of the other options are valid, and they are falling,
+    // then move them in the direction of gravity
     reallyMovePlayer(player, gravityDir);
     lastMoveMapped = 'down';
 
   } else {
-    // TODO: DIS WHAT HAPPENS WHEN YR STANDING ON THE EDGE!
+    console.warn('ignoring movement', dir, axis, amt)
   }
 }
 
-// DANGER!
-
-// BRITTLE CODE
+// Replace the default bitsy movement code inside `movePlayer` with our custom gravity
 inject(/player\(\)\.x -= 1;/, "movePlayerWithGravity('left', 'x', -1);");
 inject(/player\(\)\.x \+= 1;/, "movePlayerWithGravity('right', 'x', 1);");
 inject(/player\(\)\.y -= 1;/, "movePlayerWithGravity('up', 'y', -1);");
 inject(/player\(\)\.y \+= 1;/, "movePlayerWithGravity('down', 'y', 1);");
 
-// EXTREMELY BRITTLE CODE
-inject(/var ext = getExit\( player\(\)\.room, player\(\)\.x, player\(\)\.y \);/, "else { advanceGravity(); didPlayerMoveThisFrame = true; } var ext = getExit( player().room, player().x, player().y ); ");
-
-// END OF DANGER!
-
-/* HELPERS
-*/
+// This adds an `else` clause to the default bitsy `movePlayer` logic
+// so that when the player presses a direction that they cannot move in
+// they are instead forced in the direction of gravity.
+// i.e, if they are standing to the left of a wall tile and press right,
+// the player will fall downward if there is an empty tile beneath them
+inject(/(var ext = getExit\( player\(\)\.room, player\(\)\.x, player\(\)\.y \);)/, "else { advanceGravity(); didPlayerMoveThisFrame = true; } $1 ");
 
 function mapDir(dir) {
   return gravityMap[gravityDir][dir];
 }
 
-function invertPhysics(newDown) {
-  if (isValidDir(newDown)) {
-    gravityDir = newDown;
-  } else {
-    console.warn('gravity: invertGravity failed, expected "up|down|left|right", but got ', newDown);
-  }
+function setGravity(newDown) {
+
 }
 
 function isValidDir(dir) {
@@ -328,9 +319,9 @@ function isSolid(dir, x, y) {
   var isSpriteThere =  bitsy[spriteCheck]()
   var edgeMap = {
     up: { coord: y, value: 0 },
-    down: { coord: y, value: 15 },
+    down: { coord: y, value: bitsy.mapsize - 1 },
     left: { coord: x, value: 0 },
-    right: { coord: x, value: 15 }
+    right: { coord: x, value: bitsy.mapsize - 1 }
   }
   var edgeToCheck = edgeMap[dir]
   var isWallThere = bitsy[wallCheck]() || (edgeToCheck.coord == edgeToCheck.value)
@@ -340,7 +331,7 @@ function isSolid(dir, x, y) {
 
 function isTileClimbable(x, y) {
   var tile = bitsy.tile[bitsy.getTile(x, y)];
-  return tile && tile.name && hackOptions.isClimbable(tile)
+  return tile && hackOptions.isClimbable(tile)
 }
 
 function isOnStandableTile(player) {
@@ -350,7 +341,7 @@ function isOnStandableTile(player) {
   coords[0] += offset[0]
   coords[1] += offset[1]
   var tile = bitsy.tile[bitsy.getTile(coords[0], coords[1])];
-  return tile && tile.name && hackOptions.isStandable(tile)
+  return tile && hackOptions.isStandable(tile)
 }
 
 function canMoveHorizontallyWhileFalling() {
@@ -361,7 +352,6 @@ function canMoveHorizontallyWhileFalling() {
 }
 
 function reallyMovePlayer(player, dir) {
-
   if (isSolid(dir, player.x, player.y)) {
     // can't move into solid thing...so...chill?
     // should maybe trigger sprites here?
@@ -374,83 +364,24 @@ function reallyMovePlayer(player, dir) {
       if (player.y > 0) player.y -= 1;
       break;
     case 'down':
-      if (player.y < 15) player.y += 1;
+      if (player.y < bitsy.mapsize - 1) player.y += 1;
       break;
     case 'left':
       if (player.x > 0) player.x -= 1;
       break;
     case 'right':
-      if (player.x < 15) player.x += 1;
+      if (player.x < bitsy.mapsize - 1) player.x += 1;
       break;
     default:
-      console.warn('invalid move', player.x, player.y, dir)
+      console.warn('gravity: invalid move', player.x, player.y, dir)
   }
 }
 
-/* copied from ... stack overflow...or something... */
-
-function transpose(matrix) {
-  const rows = matrix.length, cols = matrix[0].length;
-  const grid = [];
-  for (let j = 0; j < cols; j++) {
-    grid[j] = Array(rows);
-  }
-  for (let i = 0; i < rows; i++) {
-    for (let j = 0; j < cols; j++) {
-      grid[j][i] = matrix[i][j];
-    }
-  }
-  return grid;
-}
-
-/* copied from directional-avatar and edited to add rotation */
-
-// helper function to flip sprite data
-function flip(spriteData, v, h, rot) {
-  var x, y, x2, y2, col, tmp;
-  var s = spriteData.slice();
-  if (v) {
-    for (y = 0; y < s.length / 2; ++y) {
-      y2 = s.length - y - 1;
-      tmp = s[y];
-      s[y] = s[y2];
-      s[y2] = tmp;
-    }
-  }
-  if (h) {
-    for (y = 0; y < s.length; ++y) {
-      col = s[y] = s[y].slice();
-      for (x = 0; x < col.length / 2; ++x) {
-        x2 = col.length - x - 1;
-        tmp = col[x];
-        col[x] = col[x2];
-        col[x2] = tmp;
-      }
-    }
-  }
-  if (rot) {
-    s = transpose(s)
-  }
-
-  return s;
-}
 
 function flipAvatar(gravityDirection) {
   var hflip = false;
   var vflip = false;
   var rot = false;
-
-  var i;
-  // save the original frames
-  if (!originalAnimation || originalAnimation.referenceFrame !== getSpriteData(bitsy.playerId, 0)) {
-    originalAnimation = {
-      frames: []
-    };
-    for (i = 0; i < bitsy.player().animation.frameCount; ++i) {
-      originalAnimation.frames.push(getSpriteData(bitsy.playerId, i));
-    }
-  }
-
   // determine which directions need flipping
   switch (gravityDirection) {
   case 'up':
@@ -470,39 +401,43 @@ function flipAvatar(gravityDirection) {
     break;
   }
 
-  // update sprite with flipped frames
-  for (i = 0; i < originalAnimation.frames.length; ++i) {
-    setSpriteData(bitsy.playerId, i, flip(originalAnimation.frames[i], vflip, hflip, rot));
-  }
-  originalAnimation.referenceFrame = getSpriteData(bitsy.playerId, 0);
+  transformAvatar(originalAnimation, vflip, hflip, rot)
 }
 
-/* end of directional-avatar copy pasta */
-
-/* dialog tags
-*/
-
-
-addDualDialogTag("invertGravity", function (env, params) {
+addDualDialogTag("setGravityDirection", function (env, params) {
   var newGravityDir = params[0];
-  invertPhysics(newGravityDir);
-  if (hackOptions.flipAvatarOnInversion) flipAvatar(newGravityDir);
+  if (isValidDir(newGravityDir)) {
+    gravityDir = newGravityDir;
+  } else {
+    console.error('gravity: setGravityDirection failed, expected "up|down|left|right", but got ', newGravityDir);
+  }
+  if (hackOptions.flipAvatarOnGravityChange) flipAvatar(newGravityDir);
 })
 
-addDualDialogTag('toggleGravity', function (env, params) {
+addDualDialogTag('toggleGravity', function () {
   active = !active;
 });
 
 addDualDialogTag('setJumpPower', function (env, params) {
-  var amt = ~~params[0];
-  hackOptions.jumpPower = amt; // sets base jumpPower that gets re-plenished upon landing
-  jumpPower = amt; // re-fills players current jumpPowers so they can get jumps mid-air
+  var amt = params[0];
+  if (isNaN(amt - 1)) {
+    // 1 or '1' are valid but not 'one'
+    console.error('gravity: setJumpPower failed, expected a number, but got ', amt)
+  } else {
+    hackOptions.jumpPower = amt; // sets base jumpPower that gets re-plenished upon landing
+    jumpPower = amt; // re-fills players current jumpPowers so they can get jumps mid-air
+  }
 });
 
-addDualDialogTag('toggleJetpack', function (env, params) {
+addDualDialogTag('toggleJetpack', function () {
   jetpack = !jetpack;
 });
 
 addDualDialogTag('forceGravity', function (env, params) {
-  forceGravityDir = params[0];
+  var newForceGravityDir = params[0]
+  if (isValidDir(newForceGravityDir)) {
+    forceGravityDir = newForceGravityDir;
+  } else {
+    console.error('gravity: forceGravity failed, expected "up|down|left|right", but got ', forceGravityDir);
+  }
 });

@@ -98,7 +98,7 @@ test('gravity: jump', async () => {
 	await start({
 		hacks: ['gravity'],
 		gamedata: gamedata,
-		catDialog: 'meow (setJumpPower "1")'
+		catDialog: 'meow (setJumpPower 1)'
 	});
 	await press('Enter'); // complete title dialog
 	await press('Enter'); // end dialog
@@ -163,7 +163,7 @@ test('gravity: invert', async () => {
 	await start({
 		hacks: ['gravity'],
 		gamedata: gamedata,
-		catDialog: 'meow (invertGravity "left")'
+		catDialog: 'meow (setGravityDirection "left")'
 	});
 	await press('Enter'); // complete title dialog
 	await press('Enter'); // end dialog
