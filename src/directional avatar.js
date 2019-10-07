@@ -19,6 +19,9 @@ import {
 	after
 } from "./helpers/kitsy-script-toolkit";
 import {
+	transformSpriteData
+} from "./helpers/transform-sprite-data";
+import {
 	getSpriteData,
 	setSpriteData
 } from "./helpers/edit image at runtime";
@@ -33,32 +36,6 @@ export var hackOptions = {
 	// 	pressing up will make the player's sprite right-side up
 	verticalFlipAllowed: false
 };
-
-// helper function to flip sprite data
-function flip(spriteData, v, h) {
-	var x, y, x2, y2, col, tmp;
-	var s = spriteData.slice();
-	if (v && hackOptions.verticalFlipAllowed) {
-		for (y = 0; y < s.length / 2; ++y) {
-			y2 = s.length - y - 1;
-			tmp = s[y];
-			s[y] = s[y2];
-			s[y2] = tmp;
-		}
-	}
-	if (h && hackOptions.horizontalFlipAllowed) {
-		for (y = 0; y < s.length; ++y) {
-			col = s[y] = s[y].slice();
-			for (x = 0; x < col.length / 2; ++x) {
-				x2 = col.length - x - 1;
-				tmp = col[x];
-				col[x] = col[x2];
-				col[x2] = tmp;
-			}
-		}
-	}
-	return s;
-}
 
 var hflip = false;
 var vflip = false;
@@ -96,7 +73,7 @@ after('updateInput', function () {
 
 	// update sprite with flipped frames
 	for (i = 0; i < originalAnimation.frames.length; ++i) {
-		setSpriteData(bitsy.playerId, i, flip(originalAnimation.frames[i], vflip, hflip));
+		setSpriteData(bitsy.playerId, i, transformSpriteData(originalAnimation.frames[i], vflip, hflip));
 	}
 	originalAnimation.referenceFrame = getSpriteData(bitsy.playerId, 0);
 });

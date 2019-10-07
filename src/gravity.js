@@ -45,8 +45,8 @@ import {
   after, before, addDualDialogTag, inject
 } from "./helpers/kitsy-script-toolkit";
 import {
-	transformAvatar
-} from "./helpers/transform-avatar";
+	transformSpriteData
+} from "./helpers/transform-sprite-data";
 import {
   getSpriteData,
   setSpriteData
@@ -382,6 +382,17 @@ function flipAvatar(gravityDirection) {
   var hflip = false;
   var vflip = false;
   var rot = false;
+  var i;
+  // save the original frames
+  if (!originalAnimation || originalAnimation.referenceFrame !== getSpriteData(bitsy.playerId, 0)) {
+    originalAnimation = {
+      frames: []
+    };
+    for (i = 0; i < bitsy.player().animation.frameCount; ++i) {
+      originalAnimation.frames.push(getSpriteData(bitsy.playerId, i));
+    }
+  }
+
   // determine which directions need flipping
   switch (gravityDirection) {
   case 'up':
@@ -401,7 +412,11 @@ function flipAvatar(gravityDirection) {
     break;
   }
 
-  transformAvatar(originalAnimation, vflip, hflip, rot)
+  // update sprite with transformed frames
+  for (i = 0; i < originalAnimation.frames.length; ++i) {
+    setSpriteData(bitsy.playerId, i, transformSpriteData(originalAnimation.frames[i], vflip, hflip, rot));
+  }
+  originalAnimation.referenceFrame = getSpriteData(bitsy.playerId, 0);
 }
 
 addDualDialogTag("setGravityDirection", function (env, params) {
