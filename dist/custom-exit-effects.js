@@ -3,7 +3,7 @@
 @file custom-exit-effects
 @summary make custom exit transition effects
 @license MIT
-@version 1.0.2
+@version 1.1.0
 @requires 6.0
 @author Sean S. LeBlanc
 
@@ -11,7 +11,10 @@
 Adds support for custom exit transition effects.
 Multiple effects can be added this way.
 This can be combined with exit-from-dialog for custom dialog transitions too.
-Effects are limited to a relatively low framerate;
+
+Effects are limited to a relatively low framerate by default.
+You can increase the framerate to make it smoother,
+but note that the way bitsy renders transitions is fairly inefficient;
 for fancier effects it may be better to try the GL transitions hack.
 
 EFFECT NOTES:
@@ -20,6 +23,7 @@ Each effect looks like:
 		showPlayerStart: <true or false>,
 		showPlayerEnd: <true or false>,
 		duration: <duration in ms>,
+		frameRate: <1-60 (default is 8)>
 		pixelEffectFunc: function(start, end, pixelX, pixelY, delta) {
 			...
 		}
@@ -57,6 +61,7 @@ var hackOptions = {
 		showPlayerStart: true,
 		showPlayerEnd: true,
 		duration: 500,
+		frameRate: 8,
 		pixelEffectFunc: function (start, end, pixelX, pixelY, delta) {
 			var a = start.Image.GetPixel(pixelX, pixelY);
 			var b = end.Image.GetPixel(pixelX, pixelY);
@@ -141,6 +146,16 @@ HOW TO USE:
   For more info, see the documentation at:
   https://github.com/seleb/bitsy-hacks/wiki/Coding-with-kitsy
 */
+
+
+// Ex: inject(/(names.sprite.set\( name, id \);)/, '$1console.dir(names)');
+function inject$1(searchRegex, replaceString) {
+	var kitsy = kitsyInit();
+	kitsy.queuedInjectScripts.push({
+		searchRegex: searchRegex,
+		replaceString: replaceString
+	});
+}
 
 // Ex: before('load_game', function run() { alert('Loading!'); });
 //     before('show_text', function run(text) { return text.toUpperCase(); });
@@ -262,7 +277,13 @@ function _reinitEngine() {
 
 
 
+// allow customizable frameRate
+inject$1(/(var maxStep = Math\.floor\()(frameRate \* \(transitionEffects\[curEffect\]\.duration \/ 1000\)\);)/, '$1transitionEffects[curEffect].frameRate || $2');
+
 before('startExportedGame', function () {
+	// recreate the transition manager so the injected code is used
+	bitsy.transition = new bitsy.TransitionManager();
+	// make the custom effects available
 	Object.entries(hackOptions).forEach(function (entry) {
 		bitsy.transition.RegisterTransitionEffect(entry[0], entry[1]);
 	});
