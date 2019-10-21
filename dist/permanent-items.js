@@ -3,7 +3,7 @@
 @file permanent items
 @summary prevent some items from being picked up
 @license MIT
-@version 2.1.3
+@version 2.1.4
 @author Sean S. LeBlanc
 
 @description
@@ -18,9 +18,9 @@ this.hacks = this.hacks || {};
 'use strict';
 var hackOptions = {
 	itemIsPermanent: function (item) {
-		//return item.name == 'tea'; // specific permanent item
+		//return item.name && item.name == 'tea'; // specific permanent item
 		//return ['tea', 'flower', 'hat'].indexOf(item.name) !== -1; // specific permanent item list
-		//return item.name.indexOf('PERMANENT') !== -1; // permanent item flag in name
+		//return item.name && item.name.indexOf('PERMANENT') !== -1; // permanent item flag in name
 		return true; // all items are permanent
 	}
 };
