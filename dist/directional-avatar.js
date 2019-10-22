@@ -3,7 +3,7 @@
 @file directional avatar
 @summary flips the player's sprite based on directional movement
 @license MIT
-@version 1.1.6
+@version 1.1.7
 @requires 5.3
 @author Sean S. LeBlanc
 
@@ -368,10 +368,10 @@ after('updateInput', function () {
 		vflip = false;
 		break;
 	case bitsy.Direction.Down:
-		vflip = true;
+		vflip = hackOptions.verticalFlipAllowed;
 		break;
 	case bitsy.Direction.Left:
-		hflip = true;
+		hflip = hackOptions.horizontalFlipAllowed;
 		break;
 	case bitsy.Direction.Right:
 		hflip = false;
