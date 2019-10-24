@@ -3,7 +3,7 @@
 @file solid items
 @summary treat some items like sprites that can be placed multiple times
 @license MIT
-@version 2.1.3
+@version 2.1.4
 @author Sean S. LeBlanc
 
 @description
@@ -19,9 +19,9 @@ this.hacks = this.hacks || {};
 'use strict';
 var hackOptions = {
 	itemIsSolid: function (item) {
-		//return item.name == 'tea'; // specific solid item
+		//return item.name && item.name == 'tea'; // specific solid item
 		//return ['tea', 'flower', 'hat'].indexOf(item.name) !== -1; // specific solid item list
-		//return item.name.indexOf('SOLID') !== -1; // solid item flag in name
+		//return item.name && item.name.indexOf('SOLID') !== -1; // solid item flag in name
 		return true; // all items are solid
 	}
 };
