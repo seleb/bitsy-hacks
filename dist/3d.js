@@ -1121,7 +1121,7 @@ before('drawRoom', function (room, context, frameIndex) {
 	// in order to be compatible with smooth moves
 	if (exports.playerRef && prevRoom === bitsy.curRoom) {
 		exports.playerRef.position.x = bitsy.player().x;
-		exports.playerRef.position.z = bitsy.mapsize - bitsy.player().y;
+		exports.playerRef.position.z = bitsy.mapsize - 1 - bitsy.player().y;
 		// make sure playerPosNode moves with the player so that the camera can
 		// use it as a target to prevent crashing whith billboard-avatar
 		playerPosNode.position = exports.playerRef.position;
@@ -1304,7 +1304,7 @@ function update() {
 			}
 			newMesh = newMesh.createInstance();
 			newMesh.position.x = sprite.x;
-			newMesh.position.z = bitsy.mapsize - sprite.y;
+			newMesh.position.z = bitsy.mapsize - 1 - sprite.y;
 			newMesh.position.y = stackPosOfRoom[sprite.room].pos;
 			if (id === bitsy.playerId) {
 				newMesh.name = 'player';
@@ -1353,7 +1353,7 @@ function update() {
 				}
 				newMesh = newMesh.createInstance();
 				newMesh.position.x = roomItem.x;
-				newMesh.position.z = bitsy.mapsize - roomItem.y;
+				newMesh.position.z = bitsy.mapsize - 1 - roomItem.y;
 				newMesh.position.y = stackPosOfRoom[roomId].pos;
 				applyBehaviours(newMesh, item);
 				items[key] = newMesh;
@@ -1399,7 +1399,7 @@ function update() {
 				}
 				newMesh = newMesh.createInstance();
 				newMesh.position.x = x;
-				newMesh.position.z = bitsy.mapsize - y;
+				newMesh.position.z = bitsy.mapsize - 1 - y;
 				newMesh.position.y = stackPosOfRoom[roomId].pos;
 				applyBehaviours(newMesh, bitsy.tile[roomTile]);
 				if (oldMesh) {
