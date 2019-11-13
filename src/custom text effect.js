@@ -70,7 +70,7 @@ export var hackOptions = {
 		// note that it's adding a custom property to the character if it doesn't already exist
 		this.DoEffect = function (char, time) {
 			char.start = char.start || time;
-			char.offset.y += (time - char.start) / 100 * Math.abs(Math.sin(char.col));
+			char.offset.y += ((time - char.start) / 100) * Math.abs(Math.sin(char.col));
 		};
 	},
 	fadeout: function () {
@@ -113,7 +113,7 @@ export var hackOptions = {
 			if (char.original.match(/\s|\0/)) {
 				return;
 			}
-			var c = String.fromCharCode(char.original.codePointAt(0) + (char.col + time / 40) % 10);
+			var c = String.fromCharCode(char.original.codePointAt(0) + ((char.col + time / 40) % 10));
 			window.customTextEffects.setBitmap(char, c);
 		};
 	},
@@ -122,9 +122,9 @@ export var hackOptions = {
 		this.DoEffect = function (char) {
 			window.customTextEffects.saveOriginalChar(char);
 			var bitmap = char.original.replace(/[a-z]/, function (c) {
-				return String.fromCharCode((c.codePointAt(0) - 97 + 13) % 26 + 97);
+				return String.fromCharCode(((c.codePointAt(0) - 97 + 13) % 26) + 97);
 			}).replace(/[A-Z]/, function (c) {
-				return String.fromCharCode((c.codePointAt(0) - 65 + 13) % 26 + 65);
+				return String.fromCharCode(((c.codePointAt(0) - 65 + 13) % 26) + 65);
 			});
 			window.customTextEffects.setBitmap(char, bitmap);
 		};

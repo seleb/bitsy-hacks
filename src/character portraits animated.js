@@ -106,7 +106,7 @@ after('startExportedGame', function () {
 						}
 						prevCtx.drawImage(canvas, 0, 0);
 						ctx.drawImage(prev, 0, 0);
-						var delay = Math.max(1 / 60 * 1000, reader.frameInfo(i).delay * 10); // maximum speed of 60fps
+						var delay = Math.max((1 / 60) * 1000, reader.frameInfo(i).delay * 10); // maximum speed of 60fps
 						duration += delay;
 						frames.push({
 							img: canvas,

@@ -75,8 +75,8 @@ after('load_game', function () {
 
 function drawFrame(frameData) {
 	var pal = getPalette(hackOptions.PALETTE_ID);
-	var bgColor = pal && pal[hackOptions.BG_COLOR_NUM] || [20, 20, 20];
-	var spriteColor = pal && pal[hackOptions.FG_COLOR_NUM] || [245, 245, 245];
+	var bgColor = (pal && pal[hackOptions.BG_COLOR_NUM]) || [20, 20, 20];
+	var spriteColor = (pal && pal[hackOptions.FG_COLOR_NUM]) || [245, 245, 245];
 	var roundingOffset = hackOptions.ROUNDED_CORNERS ? ONE_PIXEL_SCALED : 0;
 
 	// Approximate a squircle-shaped background by drawing a fat plus sign with

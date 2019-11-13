@@ -248,7 +248,7 @@ export var hackOptions = {
 };
 
 function radians(degrees) {
-	return degrees * Math.PI / 180;
+	return (degrees * Math.PI) / 180;
 }
 
 // forward transparent sprites hack option
