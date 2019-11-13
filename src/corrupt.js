@@ -146,8 +146,8 @@ function corrupt() {
 	possibleTiles.push('0'); // empty tile
 	iterate(hackOptions.tilemapFreq * hackOptions.globalFreq, function () {
 		// pick a tile at random in the current room and assign it a random tile
-		y = Math.floor(Math.random() * bitsy.mapsize);
-		x = Math.floor(Math.random() * bitsy.mapsize);
+		var y = Math.floor(Math.random() * bitsy.mapsize);
+		var x = Math.floor(Math.random() * bitsy.mapsize);
 		currentRoom.tilemap[y][x] = rndItem(possibleTiles);
 	});
 
