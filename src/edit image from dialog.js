@@ -141,7 +141,7 @@ function editPalette(environment, parameters) {
 	if (!tgtObj) {
 		throw new Error('Target "' + tgtId + '" was not the id/name of a ' + mapId + '.');
 	}
-	var palObj = parseInt(palId);
+	var palObj = parseInt(palId, 10);
 	if (isNaN(palObj)) {
 		throw new Error('Palette "' + palId + '" was not a number.');
 	}
