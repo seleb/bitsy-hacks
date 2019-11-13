@@ -135,7 +135,7 @@ var fallCounter = 0; // how many tiles player has been falling for
 var horizontalFallingMoves = 0; // how many times player has moved horizontally during current fall
 var gravityDir = hackOptions.initialGravityDir; // which arrow key does the user press to move downward relative to gravity
 var lastMoveMapped = 'down'; // last direction that the player moved in (relative to gravity)
-var forceGravityDir = undefined; // if played is being forced, this is the direction they are being pushed in
+var forceGravityDir; // if played is being forced, this is the direction they are being pushed in
 var wasJetpacking = false; // whether or not player used any jumpPower on their last move
 var jumpPower = hackOptions.jumpPower; // how many tiles the player can jump upwards
 var jetpack = hackOptions.jetpack; // player can start a jump only when they are standing on the ground. if false, player can "jetpack" anywhere anytime
