@@ -96,12 +96,16 @@ function drawFrame(frameData) {
 	// Draw sprite foreground.
 	ctx.fillStyle = rgb(spriteColor);
 	for (var y in frameData) {
-		for (var x in frameData[y]) {
-			if (frameData[y][x] === 1) {
-				ctx.fillRect(x * ONE_PIXEL_SCALED + hackOptions.PIXEL_PADDING,
-					y * ONE_PIXEL_SCALED + hackOptions.PIXEL_PADDING,
-					ONE_PIXEL_SCALED,
-					ONE_PIXEL_SCALED);
+		if (Object.prototype.hasOwnProperty.call(frameData, y)) {
+			for (var x in frameData[y]) {
+				if (Object.prototype.hasOwnProperty.call(frameData[y], x)) {
+					if (frameData[y][x] === 1) {
+						ctx.fillRect(x * ONE_PIXEL_SCALED + hackOptions.PIXEL_PADDING,
+							y * ONE_PIXEL_SCALED + hackOptions.PIXEL_PADDING,
+							ONE_PIXEL_SCALED,
+							ONE_PIXEL_SCALED);
+					}
+				}
 			}
 		}
 	}

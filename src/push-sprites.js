@@ -349,11 +349,13 @@ function checkTargets() {
 	var s;
 	targetsLookup = [];
 	for (var id in bitsy.sprite) {
-		spr = bitsy.sprite[id];
-		if (spr.name) {
-			targetsLookup[spr.room] = targetsLookup[spr.room] || [];
-			targetsLookup[spr.room][spr.x] = targetsLookup[spr.room][spr.x] || [];
-			targetsLookup[spr.room][spr.x][spr.y] = spr.name;
+		if (Object.prototype.hasOwnProperty.call(bitsy.sprite, id)) {
+			spr = bitsy.sprite[id];
+			if (spr.name) {
+				targetsLookup[spr.room] = targetsLookup[spr.room] || [];
+				targetsLookup[spr.room][spr.x] = targetsLookup[spr.room][spr.x] || [];
+				targetsLookup[spr.room][spr.x][spr.y] = spr.name;
+			}
 		}
 	}
 	targetsLookup[bitsy.curRoom] = targetsLookup[bitsy.curRoom] || [];
@@ -361,16 +363,24 @@ function checkTargets() {
 	targetsLookup[bitsy.curRoom][bitsy.player().x][bitsy.player().y] = bitsy.playerId;
 
 	for (k in hackOptions.conditions) {
-		var result = true;
-		for (s in hackOptions.conditions[k]) {
-			result = result && checkOR(s, hackOptions.conditions[k][s]);
-		}
-		var dialogId;
-		if (result) { dialogId = k + '_true'; } else { dialogId = k + '_false'; }
+		if (Object.prototype.hasOwnProperty.call(hackOptions.conditions, k)) {
+			var result = true;
+			for (s in hackOptions.conditions[k]) {
+				if (Object.prototype.hasOwnProperty.call(hackOptions.conditions[k], s)) {
+					result = result && checkOR(s, hackOptions.conditions[k][s]);
+				}
+			}
+			var dialogId;
+			if (result) {
+				dialogId = k + '_true';
+			} else {
+				dialogId = k + '_false';
+			}
 
-		if (bitsy.dialog[dialogId]) {
-			var dialogStr = bitsy.dialog[dialogId];
-			bitsy.startDialog(dialogStr, dialogId);
+			if (bitsy.dialog[dialogId]) {
+				var dialogStr = bitsy.dialog[dialogId];
+				bitsy.startDialog(dialogStr, dialogId);
+			}
 		}
 	}
 }
@@ -426,17 +436,19 @@ var vflips = [];
 before('onready', function () {
 	var i;
 	for (var id in bitsy.sprite) {
-		var spr = bitsy.sprite[id];
+		if (Object.prototype.hasOwnProperty.call(bitsy.sprite, id)) {
+			var spr = bitsy.sprite[id];
 
-		originalAnimations[spr.id] = {
-			frames: [],
-		};
-		for (i = 0; i < spr.animation.frameCount; ++i) {
-			originalAnimations[spr.id].frames.push(getSpriteData(spr.id, i));
+			originalAnimations[spr.id] = {
+				frames: [],
+			};
+			for (i = 0; i < spr.animation.frameCount; ++i) {
+				originalAnimations[spr.id].frames.push(getSpriteData(spr.id, i));
+			}
+
+			hflips[spr.id] = false;
+			vflips[spr.id] = false;
 		}
-
-		hflips[spr.id] = false;
-		vflips[spr.id] = false;
 	}
 });
 
