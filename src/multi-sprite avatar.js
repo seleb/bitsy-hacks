@@ -108,6 +108,7 @@ var getEndingOverride = function (roomId, x, y) {
 			return e;
 		}
 	}
+	return undefined;
 };
 var getExitOverride = function (roomId, x, y) {
 	for (var i = 0; i < pieces.length; ++i) {
@@ -117,6 +118,7 @@ var getExitOverride = function (roomId, x, y) {
 			return e;
 		}
 	}
+	return undefined;
 };
 before('movePlayer', function () {
 	if (enabled) {

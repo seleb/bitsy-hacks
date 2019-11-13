@@ -361,7 +361,9 @@ function isTileClimbable(x, y) {
 }
 
 function isOnStandableTile(player) {
-	if (fallCounter > 1) return;
+	if (fallCounter > 1) {
+		return false;
+	}
 	var coords = [player.x, player.y];
 	var offset = offsets[gravityDir]; // like [0, -1] for y -= 1
 	coords[0] += offset[0];

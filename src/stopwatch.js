@@ -91,7 +91,8 @@ function resumeWatch(environment, parameters) {
 
 	// just start the timer if there isn't one
 	if (!timer) {
-		return startWatch(environment, parameters);
+		startWatch(environment, parameters);
+		return;
 	}
 
 	// don't do anything if the timer's not running
