@@ -62,12 +62,12 @@ after('onready', function () {
 
 	// add key handler
 	document.addEventListener('keypress', function (e) {
-		if (e.keyCode == 114 && noClip) {
+		if (e.keyCode === 114 && noClip) {
 			// cycle to next room on 'r' if no-clipping
 			e.preventDefault();
 			var k = Object.keys(bitsy.room);
 			bitsy.curRoom = bitsy.player().room = k[(k.indexOf(bitsy.player().room) + 1) % k.length];
-		} else if (e.keyCode == bitsy.key.space) {
+		} else if (e.keyCode === bitsy.key.space) {
 			// toggle noclip on 'space'
 			e.preventDefault();
 			toggleNoClip();

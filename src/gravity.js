@@ -259,7 +259,7 @@ window.movePlayerWithGravity = function (dir, axis, amt) {
 	var realDir = mapDir(dir);
 	var horizontal = realDir === 'left' || realDir === 'right';
 
-	var canJetpack = jumpPower != 0;
+	var canJetpack = jumpPower !== 0;
 
 	// if jetpack is false, only let them jump if they are standing on something
 	if (!jetpack && !wasStandingOnSomething && !wasJetpacking) canJetpack = false;
@@ -350,7 +350,7 @@ function isSolid(dir, x, y) {
 		},
 	};
 	var edgeToCheck = edgeMap[dir];
-	var isWallThere = bitsy[wallCheck]() || (edgeToCheck.coord == edgeToCheck.value);
+	var isWallThere = bitsy[wallCheck]() || (edgeToCheck.coord === edgeToCheck.value);
 
 	return isWallThere || isSpriteThere;
 }
@@ -462,8 +462,8 @@ addDualDialogTag('toggleGravity', function () {
 });
 
 addDualDialogTag('setJumpPower', function (env, params) {
-	var amt = params[0];
-	if (Number.isNaN(amt - 1)) {
+	var amt = Number(params[0]);
+	if (Number.isNaN(amt)) {
 		// 1 or '1' are valid but not 'one'
 		console.error('gravity: setJumpPower failed, expected a number, but got ', amt);
 	} else {

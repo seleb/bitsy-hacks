@@ -274,7 +274,7 @@ function itemOK(spr, x, y) {
 	var items = bitsy.room[spr.room].items;
 	if (items.length > 0) {
 		for (var itm of items) {
-			if (hackOptions.itemStopsSprite(bitsy.item[itm.id], spr) && itm.x == x && itm.y == y) { return false; }
+			if (hackOptions.itemStopsSprite(bitsy.item[itm.id], spr) && itm.x === x && itm.y === y) { return false; }
 		}
 	}
 	return true;
@@ -283,20 +283,20 @@ function itemOK(spr, x, y) {
 function tileOK(spr, x, y) {
 	if (x < 0 || y < 0 || x >= bitsy.mapsize || y >= bitsy.mapsize) { return false; } // can't push sprite off the edge
 	var tileid = bitsy.room[spr.room].tilemap[y][x];
-	if (tileid == '0') { return true; } // no tile => no problem
+	if (tileid === '0') { return true; } // no tile => no problem
 	if (hackOptions.tileStopsSprite(bitsy.tile[tileid], spr)) { return false; }
 	return true;
 }
 
 function getFirstSpriteAt(r, x, y) {
 	return Object.values(bitsy.sprite).find(function (spr) {
-		return spr.room == r && spr.x == x && spr.y == y;
+		return spr.room === r && spr.x === x && spr.y === y;
 	});
 }
 
 function getAllSpritesAt(r, x, y) {
 	return Object.values(bitsy.sprite).filter(function (spr) {
-		return spr.room == r && spr.x == x && spr.y == y;
+		return spr.room === r && spr.x === x && spr.y === y;
 	});
 }
 
@@ -308,7 +308,7 @@ function getAllSpritesAt(r, x, y) {
 function checkExit(spr, direction) {
 	var source = spr.room;
 	var ext = bitsy.room[source].exits.find(function (e) {
-		return spr.x == e.x && spr.y == e.y;
+		return spr.x === e.x && spr.y === e.y;
 	});
 
 	if (ext) {
@@ -390,7 +390,7 @@ after('movePlayer', function (direction) {
 });
 
 function check(s, xyz) {
-	if (s == 'nothing') {
+	if (s === 'nothing') {
 		return targetsLookup[xyz[0]] === undefined
 			|| targetsLookup[xyz[0]][xyz[1]] === undefined
 			|| targetsLookup[xyz[0]][xyz[1]][xyz[2]] === undefined;
@@ -418,8 +418,8 @@ function checkOR(s, xyzss) {
 }
 
 function isCompatible(p, q) {
-	if (p == 'anything') { return true; }
-	if (p == bitsy.playerId) { return (q == bitsy.playerId); }
+	if (p === 'anything') { return true; }
+	if (p === bitsy.playerId) { return (q === bitsy.playerId); }
 	return q.includes(p);
 }
 
