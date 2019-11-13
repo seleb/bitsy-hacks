@@ -32,11 +32,11 @@ HOW TO USE:
 import bitsy from 'bitsy';
 import {
 	after,
-} from './helpers/kitsy-script-toolkit.js';
-import './javascript dialog.js';
+} from './helpers/kitsy-script-toolkit';
+import './javascript dialog';
 import {
 	setSpriteData,
-} from './helpers/edit image at runtime.js';
+} from './helpers/edit image at runtime';
 import './edit image from dialog';
 import './edit dialog from dialog';
 
