@@ -3,7 +3,7 @@
 @file push sprites
 @summary sokoban-style sprite pushing
 @license MIT
-@version 1.01
+@version 1.02
 @requires 6.4
 @author jan0sc
 
@@ -525,7 +525,12 @@ before("movePlayer", function(direction) {
 
 	if (spriteId && hackOptions.playerPushesSprite(bitsy.sprite[spriteId])) {
 		var success = pushSprite(bitsy.sprite[spriteId],direction);
-		if (!success) { updateImage(bitsy.sprite[spriteId]); } // to flip the sprite even if it doesn't move
+		if (!success) {
+			// flip the sprite even if it doesn't move
+			updateImage(bitsy.sprite[spriteId]);
+			// call the sprite's dialog
+			bitsy.startSpriteDialog(spriteId);
+		}
 	}
 
 });
