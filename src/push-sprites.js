@@ -211,8 +211,6 @@ before("movePlayer", function(direction) {
 		if (!success) {
 			// flip the sprite even if it doesn't move
 			updateImage(bitsy.sprite[spriteId]);
-			// call the sprite's dialog
-			bitsy.startSpriteDialog(spriteId);
 		}
 	}
 
