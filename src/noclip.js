@@ -23,14 +23,14 @@ import {
 var noClip = false;
 
 // save references to existing functions
-var _getSpriteAt = bitsy.getSpriteAt;
-var _isWallLeft = bitsy.isWallLeft;
-var _isWallRight = bitsy.isWallRight;
-var _isWallUp = bitsy.isWallUp;
-var _isWallDown = bitsy.isWallDown;
-var _getExit = bitsy.getExit;
-var _getEnding = bitsy.getEnding;
-var _getItemIndex = bitsy.getItemIndex;
+var originalGetSpriteAt = bitsy.getSpriteAt;
+var originalIsWallLeft = bitsy.isWallLeft;
+var originalIsWallRight = bitsy.isWallRight;
+var originalIsWallUp = bitsy.isWallUp;
+var originalIsWallDown = bitsy.isWallDown;
+var originalGetExit = bitsy.getExit;
+var originalGetEnding = bitsy.getEnding;
+var originalGetItemIndex = bitsy.getItemIndex;
 
 var toggleNoClip = function () {
 	noClip = !noClip;
@@ -45,14 +45,14 @@ var toggleNoClip = function () {
 		console.log('noclip enabled');
 	} else {
 		// re-enable functions
-		bitsy.getSpriteAt = _getSpriteAt;
-		bitsy.isWallLeft = _isWallLeft;
-		bitsy.isWallRight = _isWallRight;
-		bitsy.isWallUp = _isWallUp;
-		bitsy.isWallDown = _isWallDown;
-		bitsy.getExit = _getExit;
-		bitsy.getEnding = _getEnding;
-		bitsy.getItemIndex = _getItemIndex;
+		bitsy.getSpriteAt = originalGetSpriteAt;
+		bitsy.isWallLeft = originalIsWallLeft;
+		bitsy.isWallRight = originalIsWallRight;
+		bitsy.isWallUp = originalIsWallUp;
+		bitsy.isWallDown = originalIsWallDown;
+		bitsy.getExit = originalGetExit;
+		bitsy.getEnding = originalGetEnding;
+		bitsy.getItemIndex = originalGetItemIndex;
 		console.log('noclip disabled');
 	}
 };

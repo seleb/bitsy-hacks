@@ -87,13 +87,13 @@ function disableBig() {
 }
 
 // handle item/ending/exit collision
-var _getItemIndex = bitsy.getItemIndex;
-var _getEnding = bitsy.getEnding;
-var _getExit = bitsy.getExit;
+var originalGetItemIndex = bitsy.getItemIndex;
+var originalGetEnding = bitsy.getEnding;
+var originalGetExit = bitsy.getExit;
 var getItemIndexOverride = function (roomId, x, y) {
 	for (var i = 0; i < pieces.length; ++i) {
 		var piece = pieces[i];
-		var idx = _getItemIndex(roomId, x + piece.x, y + piece.y);
+		var idx = originalGetItemIndex(roomId, x + piece.x, y + piece.y);
 		if (idx !== -1) {
 			return idx;
 		}
@@ -103,7 +103,7 @@ var getItemIndexOverride = function (roomId, x, y) {
 var getEndingOverride = function (roomId, x, y) {
 	for (var i = 0; i < pieces.length; ++i) {
 		var piece = pieces[i];
-		var e = _getEnding(roomId, x + piece.x, y + piece.y);
+		var e = originalGetEnding(roomId, x + piece.x, y + piece.y);
 		if (e) {
 			return e;
 		}
@@ -112,7 +112,7 @@ var getEndingOverride = function (roomId, x, y) {
 var getExitOverride = function (roomId, x, y) {
 	for (var i = 0; i < pieces.length; ++i) {
 		var piece = pieces[i];
-		var e = _getExit(roomId, x + piece.x, y + piece.y);
+		var e = originalGetExit(roomId, x + piece.x, y + piece.y);
 		if (e) {
 			return e;
 		}
@@ -126,9 +126,9 @@ before('movePlayer', function () {
 	}
 });
 after('movePlayer', function () {
-	bitsy.getItemIndex = _getItemIndex;
-	bitsy.getEnding = _getEnding;
-	bitsy.getExit = _getExit;
+	bitsy.getItemIndex = originalGetItemIndex;
+	bitsy.getEnding = originalGetEnding;
+	bitsy.getExit = originalGetExit;
 	if (enabled) {
 		syncPieces();
 	}
@@ -175,13 +175,13 @@ function filterPieces(id) {
 after('startExportedGame', function () {
 	for (var i = 0; i < repeats.length; ++i) {
 		var r = repeats[i];
-		var _fn = bitsy[r];
+		var originalFn = bitsy[r];
 		bitsy[r] = function (fn) {
 			return enabled ? repeat(fn) : fn();
-		}.bind(undefined, _fn);
+		}.bind(undefined, originalFn);
 	}
-	var _getSpriteAt = bitsy.getSpriteAt;
+	var originalGetSpriteAt = bitsy.getSpriteAt;
 	bitsy.getSpriteAt = function () {
-		return filterPieces(_getSpriteAt.apply(this, arguments));
+		return filterPieces(originalGetSpriteAt.apply(this, arguments));
 	};
 });

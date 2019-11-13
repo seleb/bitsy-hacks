@@ -85,20 +85,20 @@ function filterFollowing(id) {
 }
 if (!hackOptions.allowFollowerCollision) {
 	// filter follower out of collisions
-	var _getSpriteLeft = bitsy.getSpriteLeft;
+	var originalGetSpriteLeft = bitsy.getSpriteLeft;
 	bitsy.getSpriteLeft = function () {
-		return filterFollowing(_getSpriteLeft());
+		return filterFollowing(originalGetSpriteLeft());
 	};
-	var _getSpriteRight = bitsy.getSpriteRight;
+	var originalGetSpriteRight = bitsy.getSpriteRight;
 	bitsy.getSpriteRight = function () {
-		return filterFollowing(_getSpriteRight());
+		return filterFollowing(originalGetSpriteRight());
 	};
-	var _getSpriteUp = bitsy.getSpriteUp;
+	var originalGetSpriteUp = bitsy.getSpriteUp;
 	bitsy.getSpriteUp = function () {
-		return filterFollowing(_getSpriteUp());
+		return filterFollowing(originalGetSpriteUp());
 	};
-	var _getSpriteDown = bitsy.getSpriteDown;
+	var originalGetSpriteDown = bitsy.getSpriteDown;
 	bitsy.getSpriteDown = function () {
-		return filterFollowing(_getSpriteDown());
+		return filterFollowing(originalGetSpriteDown());
 	};
 }
