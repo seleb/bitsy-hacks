@@ -320,18 +320,16 @@ function checkExit(spr, direction) {
 		// try to push one cell in same direction
 		var success = pushSprite(spr, direction);
 
-		// if it succeeds, move any remaining sprites across to join it
 		if (success) {
+			// if it succeeds, move any remaining sprites across to join it
 			var sprs = getAllSpritesAt(source, ext.x, ext.y);
 			sprs.forEach(function (s) {
 				s.room = spr.room;
 				s.x = spr.x;
 				s.y = spr.y;
 			});
-		}
-
-		// if it fails, sprite cannot transit so move it back
-		else {
+		} else {
+			// if it fails, sprite cannot transit so move it back
 			spr.room = source;
 			spr.x = ext.x;
 			spr.y = ext.y;
@@ -368,8 +366,7 @@ function checkTargets() {
 			result = result && checkOR(s, hackOptions.conditions[k][s]);
 		}
 		var dialogId;
-		if (result) { dialogId = k + '_true'; }
-		else { dialogId = k + '_false'; }
+		if (result) { dialogId = k + '_true'; } else { dialogId = k + '_false'; }
 
 		if (bitsy.dialog[dialogId]) {
 			var dialogStr = bitsy.dialog[dialogId];
