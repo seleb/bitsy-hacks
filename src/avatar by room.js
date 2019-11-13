@@ -69,9 +69,6 @@ before('update', function () {
 			bitsy.player().drw = originalAvatar;
 			return;
 		}
-		if (newAvatarId === bitsy.playerId) {
-			bitsy.player().drw;
-		}
 		var newAvatar = getImage(newAvatarId, bitsy.sprite);
 		if (!newAvatar) {
 			throw new Error('Could not find sprite "' + newAvatarId + '" for room "' + currentRoom + '"');
