@@ -138,7 +138,8 @@ after('startExportedGame', function () {
 	if (!window.Client) {
 		console.error("Couldn't retrieve client; running game offline");
 	}
-	client = new window.Client.default({
+	var Client = window.Client.default;
+	client = new Client({
 		host: hackOptions.host,
 		room: hackOptions.room || bitsy.title,
 	});
