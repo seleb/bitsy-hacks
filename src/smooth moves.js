@@ -15,11 +15,11 @@ HOW TO USE:
 1. Copy-paste this script into a script tag after the bitsy source
 2. Edit hackOptions below as needed
 */
+import bitsy from 'bitsy';
 import {
 	before,
 	after,
 } from './helpers/kitsy-script-toolkit';
-import bitsy from 'bitsy';
 
 export var hackOptions = {
 	// duration of ease in ms

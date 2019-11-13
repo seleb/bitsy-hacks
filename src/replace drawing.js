@@ -34,10 +34,10 @@ HOW TO USE:
 1. add '#draw(TYPE,id)' tag to the names of the drawings you want to replace when the game loads
 2. copy-paste this script into a script tag after the bitsy source
 */
+import bitsy from 'bitsy';
 import {
 	after,
 } from './helpers/kitsy-script-toolkit';
-import bitsy from 'bitsy';
 
 after('parseWorld', function () {
 	[].concat(Object.values(bitsy.item), Object.values(bitsy.tile), Object.values(bitsy.sprite)).forEach(function (drawing) {

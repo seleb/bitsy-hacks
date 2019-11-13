@@ -92,6 +92,8 @@ HOW TO USE:
 2. Add the tags described above to the names of the rooms and drawings in bitsy editor to use additional features
 3. Edit hackOptions below as needed
 */
+import bitsy from 'bitsy';
+import BABYLON from 'babylonjs';
 import {
 	hackOptions as smoothMoves,
 } from './smooth moves';
@@ -103,8 +105,6 @@ import {
 	hackOptions as transparentSprites,
 } from './transparent sprites';
 import 'array-flat-polyfill'; // polyfill array.flat for babylon
-import BABYLON from 'babylonjs';
-import bitsy from 'bitsy';
 
 export var hackOptions = {
 	// Determines the resolution of the scene rendered
