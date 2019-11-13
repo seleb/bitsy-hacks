@@ -70,7 +70,7 @@ function getExitParams(parameters) {
 	var roomName = params[0];
 	var x = params[1];
 	var y = params[2];
-	var transition_effect = params[3];
+	var transitionEffect = params[3];
 	var room = getRoom(roomName);
 
 	if (!room) {
@@ -99,7 +99,7 @@ function getExitParams(parameters) {
 			x,
 			y,
 		},
-		transition_effect,
+		transition_effect: transitionEffect,
 	};
 }
 // End of (exit) dialog function mod

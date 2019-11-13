@@ -77,19 +77,19 @@ function drawFrame(frameData) {
 	var pal = getPalette(hackOptions.PALETTE_ID);
 	var bgColor = pal && pal[hackOptions.BG_COLOR_NUM] || [20, 20, 20];
 	var spriteColor = pal && pal[hackOptions.FG_COLOR_NUM] || [245, 245, 245];
-	var rounding_offset = hackOptions.ROUNDED_CORNERS ? ONE_PIXEL_SCALED : 0;
+	var roundingOffset = hackOptions.ROUNDED_CORNERS ? ONE_PIXEL_SCALED : 0;
 
 	// Approximate a squircle-shaped background by drawing a fat plus sign with
 	// two overlapping rects, leaving some empty pixels in the corners.
 	var longSide = FAVICON_SIZE + 2 * hackOptions.PIXEL_PADDING;
-	var shortSide = longSide - rounding_offset * ONE_PIXEL_SCALED;
+	var shortSide = longSide - roundingOffset * ONE_PIXEL_SCALED;
 	ctx.fillStyle = rgb(bgColor);
-	ctx.fillRect(rounding_offset,
+	ctx.fillRect(roundingOffset,
 		0,
 		shortSide,
 		longSide);
 	ctx.fillRect(0,
-		rounding_offset,
+		roundingOffset,
 		longSide,
 		shortSide);
 
