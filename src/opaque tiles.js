@@ -16,12 +16,12 @@ HOW TO USE:
 1. Copy-paste this script into a script tag after the bitsy source
 2. Update the `tileIsOpaque` function below to match your needs
 */
-import bitsy from "bitsy";
+import bitsy from 'bitsy';
 import {
 	before,
 	after,
 	inject,
-} from "./helpers/kitsy-script-toolkit";
+} from './helpers/kitsy-script-toolkit';
 
 export var hackOptions = {
 	tileIsOpaque: function (tile) {
@@ -29,12 +29,12 @@ export var hackOptions = {
 		// return ['wall', 'column', 'door'].indexOf(tile.name) !== -1; // specific opaque tile list
 		// return tile.name && tile.name.indexOf('OPAQUE') !== -1; // opaque tile flag in name
 		return true; // all tiles are opaque
-	}
+	},
 };
 
 // track whether opaque
 var opaque = false;
-after("movePlayer", function () {
+after('movePlayer', function () {
 	// check for changes
 	var player = bitsy.player();
 	var tile = bitsy.tile[bitsy.getTile(player.x, player.y)];
@@ -47,12 +47,12 @@ after("movePlayer", function () {
 
 // prevent player from drawing on top of opaque tiles
 var room;
-before("drawRoom", function () {
+before('drawRoom', function () {
 	var player = bitsy.player();
 	room = player.room;
 	player.room = opaque ? null : room;
 });
-after("drawRoom", function () {
+after('drawRoom', function () {
 	bitsy.player().room = room;
 });
 

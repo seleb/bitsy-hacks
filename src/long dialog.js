@@ -27,9 +27,9 @@ HOW TO USE:
 	2. edit hackOptions below as needed
 */
 import {
-	inject
-} from "./helpers/kitsy-script-toolkit";
-import "./paragraph-break";
+	inject,
+} from './helpers/kitsy-script-toolkit';
+import './paragraph-break';
 
 export var hackOptions = {
 	minRows: 2,
@@ -38,7 +38,7 @@ export var hackOptions = {
 
 // override textbox height
 inject(/textboxInfo\.height = .+;/,
-`Object.defineProperty(textboxInfo, 'height', {
+	`Object.defineProperty(textboxInfo, 'height', {
 	get() { return textboxInfo.padding_vert + (textboxInfo.padding_vert + relativeFontHeight()) * Math.max(${hackOptions.minRows}, dialogBuffer.CurPage().indexOf(dialogBuffer.CurRow())+Math.sign(dialogBuffer.CurCharCount())) + textboxInfo.arrow_height; }
 })`);
 // prevent textbox from caching

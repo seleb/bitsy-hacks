@@ -14,17 +14,17 @@ HOW TO USE:
 1. Copy-paste into a script tag after the bitsy source
 2. Edit `horizontalFlipAllowed` and `verticalFlipAllowed` below as needed
 */
-import bitsy from "bitsy";
+import bitsy from 'bitsy';
 import {
-	after
-} from "./helpers/kitsy-script-toolkit";
+	after,
+} from './helpers/kitsy-script-toolkit';
 import {
-	transformSpriteData
-} from "./helpers/transform-sprite-data";
+	transformSpriteData,
+} from './helpers/transform-sprite-data';
 import {
 	getSpriteData,
-	setSpriteData
-} from "./helpers/edit image at runtime";
+	setSpriteData,
+} from './helpers/edit image at runtime';
 
 export var hackOptions = {
 	// If `horizontalFlipAllowed` is true:
@@ -34,7 +34,7 @@ export var hackOptions = {
 	// If `verticalFlipAllowed` is true:
 	// 	pressing down will make the player's sprite upside-down
 	// 	pressing up will make the player's sprite right-side up
-	verticalFlipAllowed: false
+	verticalFlipAllowed: false,
 };
 
 var hflip = false;
@@ -46,7 +46,7 @@ after('updateInput', function () {
 	// save the original frames
 	if (!originalAnimation || originalAnimation.referenceFrame !== getSpriteData(bitsy.playerId, 0)) {
 		originalAnimation = {
-			frames: []
+			frames: [],
 		};
 		for (i = 0; i < bitsy.player().animation.frameCount; ++i) {
 			originalAnimation.frames.push(getSpriteData(bitsy.playerId, i));

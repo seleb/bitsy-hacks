@@ -17,12 +17,15 @@ HOW TO USE:
      should use for the favicon. By default, it will render the player avatar
      sprite in the first available palette's colors.
 */
-'use strict';
-import bitsy from "bitsy";
+
+
+import bitsy from 'bitsy';
 import {
-	after
-} from "./helpers/kitsy-script-toolkit";
-import { getImage } from "./helpers/utils";
+	after,
+} from './helpers/kitsy-script-toolkit';
+import {
+	getImage,
+} from './helpers/utils';
 
 // CONFIGURATION FOR FAVICON
 export var hackOptions = {
@@ -32,7 +35,7 @@ export var hackOptions = {
 	FG_COLOR_NUM: 2, // Favicon sprite color in palette. 0 = BG, 1 = Tile, 2 = Sprite.
 	PIXEL_PADDING: 1, // Padding around sprite, in Bitsy pixel units.
 	ROUNDED_CORNERS: true, // Should the favicon have rounded corners? (Suggest margin 2px if rounding.)
-	FRAME_DELAY: 400 // Frame change interval (ms) if sprite is animated. Use `Infinity` to disable.
+	FRAME_DELAY: 400, // Frame change interval (ms) if sprite is animated. Use `Infinity` to disable.
 };
 // END CONFIG
 
@@ -103,7 +106,7 @@ function drawFrame(frameData) {
 		}
 	}
 
-	return canvas.toDataURL("image/x-icon");
+	return canvas.toDataURL('image/x-icon');
 }
 
 function updateBrowserFavicon(dataURL) {

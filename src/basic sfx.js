@@ -23,14 +23,14 @@ HOW TO USE:
 Additional sounds can be added by by including more <audio> tags with different ids and calling `sounds.<sound id>()` as needed.
 If you'd like to trigger sounds from dialog, check out the bitsymuse hack!
 */
-import bitsy from "bitsy";
+import bitsy from 'bitsy';
 import {
 	before,
-	after
-} from "./helpers/kitsy-script-toolkit";
+	after,
+} from './helpers/kitsy-script-toolkit';
 
 export var hackOptions = {
-	beNiceToEars: true // if `true`, reduces volume of recently played sound effects
+	beNiceToEars: true, // if `true`, reduces volume of recently played sound effects
 };
 
 var sounds = {};
@@ -38,7 +38,7 @@ before('startExportedGame', function () {
 	function playSound(sound) {
 		if (hackOptions.beNiceToEars) {
 			// reduce volume if played recently
-			sound.volume = Math.min(1.0, Math.max(0.25, Math.pow((bitsy.prevTime - sound.lastPlayed) * .002, .5)));
+			sound.volume = Math.min(1.0, Math.max(0.25, Math.pow((bitsy.prevTime - sound.lastPlayed) * 0.002, 0.5)));
 			sound.lastPlayed = bitsy.prevTime;
 		}
 
@@ -51,7 +51,7 @@ before('startExportedGame', function () {
 	}
 
 	// get sound elements
-	var s = document.getElementsByTagName("audio");
+	var s = document.getElementsByTagName('audio');
 	for (var i in s) {
 		if (Object.prototype.hasOwnProperty.call(s, i)) {
 			i = s[i];

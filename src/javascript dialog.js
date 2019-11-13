@@ -38,10 +38,11 @@ NOTE: This uses parentheses "()" instead of curly braces "{}" around function
       For full editor integration, you'd *probably* also need to paste this
       code at the end of the editor's `bitsy.js` file. Untested.
 */
-"use strict";
+
+
 import {
-	addDualDialogTag
-} from "./helpers/kitsy-script-toolkit";
+	addDualDialogTag,
+} from './helpers/kitsy-script-toolkit';
 
 var indirectEval = eval;
 

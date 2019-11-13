@@ -55,102 +55,102 @@ NOTE: This uses parentheses "()" instead of curly braces "{}" around function
       For full editor integration, you'd *probably* also need to paste this
       code at the end of the editor's `bitsy.js` file. Untested.
 */
-import bitsy from "bitsy";
+import bitsy from 'bitsy';
 import {
-  after,
-  addDualDialogTag
-} from "./helpers/kitsy-script-toolkit";
+	after,
+	addDualDialogTag,
+} from './helpers/kitsy-script-toolkit';
 import {
-  getImage
-} from "./helpers/utils";
+	getImage,
+} from './helpers/utils';
 import {
-  getImageData,
-  setImageData
-} from "./helpers/edit image at runtime";
+	getImageData,
+	setImageData,
+} from './helpers/edit image at runtime';
 
 // map of maps
 var maps;
 after('load_game', function () {
 	maps = {
-    spr: bitsy.sprite,
-    sprite: bitsy.sprite,
-    til: bitsy.tile,
-    tile: bitsy.tile,
-    itm: bitsy.item,
-    item: bitsy.item,
+		spr: bitsy.sprite,
+		sprite: bitsy.sprite,
+		til: bitsy.tile,
+		tile: bitsy.tile,
+		itm: bitsy.item,
+		item: bitsy.item,
 	};
 });
 
 function editImage(environment, parameters) {
-  var i;
+	var i;
 
-  // parse parameters
-  var params = parameters[0].split(/,\s?/);
-  params[0] = (params[0] || "").toLowerCase();
-  var mapId = params[0];
-  var tgtId = params[1];
-  var srcId = params[2];
+	// parse parameters
+	var params = parameters[0].split(/,\s?/);
+	params[0] = (params[0] || '').toLowerCase();
+	var mapId = params[0];
+	var tgtId = params[1];
+	var srcId = params[2];
 
-  if (!mapId || !tgtId || !srcId) {
-    throw new Error('Image expects three parameters: "map, target, source", but received: "' + params.join(', ') + '"');
-  }
+	if (!mapId || !tgtId || !srcId) {
+		throw new Error('Image expects three parameters: "map, target, source", but received: "' + params.join(', ') + '"');
+	}
 
-  // get objects
-  var mapObj = maps[mapId];
-  if (!mapObj) {
-    throw new Error('Invalid map "' + mapId + '". Try "SPR", "TIL", or "ITM" instead.');
-  }
-  var tgtObj = getImage(tgtId, mapObj);
-  if (!tgtObj) {
-    throw new Error('Target "' + tgtId + '" was not the id/name of a ' + mapId + '.');
-  }
-  var srcObj = getImage(srcId, mapObj);
-  if (!srcObj) {
-    throw new Error('Source "' + srcId + '" was not the id/name of a ' + mapId + '.');
-  }
+	// get objects
+	var mapObj = maps[mapId];
+	if (!mapObj) {
+		throw new Error('Invalid map "' + mapId + '". Try "SPR", "TIL", or "ITM" instead.');
+	}
+	var tgtObj = getImage(tgtId, mapObj);
+	if (!tgtObj) {
+		throw new Error('Target "' + tgtId + '" was not the id/name of a ' + mapId + '.');
+	}
+	var srcObj = getImage(srcId, mapObj);
+	if (!srcObj) {
+		throw new Error('Source "' + srcId + '" was not the id/name of a ' + mapId + '.');
+	}
 
-  // copy animation from target to source
-  tgtObj.animation = {
-    frameCount: srcObj.animation.frameCount,
-    isAnimated: srcObj.animation.isAnimated,
-    frameIndex: srcObj.animation.frameIndex
-  };
-  for (i = 0; i < srcObj.animation.frameCount; ++i) {
-    setImageData(tgtId, i, mapObj, getImageData(srcId, i, mapObj));
-  }
+	// copy animation from target to source
+	tgtObj.animation = {
+		frameCount: srcObj.animation.frameCount,
+		isAnimated: srcObj.animation.isAnimated,
+		frameIndex: srcObj.animation.frameIndex,
+	};
+	for (i = 0; i < srcObj.animation.frameCount; ++i) {
+		setImageData(tgtId, i, mapObj, getImageData(srcId, i, mapObj));
+	}
 }
 
 function editPalette(environment, parameters) {
-  // parse parameters
-  var params = parameters[0].split(/,\s?/);
-  params[0] = (params[0] || "").toLowerCase();
-  var mapId = params[0];
-  var tgtId = params[1];
-  var palId = params[2];
+	// parse parameters
+	var params = parameters[0].split(/,\s?/);
+	params[0] = (params[0] || '').toLowerCase();
+	var mapId = params[0];
+	var tgtId = params[1];
+	var palId = params[2];
 
-  if (!mapId || !tgtId || !palId) {
-    throw new Error('Image expects three parameters: "map, target, palette", but received: "' + params.join(', ') + '"');
-  }
+	if (!mapId || !tgtId || !palId) {
+		throw new Error('Image expects three parameters: "map, target, palette", but received: "' + params.join(', ') + '"');
+	}
 
-  // get objects
-  var mapObj = maps[mapId];
-  if (!mapObj) {
-    throw new Error('Invalid map "' + mapId + '". Try "SPR", "TIL", or "ITM" instead.');
-  }
-  var tgtObj = getImage(tgtId, mapObj);
-  if (!tgtObj) {
-    throw new Error('Target "' + tgtId + '" was not the id/name of a ' + mapId + '.');
-  }
-  var palObj = parseInt(palId);
-  if (isNaN(palObj)) {
-    throw new Error('Palette "' + palId + '" was not a number.');
-  }
+	// get objects
+	var mapObj = maps[mapId];
+	if (!mapObj) {
+		throw new Error('Invalid map "' + mapId + '". Try "SPR", "TIL", or "ITM" instead.');
+	}
+	var tgtObj = getImage(tgtId, mapObj);
+	if (!tgtObj) {
+		throw new Error('Target "' + tgtId + '" was not the id/name of a ' + mapId + '.');
+	}
+	var palObj = parseInt(palId);
+	if (isNaN(palObj)) {
+		throw new Error('Palette "' + palId + '" was not a number.');
+	}
 
-  // set palette
-  tgtObj.col = palObj;
+	// set palette
+	tgtObj.col = palObj;
 
-  // update images in cache
-  bitsy.renderImageForAllPalettes(tgtObj);
+	// update images in cache
+	bitsy.renderImageForAllPalettes(tgtObj);
 }
 
 // hook up the dialog tags

@@ -30,7 +30,7 @@ so I focused on covering what I imagined to be some of the most common use cases
 If you need help customizing the hack to achieve a different style, feel free to reach out.
 
 The hackOptions below have relatively thorough documentation,
-but make sure to check out https://github.com/seleb/bitsy-hacks/wiki/3D-Hack-Examples 
+but make sure to check out https://github.com/seleb/bitsy-hacks/wiki/3D-Hack-Examples
 for examples of different setups if you're new to 3D.
 
 additional features to help make more fancy 3d scenes from bitsy editor:
@@ -92,7 +92,9 @@ HOW TO USE:
 2. Add the tags described above to the names of the rooms and drawings in bitsy editor to use additional features
 3. Edit hackOptions below as needed
 */
-import { hackOptions as smoothMoves } from './smooth moves';
+import {
+	hackOptions as smoothMoves,
+} from './smooth moves';
 import {
 	after,
 	before,
@@ -169,12 +171,11 @@ export var hackOptions = {
 		if (meshMatch) {
 			if (meshTemplates[meshMatch[1]]) {
 				return meshMatch[1];
-			} else {
-				// if the specified mesh template doesn't exist,
-				// display error message, but continue execution
-				// to resolve the mesh with default logic
-				console.error(`mesh template '${meshMatch[1]}' wasn't found`);
 			}
+			// if the specified mesh template doesn't exist,
+			// display error message, but continue execution
+			// to resolve the mesh with default logic
+			console.error(`mesh template '${meshMatch[1]}' wasn't found`);
 		}
 
 		// default
@@ -216,7 +217,7 @@ export var hackOptions = {
 			mesh.scaling = new BABYLON.Vector3(
 				Number(scaleTag[1]) || 0,
 				Number(scaleTag[2]) || 0,
-				Number(scaleTag[3]) || 0
+				Number(scaleTag[3]) || 0,
 			);
 		}
 		// rotate. input in degrees
@@ -240,7 +241,7 @@ export var hackOptions = {
 	// max distance to allow tweens
 	delta: 1.5,
 	// easing function
-	ease: function(t) {
+	ease: function (t) {
 		t = 1 - Math.pow(1 - t, 2);
 		return t;
 	},
@@ -254,13 +255,13 @@ function radians(degrees) {
 transparentSprites.isTransparent = function (drawing) {
 	return hackOptions.isTransparent(drawing);
 };
-smoothMoves.ease = function(t) {
+smoothMoves.ease = function (t) {
 	return hackOptions.ease(t);
 };
 
 // scene init helpers
 export function makeBaseCamera() {
-	var camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 2, Math.PI / 4, bitsy.mapsize / 2, BABYLON.Vector3.Zero(), scene);
+	var camera = new BABYLON.ArcRotateCamera('Camera', -Math.PI / 2, Math.PI / 4, bitsy.mapsize / 2, BABYLON.Vector3.Zero(), scene);
 	// perspective clipping
 	camera.minZ = 0.001;
 	camera.maxZ = bitsy.mapsize * 2;
@@ -294,11 +295,11 @@ export function makeFollowPlayer(camera) {
 	};
 }
 export function addShader(fragmentSrc, downScale) {
-	BABYLON.Effect.ShadersStore["customFragmentShader"] = fragmentSrc;
+	BABYLON.Effect.ShadersStore.customFragmentShader = fragmentSrc;
 
-	var postProcess = new BABYLON.PostProcess("customFragmentShader", "custom", ["screenSize"], null, downScale, scene.activeCamera);
+	var postProcess = new BABYLON.PostProcess('customFragmentShader', 'custom', ['screenSize'], null, downScale, scene.activeCamera);
 	postProcess.onApply = function (effect) {
-		effect.setFloat2("screenSize", postProcess.width, postProcess.height);
+		effect.setFloat2('screenSize', postProcess.width, postProcess.height);
 	};
 }
 export function addControls(camera) {
@@ -399,7 +400,7 @@ canvas:focus { outline: none; }
 	meshTemplates.box = meshTemplates.tower1;
 
 	// floor
-	var floorMesh = BABYLON.MeshBuilder.CreatePlane(`floor`, {
+	var floorMesh = BABYLON.MeshBuilder.CreatePlane('floor', {
 		width: 1,
 		height: 1,
 	}, scene);
@@ -425,24 +426,24 @@ canvas:focus { outline: none; }
 	meshTemplates.billboard = planeMesh.clone('billboard');
 
 	// wedge
-	var wedgeMesh = new BABYLON.Mesh("wedgeMesh", scene);
+	var wedgeMesh = new BABYLON.Mesh('wedgeMesh', scene);
 	var wedgeMeshPos = [
 		-1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 1, 0, 1, 1, // 0,1,2, 3,4,5,
 		-1, 0, 1, -1, 0, 0, 0, 1, 0, 0, 1, 1, // 6,7,8,9
 		0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, // 10,11,12,13
-		0, 0, 1, 0, 0, 0, -1, 0, 0, -1, 0, 1 // 14,15,16,17
+		0, 0, 1, 0, 0, 0, -1, 0, 0, -1, 0, 1, // 14,15,16,17
 	];
 	var wedgeMeshInd = [
-		0, 1, 2, 3, 4, 5, //triangles on the front and the back
+		0, 1, 2, 3, 4, 5, // triangles on the front and the back
 		6, 7, 8, 8, 9, 6, // tris that make up the sliding face at the top
 		10, 11, 12, 12, 13, 10, // right face
-		14, 15, 16, 16, 17, 14 // bottom face
+		14, 15, 16, 16, 17, 14, // bottom face
 	];
 	var wedgeMeshUvs = [
 		0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0, 1,
 		0, 0, 1, 0, 1, 1, 0, 1,
 		0, 0, 1, 0, 1, 1, 0, 1,
-		0, 0, 1, 0, 1, 1, 0, 1
+		0, 0, 1, 0, 1, 1, 0, 1,
 	];
 	var wedgeMeshVertData = new BABYLON.VertexData();
 	wedgeMeshVertData.positions = wedgeMeshPos;
@@ -459,12 +460,12 @@ canvas:focus { outline: none; }
 	meshTemplates.wedge = wedgeMesh;
 
 	// empty mesh for making drawings invisible
-	var emptyMesh = new BABYLON.Mesh("emptyMesh", scene);
+	var emptyMesh = new BABYLON.Mesh('emptyMesh', scene);
 	meshTemplates.empty = emptyMesh;
 
 	// add transform node for playerPosNode that's going to copy avatar's position so that the
 	// camera can follow them without crashing when the avatar is rendered as billboard
-	playerPosNode = new BABYLON.TransformNode("playerPosNode");
+	playerPosNode = new BABYLON.TransformNode('playerPosNode');
 
 	// material
 	baseMat = new BABYLON.StandardMaterial('base material', scene);
@@ -486,7 +487,7 @@ canvas:focus { outline: none; }
 	engine.setSize(hackOptions.size.width, hackOptions.size.height);
 	if (hackOptions.size.auto) {
 		engine.resize();
-		window.addEventListener("resize", function () {
+		window.addEventListener('resize', function () {
 			engine.resize();
 		});
 	}
@@ -501,7 +502,7 @@ canvas:focus { outline: none; }
 			stackId = tag[1];
 			stackPos = Number(tag[2]) || 0;
 		}
-		roomsInStack[stackId] = roomsInStack[stackId] || []
+		roomsInStack[stackId] = roomsInStack[stackId] || [];
 		roomsInStack[stackId].push(room.id);
 
 		stackPosOfRoom[room.id] = {
@@ -848,8 +849,8 @@ function update() {
 			// check if it is still listed its room
 			// if so keep it as it is and return
 			if (bitsy.room[roomId].items.find(function (item) {
-					return `${roomId},${item.id},${item.x},${item.y}` === entry[0];
-				})) {
+				return `${roomId},${item.id},${item.x},${item.y}` === entry[0];
+			})) {
 				return;
 			}
 		}
@@ -944,6 +945,6 @@ function getBgColor() {
 	return new BABYLON.Color3(
 		col[0] / 255,
 		col[1] / 255,
-		col[2] / 255
+		col[2] / 255,
 	);
 }

@@ -23,16 +23,16 @@ i.e. if the player moves into a sprite from the left, the variable will be "righ
 HOW TO USE:
 Copy-paste into a script tag after the bitsy source
 */
-import bitsy from "bitsy";
+import bitsy from 'bitsy';
 import {
 	before,
-} from "./helpers/kitsy-script-toolkit";
+} from './helpers/kitsy-script-toolkit';
 
 var keys = {};
-keys[bitsy.Direction.Up] = "up";
-keys[bitsy.Direction.Down] = "down";
-keys[bitsy.Direction.Left] = "left";
-keys[bitsy.Direction.Right] = "right";
+keys[bitsy.Direction.Up] = 'up';
+keys[bitsy.Direction.Down] = 'down';
+keys[bitsy.Direction.Left] = 'left';
+keys[bitsy.Direction.Right] = 'right';
 keys[bitsy.Direction.None] = null;
 
 before('startDialog', function () {

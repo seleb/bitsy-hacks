@@ -78,25 +78,23 @@ describe('getImage', () => {
 });
 
 xdescribe('inject', () => {
-	it('requires a search string and a string to inject', () => {
-	});
+	it('requires a search string and a string to inject', () => {});
 
-	it('replaces the script tag containing the search string with a copy containing the code to inject after the search string', () => {
-	});
+	it('replaces the script tag containing the search string with a copy containing the code to inject after the search string', () => {});
 });
 
 describe('unique', () => {
 	it('requires an array as a paramter', () => {
-		expect(()=>unique()).toThrow();
-		expect(()=>unique([])).not.toThrow();
+		expect(() => unique()).toThrow();
+		expect(() => unique([])).not.toThrow();
 	});
 
 	it('returns an array which is a copy of the parameter, without duplicates', () => {
-		const obj={};
+		const obj = {};
 		expect(unique([])).toMatchSnapshot();
-		expect(unique([1,1,1,2,3,4,1,2,3,4,5,1,4,5])).toMatchSnapshot();
-		expect(unique(['a','b','c','a','b','c','A','A'])).toMatchSnapshot();
-		expect(unique([obj,obj,obj])).toMatchSnapshot();
-		expect(unique([1,'1',obj,obj,'1',1])).toMatchSnapshot();
+		expect(unique([1, 1, 1, 2, 3, 4, 1, 2, 3, 4, 5, 1, 4, 5])).toMatchSnapshot();
+		expect(unique(['a', 'b', 'c', 'a', 'b', 'c', 'A', 'A'])).toMatchSnapshot();
+		expect(unique([obj, obj, obj])).toMatchSnapshot();
+		expect(unique([1, '1', obj, obj, '1', 1])).toMatchSnapshot();
 	});
 });

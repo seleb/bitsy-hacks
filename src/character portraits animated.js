@@ -46,9 +46,9 @@ export var hackOptions = {
 	scale: bitsy.scale,
 	autoReset: true,
 	portraits: {
-		'earth': './GIF.gif',
-		'cat': './test-export.gif',
-		'png': './test.gif',
+		earth: './GIF.gif',
+		cat: './test-export.gif',
+		png: './test.gif',
 	},
 };
 

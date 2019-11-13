@@ -14,13 +14,13 @@ Note: this one's ~pretty hacky~.
 HOW TO USE:
 Copy-paste into a script tag after the bitsy source
 */
-import bitsy from "bitsy";
+import bitsy from 'bitsy';
 import {
-	inject
-} from "./helpers/kitsy-script-toolkit";
+	inject,
+} from './helpers/kitsy-script-toolkit';
 
 bitsy.transparentDialog = {
-	canvas: document.createElement('canvas')
+	canvas: document.createElement('canvas'),
 };
 bitsy.transparentDialog.context = bitsy.transparentDialog.canvas.getContext('2d');
 var drawOverride = `
@@ -39,7 +39,7 @@ else {
 return;`;
 
 // override textbox drawing to use draw image version from above
-inject(/(this\.DrawTextbox = function\(\) {)/, '$1'+drawOverride);
+inject(/(this\.DrawTextbox = function\(\) {)/, '$1' + drawOverride);
 
 // override textbox clearing pixels to be fully transparent
 inject(/(textboxInfo\.img\.data\[i\+3\]=)255/, '$10');

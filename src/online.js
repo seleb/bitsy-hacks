@@ -29,19 +29,19 @@ HOW TO USE:
 2. Edit `hackOptions.host` below to point to your server (depending on hosting, you may need to use `ws://` instead of `wss://`)
 3. Edit other hackOptions as needed
 */
-import bitsy from "bitsy";
+import bitsy from 'bitsy';
 import {
-	after
-} from "./helpers/kitsy-script-toolkit.js";
-import "./javascript dialog.js";
+	after,
+} from './helpers/kitsy-script-toolkit.js';
+import './javascript dialog.js';
 import {
-	setSpriteData
-} from "./helpers/edit image at runtime.js";
-import "./edit image from dialog";
-import "./edit dialog from dialog";
+	setSpriteData,
+} from './helpers/edit image at runtime.js';
+import './edit image from dialog';
+import './edit dialog from dialog';
 
 export var hackOptions = {
-	host: "wss://your signalling server",
+	host: 'wss://your signalling server',
 	// room: "custom room", // sets the room on the server to use; otherwise, uses game title
 	immediateMode: true, // if true, teleports players to their reported positions; otherwise, queues movements and lets bitsy handle the walking (note: other players pick up items like this)
 	ghosts: false, // if true, sprites from players who disconnected while you were online won't go away until you restart
@@ -51,13 +51,13 @@ export var hackOptions = {
 // download the client script
 // bitsy starts onload, so adding it to the head
 // is enough to delay game startup until it's loaded/errored
-var clientScript = document.createElement("script");
-clientScript.src = hackOptions.host.replace(/^ws/, "http") + "/client.js";
+var clientScript = document.createElement('script');
+clientScript.src = hackOptions.host.replace(/^ws/, 'http') + '/client.js';
 clientScript.onload = function () {
-	console.log("online available!");
+	console.log('online available!');
 };
 clientScript.onerror = function (error) {
-	console.error("online not available!", error);
+	console.error('online not available!', error);
 };
 document.head.appendChild(clientScript);
 
@@ -67,60 +67,60 @@ function onData(event) {
 	var spr;
 	var data = event.data;
 	switch (data.e) {
-		case "move":
-			spr = bitsy.sprite[event.from];
-			if (spr) {
-				// move sprite
-				if (hackOptions.immediateMode) {
-					// do it now
-					spr.x = data.x;
-					spr.y = data.y;
-					spr.room = data.room;
-				} else {
-					// let bitsy handle it later
-					spr.walkingPath.push({
-						x: data.x,
-						y: data.y
-					});
-				}
+	case 'move':
+		spr = bitsy.sprite[event.from];
+		if (spr) {
+			// move sprite
+			if (hackOptions.immediateMode) {
+				// do it now
+				spr.x = data.x;
+				spr.y = data.y;
+				spr.room = data.room;
 			} else {
-				// got a move from an unknown player,
-				// so ask them who they are
-				client.send(event.from, {
-					e: "gimmeSprite"
+				// let bitsy handle it later
+				spr.walkingPath.push({
+					x: data.x,
+					y: data.y,
 				});
 			}
-			break;
-		case "gimmeSprite":
-			// send a sprite update to specific peer
-			client.send(event.from, getSpriteUpdate());
-			break;
-		case "sprite":
-			// update a sprite
-			var longname = "SPR_" + event.from;
-			spr = bitsy.sprite[event.from] = {
-				animation: {
-					frameCount: data.data.length,
-					frameIndex: 0,
-					isAnimated: data.data.length > 1
-				},
-				col: data.col,
-				dlg: longname,
-				drw: longname,
-				inventory: {},
-				name: event.from,
-				walkingPath: [],
-				x: data.x,
-				y: data.y,
-				room: data.room
-			};
-			bitsy.dialog[longname] = data.dlg;
-			bitsy.renderer.SetImageSource(longname, data.data);
+		} else {
+			// got a move from an unknown player,
+			// so ask them who they are
+			client.send(event.from, {
+				e: 'gimmeSprite',
+			});
+		}
+		break;
+	case 'gimmeSprite':
+		// send a sprite update to specific peer
+		client.send(event.from, getSpriteUpdate());
+		break;
+	case 'sprite':
+		// update a sprite
+		var longname = 'SPR_' + event.from;
+		spr = bitsy.sprite[event.from] = {
+			animation: {
+				frameCount: data.data.length,
+				frameIndex: 0,
+				isAnimated: data.data.length > 1,
+			},
+			col: data.col,
+			dlg: longname,
+			drw: longname,
+			inventory: {},
+			name: event.from,
+			walkingPath: [],
+			x: data.x,
+			y: data.y,
+			room: data.room,
+		};
+		bitsy.dialog[longname] = data.dlg;
+		bitsy.renderer.SetImageSource(longname, data.data);
 
-			for (var frame = 0; frame < data.data.length; ++frame) {
-				setSpriteData(event.from, frame, data.data[frame]);
-			}
-			break;
+		for (var frame = 0; frame < data.data.length; ++frame) {
+			setSpriteData(event.from, frame, data.data[frame]);
+		}
+		break;
 	}
 }
 
@@ -134,7 +134,7 @@ function onClose(event) {
 	}
 }
 
-after("startExportedGame", function () {
+after('startExportedGame', function () {
 	if (!window.Client) {
 		console.error("Couldn't retrieve client; running game offline");
 	}
@@ -147,15 +147,15 @@ after("startExportedGame", function () {
 	client.setDebug(hackOptions.debug);
 });
 
-after("movePlayer", moveSprite);
-after("onready", function () {
+after('movePlayer', moveSprite);
+after('onready', function () {
 	// tell everyone who you are
 	// and ask who they are 1s after starting
 	setTimeout(function () {
 		if (client) {
 			updateSprite();
 			client.broadcast({
-				e: "gimmeSprite"
+				e: 'gimmeSprite',
 			});
 		}
 	}, 1000);
@@ -165,10 +165,10 @@ after("onready", function () {
 function moveSprite() {
 	var p = bitsy.player();
 	client.broadcast({
-		e: "move",
+		e: 'move',
 		x: p.x,
 		y: p.y,
-		room: p.room
+		room: p.room,
 	});
 }
 
@@ -181,13 +181,13 @@ function updateSprite() {
 function getSpriteUpdate() {
 	var p = bitsy.player();
 	return {
-		e: "sprite",
+		e: 'sprite',
 		data: bitsy.renderer.GetImageSource(p.drw),
 		x: p.x,
 		y: p.y,
 		room: p.room,
 		dlg: bitsy.dialog[p.dlg],
-		col: p.col
+		col: p.col,
 	};
 }
 
@@ -197,7 +197,7 @@ function getSpriteUpdate() {
 	'imageNow',
 	'imagePal',
 	'imagePalNow',
-	'dialog'
+	'dialog',
 ].forEach(function (tag) {
 	var original = bitsy.kitsy.dialogFunctions[tag];
 	bitsy.kitsy.dialogFunctions[tag] = function () {

@@ -54,10 +54,10 @@ NOTES:
 		start += mix(0.0, rand(sUv-vec2(t)), t);
 		result = mix(start, end, step(.5,t));
 */
-import bitsy from "bitsy";
+import bitsy from 'bitsy';
 import {
-	hackOptions as canvasReplacementHackOptions
-} from "./canvas replacement";
+	hackOptions as canvasReplacementHackOptions,
+} from './canvas replacement';
 
 export var hackOptions = {
 	// transition duration

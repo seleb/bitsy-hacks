@@ -48,22 +48,22 @@ A few helpers are provided under `window.customTextEffects` for more complex eff
 	- `saveOriginalChar`: saves the character string on `char`
 	- `setBitmap`: sets bitmap based on a new character
 	- `editBitmapCopy`: copies the character bitmap and runs an edit function once
-	
+
 The second argument is `time`, which is the time in milliseconds
 
 A number of example effects are included
 */
 import {
-	inject
-} from "./helpers/kitsy-script-toolkit";
+	inject,
+} from './helpers/kitsy-script-toolkit';
 
 export var hackOptions = {
-	"my-effect": function () {
-		// a horizontal wavy effect with a blue tint 
+	'my-effect': function () {
+		// a horizontal wavy effect with a blue tint
 		this.DoEffect = function (char, time) {
 			char.offset.x += 5 * Math.sin(time / 100 + char.col / 3);
 			char.color.r = 255 * Math.cos(time / 100 + char.col / 3);
-		}
+		};
 	},
 	droop: function () {
 		// causes text to droop down slowly over time
@@ -71,24 +71,24 @@ export var hackOptions = {
 		this.DoEffect = function (char, time) {
 			char.start = char.start || time;
 			char.offset.y += (time - char.start) / 100 * Math.abs(Math.sin(char.col));
-		}
+		};
 	},
 	fadeout: function () {
 		// fades text to invisible after appearing
 		this.DoEffect = function (char, time) {
 			char.start = char.start || time;
 			char.color.a = Math.max(0, 255 - (time - char.start) / 2);
-		}
+		};
 	},
 	noise: function () {
 		// renders noise on top of text
 		// note that it's making a copy with `.slice()` since it's a dynamic bitmap change
 		this.DoEffect = function (char) {
 			char.bitmap = char.bitmap.slice();
-			for(var i = 0; i < char.bitmap.length; ++i) {
+			for (var i = 0; i < char.bitmap.length; ++i) {
 				char.bitmap[i] = Math.random() < 0.25 ? 1 : 0;
 			}
-		}
+		};
 	},
 	strike: function () {
 		// renders text with a strike-through
@@ -97,12 +97,12 @@ export var hackOptions = {
 			var font = window.fontManager.Get(window.fontName);
 			var w = font.getWidth();
 			var h = font.getHeight();
-			window.customTextEffects.editBitmapCopy(char, function(bitmap) {
-				for(var x = 0; x < w; ++x) {
-					bitmap[x + Math.floor(h/2)*w] = 1;
+			window.customTextEffects.editBitmapCopy(char, function (bitmap) {
+				for (var x = 0; x < w; ++x) {
+					bitmap[x + Math.floor(h / 2) * w] = 1;
 				}
 			});
-		}
+		};
 	},
 	scramble: function () {
 		// animated text scrambling
@@ -127,7 +127,7 @@ export var hackOptions = {
 				return String.fromCharCode((c.codePointAt(0) - 65 + 13) % 26 + 65);
 			});
 			window.customTextEffects.setBitmap(char, c);
-		}
+		};
 	},
 	sponge: function () {
 		// animated alternating letter case
@@ -139,7 +139,7 @@ export var hackOptions = {
 			window.customTextEffects.saveOriginalChar(char);
 			var c = char.original[['toUpperCase', 'toLowerCase'][Math.round(posmod(time / 1000 - (char.col + char.row) / 2, 1))]]();
 			window.customTextEffects.setBitmap(char, c);
-		}
+		};
 	},
 	flag: function () {
 		// applies a wave effect that's more intense towards the ends of words
@@ -151,13 +151,14 @@ export var hackOptions = {
 			window.customTextEffects.saveOriginalChar(char);
 			if (char.original.match(/\s|\0/)) {
 				return;
-			} else if (Math.abs(char.col - lastCol) > 1) {
+			}
+			if (Math.abs(char.col - lastCol) > 1) {
 				lastSpace = char.col - 1;
 			}
 			lastCol = char.col;
 			char.offset.y -= Math.pow(char.col - lastSpace, 1.5) * (Math.sin(time / 120 + char.col / 2));
-		}
-	}
+		};
+	},
 };
 
 // custom text effects are injected,
@@ -171,7 +172,7 @@ window.customTextEffects = {
 		}
 		var font = window.fontManager.Get(window.fontName);
 		var characters = Object.entries(font.getData());
-		var character = characters.find(function(keyval){
+		var character = characters.find(function (keyval) {
 			return keyval[1].toString() === char.bitmap.toString();
 		});
 		char.original = String.fromCharCode(character[0]);
@@ -188,7 +189,7 @@ window.customTextEffects = {
 		char.originalBitmap = char.bitmap;
 		char.bitmap = char.bitmap.slice();
 		editFn(char.bitmap);
-	}
+	},
 };
 
 // generate code for each text effect

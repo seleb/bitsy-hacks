@@ -48,15 +48,16 @@ NOTE: This uses parentheses "()" instead of curly braces "{}" around function
       For full editor integration, you'd *probably* also need to paste this
       code at the end of the editor's `bitsy.js` file. Untested.
 */
-'use strict';
-import bitsy from "bitsy";
+
+
+import bitsy from 'bitsy';
 import {
-	addDualDialogTag
-} from "./helpers/kitsy-script-toolkit";
+	addDualDialogTag,
+} from './helpers/kitsy-script-toolkit';
 
 // Implement the dialog functions
 addDualDialogTag('end', function (environment, parameters) {
-  bitsy.dialogBuffer.EndDialog();
+	bitsy.dialogBuffer.EndDialog();
 	bitsy.startNarrating(bitsy.ending[parameters[0]] || parameters[0] || '', true);
 });
 // End of (end) dialog function mod

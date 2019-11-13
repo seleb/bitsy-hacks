@@ -31,11 +31,12 @@ this will print forever(jump "DLG_infinite_loop")
 HOW TO USE:
 Copy-paste into a script tag after the bitsy source
 */
-'use strict';
-import bitsy from "bitsy";
+
+
+import bitsy from 'bitsy';
 import {
-	addDualDialogTag
-} from "./helpers/kitsy-script-toolkit";
+	addDualDialogTag,
+} from './helpers/kitsy-script-toolkit';
 
 // jump function
 function jump(targetDialog) {

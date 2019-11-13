@@ -15,10 +15,10 @@ HOW TO USE:
 2. Press 'space' to toggle noclip
 3. Press 'r' while noclip is enabled to cycle rooms
 */
-import bitsy from "bitsy";
+import bitsy from 'bitsy';
 import {
-	after
-} from "./helpers/kitsy-script-toolkit";
+	after,
+} from './helpers/kitsy-script-toolkit';
 
 var noClip = false;
 
@@ -36,20 +36,13 @@ var toggleNoClip = function () {
 	noClip = !noClip;
 	if (noClip) {
 		// disable functions
-		bitsy.getSpriteAt =
-		bitsy.isWallLeft =
-		bitsy.isWallRight =
-		bitsy.isWallUp =
-		bitsy.isWallDown =
-		bitsy.getExit =
-		bitsy.getEnding =
-		function () {
+		bitsy.getSpriteAt = bitsy.isWallLeft = bitsy.isWallRight = bitsy.isWallUp = bitsy.isWallDown = bitsy.getExit = bitsy.getEnding = function () {
 			return null;
 		};
 		bitsy.getItemIndex = function () {
 			return -1;
 		};
-		console.log("noclip enabled");
+		console.log('noclip enabled');
 	} else {
 		// re-enable functions
 		bitsy.getSpriteAt = _getSpriteAt;
@@ -60,7 +53,7 @@ var toggleNoClip = function () {
 		bitsy.getExit = _getExit;
 		bitsy.getEnding = _getEnding;
 		bitsy.getItemIndex = _getItemIndex;
-		console.log("noclip disabled");
+		console.log('noclip disabled');
 	}
 };
 

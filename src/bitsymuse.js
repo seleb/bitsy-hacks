@@ -35,15 +35,15 @@ By default, music tracks automatically restart from the beginning if you go back
 This can also be changed in the hackOptions below.
 */
 
-'use strict';
-import bitsy from "bitsy";
+
+import bitsy from 'bitsy';
 import {
-	getRoom
-} from "./helpers/utils";
+	getRoom,
+} from './helpers/utils';
 import {
 	after,
-	addDualDialogTag
-} from "./helpers/kitsy-script-toolkit";
+	addDualDialogTag,
+} from './helpers/kitsy-script-toolkit';
 
 export var hackOptions = {
 	// You need to put an entry in this list for every room ID or name that is accessible by the player,
@@ -56,7 +56,7 @@ export var hackOptions = {
 		1: 'S', // This room is silent - it will stop music when you enter (see `silenceId` below)
 		2: 'another song ID',
 		h: 'a song ID for a room with a non-numeric ID',
-		'my room': 'a song ID for a room with a user-defined name'
+		'my room': 'a song ID for a room with a user-defined name',
 	},
 	silenceId: 'S', // Use this song ID of to make a room fall silent.
 	resume: false, // If true, songs will pause/resume on change; otherwise, they'll stop/play (doesn't affect sound effects)

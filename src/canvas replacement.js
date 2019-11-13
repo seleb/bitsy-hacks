@@ -38,23 +38,23 @@ void main(){
 	},
 };
 */
-import WebGLazy from "webglazy";
+import WebGLazy from 'webglazy';
 import {
-	after
-} from "./helpers/kitsy-script-toolkit";
+	after,
+} from './helpers/kitsy-script-toolkit';
 
 export var hackOptions = {
 	glazyOptions: {
-		background: "black",
-		scaleMode: "MULTIPLES", // use "FIT" if you prefer size to pixel accuracy
+		background: 'black',
+		scaleMode: 'MULTIPLES', // use "FIT" if you prefer size to pixel accuracy
 		allowDownscaling: true,
 		disableFeedbackTexture: true, // set this to false if you want to use the feedback texture
 	},
-	init: function(glazy) {
+	init: function (glazy) {
 		// you can set up any custom uniforms you have here if needed
 		// e.g. glazy.glLocations.myUniform = glazy.gl.getUniformLocation(glazy.shader.program, 'myUniform');
 	},
-	update: function(glazy) {
+	update: function (glazy) {
 		// you can update any custom uniforms you have here if needed
 		// e.g. glazy.gl.uniform1f(glazy.glLocations.myUniform, 0);
 	},

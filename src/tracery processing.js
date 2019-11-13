@@ -39,10 +39,10 @@ can create
 
 See http://www.crystalcodepalace.com/traceryTut.html for more on how to use tracery
 */
-import tracery from "tracery-grammar";
+import tracery from 'tracery-grammar';
 import {
-	before
-} from "./helpers/kitsy-script-toolkit";
+	before,
+} from './helpers/kitsy-script-toolkit';
 
 export var hackOptions = {
 	// put your grammar entries here

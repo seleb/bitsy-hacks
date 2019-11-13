@@ -27,10 +27,11 @@ NOTE: The combining operators (&&, ||, &&!, ||!) have lower precedence than
       condition, be sure to test every possibility to make sure it behaves
       the way you want.
 */
-'use strict';
+
+
 import {
-	inject
-} from "./helpers/kitsy-script-toolkit";
+	inject,
+} from './helpers/kitsy-script-toolkit';
 
 function andExp(environment, left, right, onReturn) {
 	right.Eval(environment, function (rVal) {
@@ -72,7 +73,7 @@ function orNotExp(environment, left, right, onReturn) {
 	});
 }
 
-inject(/(operatorMap\.set\("-", subExp\);)/,`
+inject(/(operatorMap\.set\("-", subExp\);)/, `
 	$1
 	operatorMap.set("&&", ${andExp.toString()});
 	operatorMap.set("||", ${orExp.toString()});
@@ -82,6 +83,6 @@ inject(/(operatorMap\.set\("-", subExp\);)/,`
 `);
 inject(
 	/(var operatorSymbols = \[.+\];)/,
-	'$1operatorSymbols.unshift("!==", "&&", "||", "&&!", "||!");'
+	'$1operatorSymbols.unshift("!==", "&&", "||", "&&!", "||!");',
 );
 // End of logic operators mod

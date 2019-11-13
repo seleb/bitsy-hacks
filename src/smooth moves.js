@@ -18,7 +18,7 @@ HOW TO USE:
 import {
 	before,
 	after,
-} from "./helpers/kitsy-script-toolkit";
+} from './helpers/kitsy-script-toolkit';
 import bitsy from 'bitsy';
 
 export var hackOptions = {
@@ -27,7 +27,7 @@ export var hackOptions = {
 	// max distance to allow tweens
 	delta: 1.5,
 	// easing function
-	ease: function(t) {
+	ease: function (t) {
 		t = 1 - Math.pow(1 - t, 2);
 		return t;
 	},
@@ -36,6 +36,7 @@ export var hackOptions = {
 // smooth move
 var tweens = {};
 var sprites = {};
+
 function addTween(spr, fromX, fromY, toX, toY) {
 	if (Math.abs(toX - fromX) + Math.abs(toY - fromY) > hackOptions.delta) {
 		delete tweens[spr];
@@ -48,14 +49,14 @@ function addTween(spr, fromX, fromY, toX, toY) {
 		t.start = bitsy.prevTime;
 	}
 }
-before('onready', function() {
+before('onready', function () {
 	tweens = {};
 	sprites = {};
 });
 
 // listen for changes in sprite positions to add tweens
-before('update', function() {
-	Object.values(bitsy.sprite).forEach(spr => {
+before('update', function () {
+	Object.values(bitsy.sprite).forEach((spr) => {
 		if (spr.room === bitsy.curRoom) {
 			var s = sprites[spr.id] = sprites[spr.id] || {};
 			s.x = spr.x;
@@ -65,6 +66,7 @@ before('update', function() {
 		}
 	});
 });
+
 function addTweens() {
 	Object.entries(sprites).forEach(function (entry) {
 		var spr = bitsy.sprite[entry[0]];

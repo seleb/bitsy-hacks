@@ -36,20 +36,22 @@ e.g.
 	2.0 = will corrupt twice
 	3.5 = will corrupt thrice, and corrupt a fourth time with a probability of one in two
 */
-import bitsy from "bitsy";
+import bitsy from 'bitsy';
 import {
 	getSpriteData,
 	getTileData,
 	getItemData,
 	setSpriteData,
 	setTileData,
-	setItemData
-} from "./helpers/edit image at runtime";
-import { after } from "./helpers/kitsy-script-toolkit";
+	setItemData,
+} from './helpers/edit image at runtime';
+import {
+	after,
+} from './helpers/kitsy-script-toolkit';
 
-///////////
+// /////////
 // setup //
-///////////
+// /////////
 export var hackOptions = {
 	tilemapFreq: 1,
 	tilePixelsFreq: 1,
@@ -65,14 +67,16 @@ export var hackOptions = {
 // hook corruption to player movement
 after('onPlayerMoved', corrupt);
 
-//////////////////
+// ////////////////
 // corrupt code //
-//////////////////
+// ////////////////
 
 // get a reference to the fontdata
 var fontdata;
-after('dialogRenderer.SetFont', function(font) {
-	fontdata = Object.values(font.getData()).map(function(char){ return char.data; });
+after('dialogRenderer.SetFont', function (font) {
+	fontdata = Object.values(font.getData()).map(function (char) {
+		return char.data;
+	});
 });
 
 function corrupt() {
@@ -85,7 +89,7 @@ function corrupt() {
 			visibleTiles[currentRoom.tilemap[y][x]] = true;
 		}
 	}
-	delete visibleTiles["0"]; // empty tile doesn't actually exist
+	delete visibleTiles['0']; // empty tile doesn't actually exist
 	visibleTiles = Object.keys(visibleTiles);
 	if (visibleTiles.length > 0) {
 		iterate(hackOptions.tilePixelsFreq * hackOptions.globalFreq, function () {
@@ -139,7 +143,7 @@ function corrupt() {
 
 	// corrupt current room's tilemap
 	var possibleTiles = Object.keys(bitsy.tile);
-	possibleTiles.push("0"); // empty tile
+	possibleTiles.push('0'); // empty tile
 	iterate(hackOptions.tilemapFreq * hackOptions.globalFreq, function () {
 		// pick a tile at random in the current room and assign it a random tile
 		y = Math.floor(Math.random() * bitsy.mapsize);
@@ -166,9 +170,9 @@ function corrupt() {
 	});
 }
 
-/////////////
+// ///////////
 // helpers //
-/////////////
+// ///////////
 
 // helper for iteratively calling a function
 function iterate(i, fn) {

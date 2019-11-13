@@ -15,7 +15,10 @@ HOW TO USE:
 2. Edit `onLetter` below as needed
 */
 import bitsy from 'bitsy';
-import { inject, before } from './helpers/kitsy-script-toolkit';
+import {
+	inject,
+	before,
+} from './helpers/kitsy-script-toolkit';
 
 var hackOptions = {
 	// function called for each character printed to the dialog box
@@ -38,7 +41,7 @@ var hackOptions = {
 	//
 	// note that the character may not always be defined (e.g. during bitsy dialog commands)
 	// so be sure to guard against null data if modifying the implementation
-	onLetter: function(dialogChar) {
+	onLetter: function (dialogChar) {
 		var character = (dialogChar || {}).char || '';
 		var id = 'dialog-' + character.toLowerCase();
 		var audioEl = document.getElementById(id);
@@ -53,6 +56,6 @@ var hackOptions = {
 inject(/(function DialogFontChar\(font, char, effectList\) {)/, '$1\nthis.char = char;');
 
 // hook up letter function
-before('dialogBuffer.DoNextChar', function() {
+before('dialogBuffer.DoNextChar', function () {
 	hackOptions.onLetter(bitsy.dialogBuffer.CurChar());
 });

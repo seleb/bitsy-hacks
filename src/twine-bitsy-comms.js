@@ -47,11 +47,11 @@ HOW TO USE:
 3. Add `.bitsy { ... }` CSS to the Story Stylesheet of your Twine game
 4. Edit the variable naming functions below as needed
 */
-import bitsy from "bitsy";
+import bitsy from 'bitsy';
 import {
 	after,
-	addDualDialogTag
-} from "./helpers/kitsy-script-toolkit";
+	addDualDialogTag,
+} from './helpers/kitsy-script-toolkit';
 
 var hackOptions = {
 	// how dialog variables will be named when they are sent out
@@ -80,13 +80,13 @@ var hackOptions = {
 	send: function (type, data) {
 		window.parent.postMessage({
 			type: type,
-			data: data
+			data: data,
 		}, '*');
 	},
 	// how info will be received from external process
 	// default implementation is for parent page postMessage-ing into iframe
 	receive: function () {
-		window.addEventListener("message", function (event) {
+		window.addEventListener('message', function (event) {
 			var type = event.data.type;
 			var data = event.data.data;
 			receiveMessage(type, data);
@@ -101,19 +101,19 @@ hackOptions.receive();
 
 function receiveMessage(type, data) {
 	switch (type) {
-		case 'variables':
-			var state = sending;
-			sending = false;
-			Object.entries(data).forEach(function (entry) {
-				var name = entry[0];
-				var value = entry[1];
-				bitsy.scriptInterpreter.SetVariable(hackOptions.variableNameIn(name), value);
-			});
-			sending = state;
-			break;
-		default:
-			console.warn('Unhandled message from outside Bitsy:', type, data);
-			break;
+	case 'variables':
+		var state = sending;
+		sending = false;
+		Object.entries(data).forEach(function (entry) {
+			var name = entry[0];
+			var value = entry[1];
+			bitsy.scriptInterpreter.SetVariable(hackOptions.variableNameIn(name), value);
+		});
+		sending = state;
+		break;
+	default:
+		console.warn('Unhandled message from outside Bitsy:', type, data);
+		break;
 	}
 }
 
@@ -121,7 +121,7 @@ function receiveMessage(type, data) {
 function sendVariable(name, value) {
 	hackOptions.send('variable', {
 		name: name,
-		value: value
+		value: value,
 	});
 }
 after('onVariableChanged', function (name) {
@@ -151,7 +151,7 @@ after('startExportedGame', function () {
 [
 	'eval',
 	'play',
-	'back'
+	'back',
 ].forEach(function (command) {
 	function doCommand(environment, parameters) {
 		hackOptions.send(command, parameters[0]);

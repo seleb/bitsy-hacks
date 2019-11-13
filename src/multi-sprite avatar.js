@@ -23,38 +23,38 @@ HOW TO USE:
 2. Edit `pieces` below to customize the multi-sprite avatar
 	Pieces must have an x,y offset and a sprite id
 */
-import bitsy from "bitsy";
+import bitsy from 'bitsy';
 import {
 	before,
-	after
-} from "./helpers/kitsy-script-toolkit";
+	after,
+} from './helpers/kitsy-script-toolkit';
 import {
-	getImage
-} from "./helpers/utils";
+	getImage,
+} from './helpers/utils';
 
 export var hackOptions = {
 	pieces: [{
 		x: 0,
 		y: 0,
-		spr: 'c'
+		spr: 'c',
 	}, {
 		x: 1,
 		y: 0,
-		spr: 'd'
+		spr: 'd',
 	}, {
 		x: 0,
 		y: 1,
-		spr: 'e'
+		spr: 'e',
 	}, {
 		x: 1,
 		y: 1,
-		spr: 'f'
+		spr: 'f',
 	}],
-	enabledOnStart: true
+	enabledOnStart: true,
 };
 
 if (hackOptions.enabledOnStart) {
-	after("onready", enableBig);
+	after('onready', enableBig);
 }
 
 var enabled = false;
@@ -108,7 +108,7 @@ var getEndingOverride = function (roomId, x, y) {
 			return e;
 		}
 	}
-}
+};
 var getExitOverride = function (roomId, x, y) {
 	for (var i = 0; i < pieces.length; ++i) {
 		var piece = pieces[i];
@@ -117,15 +117,15 @@ var getExitOverride = function (roomId, x, y) {
 			return e;
 		}
 	}
-}
-before("movePlayer", function () {
+};
+before('movePlayer', function () {
 	if (enabled) {
 		bitsy.getItemIndex = getItemIndexOverride;
 		bitsy.getEnding = getEndingOverride;
 		bitsy.getExit = getExitOverride;
 	}
 });
-after("movePlayer", function () {
+after('movePlayer', function () {
 	bitsy.getItemIndex = _getItemIndex;
 	bitsy.getEnding = _getEnding;
 	bitsy.getExit = _getExit;
@@ -159,7 +159,7 @@ var repeats = [
 	'isWallLeft',
 	'isWallRight',
 	'isWallUp',
-	'isWallDown'
+	'isWallDown',
 ];
 
 // prevent player from colliding with their own pieces
@@ -183,5 +183,5 @@ after('startExportedGame', function () {
 	var _getSpriteAt = bitsy.getSpriteAt;
 	bitsy.getSpriteAt = function () {
 		return filterPieces(_getSpriteAt.apply(this, arguments));
-	}
+	};
 });

@@ -35,11 +35,11 @@ HOW TO USE:
 1. Copy-paste this script into a script tag after the bitsy source
 2. Edit the hackOptions object as needed
 */
-import bitsy from "bitsy";
+import bitsy from 'bitsy';
 import {
 	addDialogTag,
-	after
-} from "./helpers/kitsy-script-toolkit";
+	after,
+} from './helpers/kitsy-script-toolkit';
 
 export var hackOptions = {
 	// influences the resolution of the drawn image
@@ -54,7 +54,7 @@ export var hackOptions = {
 	// - online urls (which are not guaranteed to work as they are network-dependent)
 	// - base64-encoded images (the most reliable but unwieldy)
 	portraits: {
-		'cat': './cat.png',
+		cat: './cat.png',
 	},
 	autoReset: true, // if true, automatically resets the portrait to blank when dialog is exited
 };
@@ -65,9 +65,9 @@ export var state = {
 };
 
 // preload images into a cache
-after('startExportedGame', function() {
+after('startExportedGame', function () {
 	for (var i in hackOptions.portraits) {
-		if(Object.prototype.hasOwnProperty.call(hackOptions.portraits, i)) {
+		if (Object.prototype.hasOwnProperty.call(hackOptions.portraits, i)) {
 			state.portraits[i] = new Image();
 			state.portraits[i].src = hackOptions.portraits[i];
 		}
@@ -104,7 +104,7 @@ after('drawRoom', function () {
 	}
 });
 
-after('onExitDialog', function() {
+after('onExitDialog', function () {
 	if (hackOptions.autoReset) {
 		state.portrait = '';
 	}

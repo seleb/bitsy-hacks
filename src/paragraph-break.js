@@ -8,13 +8,13 @@
 @author Sean S. LeBlanc, David Mowatt
 
 @description
-Adds a (p) tag to the dialogue parser that forces the following text to 
+Adds a (p) tag to the dialogue parser that forces the following text to
 start on a fresh dialogue screen, eliminating the need to spend hours testing
 line lengths or adding multiple line breaks that then have to be reviewed
 when you make edits or change the font size.
 
 Usage: (p)
-       
+
 Example: I am a cat(p)and my dialogue contains multitudes
 
 HOW TO USE:
@@ -30,16 +30,16 @@ NOTE: This uses parentheses "()" instead of curly braces "{}" around function
       For full editor integration, you'd *probably* also need to paste this
       code at the end of the editor's `bitsy.js` file. Untested.
 */
-'use strict';
+
 
 import {
 	addDialogTag,
-} from "./helpers/kitsy-script-toolkit";
-import "./helpers/addParagraphBreak";
+} from './helpers/kitsy-script-toolkit';
+import './helpers/addParagraphBreak';
 
-//Adds the actual dialogue tag. No deferred version is required.
-addDialogTag('p', function(environment, parameters, onReturn){
-    environment.GetDialogBuffer().AddParagraphBreak();
-    onReturn(null);
+// Adds the actual dialogue tag. No deferred version is required.
+addDialogTag('p', function (environment, parameters, onReturn) {
+	environment.GetDialogBuffer().AddParagraphBreak();
+	onReturn(null);
 });
 // End of (p) paragraph break mod

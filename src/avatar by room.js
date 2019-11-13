@@ -17,15 +17,15 @@ HOW TO USE:
 By default, the avatar will reset to the default if you enter a room without a sprite defined.
 This can also be changed in the hackOptions below to instead apply avatar changes permanently.
 */
-import bitsy from "bitsy";
+import bitsy from 'bitsy';
 import {
 	getRoom,
-	getImage
-} from "./helpers/utils";
+	getImage,
+} from './helpers/utils';
 import {
 	after,
-	before
-} from "./helpers/kitsy-script-toolkit";
+	before,
+} from './helpers/kitsy-script-toolkit';
 
 export var hackOptions = {
 	permanent: false, // If true, avatar changes will persist across rooms without sprites defined
@@ -37,7 +37,7 @@ export var hackOptions = {
 		1: 'A', // note that 'A' is the player sprite, so this does nothing by default, but will reset the player if permanent == true
 		2: 'another sprite ID',
 		h: 'a sprite ID for a room with a non-numeric ID',
-		'my room': 'a sprite ID for a room with a user-defined name'
+		'my room': 'a sprite ID for a room with a user-defined name',
 	},
 };
 
@@ -64,14 +64,13 @@ before('update', function () {
 		var newAvatarId = hackOptions.avatarByRoom[currentRoom];
 		if (
 			(!newAvatarId && !hackOptions.permanent) // if no sprite defined + not permanent, reset
-			||
-			(newAvatarId === bitsy.playerId) // manual reset
+			|| (newAvatarId === bitsy.playerId) // manual reset
 		) {
 			bitsy.player().drw = originalAvatar;
 			return;
 		}
 		if (newAvatarId === bitsy.playerId) {
-			bitsy.player().drw
+			bitsy.player().drw;
 		}
 		var newAvatar = getImage(newAvatarId, bitsy.sprite);
 		if (!newAvatar) {

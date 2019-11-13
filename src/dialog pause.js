@@ -17,8 +17,8 @@ HOW TO USE:
 Copy-paste into a script tag after the bitsy source
 */
 import {
-	addDialogTag
-} from "./helpers/kitsy-script-toolkit";
+	addDialogTag,
+} from './helpers/kitsy-script-toolkit';
 
 addDialogTag('pause', function (environment, parameters, onReturn) {
 	environment.GetDialogBuffer().Update(-parseFloat(parameters[0]));

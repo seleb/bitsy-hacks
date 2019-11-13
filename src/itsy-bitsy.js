@@ -25,8 +25,8 @@ but most of the numbers being replaced can be easily
 customized if you want slightly different sizes/positions.
 */
 import {
-	inject
-} from "./helpers/kitsy-script-toolkit";
+	inject,
+} from './helpers/kitsy-script-toolkit';
 
 export var hackOptions = {
 	rows: 2, // number of rows per text box (bitsy default is 2)
@@ -52,7 +52,7 @@ inject(/(var textboxInfo = {)[^]*?(};)/, '$1' + [
 	'bottom : 1,',
 	'font_scale : 1,',
 	'padding_vert : 2,',
-	'arrow_height : 5'
+	'arrow_height : 5',
 ].join('\n') + '$2');
 inject(/(top = \()4/, '$1 1');
 inject(/(left = \()4/, '$1 1');

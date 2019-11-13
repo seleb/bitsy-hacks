@@ -52,11 +52,11 @@ HOW TO USE:
 1. Copy-paste this script into a script tag after the bitsy source
 2. Update the `hackOptions` object at the top of the script with your custom effects
 */
-import bitsy from "bitsy";
+import bitsy from 'bitsy';
 import {
 	before,
 	inject,
-} from "./helpers/kitsy-script-toolkit";
+} from './helpers/kitsy-script-toolkit';
 
 export var hackOptions = {
 	// a simple crossfade example effect
@@ -69,7 +69,7 @@ export var hackOptions = {
 			var a = start.Image.GetPixel(pixelX, pixelY);
 			var b = end.Image.GetPixel(pixelX, pixelY);
 			return bitsy.PostProcessUtilities.LerpColor(a, b, delta);
-		}
+		},
 	},
 };
 
