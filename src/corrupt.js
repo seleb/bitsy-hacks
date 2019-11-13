@@ -80,15 +80,14 @@ after('dialogRenderer.SetFont', function (font) {
 });
 
 function corrupt() {
-	var i;
 	var currentRoom = bitsy.room[bitsy.curRoom];
 	// corrupt pixels of visible tiles
 	var visibleTiles = {};
-	for (var y = 0; y < bitsy.mapsize; ++y) {
-		for (var x = 0; x < bitsy.mapsize; ++x) {
-			visibleTiles[currentRoom.tilemap[y][x]] = true;
-		}
-	}
+	currentRoom.tilemap.forEach(function (row) {
+		row.forEach(function (tile) {
+			visibleTiles[tile] = true;
+		});
+	});
 	delete visibleTiles['0']; // empty tile doesn't actually exist
 	visibleTiles = Object.keys(visibleTiles);
 	if (visibleTiles.length > 0) {
@@ -105,10 +104,10 @@ function corrupt() {
 
 	// corrupt pixels of visible sprites
 	var visibleSprites = {};
-	for (i in bitsy.sprite) {
-		if (Object.prototype.hasOwnProperty.call(bitsy.sprite, i)) {
-			if (bitsy.sprite[i].room === bitsy.curRoom) {
-				visibleSprites[i] = true;
+	for (var spr in bitsy.sprite) {
+		if (Object.prototype.hasOwnProperty.call(bitsy.sprite, spr)) {
+			if (bitsy.sprite[spr].room === bitsy.curRoom) {
+				visibleSprites[spr] = true;
 			}
 		}
 	}
@@ -125,9 +124,9 @@ function corrupt() {
 
 	// corrupt pixels of visible items
 	var visibleItems = {};
-	for (i = 0; i < currentRoom.items.length; ++i) {
-		visibleItems[currentRoom.items[i].id] = true;
-	}
+	currentRoom.items.forEach(function (item) {
+		visibleItems[item.id] = true;
+	});
 	visibleItems = Object.keys(visibleItems);
 	if (visibleItems.length > 0) {
 		iterate(hackOptions.itemPixelsFreq * hackOptions.globalFreq, function () {

@@ -194,9 +194,9 @@ export var hackOptions = {
 		return 'floor';
 	},
 	// controls how the 'billboard' type behaves
-	// recommendation: the default provided below, or BABYLON.TransformNode.BILLBOARDMODE_ALL
-	getBillboardMode: function (BABYLON) {
-		return BABYLON.TransformNode.BILLBOARDMODE_Y | BABYLON.TransformNode.BILLBOARDMODE_Z;
+	// recommendation: the default provided below, or babylon.TransformNode.BILLBOARDMODE_ALL
+	getBillboardMode: function (babylon) {
+		return babylon.TransformNode.BILLBOARDMODE_Y | babylon.TransformNode.BILLBOARDMODE_Z;
 	},
 	// If true, textures will be preloaded before they're needed while idle
 	// it's recommended to keep this on for more consistent performance post-startup
@@ -535,12 +535,12 @@ canvas:focus { outline: none; }
 			});
 			[].concat(items, tiles, sprites).forEach(function (drawing) {
 				requestIdleCallback(function () {
-					var f = drawing.animation.frameIndex;
-					for (var i = 0; i < drawing.animation.frameCount; ++i) {
-						drawing.animation.frameIndex = i;
+					var originalFrame = drawing.animation.frameIndex;
+					for (var frame = 0; frame < drawing.animation.frameCount; ++frame) {
+						drawing.animation.frameIndex = frame;
 						getTexture(drawing, room.pal);
 					}
-					drawing.animation.frameIndex = f;
+					drawing.animation.frameIndex = originalFrame;
 				});
 			});
 		});

@@ -121,12 +121,12 @@ export var hackOptions = {
 		// puts letters through the rot13 cipher (see www.rot13.com)
 		this.DoEffect = function (char) {
 			window.customTextEffects.saveOriginalChar(char);
-			var c = char.original.replace(/[a-z]/, function (c) {
+			var bitmap = char.original.replace(/[a-z]/, function (c) {
 				return String.fromCharCode((c.codePointAt(0) - 97 + 13) % 26 + 97);
 			}).replace(/[A-Z]/, function (c) {
 				return String.fromCharCode((c.codePointAt(0) - 65 + 13) % 26 + 65);
 			});
-			window.customTextEffects.setBitmap(char, c);
+			window.customTextEffects.setBitmap(char, bitmap);
 		};
 	},
 	sponge: function () {
