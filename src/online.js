@@ -121,6 +121,8 @@ function onData(event) {
 			setSpriteData(event.from, frame, data.data[frame]);
 		}
 		break;
+	default:
+		break;
 	}
 }
 
