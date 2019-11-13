@@ -156,7 +156,7 @@ export var hackOptions = {
 				lastSpace = char.col - 1;
 			}
 			lastCol = char.col;
-			char.offset.y -= Math.pow(char.col - lastSpace, 1.5) * (Math.sin(time / 120 + char.col / 2));
+			char.offset.y -= ((char.col - lastSpace) ** 1.5) * (Math.sin(time / 120 + char.col / 2));
 		};
 	},
 };

@@ -142,7 +142,7 @@ function editPalette(environment, parameters) {
 		throw new Error('Target "' + tgtId + '" was not the id/name of a ' + mapId + '.');
 	}
 	var palObj = parseInt(palId, 10);
-	if (window.isNaN(palObj)) {
+	if (Number.isNaN(Number(palObj))) {
 		throw new Error('Palette "' + palId + '" was not a number.');
 	}
 

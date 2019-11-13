@@ -463,7 +463,7 @@ addDualDialogTag('toggleGravity', function () {
 
 addDualDialogTag('setJumpPower', function (env, params) {
 	var amt = params[0];
-	if (window.isNaN(amt - 1)) {
+	if (Number.isNaN(amt - 1)) {
 		// 1 or '1' are valid but not 'one'
 		console.error('gravity: setJumpPower failed, expected a number, but got ', amt);
 	} else {

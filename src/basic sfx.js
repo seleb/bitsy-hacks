@@ -38,7 +38,7 @@ before('startExportedGame', function () {
 	function playSound(sound) {
 		if (hackOptions.beNiceToEars) {
 			// reduce volume if played recently
-			sound.volume = Math.min(1.0, Math.max(0.25, Math.pow((bitsy.prevTime - sound.lastPlayed) * 0.002, 0.5)));
+			sound.volume = Math.min(1.0, Math.max(0.25, ((bitsy.prevTime - sound.lastPlayed) * 0.002 ** 0.5)));
 			sound.lastPlayed = bitsy.prevTime;
 		}
 

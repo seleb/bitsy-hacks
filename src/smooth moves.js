@@ -28,7 +28,7 @@ export var hackOptions = {
 	delta: 1.5,
 	// easing function
 	ease: function (t) {
-		t = 1 - Math.pow(1 - t, 2);
+		t = 1 - ((1 - t) ** 2);
 		return t;
 	},
 };

@@ -242,7 +242,7 @@ export var hackOptions = {
 	delta: 1.5,
 	// easing function
 	ease: function (t) {
-		t = 1 - Math.pow(1 - t, 2);
+		t = 1 - ((1 - t) ** 2);
 		return t;
 	},
 };
@@ -615,7 +615,7 @@ after('update', function () {
 	}
 	update();
 	if (hackOptions.tankControls) {
-		scene.activeCamera.alpha = tankFrom + (tankTarget - tankFrom) * (1.0 - Math.pow(1.0 - Math.min((bitsy.prevTime - tankTime) / 200, 1), 2.0));
+		scene.activeCamera.alpha = tankFrom + (tankTarget - tankFrom) * (1.0 - ((1.0 - Math.min((bitsy.prevTime - tankTime) / 200, 1)) ** 2.0));
 	}
 	if (prevRoom !== bitsy.curRoom) {
 		scene.blockMaterialDirtyMechanism = false;
