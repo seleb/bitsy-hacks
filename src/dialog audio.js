@@ -3,7 +3,7 @@
 @file dialog audio
 @summary animal crossing-style audio
 @license MIT
-@version 1.0.1
+@version 1.0.2
 @author Sean S. LeBlanc
 
 @description
@@ -20,7 +20,7 @@ import {
 	before,
 } from './helpers/kitsy-script-toolkit';
 
-var hackOptions = {
+export var hackOptions = {
 	// function called for each character printed to the dialog box
 	// the single parameter is the character with the following properties:
 	// 	offset: offset from actual position in pixels. starts at {x:0, y:0}

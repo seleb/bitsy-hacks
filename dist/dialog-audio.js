@@ -3,7 +3,7 @@
 @file dialog audio
 @summary animal crossing-style audio
 @license MIT
-@version 1.0.1
+@version 1.0.2
 @author Sean S. LeBlanc
 
 @description
@@ -14,7 +14,8 @@ HOW TO USE:
 1. Copy-paste into a script tag after the bitsy source
 2. Edit `onLetter` below as needed
 */
-(function (bitsy) {
+this.hacks = this.hacks || {};
+(function (exports, bitsy) {
 'use strict';
 var hackOptions = {
 	// function called for each character printed to the dialog box
@@ -263,4 +264,6 @@ before('dialogBuffer.DoNextChar', function () {
 	hackOptions.onLetter(bitsy.dialogBuffer.CurChar());
 });
 
-}(window));
+exports.hackOptions = hackOptions;
+
+}(this.hacks.dialog_audio = this.hacks.dialog_audio || {}, window));
