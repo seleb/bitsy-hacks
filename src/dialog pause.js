@@ -3,7 +3,7 @@
 @file dialog pause
 @summary add pauses in between printing text
 @license MIT
-@version 1.1.3
+@version 1.1.4
 @author Sean S. LeBlanc
 
 @description
@@ -17,8 +17,8 @@ HOW TO USE:
 Copy-paste into a script tag after the bitsy source
 */
 import {
-	addDialogTag
-} from "./helpers/kitsy-script-toolkit";
+	addDialogTag,
+} from './helpers/kitsy-script-toolkit';
 
 addDialogTag('pause', function (environment, parameters, onReturn) {
 	environment.GetDialogBuffer().Update(-parseFloat(parameters[0]));

@@ -3,7 +3,7 @@
 @file transparent sprites
 @summary makes all sprites have transparent backgrounds
 @license MIT
-@version 4.0.4
+@version 4.0.5
 @requires Bitsy Version: 6.1
 @author Sean S. LeBlanc
 
@@ -20,9 +20,9 @@ this.hacks = this.hacks || {};
 'use strict';
 var hackOptions = {
 	isTransparent: function (drawing) {
-		//return drawing.name == 'tea'; // specific transparent drawing
-		//return ['tea', 'flower', 'hat'].indexOf(drawing.name) !== -1; // specific transparent drawing list
-		//return drawing.name && drawing.name.indexOf('TRANSPARENT') !== -1; // transparent drawing flag in name
+		// return drawing.name == 'tea'; // specific transparent drawing
+		// return ['tea', 'flower', 'hat'].indexOf(drawing.name) !== -1; // specific transparent drawing list
+		// return drawing.name && drawing.name.indexOf('TRANSPARENT') !== -1; // transparent drawing flag in name
 		return true; // all drawings are transparent
 	},
 };
@@ -226,7 +226,7 @@ function _reinitEngine() {
 
 var madeTransparent;
 var makeTransparent;
-before('onready', function() {
+before('onready', function () {
 	madeTransparent = {};
 	makeTransparent = false;
 });

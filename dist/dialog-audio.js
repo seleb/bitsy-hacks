@@ -3,7 +3,7 @@
 @file dialog audio
 @summary animal crossing-style audio
 @license MIT
-@version 1.0.0
+@version 1.0.1
 @author Sean S. LeBlanc
 
 @description
@@ -37,7 +37,7 @@ var hackOptions = {
 	//
 	// note that the character may not always be defined (e.g. during bitsy dialog commands)
 	// so be sure to guard against null data if modifying the implementation
-	onLetter: function(dialogChar) {
+	onLetter: function (dialogChar) {
 		var character = (dialogChar || {}).char || '';
 		var id = 'dialog-' + character.toLowerCase();
 		var audioEl = document.getElementById(id);
@@ -259,7 +259,7 @@ function _reinitEngine() {
 inject$1(/(function DialogFontChar\(font, char, effectList\) {)/, '$1\nthis.char = char;');
 
 // hook up letter function
-before('dialogBuffer.DoNextChar', function() {
+before('dialogBuffer.DoNextChar', function () {
 	hackOptions.onLetter(bitsy.dialogBuffer.CurChar());
 });
 

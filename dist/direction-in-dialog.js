@@ -3,7 +3,7 @@
 @file direction in dialog
 @summary provides a variable with player direction
 @license MIT
-@version 1.1.3
+@version 1.1.4
 @requires 5.3
 @author Sean S. LeBlanc
 
@@ -222,10 +222,10 @@ function _reinitEngine() {
 
 
 var keys = {};
-keys[bitsy.Direction.Up] = "up";
-keys[bitsy.Direction.Down] = "down";
-keys[bitsy.Direction.Left] = "left";
-keys[bitsy.Direction.Right] = "right";
+keys[bitsy.Direction.Up] = 'up';
+keys[bitsy.Direction.Down] = 'down';
+keys[bitsy.Direction.Left] = 'left';
+keys[bitsy.Direction.Right] = 'right';
 keys[bitsy.Direction.None] = null;
 
 before('startDialog', function () {

@@ -3,7 +3,7 @@
 @file dialog jump
 @summary jump from one dialog entry to another
 @license MIT
-@version 1.1.5
+@version 1.1.6
 @requires 5.3
 @author Sean S. LeBlanc
 
@@ -31,11 +31,12 @@ this will print forever(jump "DLG_infinite_loop")
 HOW TO USE:
 Copy-paste into a script tag after the bitsy source
 */
-'use strict';
-import bitsy from "bitsy";
+
+
+import bitsy from 'bitsy';
 import {
-	addDualDialogTag
-} from "./helpers/kitsy-script-toolkit";
+	addDualDialogTag,
+} from './helpers/kitsy-script-toolkit';
 
 // jump function
 function jump(targetDialog) {

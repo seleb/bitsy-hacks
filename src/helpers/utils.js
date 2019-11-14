@@ -100,7 +100,7 @@ export function unique(array) {
  * @param {Function} onReturn Bitsy onReturn function; third param to a dialog function
  */
 export function printDialog(environment, text, onReturn) {
-	environment.GetDialogBuffer().AddText(text, function() {
+	environment.GetDialogBuffer().AddText(text, function () {
 		onReturn(null);
 	});
 }

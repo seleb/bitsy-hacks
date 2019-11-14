@@ -3,7 +3,7 @@
 @file stopwatch
 @summary time player actions
 @license MIT
-@version 1.2.4
+@version 1.2.5
 @author Lenny Magner
 
 @description
@@ -39,15 +39,16 @@ NOTE: This uses parentheses "()" instead of curly braces "{}" around function
       For full editor integration, you'd *probably* also need to paste this
       code at the end of the editor's `bitsy.js` file. Untested.
 */
-"use strict";
+
+
 import {
 	addDialogTag,
 	addDualDialogTag,
-	before
-} from "./helpers/kitsy-script-toolkit";
+	before,
+} from './helpers/kitsy-script-toolkit';
 import {
-	printDialog
-} from "./helpers/utils";
+	printDialog,
+} from './helpers/utils';
 
 export var hackOptions = {
 	// function which returns the string which bitsy will print
@@ -62,10 +63,10 @@ export var hackOptions = {
 		var mins = time.getUTCMinutes();
 		var secs = time.getUTCSeconds();
 		if (secs < 10) {
-			secs = "0" + secs;
+			secs = '0' + secs;
 		}
-		return mins + ":" + secs;
-	}
+		return mins + ':' + secs;
+	},
 };
 
 function getTimeDifferenceInMs(timer) {
@@ -79,7 +80,7 @@ function startWatch(environment, parameters) {
 	var id = parameters[0];
 	timers[id] = {
 		start: Date.now(),
-		end: undefined
+		end: undefined,
 	};
 }
 
@@ -90,7 +91,8 @@ function resumeWatch(environment, parameters) {
 
 	// just start the timer if there isn't one
 	if (!timer) {
-		return startWatch(environment, parameters);
+		startWatch(environment, parameters);
+		return;
 	}
 
 	// don't do anything if the timer's not running

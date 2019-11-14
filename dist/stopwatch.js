@@ -3,7 +3,7 @@
 @file stopwatch
 @summary time player actions
 @license MIT
-@version 1.2.4
+@version 1.2.5
 @author Lenny Magner
 
 @description
@@ -55,10 +55,10 @@ var hackOptions = {
 		var mins = time.getUTCMinutes();
 		var secs = time.getUTCSeconds();
 		if (secs < 10) {
-			secs = "0" + secs;
+			secs = '0' + secs;
 		}
-		return mins + ":" + secs;
-	}
+		return mins + ':' + secs;
+	},
 };
 
 bitsy = bitsy && bitsy.hasOwnProperty('default') ? bitsy['default'] : bitsy;
@@ -127,7 +127,7 @@ function unique(array) {
  * @param {Function} onReturn Bitsy onReturn function; third param to a dialog function
  */
 function printDialog(environment, text, onReturn) {
-	environment.GetDialogBuffer().AddText(text, function() {
+	environment.GetDialogBuffer().AddText(text, function () {
 		onReturn(null);
 	});
 }
@@ -292,11 +292,11 @@ function _reinitEngine() {
 // interpreter. Unescape escaped parentheticals, too.
 function convertDialogTags(input, tag) {
 	return input
-		.replace(new RegExp('\\\\?\\((' + tag + '(\\s+(".+?"|.+?))?)\\\\?\\)', 'g'), function(match, group){
-			if(match.substr(0,1) === '\\') {
-				return '('+ group + ')'; // Rewrite \(tag "..."|...\) to (tag "..."|...)
+		.replace(new RegExp('\\\\?\\((' + tag + '(\\s+(".+?"|.+?))?)\\\\?\\)', 'g'), function (match, group) {
+			if (match.substr(0, 1) === '\\') {
+				return '(' + group + ')'; // Rewrite \(tag "..."|...\) to (tag "..."|...)
 			}
-			return '{'+ group + '}'; // Rewrite (tag "..."|...) to {tag "..."|...}
+			return '{' + group + '}'; // Rewrite (tag "..."|...) to {tag "..."|...}
 		});
 }
 
@@ -383,7 +383,7 @@ function addDeferredDialogTag(tag, fn) {
  *                       parameters: array containing parameters as string in first element (i.e. `parameters[0]`)
  */
 function addDualDialogTag(tag, fn) {
-	addDialogTag(tag + 'Now', function(environment, parameters, onReturn) {
+	addDialogTag(tag + 'Now', function (environment, parameters, onReturn) {
 		fn(environment, parameters);
 		onReturn(null);
 	});
@@ -405,7 +405,7 @@ function startWatch(environment, parameters) {
 	var id = parameters[0];
 	timers[id] = {
 		start: Date.now(),
-		end: undefined
+		end: undefined,
 	};
 }
 
@@ -416,7 +416,8 @@ function resumeWatch(environment, parameters) {
 
 	// just start the timer if there isn't one
 	if (!timer) {
-		return startWatch(environment, parameters);
+		startWatch(environment, parameters);
+		return;
 	}
 
 	// don't do anything if the timer's not running

@@ -3,7 +3,7 @@
 @file exit-from-dialog
 @summary exit to another room from dialog, including conditionals
 @license WTFPL (do WTF you want)
-@version 7.0.2
+@version 7.0.3
 @requires Bitsy Version: 6.0
 @author @mildmojo
 
@@ -47,13 +47,13 @@ calls because the Bitsy editor's fancy dialog window strips unrecognized
 curly-brace functions from dialog text. To keep from losing data, write
 these function calls with parentheses like the examples above.
 */
-import bitsy from "bitsy";
+import bitsy from 'bitsy';
 import {
-	getRoom
-} from "./helpers/utils";
+	getRoom,
+} from './helpers/utils';
 import {
-	addDualDialogTag
-} from "./helpers/kitsy-script-toolkit";
+	addDualDialogTag,
+} from './helpers/kitsy-script-toolkit';
 
 // Implement the dialog functions
 addDualDialogTag('exit', function (environment, parameters) {
@@ -70,7 +70,7 @@ function getExitParams(parameters) {
 	var roomName = params[0];
 	var x = params[1];
 	var y = params[2];
-	var transition_effect = params[3];
+	var transitionEffect = params[3];
 	var room = getRoom(roomName);
 
 	if (!room) {
@@ -99,7 +99,7 @@ function getExitParams(parameters) {
 			x,
 			y,
 		},
-		transition_effect,
+		transition_effect: transitionEffect,
 	};
 }
 // End of (exit) dialog function mod

@@ -3,7 +3,7 @@
 @file dynamic background
 @summary HTML background matching bitsy background
 @license MIT
-@version 2.1.3
+@version 2.1.4
 @author Sean S. LeBlanc
 
 @description
@@ -15,10 +15,11 @@ Copy-paste this script into a script tag after the bitsy source
 import bitsy from 'bitsy';
 import {
 	before,
-	after
+	after,
 } from './helpers/kitsy-script-toolkit';
 
-var p1, p2;
+var p1;
+var p2;
 
 function getBg() {
 	try {

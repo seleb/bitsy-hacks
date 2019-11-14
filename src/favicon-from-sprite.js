@@ -3,7 +3,7 @@
 @file favicon-from-sprite
 @summary generate a browser favicon (tab icon) from a Bitsy sprite, including animation!
 @license WTFPL (do WTF you want)
-@version 3.0.3
+@version 3.0.4
 @requires Bitsy Version: 5.5
 @author @mildmojo
 
@@ -17,12 +17,15 @@ HOW TO USE:
      should use for the favicon. By default, it will render the player avatar
      sprite in the first available palette's colors.
 */
-'use strict';
-import bitsy from "bitsy";
+
+
+import bitsy from 'bitsy';
 import {
-	after
-} from "./helpers/kitsy-script-toolkit";
-import { getImage } from "./helpers/utils";
+	after,
+} from './helpers/kitsy-script-toolkit';
+import {
+	getImage,
+} from './helpers/utils';
 
 // CONFIGURATION FOR FAVICON
 export var hackOptions = {
@@ -32,7 +35,7 @@ export var hackOptions = {
 	FG_COLOR_NUM: 2, // Favicon sprite color in palette. 0 = BG, 1 = Tile, 2 = Sprite.
 	PIXEL_PADDING: 1, // Padding around sprite, in Bitsy pixel units.
 	ROUNDED_CORNERS: true, // Should the favicon have rounded corners? (Suggest margin 2px if rounding.)
-	FRAME_DELAY: 400 // Frame change interval (ms) if sprite is animated. Use `Infinity` to disable.
+	FRAME_DELAY: 400, // Frame change interval (ms) if sprite is animated. Use `Infinity` to disable.
 };
 // END CONFIG
 
@@ -72,38 +75,42 @@ after('load_game', function () {
 
 function drawFrame(frameData) {
 	var pal = getPalette(hackOptions.PALETTE_ID);
-	var bgColor = pal && pal[hackOptions.BG_COLOR_NUM] || [20, 20, 20];
-	var spriteColor = pal && pal[hackOptions.FG_COLOR_NUM] || [245, 245, 245];
-	var rounding_offset = hackOptions.ROUNDED_CORNERS ? ONE_PIXEL_SCALED : 0;
+	var bgColor = (pal && pal[hackOptions.BG_COLOR_NUM]) || [20, 20, 20];
+	var spriteColor = (pal && pal[hackOptions.FG_COLOR_NUM]) || [245, 245, 245];
+	var roundingOffset = hackOptions.ROUNDED_CORNERS ? ONE_PIXEL_SCALED : 0;
 
 	// Approximate a squircle-shaped background by drawing a fat plus sign with
 	// two overlapping rects, leaving some empty pixels in the corners.
 	var longSide = FAVICON_SIZE + 2 * hackOptions.PIXEL_PADDING;
-	var shortSide = longSide - rounding_offset * ONE_PIXEL_SCALED;
+	var shortSide = longSide - roundingOffset * ONE_PIXEL_SCALED;
 	ctx.fillStyle = rgb(bgColor);
-	ctx.fillRect(rounding_offset,
+	ctx.fillRect(roundingOffset,
 		0,
 		shortSide,
 		longSide);
 	ctx.fillRect(0,
-		rounding_offset,
+		roundingOffset,
 		longSide,
 		shortSide);
 
 	// Draw sprite foreground.
 	ctx.fillStyle = rgb(spriteColor);
 	for (var y in frameData) {
-		for (var x in frameData[y]) {
-			if (frameData[y][x] === 1) {
-				ctx.fillRect(x * ONE_PIXEL_SCALED + hackOptions.PIXEL_PADDING,
-					y * ONE_PIXEL_SCALED + hackOptions.PIXEL_PADDING,
-					ONE_PIXEL_SCALED,
-					ONE_PIXEL_SCALED);
+		if (Object.prototype.hasOwnProperty.call(frameData, y)) {
+			for (var x in frameData[y]) {
+				if (Object.prototype.hasOwnProperty.call(frameData[y], x)) {
+					if (frameData[y][x] === 1) {
+						ctx.fillRect(x * ONE_PIXEL_SCALED + hackOptions.PIXEL_PADDING,
+							y * ONE_PIXEL_SCALED + hackOptions.PIXEL_PADDING,
+							ONE_PIXEL_SCALED,
+							ONE_PIXEL_SCALED);
+					}
+				}
 			}
 		}
 	}
 
-	return canvas.toDataURL("image/x-icon");
+	return canvas.toDataURL('image/x-icon');
 }
 
 function updateBrowserFavicon(dataURL) {
