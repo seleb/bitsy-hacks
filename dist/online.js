@@ -3,7 +3,7 @@
 @file online
 @summary multiplayer bitsy
 @license MIT
-@version 2.1.7
+@version 2.1.8
 @requires 5.5
 @author Sean S. LeBlanc
 @description
@@ -33,7 +33,7 @@ this.hacks = this.hacks || {};
 (function (exports, bitsy) {
 'use strict';
 var hackOptions = {
-	host: "wss://your signalling server",
+	host: 'wss://your signalling server',
 	// room: "custom room", // sets the room on the server to use; otherwise, uses game title
 	immediateMode: true, // if true, teleports players to their reported positions; otherwise, queues movements and lets bitsy handle the walking (note: other players pick up items like this)
 	ghosts: false, // if true, sprites from players who disconnected while you were online won't go away until you restart
@@ -270,11 +270,11 @@ function _reinitEngine() {
 // interpreter. Unescape escaped parentheticals, too.
 function convertDialogTags(input, tag) {
 	return input
-		.replace(new RegExp('\\\\?\\((' + tag + '(\\s+(".+?"|.+?))?)\\\\?\\)', 'g'), function(match, group){
-			if(match.substr(0,1) === '\\') {
-				return '('+ group + ')'; // Rewrite \(tag "..."|...\) to (tag "..."|...)
+		.replace(new RegExp('\\\\?\\((' + tag + '(\\s+(".+?"|.+?))?)\\\\?\\)', 'g'), function (match, group) {
+			if (match.substr(0, 1) === '\\') {
+				return '(' + group + ')'; // Rewrite \(tag "..."|...\) to (tag "..."|...)
 			}
-			return '{'+ group + '}'; // Rewrite (tag "..."|...) to {tag "..."|...}
+			return '{' + group + '}'; // Rewrite (tag "..."|...) to {tag "..."|...}
 		});
 }
 
@@ -361,7 +361,7 @@ function addDeferredDialogTag(tag, fn) {
  *                       parameters: array containing parameters as string in first element (i.e. `parameters[0]`)
  */
 function addDualDialogTag(tag, fn) {
-	addDialogTag(tag + 'Now', function(environment, parameters, onReturn) {
+	addDialogTag(tag + 'Now', function (environment, parameters, onReturn) {
 		fn(environment, parameters);
 		onReturn(null);
 	});
@@ -373,7 +373,7 @@ function addDualDialogTag(tag, fn) {
 @file javascript dialog
 @summary execute arbitrary javascript from dialog
 @license MIT
-@version 3.2.4
+@version 3.2.5
 @requires Bitsy Version: 4.5, 4.6
 @author Sean S. LeBlanc
 
@@ -409,6 +409,7 @@ NOTE: This uses parentheses "()" instead of curly braces "{}" around function
       code at the end of the editor's `bitsy.js` file. Untested.
 */
 
+// eslint-disable-next-line no-eval
 var indirectEval = eval;
 
 function executeJs(environment, parameters) {
@@ -476,7 +477,7 @@ function setSpriteData(id, frame, newData) {
 @file edit image from dialog
 @summary edit sprites, items, and tiles from dialog
 @license MIT
-@version 1.2.6
+@version 1.2.7
 @requires 5.3
 @author Sean S. LeBlanc
 
@@ -533,85 +534,85 @@ NOTE: This uses parentheses "()" instead of curly braces "{}" around function
 var maps;
 after('load_game', function () {
 	maps = {
-    spr: bitsy.sprite,
-    sprite: bitsy.sprite,
-    til: bitsy.tile,
-    tile: bitsy.tile,
-    itm: bitsy.item,
-    item: bitsy.item,
+		spr: bitsy.sprite,
+		sprite: bitsy.sprite,
+		til: bitsy.tile,
+		tile: bitsy.tile,
+		itm: bitsy.item,
+		item: bitsy.item,
 	};
 });
 
 function editImage(environment, parameters) {
-  var i;
+	var i;
 
-  // parse parameters
-  var params = parameters[0].split(/,\s?/);
-  params[0] = (params[0] || "").toLowerCase();
-  var mapId = params[0];
-  var tgtId = params[1];
-  var srcId = params[2];
+	// parse parameters
+	var params = parameters[0].split(/,\s?/);
+	params[0] = (params[0] || '').toLowerCase();
+	var mapId = params[0];
+	var tgtId = params[1];
+	var srcId = params[2];
 
-  if (!mapId || !tgtId || !srcId) {
-    throw new Error('Image expects three parameters: "map, target, source", but received: "' + params.join(', ') + '"');
-  }
+	if (!mapId || !tgtId || !srcId) {
+		throw new Error('Image expects three parameters: "map, target, source", but received: "' + params.join(', ') + '"');
+	}
 
-  // get objects
-  var mapObj = maps[mapId];
-  if (!mapObj) {
-    throw new Error('Invalid map "' + mapId + '". Try "SPR", "TIL", or "ITM" instead.');
-  }
-  var tgtObj = getImage(tgtId, mapObj);
-  if (!tgtObj) {
-    throw new Error('Target "' + tgtId + '" was not the id/name of a ' + mapId + '.');
-  }
-  var srcObj = getImage(srcId, mapObj);
-  if (!srcObj) {
-    throw new Error('Source "' + srcId + '" was not the id/name of a ' + mapId + '.');
-  }
+	// get objects
+	var mapObj = maps[mapId];
+	if (!mapObj) {
+		throw new Error('Invalid map "' + mapId + '". Try "SPR", "TIL", or "ITM" instead.');
+	}
+	var tgtObj = getImage(tgtId, mapObj);
+	if (!tgtObj) {
+		throw new Error('Target "' + tgtId + '" was not the id/name of a ' + mapId + '.');
+	}
+	var srcObj = getImage(srcId, mapObj);
+	if (!srcObj) {
+		throw new Error('Source "' + srcId + '" was not the id/name of a ' + mapId + '.');
+	}
 
-  // copy animation from target to source
-  tgtObj.animation = {
-    frameCount: srcObj.animation.frameCount,
-    isAnimated: srcObj.animation.isAnimated,
-    frameIndex: srcObj.animation.frameIndex
-  };
-  for (i = 0; i < srcObj.animation.frameCount; ++i) {
-    setImageData(tgtId, i, mapObj, getImageData(srcId, i, mapObj));
-  }
+	// copy animation from target to source
+	tgtObj.animation = {
+		frameCount: srcObj.animation.frameCount,
+		isAnimated: srcObj.animation.isAnimated,
+		frameIndex: srcObj.animation.frameIndex,
+	};
+	for (i = 0; i < srcObj.animation.frameCount; ++i) {
+		setImageData(tgtId, i, mapObj, getImageData(srcId, i, mapObj));
+	}
 }
 
 function editPalette(environment, parameters) {
-  // parse parameters
-  var params = parameters[0].split(/,\s?/);
-  params[0] = (params[0] || "").toLowerCase();
-  var mapId = params[0];
-  var tgtId = params[1];
-  var palId = params[2];
+	// parse parameters
+	var params = parameters[0].split(/,\s?/);
+	params[0] = (params[0] || '').toLowerCase();
+	var mapId = params[0];
+	var tgtId = params[1];
+	var palId = params[2];
 
-  if (!mapId || !tgtId || !palId) {
-    throw new Error('Image expects three parameters: "map, target, palette", but received: "' + params.join(', ') + '"');
-  }
+	if (!mapId || !tgtId || !palId) {
+		throw new Error('Image expects three parameters: "map, target, palette", but received: "' + params.join(', ') + '"');
+	}
 
-  // get objects
-  var mapObj = maps[mapId];
-  if (!mapObj) {
-    throw new Error('Invalid map "' + mapId + '". Try "SPR", "TIL", or "ITM" instead.');
-  }
-  var tgtObj = getImage(tgtId, mapObj);
-  if (!tgtObj) {
-    throw new Error('Target "' + tgtId + '" was not the id/name of a ' + mapId + '.');
-  }
-  var palObj = parseInt(palId);
-  if (isNaN(palObj)) {
-    throw new Error('Palette "' + palId + '" was not a number.');
-  }
+	// get objects
+	var mapObj = maps[mapId];
+	if (!mapObj) {
+		throw new Error('Invalid map "' + mapId + '". Try "SPR", "TIL", or "ITM" instead.');
+	}
+	var tgtObj = getImage(tgtId, mapObj);
+	if (!tgtObj) {
+		throw new Error('Target "' + tgtId + '" was not the id/name of a ' + mapId + '.');
+	}
+	var palObj = parseInt(palId, 10);
+	if (Number.isNaN(Number(palObj))) {
+		throw new Error('Palette "' + palId + '" was not a number.');
+	}
 
-  // set palette
-  tgtObj.col = palObj;
+	// set palette
+	tgtObj.col = palObj;
 
-  // update images in cache
-  bitsy.renderImageForAllPalettes(tgtObj);
+	// update images in cache
+	bitsy.renderImageForAllPalettes(tgtObj);
 }
 
 // hook up the dialog tags
@@ -623,7 +624,7 @@ addDualDialogTag('imagePal', editPalette);
 @file edit dialog from dialog
 @summary edit dialog from dialog (yes really)
 @license MIT
-@version 1.1.4
+@version 1.1.5
 @author Sean S. LeBlanc
 
 @description
@@ -659,10 +660,10 @@ after('load_game', function () {
 function editDialog(environment, parameters) {
 	// parse parameters
 	var params = parameters[0].split(/,\s?/);
-	params[0] = (params[0] || "").toLowerCase();
+	params[0] = (params[0] || '').toLowerCase();
 	var mapId = params[0];
 	var tgtId = params[1];
-	var newDialog = params[2] || "";
+	var newDialog = params[2] || '';
 
 	if (!mapId || !tgtId) {
 		throw new Error('Image expects three parameters: "map, target, newDialog", but received: "' + params.join(', ') + '"');
@@ -693,13 +694,13 @@ inject(/startDialog\(dialogStr,dialogId\);/g, 'startDialog(dialogStr);');
 // download the client script
 // bitsy starts onload, so adding it to the head
 // is enough to delay game startup until it's loaded/errored
-var clientScript = document.createElement("script");
-clientScript.src = hackOptions.host.replace(/^ws/, "http") + "/client.js";
+var clientScript = document.createElement('script');
+clientScript.src = hackOptions.host.replace(/^ws/, 'http') + '/client.js';
 clientScript.onload = function () {
-	console.log("online available!");
+	console.log('online available!');
 };
 clientScript.onerror = function (error) {
-	console.error("online not available!", error);
+	console.error('online not available!', error);
 };
 document.head.appendChild(clientScript);
 
@@ -709,60 +710,60 @@ function onData(event) {
 	var spr;
 	var data = event.data;
 	switch (data.e) {
-		case "move":
-			spr = bitsy.sprite[event.from];
-			if (spr) {
-				// move sprite
-				if (hackOptions.immediateMode) {
-					// do it now
-					spr.x = data.x;
-					spr.y = data.y;
-					spr.room = data.room;
-				} else {
-					// let bitsy handle it later
-					spr.walkingPath.push({
-						x: data.x,
-						y: data.y
-					});
-				}
+	case 'move':
+		spr = bitsy.sprite[event.from];
+		if (spr) {
+			// move sprite
+			if (hackOptions.immediateMode) {
+				// do it now
+				spr.x = data.x;
+				spr.y = data.y;
+				spr.room = data.room;
 			} else {
-				// got a move from an unknown player,
-				// so ask them who they are
-				client.send(event.from, {
-					e: "gimmeSprite"
+				// let bitsy handle it later
+				spr.walkingPath.push({
+					x: data.x,
+					y: data.y,
 				});
 			}
-			break;
-		case "gimmeSprite":
-			// send a sprite update to specific peer
-			client.send(event.from, getSpriteUpdate());
-			break;
-		case "sprite":
-			// update a sprite
-			var longname = "SPR_" + event.from;
-			spr = bitsy.sprite[event.from] = {
-				animation: {
-					frameCount: data.data.length,
-					frameIndex: 0,
-					isAnimated: data.data.length > 1
-				},
-				col: data.col,
-				dlg: longname,
-				drw: longname,
-				inventory: {},
-				name: event.from,
-				walkingPath: [],
-				x: data.x,
-				y: data.y,
-				room: data.room
-			};
-			bitsy.dialog[longname] = data.dlg;
-			bitsy.renderer.SetImageSource(longname, data.data);
+		} else {
+			// got a move from an unknown player,
+			// so ask them who they are
+			client.send(event.from, {
+				e: 'gimmeSprite',
+			});
+		}
+		break;
+	case 'gimmeSprite':
+		// send a sprite update to specific peer
+		client.send(event.from, getSpriteUpdate());
+		break;
+	case 'sprite':
+		// update a sprite
+		var longname = 'SPR_' + event.from;
+		spr = bitsy.sprite[event.from] = {
+			animation: {
+				frameCount: data.data.length,
+				frameIndex: 0,
+				isAnimated: data.data.length > 1,
+			},
+			col: data.col,
+			dlg: longname,
+			drw: longname,
+			inventory: {},
+			name: event.from,
+			walkingPath: [],
+			x: data.x,
+			y: data.y,
+			room: data.room,
+		};
+		bitsy.dialog[longname] = data.dlg;
+		bitsy.renderer.SetImageSource(longname, data.data);
 
-			for (var frame = 0; frame < data.data.length; ++frame) {
-				setSpriteData(event.from, frame, data.data[frame]);
-			}
-			break;
+		for (var frame = 0; frame < data.data.length; ++frame) {
+			setSpriteData(event.from, frame, data.data[frame]);
+		}
+		break;
 	}
 }
 
@@ -776,11 +777,12 @@ function onClose(event) {
 	}
 }
 
-after("startExportedGame", function () {
+after('startExportedGame', function () {
 	if (!window.Client) {
 		console.error("Couldn't retrieve client; running game offline");
 	}
-	client = new window.Client.default({
+	var Client = window.Client.default;
+	client = new Client({
 		host: hackOptions.host,
 		room: hackOptions.room || bitsy.title,
 	});
@@ -789,15 +791,15 @@ after("startExportedGame", function () {
 	client.setDebug(hackOptions.debug);
 });
 
-after("movePlayer", moveSprite);
-after("onready", function () {
+after('movePlayer', moveSprite);
+after('onready', function () {
 	// tell everyone who you are
 	// and ask who they are 1s after starting
 	setTimeout(function () {
 		if (client) {
 			updateSprite();
 			client.broadcast({
-				e: "gimmeSprite"
+				e: 'gimmeSprite',
 			});
 		}
 	}, 1000);
@@ -807,10 +809,10 @@ after("onready", function () {
 function moveSprite() {
 	var p = bitsy.player();
 	client.broadcast({
-		e: "move",
+		e: 'move',
 		x: p.x,
 		y: p.y,
-		room: p.room
+		room: p.room,
 	});
 }
 
@@ -823,13 +825,13 @@ function updateSprite() {
 function getSpriteUpdate() {
 	var p = bitsy.player();
 	return {
-		e: "sprite",
+		e: 'sprite',
 		data: bitsy.renderer.GetImageSource(p.drw),
 		x: p.x,
 		y: p.y,
 		room: p.room,
 		dlg: bitsy.dialog[p.dlg],
-		col: p.col
+		col: p.col,
 	};
 }
 
@@ -839,7 +841,7 @@ function getSpriteUpdate() {
 	'imageNow',
 	'imagePal',
 	'imagePalNow',
-	'dialog'
+	'dialog',
 ].forEach(function (tag) {
 	var original = bitsy.kitsy.dialogFunctions[tag];
 	bitsy.kitsy.dialogFunctions[tag] = function () {

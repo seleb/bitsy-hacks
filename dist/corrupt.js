@@ -3,7 +3,7 @@
 @file corrupt
 @summary corrupts gamedata at runtime
 @license MIT
-@version 3.0.4
+@version 3.0.5
 @requires 5.5
 @author Sean S. LeBlanc
 
@@ -334,35 +334,36 @@ function _reinitEngine() {
 
 
 
-///////////
+// /////////
 // setup //
-///////////
+// /////////
 
 
 // hook corruption to player movement
 after('onPlayerMoved', corrupt);
 
-//////////////////
+// ////////////////
 // corrupt code //
-//////////////////
+// ////////////////
 
 // get a reference to the fontdata
 var fontdata;
-after('dialogRenderer.SetFont', function(font) {
-	fontdata = Object.values(font.getData()).map(function(char){ return char.data; });
+after('dialogRenderer.SetFont', function (font) {
+	fontdata = Object.values(font.getData()).map(function (char) {
+		return char.data;
+	});
 });
 
 function corrupt() {
-	var i;
 	var currentRoom = bitsy.room[bitsy.curRoom];
 	// corrupt pixels of visible tiles
 	var visibleTiles = {};
-	for (var y = 0; y < bitsy.mapsize; ++y) {
-		for (var x = 0; x < bitsy.mapsize; ++x) {
-			visibleTiles[currentRoom.tilemap[y][x]] = true;
-		}
-	}
-	delete visibleTiles["0"]; // empty tile doesn't actually exist
+	currentRoom.tilemap.forEach(function (row) {
+		row.forEach(function (tile) {
+			visibleTiles[tile] = true;
+		});
+	});
+	delete visibleTiles['0']; // empty tile doesn't actually exist
 	visibleTiles = Object.keys(visibleTiles);
 	if (visibleTiles.length > 0) {
 		iterate(hackOptions.tilePixelsFreq * hackOptions.globalFreq, function () {
@@ -378,10 +379,10 @@ function corrupt() {
 
 	// corrupt pixels of visible sprites
 	var visibleSprites = {};
-	for (i in bitsy.sprite) {
-		if (Object.prototype.hasOwnProperty.call(bitsy.sprite, i)) {
-			if (bitsy.sprite[i].room === bitsy.curRoom) {
-				visibleSprites[i] = true;
+	for (var spr in bitsy.sprite) {
+		if (Object.prototype.hasOwnProperty.call(bitsy.sprite, spr)) {
+			if (bitsy.sprite[spr].room === bitsy.curRoom) {
+				visibleSprites[spr] = true;
 			}
 		}
 	}
@@ -398,9 +399,9 @@ function corrupt() {
 
 	// corrupt pixels of visible items
 	var visibleItems = {};
-	for (i = 0; i < currentRoom.items.length; ++i) {
-		visibleItems[currentRoom.items[i].id] = true;
-	}
+	currentRoom.items.forEach(function (item) {
+		visibleItems[item.id] = true;
+	});
 	visibleItems = Object.keys(visibleItems);
 	if (visibleItems.length > 0) {
 		iterate(hackOptions.itemPixelsFreq * hackOptions.globalFreq, function () {
@@ -416,11 +417,11 @@ function corrupt() {
 
 	// corrupt current room's tilemap
 	var possibleTiles = Object.keys(bitsy.tile);
-	possibleTiles.push("0"); // empty tile
+	possibleTiles.push('0'); // empty tile
 	iterate(hackOptions.tilemapFreq * hackOptions.globalFreq, function () {
 		// pick a tile at random in the current room and assign it a random tile
-		y = Math.floor(Math.random() * bitsy.mapsize);
-		x = Math.floor(Math.random() * bitsy.mapsize);
+		var y = Math.floor(Math.random() * bitsy.mapsize);
+		var x = Math.floor(Math.random() * bitsy.mapsize);
 		currentRoom.tilemap[y][x] = rndItem(possibleTiles);
 	});
 
@@ -443,9 +444,9 @@ function corrupt() {
 	});
 }
 
-/////////////
+// ///////////
 // helpers //
-/////////////
+// ///////////
 
 // helper for iteratively calling a function
 function iterate(i, fn) {

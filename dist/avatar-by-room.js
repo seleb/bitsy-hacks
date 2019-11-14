@@ -3,7 +3,7 @@
 @file avatar by room
 @summary change the avatar in certain rooms
 @license MIT
-@version 1.1.5
+@version 1.1.6
 @requires 5.3
 @author Sean S. LeBlanc
 
@@ -30,7 +30,7 @@ var hackOptions = {
 		1: 'A', // note that 'A' is the player sprite, so this does nothing by default, but will reset the player if permanent == true
 		2: 'another sprite ID',
 		h: 'a sprite ID for a room with a non-numeric ID',
-		'my room': 'a sprite ID for a room with a user-defined name'
+		'my room': 'a sprite ID for a room with a user-defined name',
 	},
 };
 
@@ -287,14 +287,10 @@ before('update', function () {
 		var newAvatarId = hackOptions.avatarByRoom[currentRoom];
 		if (
 			(!newAvatarId && !hackOptions.permanent) // if no sprite defined + not permanent, reset
-			||
-			(newAvatarId === bitsy.playerId) // manual reset
+			|| (newAvatarId === bitsy.playerId) // manual reset
 		) {
 			bitsy.player().drw = originalAvatar;
 			return;
-		}
-		if (newAvatarId === bitsy.playerId) {
-			bitsy.player().drw;
 		}
 		var newAvatar = getImage(newAvatarId, bitsy.sprite);
 		if (!newAvatar) {

@@ -3,7 +3,7 @@
 @file directional avatar
 @summary flips the player's sprite based on directional movement
 @license MIT
-@version 1.1.7
+@version 1.1.8
 @requires 5.3
 @author Sean S. LeBlanc
 
@@ -25,7 +25,7 @@ var hackOptions = {
 	// If `verticalFlipAllowed` is true:
 	// 	pressing down will make the player's sprite upside-down
 	// 	pressing up will make the player's sprite right-side up
-	verticalFlipAllowed: false
+	verticalFlipAllowed: false,
 };
 
 bitsy = bitsy && bitsy.hasOwnProperty('default') ? bitsy['default'] : bitsy;
@@ -242,17 +242,18 @@ function _reinitEngine() {
 
 // copied from https://stackoverflow.com/a/46805290
 function transpose(matrix) {
-  const rows = matrix.length, cols = matrix[0].length;
-  const grid = [];
-  for (let j = 0; j < cols; j++) {
-    grid[j] = Array(rows);
-  }
-  for (let i = 0; i < rows; i++) {
-    for (let j = 0; j < cols; j++) {
-      grid[j][i] = matrix[i][j];
-    }
-  }
-  return grid;
+	const rows = matrix.length,
+		cols = matrix[0].length;
+	const grid = [];
+	for (let j = 0; j < cols; j++) {
+		grid[j] = Array(rows);
+	}
+	for (let i = 0; i < rows; i++) {
+		for (let j = 0; j < cols; j++) {
+			grid[j][i] = matrix[i][j];
+		}
+	}
+	return grid;
 }
 
 // helper function to flip sprite data
@@ -355,7 +356,7 @@ after('updateInput', function () {
 	// save the original frames
 	if (!originalAnimation || originalAnimation.referenceFrame !== getSpriteData(bitsy.playerId, 0)) {
 		originalAnimation = {
-			frames: []
+			frames: [],
 		};
 		for (i = 0; i < bitsy.player().animation.frameCount; ++i) {
 			originalAnimation.frames.push(getSpriteData(bitsy.playerId, i));
@@ -375,8 +376,6 @@ after('updateInput', function () {
 		break;
 	case bitsy.Direction.Right:
 		hflip = false;
-		break;
-	default:
 		break;
 	}
 

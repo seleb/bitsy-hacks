@@ -3,7 +3,7 @@
 @file dialog box transition
 @summary adds an easing transition animation to display the dialog box text
 @license MIT
-@version 1.0.2
+@version 1.0.3
 @requires 4.8, 4.9
 @author Delacannon
 
@@ -17,7 +17,7 @@ this.hacks = this.hacks || {};
 (function (exports, bitsy) {
 'use strict';
 var hackOptions = {
-	easing: 0.025 //  easing speed
+	easing: 0.025, //  easing speed
 };
 
 bitsy = bitsy && bitsy.hasOwnProperty('default') ? bitsy['default'] : bitsy;
@@ -233,8 +233,8 @@ if(context == null) return;
 		}
 		else {
 			easingDialog(textboxInfo, ${
-				hackOptions.easing
-			}, !this.onClose ? textboxInfo.top*scale : 
+	hackOptions.easing
+}, !this.onClose ? textboxInfo.top*scale : 
 				-textboxInfo.top-textboxInfo.height*scale) 
 			 this.onExit = this.onClose && textboxInfo.y <= -textboxInfo.height*scale
 		}
@@ -252,16 +252,16 @@ var functionEasing = `
 
 inject$1(
 	/(this\.DrawTextbox\(\))/,
-	`$1\nif(this.onExit && this.onClose){dialogBuffer.EndDialog()}`
+	'$1\nif(this.onExit && this.onClose){dialogBuffer.EndDialog()}',
 );
-inject$1(/(this\.EndDialog\(\))/, `dialogRenderer.onClose=true`);
+inject$1(/(this\.EndDialog\(\))/, 'dialogRenderer.onClose=true');
 inject$1(/(var DialogRenderer = function\(\) {)/, `$1${functionEasing}`);
-inject$1(/(var textboxInfo = {)/, `$1y:0,`);
+inject$1(/(var textboxInfo = {)/, '$1y:0,');
 inject$1(
 	/(this\.Reset = function\(\) {)/,
 	`$1 this.onClose=false;
 		this.onExit=false;
-		textboxInfo.y = player().y < mapsize/2 ? (height+textboxInfo.bottom+textboxInfo.height)*scale : -(textboxInfo.height) * scale;`
+		textboxInfo.y = player().y < mapsize/2 ? (height+textboxInfo.bottom+textboxInfo.height)*scale : -(textboxInfo.height) * scale;`,
 );
 
 inject$1(/(this\.DrawTextbox = function\(\) {)/, `$1${drawOverride}`);

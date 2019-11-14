@@ -3,7 +3,7 @@
 @file save
 @summary save/load your game
 @license MIT
-@version 1.0.5
+@version 1.0.6
 @requires 5.4
 @author Sean S. LeBlanc
 
@@ -269,11 +269,11 @@ function _reinitEngine() {
 // interpreter. Unescape escaped parentheticals, too.
 function convertDialogTags(input, tag) {
 	return input
-		.replace(new RegExp('\\\\?\\((' + tag + '(\\s+(".+?"|.+?))?)\\\\?\\)', 'g'), function(match, group){
-			if(match.substr(0,1) === '\\') {
-				return '('+ group + ')'; // Rewrite \(tag "..."|...\) to (tag "..."|...)
+		.replace(new RegExp('\\\\?\\((' + tag + '(\\s+(".+?"|.+?))?)\\\\?\\)', 'g'), function (match, group) {
+			if (match.substr(0, 1) === '\\') {
+				return '(' + group + ')'; // Rewrite \(tag "..."|...\) to (tag "..."|...)
 			}
-			return '{'+ group + '}'; // Rewrite (tag "..."|...) to {tag "..."|...}
+			return '{' + group + '}'; // Rewrite (tag "..."|...) to {tag "..."|...}
 		});
 }
 
@@ -360,7 +360,7 @@ function addDeferredDialogTag(tag, fn) {
  *                       parameters: array containing parameters as string in first element (i.e. `parameters[0]`)
  */
 function addDualDialogTag(tag, fn) {
-	addDialogTag(tag + 'Now', function(environment, parameters, onReturn) {
+	addDialogTag(tag + 'Now', function (environment, parameters, onReturn) {
 		fn(environment, parameters);
 		onReturn(null);
 	});
@@ -452,15 +452,15 @@ bitsy.saveHack = {
 	loadSeqIdx: function (node) {
 		var key = nodeKey(node);
 		return bitsy.saveHack.sequenceIndices[key];
-	}
+	},
 };
 
 // use saved index to eval/calc next index if available
-inject(/(ptions\[index\].Eval)/g, `ptions[window.saveHack.loadSeqIdx(this) || index].Eval`);
-inject(/var next = index \+ 1;/g, `var next = (window.saveHack.loadSeqIdx(this) || index) + 1;`);
+inject(/(ptions\[index\].Eval)/g, 'ptions[window.saveHack.loadSeqIdx(this) || index].Eval');
+inject(/var next = index \+ 1;/g, 'var next = (window.saveHack.loadSeqIdx(this) || index) + 1;');
 // save index on changes
-inject(/(index = next);/g, `$1,window.saveHack.saveSeqIdx(this, next);`);
-inject(/(\tindex = 0);/g, `$1,window.saveHack.saveSeqIdx(this, 0);`);
+inject(/(index = next);/g, '$1,window.saveHack.saveSeqIdx(this, next);');
+inject(/(\tindex = 0);/g, '$1,window.saveHack.saveSeqIdx(this, 0);');
 
 // hook up autosave
 var autosaveInterval;

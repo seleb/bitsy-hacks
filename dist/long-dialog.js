@@ -3,7 +3,7 @@
 @file long dialog
 @summary put more words onscreen
 @license MIT
-@version 1.1.2
+@version 1.1.3
 @requires Bitsy Version: 6.1
 @author Sean S. LeBlanc
 
@@ -241,11 +241,11 @@ function _reinitEngine() {
 // interpreter. Unescape escaped parentheticals, too.
 function convertDialogTags(input, tag) {
 	return input
-		.replace(new RegExp('\\\\?\\((' + tag + '(\\s+(".+?"|.+?))?)\\\\?\\)', 'g'), function(match, group){
-			if(match.substr(0,1) === '\\') {
-				return '('+ group + ')'; // Rewrite \(tag "..."|...\) to (tag "..."|...)
+		.replace(new RegExp('\\\\?\\((' + tag + '(\\s+(".+?"|.+?))?)\\\\?\\)', 'g'), function (match, group) {
+			if (match.substr(0, 1) === '\\') {
+				return '(' + group + ')'; // Rewrite \(tag "..."|...\) to (tag "..."|...)
 			}
-			return '{'+ group + '}'; // Rewrite (tag "..."|...) to {tag "..."|...}
+			return '{' + group + '}'; // Rewrite (tag "..."|...) to {tag "..."|...}
 		});
 }
 
@@ -298,18 +298,18 @@ inject$1(/(this\.AddLinebreak = )/, 'this.AddParagraphBreak = function() { buffe
 @file paragraph-break
 @summary Adds paragraph breaks to the dialogue parser
 @license WTFPL (do WTF you want)
-@version 1.1.4
+@version 1.1.5
 @requires Bitsy Version: 5.0, 5.1
 @author Sean S. LeBlanc, David Mowatt
 
 @description
-Adds a (p) tag to the dialogue parser that forces the following text to 
+Adds a (p) tag to the dialogue parser that forces the following text to
 start on a fresh dialogue screen, eliminating the need to spend hours testing
 line lengths or adding multiple line breaks that then have to be reviewed
 when you make edits or change the font size.
 
 Usage: (p)
-       
+
 Example: I am a cat(p)and my dialogue contains multitudes
 
 HOW TO USE:
@@ -326,10 +326,10 @@ NOTE: This uses parentheses "()" instead of curly braces "{}" around function
       code at the end of the editor's `bitsy.js` file. Untested.
 */
 
-//Adds the actual dialogue tag. No deferred version is required.
-addDialogTag('p', function(environment, parameters, onReturn){
-    environment.GetDialogBuffer().AddParagraphBreak();
-    onReturn(null);
+// Adds the actual dialogue tag. No deferred version is required.
+addDialogTag('p', function (environment, parameters, onReturn) {
+	environment.GetDialogBuffer().AddParagraphBreak();
+	onReturn(null);
 });
 // End of (p) paragraph break mod
 
@@ -339,7 +339,7 @@ addDialogTag('p', function(environment, parameters, onReturn){
 
 // override textbox height
 inject$1(/textboxInfo\.height = .+;/,
-`Object.defineProperty(textboxInfo, 'height', {
+	`Object.defineProperty(textboxInfo, 'height', {
 	get() { return textboxInfo.padding_vert + (textboxInfo.padding_vert + relativeFontHeight()) * Math.max(${hackOptions.minRows}, dialogBuffer.CurPage().indexOf(dialogBuffer.CurRow())+Math.sign(dialogBuffer.CurCharCount())) + textboxInfo.arrow_height; }
 })`);
 // prevent textbox from caching

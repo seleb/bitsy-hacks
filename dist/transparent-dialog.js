@@ -3,7 +3,7 @@
 @file transparent dialog
 @summary makes the dialog box have a transparent background
 @license MIT
-@version 1.1.3
+@version 1.1.4
 @author Sean S. LeBlanc
 
 @description
@@ -214,7 +214,7 @@ function _reinitEngine() {
 
 
 bitsy.transparentDialog = {
-	canvas: document.createElement('canvas')
+	canvas: document.createElement('canvas'),
 };
 bitsy.transparentDialog.context = bitsy.transparentDialog.canvas.getContext('2d');
 var drawOverride = `
@@ -233,7 +233,7 @@ else {
 return;`;
 
 // override textbox drawing to use draw image version from above
-inject$1(/(this\.DrawTextbox = function\(\) {)/, '$1'+drawOverride);
+inject$1(/(this\.DrawTextbox = function\(\) {)/, '$1' + drawOverride);
 
 // override textbox clearing pixels to be fully transparent
 inject$1(/(textboxInfo\.img\.data\[i\+3\]=)255/, '$10');

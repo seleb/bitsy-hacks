@@ -3,7 +3,7 @@
 @file twine bitsy comms
 @summary interprocess communication for twine and bitsy
 @license MIT
-@version 1.1.4
+@version 1.1.5
 @requires 5.4
 @author Sean S. LeBlanc
 
@@ -76,13 +76,13 @@ var hackOptions = {
 	send: function (type, data) {
 		window.parent.postMessage({
 			type: type,
-			data: data
+			data: data,
 		}, '*');
 	},
 	// how info will be received from external process
 	// default implementation is for parent page postMessage-ing into iframe
 	receive: function () {
-		window.addEventListener("message", function (event) {
+		window.addEventListener('message', function (event) {
 			var type = event.data.type;
 			var data = event.data.data;
 			receiveMessage(type, data);
@@ -304,11 +304,11 @@ function _reinitEngine() {
 // interpreter. Unescape escaped parentheticals, too.
 function convertDialogTags(input, tag) {
 	return input
-		.replace(new RegExp('\\\\?\\((' + tag + '(\\s+(".+?"|.+?))?)\\\\?\\)', 'g'), function(match, group){
-			if(match.substr(0,1) === '\\') {
-				return '('+ group + ')'; // Rewrite \(tag "..."|...\) to (tag "..."|...)
+		.replace(new RegExp('\\\\?\\((' + tag + '(\\s+(".+?"|.+?))?)\\\\?\\)', 'g'), function (match, group) {
+			if (match.substr(0, 1) === '\\') {
+				return '(' + group + ')'; // Rewrite \(tag "..."|...\) to (tag "..."|...)
 			}
-			return '{'+ group + '}'; // Rewrite (tag "..."|...) to {tag "..."|...}
+			return '{' + group + '}'; // Rewrite (tag "..."|...) to {tag "..."|...}
 		});
 }
 
@@ -395,7 +395,7 @@ function addDeferredDialogTag(tag, fn) {
  *                       parameters: array containing parameters as string in first element (i.e. `parameters[0]`)
  */
 function addDualDialogTag(tag, fn) {
-	addDialogTag(tag + 'Now', function(environment, parameters, onReturn) {
+	addDialogTag(tag + 'Now', function (environment, parameters, onReturn) {
 		fn(environment, parameters);
 		onReturn(null);
 	});
@@ -413,19 +413,19 @@ hackOptions.receive();
 
 function receiveMessage(type, data) {
 	switch (type) {
-		case 'variables':
-			var state = sending;
-			sending = false;
-			Object.entries(data).forEach(function (entry) {
-				var name = entry[0];
-				var value = entry[1];
-				bitsy.scriptInterpreter.SetVariable(hackOptions.variableNameIn(name), value);
-			});
-			sending = state;
-			break;
-		default:
-			console.warn('Unhandled message from outside Bitsy:', type, data);
-			break;
+	case 'variables':
+		var state = sending;
+		sending = false;
+		Object.entries(data).forEach(function (entry) {
+			var name = entry[0];
+			var value = entry[1];
+			bitsy.scriptInterpreter.SetVariable(hackOptions.variableNameIn(name), value);
+		});
+		sending = state;
+		break;
+	default:
+		console.warn('Unhandled message from outside Bitsy:', type, data);
+		break;
 	}
 }
 
@@ -433,7 +433,7 @@ function receiveMessage(type, data) {
 function sendVariable(name, value) {
 	hackOptions.send('variable', {
 		name: name,
-		value: value
+		value: value,
 	});
 }
 after('onVariableChanged', function (name) {
@@ -463,7 +463,7 @@ after('startExportedGame', function () {
 [
 	'eval',
 	'play',
-	'back'
+	'back',
 ].forEach(function (command) {
 	function doCommand(environment, parameters) {
 		hackOptions.send(command, parameters[0]);

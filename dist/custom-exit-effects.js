@@ -3,7 +3,7 @@
 @file custom-exit-effects
 @summary make custom exit transition effects
 @license MIT
-@version 1.1.0
+@version 1.1.1
 @requires 6.0
 @author Sean S. LeBlanc
 
@@ -66,7 +66,7 @@ var hackOptions = {
 			var a = start.Image.GetPixel(pixelX, pixelY);
 			var b = end.Image.GetPixel(pixelX, pixelY);
 			return bitsy.PostProcessUtilities.LerpColor(a, b, delta);
-		}
+		},
 	},
 };
 

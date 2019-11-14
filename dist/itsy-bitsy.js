@@ -3,7 +3,7 @@
 @file itsy-bitsy
 @summary for when bitsy's not small enough
 @license MIT
-@version 1.1.3
+@version 1.1.4
 @requires Bitsy Version: 5.1
 @author Sean S. LeBlanc
 
@@ -249,7 +249,7 @@ inject$1(/(var textboxInfo = {)[^]*?(};)/, '$1' + [
 	'bottom : 1,',
 	'font_scale : 1,',
 	'padding_vert : 2,',
-	'arrow_height : 5'
+	'arrow_height : 5',
 ].join('\n') + '$2');
 inject$1(/(top = \()4/, '$1 1');
 inject$1(/(left = \()4/, '$1 1');

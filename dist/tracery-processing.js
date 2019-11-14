@@ -3,7 +3,7 @@
 @file tracery processing
 @summary process all dialog text with a tracery grammar
 @license MIT
-@version 2.0.2
+@version 2.0.3
 @author Sean S. LeBlanc
 
 @description
@@ -843,19 +843,15 @@ var tracery = function() {
             switch (s.charAt(s.length -1)) {
             case 's':
                 return s + "es";
-                break;
             case 'h':
                 return s + "es";
-                break;
             case 'x':
                 return s + "es";
-                break;
             case 'y':
                 if (!isVowel(s.charAt(s.length - 2)))
                     return s.substring(0, s.length - 1) + "ies";
                 else
                     return s + "s";
-                break;
             default:
                 return s + "s";
             }
@@ -864,22 +860,17 @@ var tracery = function() {
             switch (s.charAt(s.length -1)) {
             case 's':
                 return s + "ed";
-                break;
             case 'e':
                 return s + "d";
-                break;
             case 'h':
                 return s + "ed";
-                break;
             case 'x':
                 return s + "ed";
-                break;
             case 'y':
                 if (!isVowel(s.charAt(s.length - 2)))
                     return s.substring(0, s.length - 1) + "ied";
                 else
                     return s + "d";
-                break;
             default:
                 return s + "ed";
             }
