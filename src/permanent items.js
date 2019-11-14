@@ -3,7 +3,7 @@
 @file permanent items
 @summary prevent some items from being picked up
 @license MIT
-@version 2.1.4
+@version 2.1.5
 @author Sean S. LeBlanc
 
 @description
