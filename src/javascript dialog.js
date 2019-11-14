@@ -44,6 +44,7 @@ import {
 	addDualDialogTag,
 } from './helpers/kitsy-script-toolkit';
 
+// eslint-disable-next-line no-eval
 var indirectEval = eval;
 
 function executeJs(environment, parameters) {

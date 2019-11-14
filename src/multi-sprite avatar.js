@@ -178,6 +178,7 @@ after('startExportedGame', function () {
 	for (var i = 0; i < repeats.length; ++i) {
 		var r = repeats[i];
 		var originalFn = bitsy[r];
+		// eslint-disable-next-line no-loop-func
 		bitsy[r] = function (fn) {
 			return enabled ? repeat(fn) : fn();
 		}.bind(undefined, originalFn);

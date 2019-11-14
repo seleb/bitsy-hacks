@@ -196,6 +196,7 @@ export var hackOptions = {
 	// controls how the 'billboard' type behaves
 	// recommendation: the default provided below, or babylon.TransformNode.BILLBOARDMODE_ALL
 	getBillboardMode: function (babylon) {
+		// eslint-disable-next-line no-bitwise
 		return babylon.TransformNode.BILLBOARDMODE_Y | babylon.TransformNode.BILLBOARDMODE_Z;
 	},
 	// If true, textures will be preloaded before they're needed while idle
