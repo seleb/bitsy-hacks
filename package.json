@@ -6,7 +6,7 @@
 		"hacks"
 	],
 	"main": "index.mjs",
-	"version": "7.4.2",
+	"version": "7.5.0",
 	"scripts": {
 		"build": "rollup -c",
 		"test": "jest --runInBand",
@@ -20,6 +20,7 @@
 		"url": "git://github.com/seleb/bitsy-hacks.git"
 	},
 	"dependencies": {
+		"@seansleblanc/pink-trombone": "^1.0.1",
 		"array-flat-polyfill": "^1.0.1",
 		"babylonjs": "^4.0.3",
 		"input-gamepads.js": "^2.0.2",
