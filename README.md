@@ -16,6 +16,7 @@ A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamled
 - 🅰 [custom text effect](/dist/custom-text-effect.js): make {custom}text effects{custom}
 - 🎞 [custom-exit-effects](/dist/custom-exit-effects.js): make custom exit transition effects
 - 💬 [dialog audio](/dist/dialog-audio.js): animal crossing-style audio
+- 🎺 [dialog audio vocal synth](/dist/dialog-audio-vocal-synth.js): animal crossing-style audio powered by the pink trombone vocal synth
 - 🔁 [dialog box transition](/dist/dialog-box-transition.js): adds an easing transition animation to display the dialog box text
 - 🔀 [dialog choices](/dist/dialog-choices.js): binary dialog choices
 - 🚀 [dialog jump](/dist/dialog-jump.js): jump from one dialog entry to another
