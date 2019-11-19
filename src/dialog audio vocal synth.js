@@ -3,7 +3,7 @@
 @file dialog audio vocal synth
 @summary animal crossing-style audio powered by the pink trombone vocal synth
 @license MIT
-@version 1.0.0
+@version 1.1.0
 @author Sean S. LeBlanc
 
 @description
@@ -49,7 +49,7 @@ import {
 	addDialogTag,
 } from './helpers/kitsy-script-toolkit';
 
-var hackOptions = {
+export var hackOptions = {
 	autoReset: true, // if true, automatically resets the voice to default when dialog is exited
 	// list of voices that can be used with the provided dialog command
 	// the values use for voice parameters are [base, range] pairs for RNG;

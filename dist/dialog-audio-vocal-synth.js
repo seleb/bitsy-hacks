@@ -3,7 +3,7 @@
 @file dialog audio vocal synth
 @summary animal crossing-style audio powered by the pink trombone vocal synth
 @license MIT
-@version 1.0.0
+@version 1.1.0
 @author Sean S. LeBlanc
 
 @description
@@ -36,7 +36,8 @@ HOW TO USE:
 2. Edit `hackOptions` below as needed
 3. Add (voice "<voice name>") commands to your dialog as needed
 */
-(function (bitsy) {
+this.hacks = this.hacks || {};
+(function (exports, bitsy) {
 'use strict';
 var hackOptions$1 = {
 	autoReset: true, // if true, automatically resets the voice to default when dialog is exited
@@ -1357,7 +1358,7 @@ after('dialogRenderer.DrawNextArrow', () => {
 });
 
 after('onExitDialog', function () {
-	{
+	if (hackOptions$1.autoReset) {
 		voice = defaultVoice;
 		resetTract();
 		applyVoice();
@@ -1369,4 +1370,6 @@ addDialogTag('voice', function (environment, parameters, onReturn) {
 	onReturn(null);
 });
 
-}(window));
+exports.hackOptions = hackOptions$1;
+
+}(this.hacks.dialog_audio_vocal_synth = this.hacks.dialog_audio_vocal_synth || {}, window));
