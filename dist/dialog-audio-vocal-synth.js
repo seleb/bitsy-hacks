@@ -3,7 +3,7 @@
 @file dialog audio vocal synth
 @summary animal crossing-style audio powered by the pink trombone vocal synth
 @license MIT
-@version 1.1.0
+@version 1.1.1
 @author Sean S. LeBlanc
 
 @description
@@ -1063,8 +1063,8 @@ before('dialogBuffer.DoNextChar', function () {
 
 
 
-var defaultVoice = hackOptions$1.voices.default;
-var voice = defaultVoice;
+var defaultVoice;
+var voice;
 
 // these are mostly guess-work based on playing around with the original pink trombone UI
 // some are pretty good but definitely could use some refinement
@@ -1368,6 +1368,11 @@ after('onExitDialog', function () {
 addDialogTag('voice', function (environment, parameters, onReturn) {
 	voice = hackOptions$1.voices[parameters[0]] || defaultVoice;
 	onReturn(null);
+});
+
+after('onready', function () {
+	defaultVoice = hackOptions$1.voices.default;
+	voice = defaultVoice;
 });
 
 exports.hackOptions = hackOptions$1;
