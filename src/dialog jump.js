@@ -3,7 +3,7 @@
 @file dialog jump
 @summary jump from one dialog entry to another
 @license MIT
-@version 1.1.6
+@version 1.1.7
 @requires 5.3
 @author Sean S. LeBlanc
 
@@ -45,10 +45,13 @@ function jump(targetDialog) {
 		return;
 	}
 	var dialogStr = bitsy.dialog[targetDialog];
+	var dialogId;
 	if (!dialogStr) {
 		dialogStr = targetDialog;
+	} else {
+		dialogId = targetDialog;
 	}
-	bitsy.startDialog(dialogStr);
+	bitsy.startDialog(dialogStr, dialogId);
 }
 
 addDualDialogTag('jump', function (environment, parameters) {
