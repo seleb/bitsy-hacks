@@ -58,21 +58,22 @@ after('load_game', function () {
 });
 
 var currentRoom;
-before('update', function () {
-	if (bitsy.curRoom !== currentRoom) {
-		currentRoom = bitsy.curRoom;
-		var newAvatarId = hackOptions.avatarByRoom[currentRoom];
-		if (
-			(!newAvatarId && !hackOptions.permanent) // if no sprite defined + not permanent, reset
-			|| (newAvatarId === bitsy.playerId) // manual reset
-		) {
-			bitsy.player().drw = originalAvatar;
-			return;
-		}
-		var newAvatar = getImage(newAvatarId, bitsy.sprite);
-		if (!newAvatar) {
-			throw new Error('Could not find sprite "' + newAvatarId + '" for room "' + currentRoom + '"');
-		}
-		bitsy.player().drw = newAvatar.drw;
+before('drawRoom', function () {
+	if (bitsy.player().room === currentRoom) {
+		return;
 	}
+	currentRoom = bitsy.player().room;
+	var newAvatarId = hackOptions.avatarByRoom[currentRoom];
+	if (
+		(!newAvatarId && !hackOptions.permanent) // if no sprite defined + not permanent, reset
+		|| (newAvatarId === bitsy.playerId) // manual reset
+	) {
+		bitsy.player().drw = originalAvatar;
+		return;
+	}
+	var newAvatar = getImage(newAvatarId, bitsy.sprite);
+	if (!newAvatar) {
+		throw new Error('Could not find sprite "' + newAvatarId + '" for room "' + currentRoom + '"');
+	}
+	bitsy.player().drw = newAvatar.drw;
 });
