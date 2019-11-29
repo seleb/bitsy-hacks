@@ -21,6 +21,7 @@ A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamled
 - 🔀 [dialog choices](/dist/dialog-choices.js): binary dialog choices
 - 🚀 [dialog jump](/dist/dialog-jump.js): jump from one dialog entry to another
 - 💬 [dialog pause](/dist/dialog-pause.js): add pauses in between printing text
+- ⌨ [dialog prompt](/dist/dialog-prompt.js): prompt the user for text input in dialog
 - 🔝 [direction in dialog](/dist/direction-in-dialog.js): provides a variable with player direction
 - ↔ [directional avatar](/dist/directional-avatar.js): flips the player's sprite based on directional movement
 - 🖼 [dynamic background](/dist/dynamic-background.js): HTML background matching bitsy background
