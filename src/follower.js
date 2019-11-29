@@ -3,13 +3,13 @@
 @file follower
 @summary makes a single sprite follow the player
 @license MIT
-@version 2.1.4
+@version 2.1.5
 @author Sean S. LeBlanc
 
 @description
 Makes a single sprite follow the player.
 Bitsy has a "walkingPath" built into the sprite system (I think this is a hold-over from the old pathfinding mouse controls).
-Paths can be assigned to any sprite to create different AI behaviours. 
+Paths can be assigned to any sprite to create different AI behaviours.
 
 Includes an optional feature which filters the follower out of collisions.
 
@@ -21,17 +21,17 @@ HOW TO USE:
 1. Copy-paste this script into a script tag after the bitsy source
 2. Edit `follower` to your intended sprite
 */
-import bitsy from "bitsy";
+import bitsy from 'bitsy';
 import {
-	getImage
-} from "./helpers/utils";
+	getImage,
+} from './helpers/utils';
 import {
-	after
-} from "./helpers/kitsy-script-toolkit";
+	after,
+} from './helpers/kitsy-script-toolkit';
 
 export var hackOptions = {
 	allowFollowerCollision: false, // if true, the player can walk into the follower and talk to them (possible to get stuck this way)
-	follower: 'a' // id or name of sprite to be the follower
+	follower: 'a', // id or name of sprite to be the follower
 };
 
 var follower;
@@ -58,7 +58,7 @@ after('onPlayerMoved', function () {
 	} else {
 		var step = {
 			x: bitsy.player().x,
-			y: bitsy.player().y
+			y: bitsy.player().y,
 		};
 		switch (bitsy.curPlayerDirection) {
 		case bitsy.Direction.Up:
@@ -85,20 +85,20 @@ function filterFollowing(id) {
 }
 if (!hackOptions.allowFollowerCollision) {
 	// filter follower out of collisions
-	var _getSpriteLeft = bitsy.getSpriteLeft;
+	var originalGetSpriteLeft = bitsy.getSpriteLeft;
 	bitsy.getSpriteLeft = function () {
-		return filterFollowing(_getSpriteLeft());
-	}
-	var _getSpriteRight = bitsy.getSpriteRight;
+		return filterFollowing(originalGetSpriteLeft());
+	};
+	var originalGetSpriteRight = bitsy.getSpriteRight;
 	bitsy.getSpriteRight = function () {
-		return filterFollowing(_getSpriteRight());
-	}
-	var _getSpriteUp = bitsy.getSpriteUp;
+		return filterFollowing(originalGetSpriteRight());
+	};
+	var originalGetSpriteUp = bitsy.getSpriteUp;
 	bitsy.getSpriteUp = function () {
-		return filterFollowing(_getSpriteUp());
-	}
-	var _getSpriteDown = bitsy.getSpriteDown;
+		return filterFollowing(originalGetSpriteUp());
+	};
+	var originalGetSpriteDown = bitsy.getSpriteDown;
 	bitsy.getSpriteDown = function () {
-		return filterFollowing(_getSpriteDown());
-	}
+		return filterFollowing(originalGetSpriteDown());
+	};
 }

@@ -1,57 +1,60 @@
 /**
-😌
-@file bitsymuse
-@summary A variety of Bitsy sound and music handlers
+⌨
+@file dialog prompt
+@summary prompt the user for text input in dialog
 @license MIT
-@version 3.0.6
-@requires 4.8, 4.9
-@author David Mowatt
+@version 1.0.0
+@requires 6.4
+@author Sean S. LeBlanc
 
 @description
-A hack that adds a variety of audio controls, including music that changes as you move between rooms.
-If the same song is played as you move between rooms, the audio file will continue playing.
+Adds a dialog command which prompts the user for input,
+and stores the result in a variable.
+
+Note: This hack also includes the paragraph break hack;
+this is because text after a dialog prompt won't show up unless
+there is a paragraph break in between them.
+
+Usage:
+	(prompt "variableName")
+	(prompt "variableName,defaultValue")
+
+Examples:
+	Set name: (prompt "name")
+	Set name with default: (prompt "name,Adam")
+	Set name using current as default: {temp="name,"+name}(prompt temp)
+	Set name with text after: (prompt "name")(p)Name is now {print name}
+
+By default, no validation or transformation is applied to the user input;
+whatever they submit (even a blank input) is used as the variable value.
+This can be adjusted in the hackOptions to create prompts which are constrained.
+
+Example:
 
 HOW TO USE:
-1. Place your audio files somewhere relative to your bitsy html file (in the zip if you're uploading to itch.io)
-2. Copy-paste `<audio id="sound ID" src="relative path to sound file"></audio>` into the <head> of your document.
-   You need to do it once for each sound file you are adding, and each needs a unique sound ID. Add `loop` after the `src=""`
-   tag if it's music that's going to loop (e.g. `<audio id="sound ID" src="./mySong.mp3" loop></audio>`)
-3. Copy-paste this script into a script tag after the bitsy source.
-4. Edit hackOptions below to set up the TRACK LIST for rooms you move through.
-
-In addition to the track list, which will play audio based on the room number/name,
-you have access to the following commands you can add to dialogue:
-
-1. (soundeffectNow "<sound ID>") will play a sound without interrupting the music as soon as it is called in the dialogue
-2. (soundeffect "<sound ID>") will play a sound without interrupting the music once the dialogue box closes
-3. (musicNow "<sound ID>") will change the music as soon as it is called in the dialogue
-4. (music "<sound ID>") will change the music once the dialogue box closes
-
-You can call both musicNow and music in the same dialogue, to e.g. change the music while you speak to a character
-and then restart the regular room music once you stop speaking to them.
-You can also use a special ID ("S" by default) to Silence the music.
-
-By default, music tracks automatically restart from the beginning if you go back to a previous track.
-This can also be changed in the hackOptions below.
+1. Copy-paste into a script tag after the bitsy source
+2. Edit hackOptions below as needed
 */
 this.hacks = this.hacks || {};
 (function (exports, bitsy) {
 'use strict';
 var hackOptions = {
-	// You need to put an entry in this list for every room ID or name that is accessible by the player,
-	// and then specify the song ID for each room. Expand this list to as many rooms as you need.
-	// If the player moves between rooms with the same audio ID the music keeps playing seamlessly.
-	// Undefined rooms will keep playing whatever music they were last playing
-	musicByRoom: {
-		// Note: the entries below are examples that should be removed and replaced with your own room -> audio id mappings
-		0: 'song ID',
-		1: 'S', // This room is silent - it will stop music when you enter (see `silenceId` below)
-		2: 'another song ID',
-		h: 'a song ID for a room with a non-numeric ID',
-		'my room': 'a song ID for a room with a user-defined name',
+	// character used to indicate caret
+	caret: '_',
+	// character used to indicate highlighted text
+	highlight: '█',
+	// function run when the prompt is submitted
+	// whatever is returned from this function will be saved as the variable value
+	// if an error is thrown, the prompt will not submit
+	// (this can be used for validation, but keep in mind there's no user feedback)
+	// `variable` can be used to apply different behaviour for different variable prompts
+	// `value` is the current value of the text field
+	onSubmit: function (variable, value) {
+		return value; // allow any input
+		// return value.toLowerCase(); // convert input to lowercase
+		// if (value.length === 0) { throw new Error(); } return value; // require non-blank input
+		// if (variable === 'name' && value.length === 0) { throw new Error(); } return value; // require non-blank input for 'name' only
 	},
-	silenceId: 'S', // Use this song ID of to make a room fall silent.
-	resume: false, // If true, songs will pause/resume on change; otherwise, they'll stop/play (doesn't affect sound effects)
 };
 
 bitsy = bitsy && bitsy.hasOwnProperty('default') ? bitsy['default'] : bitsy;
@@ -95,16 +98,6 @@ function inject(searchRegex, replaceString) {
 	newScriptTag.textContent = code;
 	scriptTag.insertAdjacentElement('afterend', newScriptTag);
 	scriptTag.remove();
-}
-
-/**
- * Helper for getting room by name or id
- * @param {string} name id or name of room to return
- * @return {string} room, or undefined if it doesn't exist
- */
-function getRoom(name) {
-	var id = Object.prototype.hasOwnProperty.call(bitsy.room, name) ? name : bitsy.names.room.get(name);
-	return bitsy.room[id];
 }
 
 /**
@@ -158,13 +151,6 @@ function before(targetFuncName, beforeFn) {
 	var kitsy = kitsyInit();
 	kitsy.queuedBeforeScripts[targetFuncName] = kitsy.queuedBeforeScripts[targetFuncName] || [];
 	kitsy.queuedBeforeScripts[targetFuncName].push(beforeFn);
-}
-
-// Ex: after('load_game', function run() { alert('Loaded!'); });
-function after(targetFuncName, afterFn) {
-	var kitsy = kitsyInit();
-	kitsy.queuedAfterScripts[targetFuncName] = kitsy.queuedAfterScripts[targetFuncName] || [];
-	kitsy.queuedAfterScripts[targetFuncName].push(afterFn);
 }
 
 function kitsyInit() {
@@ -324,145 +310,165 @@ function addDialogTag(tag, fn) {
 }
 
 /**
- * Adds a custom dialog tag which executes the provided function.
- * For ease-of-use with the bitsy editor, tags can be written as
- * (tagname "parameters") in addition to the standard {tagname "parameters"}
- * 
- * Function is executed after the dialog box.
- *
- * @param {string}   tag Name of tag
- * @param {Function} fn  Function to execute, with signature `function(environment, parameters){}`
- *                       environment: provides access to SetVariable/GetVariable (among other things, see Environment in the bitsy source for more info)
- *                       parameters: array containing parameters as string in first element (i.e. `parameters[0]`)
+ * Helper for printing a paragraph break inside of a dialog function.
+ * Adds the function `AddParagraphBreak` to `DialogBuffer`
  */
-function addDeferredDialogTag(tag, fn) {
-	addDialogFunction(tag, fn);
-	bitsy.kitsy.deferredDialogFunctions = bitsy.kitsy.deferredDialogFunctions || {};
-	var deferred = bitsy.kitsy.deferredDialogFunctions[tag] = [];
-	inject$1(
-		/(var functionMap = new Map\(\);)/,
-		'$1functionMap.set("' + tag + '", function(e, p, o){ kitsy.deferredDialogFunctions.' + tag + '.push({e:e,p:p}); o(null); });'
-	);
-	// Hook into the dialog finish event and execute the actual function
-	after('onExitDialog', function () {
-		while (deferred.length) {
-			var args = deferred.shift();
-			bitsy.kitsy.dialogFunctions[tag](args.e, args.p, args.o);
-		}
-	});
-	// Hook into the game reset and make sure data gets cleared
-	after('clearGameData', function () {
-		deferred.length = 0;
-	});
-}
+
+inject$1(/(this\.AddLinebreak = )/, 'this.AddParagraphBreak = function() { buffer.push( [[]] ); isActive = true; };\n$1');
 
 /**
- * Adds two custom dialog tags which execute the provided function,
- * one with the provided tagname executed after the dialog box,
- * and one suffixed with 'Now' executed immediately when the tag is reached.
- *
- * i.e. helper for the (exit)/(exitNow) pattern.
- *
- * @param {string}   tag Name of tag
- * @param {Function} fn  Function to execute, with signature `function(environment, parameters){}`
- *                       environment: provides access to SetVariable/GetVariable (among other things, see Environment in the bitsy source for more info)
- *                       parameters: array containing parameters as string in first element (i.e. `parameters[0]`)
- */
-function addDualDialogTag(tag, fn) {
-	addDialogTag(tag + 'Now', function (environment, parameters, onReturn) {
-		fn(environment, parameters);
-		onReturn(null);
+📃
+@file paragraph-break
+@summary Adds paragraph breaks to the dialogue parser
+@license WTFPL (do WTF you want)
+@version 1.1.5
+@requires Bitsy Version: 5.0, 5.1
+@author Sean S. LeBlanc, David Mowatt
+
+@description
+Adds a (p) tag to the dialogue parser that forces the following text to
+start on a fresh dialogue screen, eliminating the need to spend hours testing
+line lengths or adding multiple line breaks that then have to be reviewed
+when you make edits or change the font size.
+
+Usage: (p)
+
+Example: I am a cat(p)and my dialogue contains multitudes
+
+HOW TO USE:
+  1. Copy-paste this script into a new script tag after the Bitsy source code.
+     It should appear *before* any other mods that handle loading your game
+     data so it executes *after* them (last-in first-out).
+
+NOTE: This uses parentheses "()" instead of curly braces "{}" around function
+      calls because the Bitsy editor's fancy dialog window strips unrecognized
+      curly-brace functions from dialog text. To keep from losing data, write
+      these function calls with parentheses like the examples above.
+
+      For full editor integration, you'd *probably* also need to paste this
+      code at the end of the editor's `bitsy.js` file. Untested.
+*/
+
+// Adds the actual dialogue tag. No deferred version is required.
+addDialogTag('p', function (environment, parameters, onReturn) {
+	environment.GetDialogBuffer().AddParagraphBreak();
+	onReturn(null);
+});
+// End of (p) paragraph break mod
+
+
+
+
+
+var cachedBuffer;
+var prompted = false;
+
+// helper for making a deep copy of dialog buffer
+function bufferCopy(buffer) {
+	return buffer.map(function (page) {
+		return page.map(function (row) {
+			return row.slice();
+		});
 	});
-	addDeferredDialogTag(tag, fn);
 }
 
+// manipulates dialog buffer to show the state of the form input in bitsy
+function updateInputDisplay() {
+	// reset to state at start of prompt
+	bitsy.dialogBuffer.SetBuffer(bufferCopy(cachedBuffer));
+	var highlight = promptInput.selectionEnd - promptInput.selectionStart;
+	var str = promptInput.value;
+	// insert caret/replace highlighted text
+	str = str.substring(0, promptInput.selectionStart) + (highlight > 0 ? hackOptions.highlight.repeat(highlight) : hackOptions.caret) + str.substr(promptInput.selectionEnd);
+
+	// show text
+	bitsy.dialogBuffer.AddText(str);
+	bitsy.dialogBuffer.Skip();
+}
+
+var promptForm = document.createElement('form');
+// prevent form from affecting layout
+promptForm.style.position = 'absolute';
+promptForm.style.top = '50%';
+promptForm.style.left = '50%';
+promptForm.style.maxWidth = '25vh';
+promptForm.style.maxHeight = '25vh';
+promptForm.style.zIndex = '-1';
+
+var promptInput = document.createElement('input');
+promptInput.type = 'text';
+promptInput.oninput = promptInput.onkeyup = updateInputDisplay;
+promptInput.onblur = function () {
+	if (prompted) {
+		this.focus();
+	}
+};
+// prevent zoom on focus
+promptInput.style.fontSize = '200%';
+// hide element without preventing input
+promptInput.style.maxWidth = '100%';
+promptInput.style.maxHeight = '100%';
+promptInput.style.padding = '0';
+promptInput.style.margin = '0';
+promptInput.style.border = 'none';
+promptInput.style.outline = 'none';
+
+promptForm.appendChild(promptInput);
+before('onready', function () {
+	document.body.appendChild(promptForm);
+});
 
 
+addDialogTag('prompt', function (environment, parameters, onReturn) {
+	prompted = true;
 
+	// parse parameters
+	var params = parameters[0].split(/,\s?/);
+	var variableName = params[0];
+	var defaultValue = params[1] || '';
 
-var currentMusic;
-var roomMusicFlag = null;
+	// prevent bitsy from handling input
+	var key = bitsy.key;
+	var isPlayerEmbeddedInEditor = bitsy.isPlayerEmbeddedInEditor;
+	var anyKeyPressed = bitsy.input.anyKeyPressed;
+	var isTapReleased = bitsy.input.isTapReleased;
+	var CanContinue = environment.GetDialogBuffer().CanContinue;
+	bitsy.key = {};
+	bitsy.input.anyKeyPressed = bitsy.input.isTapReleased = environment.GetDialogBuffer().CanContinue = function () { return false; };
+	bitsy.isPlayerEmbeddedInEditor = true;
 
-// expand the map to include ids of rooms listed by name
-after('load_game', function () {
-	var room;
-	for (var i in hackOptions.musicByRoom) {
-		if (Object.prototype.hasOwnProperty.call(hackOptions.musicByRoom, i)) {
-			room = getRoom(i);
-			if (room) {
-				hackOptions.musicByRoom[room.id] = hackOptions.musicByRoom[i];
-			}
+	promptInput.value = defaultValue;
+	promptInput.focus();
+	promptForm.onsubmit = function (event) {
+		event.preventDefault();
+		try {
+			var value = hackOptions.onSubmit(variableName, promptInput.value);
+			environment.SetVariable(variableName, value);
+		} catch (error) {
+			return;
 		}
-	}
+
+		prompted = false;
+		promptInput.blur();
+
+		// allow bitsy to start handling input again
+		bitsy.key = key;
+		bitsy.isPlayerEmbeddedInEditor = isPlayerEmbeddedInEditor;
+		bitsy.input.anyKeyPressed = anyKeyPressed;
+		bitsy.input.isTapReleased = isTapReleased;
+		environment.GetDialogBuffer().CanContinue = CanContinue;
+
+		onReturn(null);
+	};
+	// save a copy of the current buffer state for display purposes
+	cachedBuffer = bufferCopy(environment.GetDialogBuffer().GetBuffer());
+	// add a caret character immediately (otherwise it won't show up till a key is pressed)
+	environment.GetDialogBuffer().AddText(hackOptions.caret);
 });
 
-var audioCache = {};
-
-function getAudio(id) {
-	var el = audioCache[id] || (audioCache[id] = document.getElementById(id));
-	if (!el) {
-		throw new Error("bitsymuse tried to use audio with id '" + id + "' but couldn't find one on the page!");
-	}
-	return el;
-}
-
-function playSound(soundParam) {
-	if (!soundParam) {
-		return;
-	}
-	getAudio(soundParam).play();
-}
-
-function changeMusic(newMusic) {
-	var audio;
-	// if we didn't get new music,
-	// or the music didn't change,
-	// there's no work to be done
-	if (!newMusic || newMusic === currentMusic) {
-		return;
-	}
-
-	// stop old music
-	if (currentMusic && currentMusic !== hackOptions.silenceId) {
-		audio = getAudio(currentMusic);
-		audio.pause();
-		if (!hackOptions.resume) {
-			audio.currentTime = 0.0;
-		}
-	}
-
-	// start new music
-	currentMusic = newMusic;
-	// special case: don't start anything new
-	if (newMusic === hackOptions.silenceId) {
-		return;
-	}
-	getAudio(newMusic).play();
-}
-
-after('drawRoom', function () {
-	if (roomMusicFlag !== bitsy.curRoom) {
-		changeMusic(hackOptions.musicByRoom[bitsy.curRoom]);
-		roomMusicFlag = bitsy.curRoom;
-	}
-});
-
-// Implement the dialog functions
-addDualDialogTag('music', function (environment, parameters) {
-	if (!parameters[0]) {
-		throw new Error('{music/musicNow} was missing parameters! Usage: {music/musicNow "track name"}');
-	}
-	changeMusic(parameters[0]);
-});
-
-addDualDialogTag('soundeffect', function (environment, parameters) {
-	if (!parameters[0]) {
-		throw new Error('{soundeffect/soundeffectNow} was missing parameters! Usage: {soundeffect/soundeffectNow "track name"}');
-	}
-	playSound(parameters[0]);
-});
-// End of (music) dialog function mod
+// expose a setter/getter for private buffer in DialogBuffer class
+inject$1(/(this\.CurPage =)/, 'this.GetBuffer = function(){ return buffer; };this.SetBuffer = function(b){ buffer = b; };\n$1');
 
 exports.hackOptions = hackOptions;
 
-}(this.hacks.bitsymuse = this.hacks.bitsymuse || {}, window));
+}(this.hacks.dialog_prompt = this.hacks.dialog_prompt || {}, window));

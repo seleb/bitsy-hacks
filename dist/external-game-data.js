@@ -3,7 +3,7 @@
 @file external-game-data
 @summary separate Bitsy game data from your (modded) HTML for easier development
 @license WTFPL (do WTF you want)
-@version 2.1.3
+@version 2.1.4
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
@@ -250,7 +250,7 @@ before('startExportedGame', function (done) {
 			throw err;
 		}
 
-		gameDataElem.text = "\n" + dos2unix(importedData);
+		gameDataElem.text = '\n' + dos2unix(importedData);
 		done();
 	});
 });
@@ -260,7 +260,7 @@ function tryImportGameData(gameData, done) {
 	if (gameData.indexOf('IMPORT') === -1) {
 		return done({
 			error: ERR_MISSING_IMPORT,
-			message: 'No IMPORT found in Bitsy data. See instructions for external game data mod.'
+			message: 'No IMPORT found in Bitsy data. See instructions for external game data mod.',
 		}, gameData);
 	}
 
@@ -271,15 +271,15 @@ function tryImportGameData(gameData, done) {
 		return bitsy.getType(line) === 'IMPORT';
 	};
 	var importCmd = gameData
-	.split("\n")
-	.map(trim)
-	.find(isImport);
+		.split('\n')
+		.map(trim)
+		.find(isImport);
 
 	// Make sure we found an actual IMPORT command.
 	if (!importCmd) {
 		return done({
 			error: ERR_MISSING_IMPORT,
-			message: 'No IMPORT found in Bitsy data. See instructions for external game data mod.'
+			message: 'No IMPORT found in Bitsy data. See instructions for external game data mod.',
 		});
 	}
 
@@ -287,9 +287,8 @@ function tryImportGameData(gameData, done) {
 
 	if (src) {
 		return fetchData(src, done);
-	} else {
-		return done('IMPORT missing a URL or path to a Bitsy data file!');
 	}
+	return done('IMPORT missing a URL or path to a Bitsy data file!');
 }
 
 function fetchData(url, done) {
@@ -300,9 +299,8 @@ function fetchData(url, done) {
 		if (this.status >= 200 && this.status < 400) {
 			// Success!
 			return done(null, this.response);
-		} else {
-			return done('Failed to load game data: ' + request.statusText + ' (' + this.status + ')');
 		}
+		return done('Failed to load game data: ' + request.statusText + ' (' + this.status + ')');
 	};
 
 	request.onerror = function () {
@@ -313,7 +311,7 @@ function fetchData(url, done) {
 }
 
 function dos2unix(text) {
-	return text.replace(/\r\n/g, "\n");
+	return text.replace(/\r\n/g, '\n');
 }
 
 }(window));

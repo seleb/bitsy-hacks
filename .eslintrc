@@ -1,0 +1,54 @@
+{
+	"extends": "airbnb-base",
+	"env": {
+		"browser": true
+	},
+	"parserOptions": {
+		"ecmaVersion": 2017,
+		"sourceType": "module",
+		"ecmaFeatures": {
+			"modules": true
+		}
+	},
+	"rules": {
+		"max-len": "off", // just apply common-sense
+		"import/no-unresolved": "off", // `bitsy` can't be resolved
+		"no-param-reassign": "off", // necessary for most hacks
+
+		// for dev accessibility
+		// e.g. helpers from body called in hackOptions,
+		// var declarations co-located with relevant functions,
+		// etc.
+		"no-console": "off",
+		"no-unused-vars": "off",
+		"vars-on-top": "off",
+		"no-use-before-define": "off",
+
+		// tabs instead of spaces
+		"no-tabs":"off",
+		"indent": ["error", "tab"],
+		
+		// don't prefer fancy stuff to account for lack of babel
+		"import/prefer-default-export": "off",
+		"import/no-default-export": "error",
+		"import/no-mutable-exports": "off",
+		"prefer-rest-params": "off",
+		"no-var": "off",
+		"prefer-arrow-callback": "off",
+		"func-names": "off",
+		"prefer-destructuring": "off",
+		"prefer-spread": "off",
+		"prefer-object-spread": "off",
+		"prefer-template": "off",
+		"object-shorthand": "off",
+
+		// i just like using these 🤷‍♀️
+		"no-multi-assign": "off",
+		"no-plusplus": "off",
+		"no-continue": "off",
+		
+		// only a warning b/c of so many existing violating cases;
+		// should re-enable after having fixed them
+		"no-restricted-syntax": "warn"
+	}
+}

@@ -3,7 +3,7 @@
 @file character portraits animated
 @summary high quality anime gifs
 @license MIT
-@version 1.0.4
+@version 1.0.5
 @requires Bitsy Version: 5.3
 @author Sean S. LeBlanc
 
@@ -46,9 +46,9 @@ export var hackOptions = {
 	scale: bitsy.scale,
 	autoReset: true,
 	portraits: {
-		'earth': './GIF.gif',
-		'cat': './test-export.gif',
-		'png': './test.gif',
+		earth: './GIF.gif',
+		cat: './test-export.gif',
+		png: './test.gif',
 	},
 };
 
@@ -106,7 +106,7 @@ after('startExportedGame', function () {
 						}
 						prevCtx.drawImage(canvas, 0, 0);
 						ctx.drawImage(prev, 0, 0);
-						var delay = Math.max(1 / 60 * 1000, reader.frameInfo(i).delay * 10); // maximum speed of 60fps
+						var delay = Math.max((1 / 60) * 1000, reader.frameInfo(i).delay * 10); // maximum speed of 60fps
 						duration += delay;
 						frames.push({
 							img: canvas,

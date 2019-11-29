@@ -3,7 +3,7 @@
 @file text-to-speech
 @summary text-to-speech for bitsy dialog
 @license MIT
-@version 1.0.3
+@version 1.0.4
 @requires 5.5
 @author Sean S. LeBlanc
 
@@ -49,7 +49,7 @@ import bitsy from 'bitsy';
 import {
 	inject,
 	after,
-	addDualDialogTag
+	addDualDialogTag,
 } from './helpers/kitsy-script-toolkit';
 
 export var hackOptions = {
@@ -151,7 +151,7 @@ inject(/(function DialogFontChar\(font, char, effectList\) {)/, '$1\nthis.char =
 var spoke = false;
 after('dialogRenderer.DrawNextArrow', function () {
 	if (hackOptions.automatic && !spoke) {
-		queueSpeak(bitsy.dialogBuffer.CurPage().map(a => a.map(i => i.char).join('')).join(' '));
+		queueSpeak(bitsy.dialogBuffer.CurPage().map((a) => a.map((i) => i.char).join('')).join(' '));
 		spoke = true;
 	}
 });

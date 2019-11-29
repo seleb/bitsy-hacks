@@ -3,7 +3,7 @@
 @file edit dialog from dialog
 @summary edit dialog from dialog (yes really)
 @license MIT
-@version 1.1.4
+@version 1.1.5
 @author Sean S. LeBlanc
 
 @description
@@ -257,11 +257,11 @@ function _reinitEngine() {
 // interpreter. Unescape escaped parentheticals, too.
 function convertDialogTags(input, tag) {
 	return input
-		.replace(new RegExp('\\\\?\\((' + tag + '(\\s+(".+?"|.+?))?)\\\\?\\)', 'g'), function(match, group){
-			if(match.substr(0,1) === '\\') {
-				return '('+ group + ')'; // Rewrite \(tag "..."|...\) to (tag "..."|...)
+		.replace(new RegExp('\\\\?\\((' + tag + '(\\s+(".+?"|.+?))?)\\\\?\\)', 'g'), function (match, group) {
+			if (match.substr(0, 1) === '\\') {
+				return '(' + group + ')'; // Rewrite \(tag "..."|...\) to (tag "..."|...)
 			}
-			return '{'+ group + '}'; // Rewrite (tag "..."|...) to {tag "..."|...}
+			return '{' + group + '}'; // Rewrite (tag "..."|...) to {tag "..."|...}
 		});
 }
 
@@ -330,10 +330,10 @@ after('load_game', function () {
 function editDialog(environment, parameters) {
 	// parse parameters
 	var params = parameters[0].split(/,\s?/);
-	params[0] = (params[0] || "").toLowerCase();
+	params[0] = (params[0] || '').toLowerCase();
 	var mapId = params[0];
 	var tgtId = params[1];
-	var newDialog = params[2] || "";
+	var newDialog = params[2] || '';
 
 	if (!mapId || !tgtId) {
 		throw new Error('Image expects three parameters: "map, target, newDialog", but received: "' + params.join(', ') + '"');

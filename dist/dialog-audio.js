@@ -1,21 +1,53 @@
 /**
-👁️‍🗨️
-@file transparent dialog
-@summary makes the dialog box have a transparent background
+💬
+@file dialog audio
+@summary animal crossing-style audio
 @license MIT
-@version 1.1.4
+@version 1.0.2
 @author Sean S. LeBlanc
 
 @description
-Makes the dialog box have a transparent background.
-
-Note: this one's ~pretty hacky~.
+Executes some logic for every letter of text printed,
+with a default implementation of animal crossing-style audio.
 
 HOW TO USE:
-Copy-paste into a script tag after the bitsy source
+1. Copy-paste into a script tag after the bitsy source
+2. Edit `onLetter` below as needed
 */
-(function (bitsy) {
+this.hacks = this.hacks || {};
+(function (exports, bitsy) {
 'use strict';
+var hackOptions = {
+	// function called for each character printed to the dialog box
+	// the single parameter is the character with the following properties:
+	// 	offset: offset from actual position in pixels. starts at {x:0, y:0}
+	// 	color: color of rendered text in [0-255]. starts at {r:255, g:255, b:255, a:255}
+	// 	bitmap: character bitmap as array of pixels
+	// 	row: vertical position in rows
+	// 	col: horizontal position in characters
+	// 	char: the letter as a string (note: this is hacked in)
+	//
+	// this function can be customized to create a variety of effects,
+	// but a default implementation is provided which will play a sound
+	// mapped by letter to an HTML audio tag with a specific id, e.g. <audio id="dialog-a" src="./a.mp3"></audio>
+	//
+	// some examples of how this could be modified for more complex audio:
+	// 	- set `audioEl.volume` based on character position
+	// 	- use `bitsy.scriptInterpreter.GetVariable('voice')` to map to a different set of sounds
+	// 	- use an HTML5 AudioContext or library instead of audio tags to control pitch or play generative audio
+	//
+	// note that the character may not always be defined (e.g. during bitsy dialog commands)
+	// so be sure to guard against null data if modifying the implementation
+	onLetter: function (dialogChar) {
+		var character = (dialogChar || {}).char || '';
+		var id = 'dialog-' + character.toLowerCase();
+		var audioEl = document.getElementById(id);
+		if (audioEl) {
+			audioEl.currentTime = 0.0;
+			audioEl.play();
+		}
+	},
+};
 
 bitsy = bitsy && bitsy.hasOwnProperty('default') ? bitsy['default'] : bitsy;
 
@@ -102,6 +134,15 @@ function inject$1(searchRegex, replaceString) {
 		searchRegex: searchRegex,
 		replaceString: replaceString
 	});
+}
+
+// Ex: before('load_game', function run() { alert('Loading!'); });
+//     before('show_text', function run(text) { return text.toUpperCase(); });
+//     before('show_text', function run(text, done) { done(text.toUpperCase()); });
+function before(targetFuncName, beforeFn) {
+	var kitsy = kitsyInit();
+	kitsy.queuedBeforeScripts[targetFuncName] = kitsy.queuedBeforeScripts[targetFuncName] || [];
+	kitsy.queuedBeforeScripts[targetFuncName].push(beforeFn);
 }
 
 function kitsyInit() {
@@ -213,29 +254,16 @@ function _reinitEngine() {
 
 
 
-bitsy.transparentDialog = {
-	canvas: document.createElement('canvas'),
-};
-bitsy.transparentDialog.context = bitsy.transparentDialog.canvas.getContext('2d');
-var drawOverride = `
-if(context == null) return;
-transparentDialog.canvas.width = textboxInfo.width*scale;
-transparentDialog.canvas.height = textboxInfo.height*scale;
-transparentDialog.context.putImageData(textboxInfo.img, 0, 0);
-if (isCentered) {
-	context.drawImage(transparentDialog.canvas, textboxInfo.left*scale, ((height/2)-(textboxInfo.height/2))*scale);
-} else if (player().y < mapsize/2) {
-	context.drawImage(transparentDialog.canvas, textboxInfo.left*scale, (height-textboxInfo.bottom-textboxInfo.height)*scale);
-}
-else {
-	context.drawImage(transparentDialog.canvas, textboxInfo.left*scale, textboxInfo.top*scale);
-}
-return;`;
 
-// override textbox drawing to use draw image version from above
-inject$1(/(this\.DrawTextbox = function\(\) {)/, '$1' + drawOverride);
 
-// override textbox clearing pixels to be fully transparent
-inject$1(/(textboxInfo\.img\.data\[i\+3\]=)255/, '$10');
+// save the character on dialog font characters so we can read it back post-render
+inject$1(/(function DialogFontChar\(font, char, effectList\) {)/, '$1\nthis.char = char;');
 
-}(window));
+// hook up letter function
+before('dialogBuffer.DoNextChar', function () {
+	hackOptions.onLetter(bitsy.dialogBuffer.CurChar());
+});
+
+exports.hackOptions = hackOptions;
+
+}(this.hacks.dialog_audio = this.hacks.dialog_audio || {}, window));

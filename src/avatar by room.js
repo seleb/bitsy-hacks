@@ -3,7 +3,7 @@
 @file avatar by room
 @summary change the avatar in certain rooms
 @license MIT
-@version 1.1.5
+@version 1.1.8
 @requires 5.3
 @author Sean S. LeBlanc
 
@@ -17,15 +17,15 @@ HOW TO USE:
 By default, the avatar will reset to the default if you enter a room without a sprite defined.
 This can also be changed in the hackOptions below to instead apply avatar changes permanently.
 */
-import bitsy from "bitsy";
+import bitsy from 'bitsy';
 import {
 	getRoom,
-	getImage
-} from "./helpers/utils";
+	getImage,
+} from './helpers/utils';
 import {
 	after,
-	before
-} from "./helpers/kitsy-script-toolkit";
+	before,
+} from './helpers/kitsy-script-toolkit';
 
 export var hackOptions = {
 	permanent: false, // If true, avatar changes will persist across rooms without sprites defined
@@ -37,13 +37,14 @@ export var hackOptions = {
 		1: 'A', // note that 'A' is the player sprite, so this does nothing by default, but will reset the player if permanent == true
 		2: 'another sprite ID',
 		h: 'a sprite ID for a room with a non-numeric ID',
-		'my room': 'a sprite ID for a room with a user-defined name'
+		'my room': 'a sprite ID for a room with a user-defined name',
 	},
 };
 
 // expand the map to include ids of rooms listed by name
 // and store the original player sprite
-var originalAvatar;
+var originalDrw;
+var originalAnimation;
 after('load_game', function () {
 	var room;
 	for (var i in hackOptions.avatarByRoom) {
@@ -54,29 +55,30 @@ after('load_game', function () {
 			}
 		}
 	}
-	originalAvatar = bitsy.player().drw;
+	originalDrw = bitsy.player().drw;
+	originalAnimation = bitsy.player().animation;
 });
 
 var currentRoom;
-before('update', function () {
-	if (bitsy.curRoom !== currentRoom) {
-		currentRoom = bitsy.curRoom;
-		var newAvatarId = hackOptions.avatarByRoom[currentRoom];
-		if (
-			(!newAvatarId && !hackOptions.permanent) // if no sprite defined + not permanent, reset
-			||
-			(newAvatarId === bitsy.playerId) // manual reset
-		) {
-			bitsy.player().drw = originalAvatar;
-			return;
-		}
-		if (newAvatarId === bitsy.playerId) {
-			bitsy.player().drw
-		}
-		var newAvatar = getImage(newAvatarId, bitsy.sprite);
-		if (!newAvatar) {
-			throw new Error('Could not find sprite "' + newAvatarId + '" for room "' + currentRoom + '"');
-		}
-		bitsy.player().drw = newAvatar.drw;
+before('drawRoom', function () {
+	var player = bitsy.player();
+	if (bitsy.player().room === currentRoom) {
+		return;
 	}
+	currentRoom = player.room;
+	var newAvatarId = hackOptions.avatarByRoom[currentRoom];
+	if (
+		(!newAvatarId && !hackOptions.permanent) // if no sprite defined + not permanent, reset
+		|| (newAvatarId === player.id) // manual reset
+	) {
+		player.drw = originalDrw;
+		player.animation = originalAnimation;
+		return;
+	}
+	var newAvatar = getImage(newAvatarId, bitsy.sprite);
+	if (!newAvatar) {
+		throw new Error('Could not find sprite "' + newAvatarId + '" for room "' + currentRoom + '"');
+	}
+	player.drw = newAvatar.drw;
+	player.animation = Object.assign({}, newAvatar.animation);
 });

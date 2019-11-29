@@ -3,7 +3,7 @@
 @file javascript dialog
 @summary execute arbitrary javascript from dialog
 @license MIT
-@version 3.2.4
+@version 3.2.5
 @requires Bitsy Version: 4.5, 4.6
 @author Sean S. LeBlanc
 
@@ -38,11 +38,13 @@ NOTE: This uses parentheses "()" instead of curly braces "{}" around function
       For full editor integration, you'd *probably* also need to paste this
       code at the end of the editor's `bitsy.js` file. Untested.
 */
-"use strict";
-import {
-	addDualDialogTag
-} from "./helpers/kitsy-script-toolkit";
 
+
+import {
+	addDualDialogTag,
+} from './helpers/kitsy-script-toolkit';
+
+// eslint-disable-next-line no-eval
 var indirectEval = eval;
 
 function executeJs(environment, parameters) {

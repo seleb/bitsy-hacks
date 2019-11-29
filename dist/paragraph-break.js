@@ -3,18 +3,18 @@
 @file paragraph-break
 @summary Adds paragraph breaks to the dialogue parser
 @license WTFPL (do WTF you want)
-@version 1.1.4
+@version 1.1.5
 @requires Bitsy Version: 5.0, 5.1
 @author Sean S. LeBlanc, David Mowatt
 
 @description
-Adds a (p) tag to the dialogue parser that forces the following text to 
+Adds a (p) tag to the dialogue parser that forces the following text to
 start on a fresh dialogue screen, eliminating the need to spend hours testing
 line lengths or adding multiple line breaks that then have to be reviewed
 when you make edits or change the font size.
 
 Usage: (p)
-       
+
 Example: I am a cat(p)and my dialogue contains multitudes
 
 HOW TO USE:
@@ -240,11 +240,11 @@ function _reinitEngine() {
 // interpreter. Unescape escaped parentheticals, too.
 function convertDialogTags(input, tag) {
 	return input
-		.replace(new RegExp('\\\\?\\((' + tag + '(\\s+(".+?"|.+?))?)\\\\?\\)', 'g'), function(match, group){
-			if(match.substr(0,1) === '\\') {
-				return '('+ group + ')'; // Rewrite \(tag "..."|...\) to (tag "..."|...)
+		.replace(new RegExp('\\\\?\\((' + tag + '(\\s+(".+?"|.+?))?)\\\\?\\)', 'g'), function (match, group) {
+			if (match.substr(0, 1) === '\\') {
+				return '(' + group + ')'; // Rewrite \(tag "..."|...\) to (tag "..."|...)
 			}
-			return '{'+ group + '}'; // Rewrite (tag "..."|...) to {tag "..."|...}
+			return '{' + group + '}'; // Rewrite (tag "..."|...) to {tag "..."|...}
 		});
 }
 
@@ -294,10 +294,10 @@ inject$1(/(this\.AddLinebreak = )/, 'this.AddParagraphBreak = function() { buffe
 
 
 
-//Adds the actual dialogue tag. No deferred version is required.
-addDialogTag('p', function(environment, parameters, onReturn){
-    environment.GetDialogBuffer().AddParagraphBreak();
-    onReturn(null);
+// Adds the actual dialogue tag. No deferred version is required.
+addDialogTag('p', function (environment, parameters, onReturn) {
+	environment.GetDialogBuffer().AddParagraphBreak();
+	onReturn(null);
 });
 // End of (p) paragraph break mod
 

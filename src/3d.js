@@ -3,7 +3,7 @@
 @file 3d
 @summary bitsy in three dee
 @license MIT
-@version 1.2.0
+@version 1.2.1
 @requires 6.3
 @author Sean S. LeBlanc & Elkie Nova
 
@@ -129,7 +129,11 @@ HOW TO USE:
 2. Add the tags described above to the names of the rooms and drawings in bitsy editor to use additional features
 3. Edit hackOptions below as needed
 */
-import { hackOptions as smoothMoves } from './smooth moves';
+import bitsy from 'bitsy';
+import BABYLON from 'babylonjs';
+import {
+	hackOptions as smoothMoves,
+} from './smooth moves';
 import {
 	after,
 	before,
@@ -138,8 +142,6 @@ import {
 	hackOptions as transparentSprites,
 } from './transparent sprites';
 import 'array-flat-polyfill'; // polyfill array.flat for babylon
-import BABYLON from 'babylonjs';
-import bitsy from 'bitsy';
 
 export var hackOptions = {
 	// Determines the resolution of the scene rendered
@@ -210,12 +212,11 @@ export var hackOptions = {
 		if (meshMatch) {
 			if (meshTemplates[meshMatch[1]]) {
 				return meshMatch[1];
-			} else {
-				// if the specified mesh template doesn't exist,
-				// display error message, but continue execution
-				// to resolve the mesh with default logic
-				console.error(`mesh template '${meshMatch[1]}' wasn't found`);
 			}
+			// if the specified mesh template doesn't exist,
+			// display error message, but continue execution
+			// to resolve the mesh with default logic
+			console.error(`mesh template '${meshMatch[1]}' wasn't found`);
 		}
 
 		// default
@@ -234,9 +235,10 @@ export var hackOptions = {
 		return 'floor';
 	},
 	// controls how the 'billboard' type behaves
-	// recommendation: the default provided below, or BABYLON.TransformNode.BILLBOARDMODE_ALL
-	getBillboardMode: function (BABYLON) {
-		return BABYLON.TransformNode.BILLBOARDMODE_Y | BABYLON.TransformNode.BILLBOARDMODE_Z;
+	// recommendation: the default provided below, or babylon.TransformNode.BILLBOARDMODE_ALL
+	getBillboardMode: function (babylon) {
+		// eslint-disable-next-line no-bitwise
+		return babylon.TransformNode.BILLBOARDMODE_Y | babylon.TransformNode.BILLBOARDMODE_Z;
 	},
 	// If true, textures will be preloaded before they're needed while idle
 	// it's recommended to keep this on for more consistent performance post-startup
@@ -257,7 +259,7 @@ export var hackOptions = {
 			mesh.scaling = new BABYLON.Vector3(
 				Number(scaleTag[1]) || 0,
 				Number(scaleTag[2]) || 0,
-				Number(scaleTag[3]) || 0
+				Number(scaleTag[3]) || 0,
 			);
 		}
 		// rotate. input in degrees
@@ -329,27 +331,27 @@ export var hackOptions = {
 	// max distance to allow tweens
 	delta: 1.5,
 	// easing function
-	ease: function(t) {
-		t = 1 - Math.pow(1 - t, 2);
+	ease: function (t) {
+		t = 1 - ((1 - t) ** 2);
 		return t;
 	},
 };
 
 function radians(degrees) {
-	return degrees * Math.PI / 180;
+	return (degrees * Math.PI) / 180;
 }
 
 // forward transparent sprites hack option
 transparentSprites.isTransparent = function (drawing) {
 	return hackOptions.isTransparent(drawing);
 };
-smoothMoves.ease = function(t) {
+smoothMoves.ease = function (t) {
 	return hackOptions.ease(t);
 };
 
 // scene init helpers
 export function makeBaseCamera() {
-	var camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 2, Math.PI / 4, bitsy.mapsize / 2, BABYLON.Vector3.Zero(), scene);
+	var camera = new BABYLON.ArcRotateCamera('Camera', -Math.PI / 2, Math.PI / 4, bitsy.mapsize / 2, BABYLON.Vector3.Zero(), scene);
 	// perspective clipping
 	camera.minZ = 0.001;
 	camera.maxZ = bitsy.mapsize * 2;
@@ -383,11 +385,11 @@ export function makeFollowPlayer(camera) {
 	};
 }
 export function addShader(fragmentSrc, downScale) {
-	BABYLON.Effect.ShadersStore["customFragmentShader"] = fragmentSrc;
+	BABYLON.Effect.ShadersStore.customFragmentShader = fragmentSrc;
 
-	var postProcess = new BABYLON.PostProcess("customFragmentShader", "custom", ["screenSize"], null, downScale, scene.activeCamera);
+	var postProcess = new BABYLON.PostProcess('customFragmentShader', 'custom', ['screenSize'], null, downScale, scene.activeCamera);
 	postProcess.onApply = function (effect) {
-		effect.setFloat2("screenSize", postProcess.width, postProcess.height);
+		effect.setFloat2('screenSize', postProcess.width, postProcess.height);
 	};
 }
 export function addControls(camera) {
@@ -488,7 +490,7 @@ canvas:focus { outline: none; }
 	meshTemplates.box = meshTemplates.tower1;
 
 	// floor
-	var floorMesh = BABYLON.MeshBuilder.CreatePlane(`floor`, {
+	var floorMesh = BABYLON.MeshBuilder.CreatePlane('floor', {
 		width: 1,
 		height: 1,
 	}, scene);
@@ -517,24 +519,24 @@ canvas:focus { outline: none; }
 	meshTemplates.billboard = planeMesh.clone('billboard');
 
 	// wedge
-	var wedgeMesh = new BABYLON.Mesh("wedgeMesh", scene);
+	var wedgeMesh = new BABYLON.Mesh('wedgeMesh', scene);
 	var wedgeMeshPos = [
 		-1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 1, 0, 1, 1, // 0,1,2, 3,4,5,
 		-1, 0, 1, -1, 0, 0, 0, 1, 0, 0, 1, 1, // 6,7,8,9
 		0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, // 10,11,12,13
-		0, 0, 1, 0, 0, 0, -1, 0, 0, -1, 0, 1 // 14,15,16,17
+		0, 0, 1, 0, 0, 0, -1, 0, 0, -1, 0, 1, // 14,15,16,17
 	];
 	var wedgeMeshInd = [
-		0, 1, 2, 3, 4, 5, //triangles on the front and the back
+		0, 1, 2, 3, 4, 5, // triangles on the front and the back
 		6, 7, 8, 8, 9, 6, // tris that make up the sliding face at the top
 		10, 11, 12, 12, 13, 10, // right face
-		14, 15, 16, 16, 17, 14 // bottom face
+		14, 15, 16, 16, 17, 14, // bottom face
 	];
 	var wedgeMeshUvs = [
 		0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0, 1,
 		0, 0, 1, 0, 1, 1, 0, 1,
 		0, 0, 1, 0, 1, 1, 0, 1,
-		0, 0, 1, 0, 1, 1, 0, 1
+		0, 0, 1, 0, 1, 1, 0, 1,
 	];
 	var wedgeMeshVertData = new BABYLON.VertexData();
 	wedgeMeshVertData.positions = wedgeMeshPos;
@@ -551,12 +553,12 @@ canvas:focus { outline: none; }
 	meshTemplates.wedge = wedgeMesh;
 
 	// empty mesh for making drawings invisible
-	var emptyMesh = new BABYLON.Mesh("emptyMesh", scene);
+	var emptyMesh = new BABYLON.Mesh('emptyMesh', scene);
 	meshTemplates.empty = emptyMesh;
 
 	// add transform node for playerPosNode that's going to copy avatar's position so that the
 	// camera can follow them without crashing when the avatar is rendered as billboard
-	playerPosNode = new BABYLON.TransformNode("playerPosNode");
+	playerPosNode = new BABYLON.TransformNode('playerPosNode');
 
 	// material
 	baseMat = new BABYLON.StandardMaterial('base material', scene);
@@ -578,7 +580,7 @@ canvas:focus { outline: none; }
 	engine.setSize(hackOptions.size.width, hackOptions.size.height);
 	if (hackOptions.size.auto) {
 		engine.resize();
-		window.addEventListener("resize", function () {
+		window.addEventListener('resize', function () {
 			engine.resize();
 		});
 	}
@@ -593,7 +595,7 @@ canvas:focus { outline: none; }
 			stackId = tag[1];
 			stackPos = Number(tag[2]) || 0;
 		}
-		roomsInStack[stackId] = roomsInStack[stackId] || []
+		roomsInStack[stackId] = roomsInStack[stackId] || [];
 		roomsInStack[stackId].push(room.id);
 
 		stackPosOfRoom[room.id] = {
@@ -626,12 +628,12 @@ canvas:focus { outline: none; }
 			});
 			[].concat(items, tiles, sprites).forEach(function (drawing) {
 				requestIdleCallback(function () {
-					var f = drawing.animation.frameIndex;
-					for (var i = 0; i < drawing.animation.frameCount; ++i) {
-						drawing.animation.frameIndex = i;
+					var originalFrame = drawing.animation.frameIndex;
+					for (var frame = 0; frame < drawing.animation.frameCount; ++frame) {
+						drawing.animation.frameIndex = frame;
 						getTexture(drawing, room.pal);
 					}
-					drawing.animation.frameIndex = f;
+					drawing.animation.frameIndex = originalFrame;
 				});
 			});
 		});
@@ -706,7 +708,7 @@ after('update', function () {
 	}
 	update();
 	if (hackOptions.tankControls) {
-		scene.activeCamera.alpha = tankFrom + (tankTarget - tankFrom) * (1.0 - Math.pow(1.0 - Math.min((bitsy.prevTime - tankTime) / 200, 1), 2.0));
+		scene.activeCamera.alpha = tankFrom + (tankTarget - tankFrom) * (1.0 - ((1.0 - Math.min((bitsy.prevTime - tankTime) / 200, 1)) ** 2.0));
 	}
 	if (prevRoom !== bitsy.curRoom) {
 		scene.blockMaterialDirtyMechanism = false;
@@ -940,8 +942,8 @@ function update() {
 			// check if it is still listed its room
 			// if so keep it as it is and return
 			if (bitsy.room[roomId].items.find(function (item) {
-					return `${roomId},${item.id},${item.x},${item.y}` === entry[0];
-				})) {
+				return `${roomId},${item.id},${item.x},${item.y}` === entry[0];
+			})) {
 				return;
 			}
 		}
@@ -1036,6 +1038,6 @@ function getColor(colorId) {
 	return new BABYLON.Color3(
 		col[0] / 255,
 		col[1] / 255,
-		col[2] / 255
+		col[2] / 255,
 	);
 }

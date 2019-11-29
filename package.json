@@ -6,7 +6,7 @@
 		"hacks"
 	],
 	"main": "index.mjs",
-	"version": "7.2.2",
+	"version": "7.7.1",
 	"scripts": {
 		"build": "rollup -c",
 		"test": "jest --runInBand",
@@ -20,25 +20,28 @@
 		"url": "git://github.com/seleb/bitsy-hacks.git"
 	},
 	"dependencies": {
+		"@seansleblanc/pink-trombone": "^1.0.1",
 		"array-flat-polyfill": "^1.0.1",
 		"babylonjs": "^4.0.3",
 		"input-gamepads.js": "^2.0.2",
 		"omggif": "^1.0.10",
-		"rollup": "^1.20.3",
+		"rollup": "^1.27.5",
 		"rollup-plugin-commonjs": "^10.1.0",
 		"rollup-plugin-node-resolve": "^5.2.0",
 		"tracery-grammar": "^2.7.4",
-		"webglazy": "^3.0.2"
+		"webglazy": "^3.0.3"
 	},
 	"devDependencies": {
-		"@babel/plugin-transform-runtime": "^7.5.5",
-		"@babel/preset-env": "^7.5.5",
-		"@babel/runtime": "^7.5.5",
+		"@babel/plugin-transform-runtime": "^7.7.4",
+		"@babel/preset-env": "^7.7.4",
+		"@babel/runtime": "^7.7.4",
 		"doctrine": "^3.0.0",
-		"eslint": "^6.2.2",
+		"eslint": "^6.7.1",
+		"eslint-config-airbnb-base": "^14.0.0",
+		"eslint-plugin-import": "^2.18.2",
 		"jest": "^24.9.0",
-		"jest-image-snapshot": "^2.10.0",
-		"puppeteer": "^1.19.0"
+		"jest-image-snapshot": "^2.11.1",
+		"puppeteer": "^2.0.0"
 	},
 	"jest": {
 		"testEnvironment": "node",

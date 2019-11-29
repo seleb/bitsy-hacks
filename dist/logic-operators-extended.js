@@ -2,7 +2,7 @@
 🔀
 @file logic-operators-extended
 @summary adds conditional logic operators
-@version 1.1.4
+@version 1.1.5
 @author @mildmojo
 
 @description
@@ -266,7 +266,7 @@ function orNotExp(environment, left, right, onReturn) {
 	});
 }
 
-inject$1(/(operatorMap\.set\("-", subExp\);)/,`
+inject$1(/(operatorMap\.set\("-", subExp\);)/, `
 	$1
 	operatorMap.set("&&", ${andExp.toString()});
 	operatorMap.set("||", ${orExp.toString()});
@@ -276,7 +276,7 @@ inject$1(/(operatorMap\.set\("-", subExp\);)/,`
 `);
 inject$1(
 	/(var operatorSymbols = \[.+\];)/,
-	'$1operatorSymbols.unshift("!==", "&&", "||", "&&!", "||!");'
+	'$1operatorSymbols.unshift("!==", "&&", "||", "&&!", "||!");',
 );
 // End of logic operators mod
 

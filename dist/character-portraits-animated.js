@@ -3,7 +3,7 @@
 @file character portraits animated
 @summary high quality anime gifs
 @license MIT
-@version 1.0.4
+@version 1.0.5
 @requires Bitsy Version: 5.3
 @author Sean S. LeBlanc
 
@@ -36,9 +36,9 @@ var hackOptions$1 = {
 	scale: bitsy.scale,
 	autoReset: true,
 	portraits: {
-		'earth': './GIF.gif',
-		'cat': './test-export.gif',
-		'png': './test.gif',
+		earth: './GIF.gif',
+		cat: './test-export.gif',
+		png: './test.gif',
 	},
 };
 
@@ -533,7 +533,6 @@ function GifReader(buf) {
 
       default:
         throw new Error("Unknown gif block: 0x" + buf[p-1].toString(16));
-        break;
     }
   }
 
@@ -1045,11 +1044,11 @@ function _reinitEngine() {
 // interpreter. Unescape escaped parentheticals, too.
 function convertDialogTags(input, tag) {
 	return input
-		.replace(new RegExp('\\\\?\\((' + tag + '(\\s+(".+?"|.+?))?)\\\\?\\)', 'g'), function(match, group){
-			if(match.substr(0,1) === '\\') {
-				return '('+ group + ')'; // Rewrite \(tag "..."|...\) to (tag "..."|...)
+		.replace(new RegExp('\\\\?\\((' + tag + '(\\s+(".+?"|.+?))?)\\\\?\\)', 'g'), function (match, group) {
+			if (match.substr(0, 1) === '\\') {
+				return '(' + group + ')'; // Rewrite \(tag "..."|...\) to (tag "..."|...)
 			}
-			return '{'+ group + '}'; // Rewrite (tag "..."|...) to {tag "..."|...}
+			return '{' + group + '}'; // Rewrite (tag "..."|...) to {tag "..."|...}
 		});
 }
 
@@ -1095,7 +1094,7 @@ function addDialogTag(tag, fn) {
 @file character portraits
 @summary high quality anime jpegs (or pngs i guess)
 @license MIT
-@version 2.0.3
+@version 2.0.4
 @requires Bitsy Version: 5.3
 @author Sean S. LeBlanc
 
@@ -1141,7 +1140,7 @@ var hackOptions = {
 	// - online urls (which are not guaranteed to work as they are network-dependent)
 	// - base64-encoded images (the most reliable but unwieldy)
 	portraits: {
-		'cat': './cat.png',
+		cat: './cat.png',
 	},
 	autoReset: true, // if true, automatically resets the portrait to blank when dialog is exited
 };
@@ -1152,9 +1151,9 @@ var state = {
 };
 
 // preload images into a cache
-after('startExportedGame', function() {
+after('startExportedGame', function () {
 	for (var i in hackOptions.portraits) {
-		if(Object.prototype.hasOwnProperty.call(hackOptions.portraits, i)) {
+		if (Object.prototype.hasOwnProperty.call(hackOptions.portraits, i)) {
 			state.portraits[i] = new Image();
 			state.portraits[i].src = hackOptions.portraits[i];
 		}
@@ -1191,7 +1190,7 @@ after('drawRoom', function () {
 	}
 });
 
-after('onExitDialog', function() {
+after('onExitDialog', function () {
 	if (hackOptions.autoReset) {
 		state.portrait = '';
 	}
@@ -1255,7 +1254,7 @@ after('startExportedGame', function () {
 						}
 						prevCtx.drawImage(canvas, 0, 0);
 						ctx.drawImage(prev, 0, 0);
-						var delay = Math.max(1 / 60 * 1000, reader.frameInfo(i).delay * 10); // maximum speed of 60fps
+						var delay = Math.max((1 / 60) * 1000, reader.frameInfo(i).delay * 10); // maximum speed of 60fps
 						duration += delay;
 						frames.push({
 							img: canvas,

@@ -3,7 +3,7 @@
 @file multi-sprite avatar
 @summary make the player big
 @license MIT
-@version 2.1.5
+@version 2.1.6
 @author Sean S. LeBlanc
 
 @description
@@ -23,38 +23,38 @@ HOW TO USE:
 2. Edit `pieces` below to customize the multi-sprite avatar
 	Pieces must have an x,y offset and a sprite id
 */
-import bitsy from "bitsy";
+import bitsy from 'bitsy';
 import {
 	before,
-	after
-} from "./helpers/kitsy-script-toolkit";
+	after,
+} from './helpers/kitsy-script-toolkit';
 import {
-	getImage
-} from "./helpers/utils";
+	getImage,
+} from './helpers/utils';
 
 export var hackOptions = {
 	pieces: [{
 		x: 0,
 		y: 0,
-		spr: 'c'
+		spr: 'c',
 	}, {
 		x: 1,
 		y: 0,
-		spr: 'd'
+		spr: 'd',
 	}, {
 		x: 0,
 		y: 1,
-		spr: 'e'
+		spr: 'e',
 	}, {
 		x: 1,
 		y: 1,
-		spr: 'f'
+		spr: 'f',
 	}],
-	enabledOnStart: true
+	enabledOnStart: true,
 };
 
 if (hackOptions.enabledOnStart) {
-	after("onready", enableBig);
+	after('onready', enableBig);
 }
 
 var enabled = false;
@@ -87,13 +87,13 @@ function disableBig() {
 }
 
 // handle item/ending/exit collision
-var _getItemIndex = bitsy.getItemIndex;
-var _getEnding = bitsy.getEnding;
-var _getExit = bitsy.getExit;
+var originalGetItemIndex = bitsy.getItemIndex;
+var originalGetEnding = bitsy.getEnding;
+var originalGetExit = bitsy.getExit;
 var getItemIndexOverride = function (roomId, x, y) {
 	for (var i = 0; i < pieces.length; ++i) {
 		var piece = pieces[i];
-		var idx = _getItemIndex(roomId, x + piece.x, y + piece.y);
+		var idx = originalGetItemIndex(roomId, x + piece.x, y + piece.y);
 		if (idx !== -1) {
 			return idx;
 		}
@@ -103,32 +103,34 @@ var getItemIndexOverride = function (roomId, x, y) {
 var getEndingOverride = function (roomId, x, y) {
 	for (var i = 0; i < pieces.length; ++i) {
 		var piece = pieces[i];
-		var e = _getEnding(roomId, x + piece.x, y + piece.y);
+		var e = originalGetEnding(roomId, x + piece.x, y + piece.y);
 		if (e) {
 			return e;
 		}
 	}
-}
+	return undefined;
+};
 var getExitOverride = function (roomId, x, y) {
 	for (var i = 0; i < pieces.length; ++i) {
 		var piece = pieces[i];
-		var e = _getExit(roomId, x + piece.x, y + piece.y);
+		var e = originalGetExit(roomId, x + piece.x, y + piece.y);
 		if (e) {
 			return e;
 		}
 	}
-}
-before("movePlayer", function () {
+	return undefined;
+};
+before('movePlayer', function () {
 	if (enabled) {
 		bitsy.getItemIndex = getItemIndexOverride;
 		bitsy.getEnding = getEndingOverride;
 		bitsy.getExit = getExitOverride;
 	}
 });
-after("movePlayer", function () {
-	bitsy.getItemIndex = _getItemIndex;
-	bitsy.getEnding = _getEnding;
-	bitsy.getExit = _getExit;
+after('movePlayer', function () {
+	bitsy.getItemIndex = originalGetItemIndex;
+	bitsy.getEnding = originalGetEnding;
+	bitsy.getExit = originalGetExit;
 	if (enabled) {
 		syncPieces();
 	}
@@ -159,7 +161,7 @@ var repeats = [
 	'isWallLeft',
 	'isWallRight',
 	'isWallUp',
-	'isWallDown'
+	'isWallDown',
 ];
 
 // prevent player from colliding with their own pieces
@@ -175,13 +177,14 @@ function filterPieces(id) {
 after('startExportedGame', function () {
 	for (var i = 0; i < repeats.length; ++i) {
 		var r = repeats[i];
-		var _fn = bitsy[r];
+		var originalFn = bitsy[r];
+		// eslint-disable-next-line no-loop-func
 		bitsy[r] = function (fn) {
 			return enabled ? repeat(fn) : fn();
-		}.bind(undefined, _fn);
+		}.bind(undefined, originalFn);
 	}
-	var _getSpriteAt = bitsy.getSpriteAt;
+	var originalGetSpriteAt = bitsy.getSpriteAt;
 	bitsy.getSpriteAt = function () {
-		return filterPieces(_getSpriteAt.apply(this, arguments));
-	}
+		return filterPieces(originalGetSpriteAt.apply(this, arguments));
+	};
 });

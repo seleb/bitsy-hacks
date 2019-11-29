@@ -3,7 +3,7 @@
 @file edit dialog from dialog
 @summary edit dialog from dialog (yes really)
 @license MIT
-@version 1.1.4
+@version 1.1.5
 @author Sean S. LeBlanc
 
 @description
@@ -24,15 +24,15 @@ TIPS:
 	- The player avatar is always a sprite with id "A"; you can edit your gamedata to give them a name for clarity
 	- You can use the full names or shorthand of image types (e.g. "SPR" and "sprite" will both work)
 */
-import bitsy from "bitsy";
+import bitsy from 'bitsy';
 import {
 	addDeferredDialogTag,
-	after
-} from "./helpers/kitsy-script-toolkit";
+	after,
+} from './helpers/kitsy-script-toolkit';
 import {
 	getImage,
-	inject
-} from "./helpers/utils";
+	inject,
+} from './helpers/utils';
 
 // map of maps
 var maps;
@@ -48,10 +48,10 @@ after('load_game', function () {
 function editDialog(environment, parameters) {
 	// parse parameters
 	var params = parameters[0].split(/,\s?/);
-	params[0] = (params[0] || "").toLowerCase();
+	params[0] = (params[0] || '').toLowerCase();
 	var mapId = params[0];
 	var tgtId = params[1];
-	var newDialog = params[2] || "";
+	var newDialog = params[2] || '';
 
 	if (!mapId || !tgtId) {
 		throw new Error('Image expects three parameters: "map, target, newDialog", but received: "' + params.join(', ') + '"');

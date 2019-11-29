@@ -3,7 +3,7 @@
 @file solid items
 @summary treat some items like sprites that can be placed multiple times
 @license MIT
-@version 2.1.4
+@version 2.1.5
 @author Sean S. LeBlanc
 
 @description
@@ -14,31 +14,32 @@ HOW TO USE:
 1. Copy-paste this script into a script tag after the bitsy source
 2. Update the `itemIsSolid` function below to match your needs
 */
-import bitsy from "bitsy";
+import bitsy from 'bitsy';
 import {
 	before,
-	after
-} from "./helpers/kitsy-script-toolkit";
+	after,
+} from './helpers/kitsy-script-toolkit';
 
 export var hackOptions = {
 	itemIsSolid: function (item) {
-		//return item.name && item.name == 'tea'; // specific solid item
-		//return ['tea', 'flower', 'hat'].indexOf(item.name) !== -1; // specific solid item list
-		//return item.name && item.name.indexOf('SOLID') !== -1; // solid item flag in name
+		// return item.name && item.name == 'tea'; // specific solid item
+		// return ['tea', 'flower', 'hat'].indexOf(item.name) !== -1; // specific solid item list
+		// return item.name && item.name.indexOf('SOLID') !== -1; // solid item flag in name
 		return true; // all items are solid
-	}
+	},
 };
 
 var room;
 var oldItems;
-var x,y;
-before("movePlayer", function () {
+var x;
+var y;
+before('movePlayer', function () {
 	x = bitsy.player().x;
 	y = bitsy.player().y;
 	room = bitsy.room[bitsy.curRoom];
 	oldItems = room.items.slice();
 });
-after("movePlayer", function () {
+after('movePlayer', function () {
 	var newItems = room.items;
 	if (newItems.length === oldItems.length) {
 		return; // nothing changed
@@ -46,10 +47,10 @@ after("movePlayer", function () {
 
 	// check for changes
 	for (var i = 0; i < oldItems.length; ++i) {
-		if (!newItems[i] ||
-			oldItems[i].x !== newItems[i].x ||
-			oldItems[i].y !== newItems[i].y ||
-			oldItems[i].id !== newItems[i].id
+		if (!newItems[i]
+			|| oldItems[i].x !== newItems[i].x
+			|| oldItems[i].y !== newItems[i].y
+			|| oldItems[i].id !== newItems[i].id
 		) {
 			// something changed
 			if (hackOptions.itemIsSolid(bitsy.item[oldItems[i].id])) {

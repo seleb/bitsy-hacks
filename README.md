@@ -15,10 +15,13 @@ A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamled
 - ➿ [corrupt](/dist/corrupt.js): corrupts gamedata at runtime
 - 🅰 [custom text effect](/dist/custom-text-effect.js): make {custom}text effects{custom}
 - 🎞 [custom-exit-effects](/dist/custom-exit-effects.js): make custom exit transition effects
+- 💬 [dialog audio](/dist/dialog-audio.js): animal crossing-style audio
+- 🎺 [dialog audio vocal synth](/dist/dialog-audio-vocal-synth.js): animal crossing-style audio powered by the pink trombone vocal synth
 - 🔁 [dialog box transition](/dist/dialog-box-transition.js): adds an easing transition animation to display the dialog box text
 - 🔀 [dialog choices](/dist/dialog-choices.js): binary dialog choices
 - 🚀 [dialog jump](/dist/dialog-jump.js): jump from one dialog entry to another
 - 💬 [dialog pause](/dist/dialog-pause.js): add pauses in between printing text
+- ⌨ [dialog prompt](/dist/dialog-prompt.js): prompt the user for text input in dialog
 - 🔝 [direction in dialog](/dist/direction-in-dialog.js): provides a variable with player direction
 - ↔ [directional avatar](/dist/directional-avatar.js): flips the player's sprite based on directional movement
 - 🖼 [dynamic background](/dist/dynamic-background.js): HTML background matching bitsy background
@@ -41,6 +44,7 @@ A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamled
 - ⬛ [opaque tiles](/dist/opaque-tiles.js): tiles which hide the player
 - 📃 [paragraph-break](/dist/paragraph-break.js): Adds paragraph breaks to the dialogue parser
 - ⏳ [permanent items](/dist/permanent-items.js): prevent some items from being picked up
+- ➡ [push sprites](/dist/push-sprites.js): sokoban-style sprite pushing
 - 🎭 [replace drawing](/dist/replace-drawing.js): add name-tags to replace drawings when the game is loading
 - 💾 [save](/dist/save.js): save/load your game
 - 🏃 [smooth moves](/dist/smooth-moves.js): ease the player's movement

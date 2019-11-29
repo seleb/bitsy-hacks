@@ -3,7 +3,7 @@
 @file close on ending
 @summary Prevents from playing past an ending
 @license MIT
-@version 1.1.3
+@version 1.1.4
 @author Sean S. LeBlanc
 
 @description
@@ -229,7 +229,7 @@ function _reinitEngine() {
 inject$1(/(function tryRestartGame\(e\) {)/, '$1return;');
 
 after('onExitDialog', function () {
-	if(bitsy.isEnding) {
+	if (bitsy.isEnding) {
 		// prevent further input
 		var no = function () {
 			return false;
