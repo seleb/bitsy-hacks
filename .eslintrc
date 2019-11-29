@@ -38,6 +38,7 @@
 		"func-names": "off",
 		"prefer-destructuring": "off",
 		"prefer-spread": "off",
+		"prefer-object-spread": "off",
 		"prefer-template": "off",
 		"object-shorthand": "off",
 
