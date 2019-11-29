@@ -43,7 +43,8 @@ export var hackOptions = {
 
 // expand the map to include ids of rooms listed by name
 // and store the original player sprite
-var originalAvatar;
+var originalDrw;
+var originalAnimation;
 after('load_game', function () {
 	var room;
 	for (var i in hackOptions.avatarByRoom) {
@@ -54,26 +55,30 @@ after('load_game', function () {
 			}
 		}
 	}
-	originalAvatar = bitsy.player().drw;
+	originalDrw = bitsy.player().drw;
+	originalAnimation = bitsy.player().animation;
 });
 
 var currentRoom;
 before('drawRoom', function () {
+	var player = bitsy.player();
 	if (bitsy.player().room === currentRoom) {
 		return;
 	}
-	currentRoom = bitsy.player().room;
+	currentRoom = player.room;
 	var newAvatarId = hackOptions.avatarByRoom[currentRoom];
 	if (
 		(!newAvatarId && !hackOptions.permanent) // if no sprite defined + not permanent, reset
-		|| (newAvatarId === bitsy.playerId) // manual reset
+		|| (newAvatarId === player.id) // manual reset
 	) {
-		bitsy.player().drw = originalAvatar;
+		player.drw = originalDrw;
+		player.animation = originalAnimation;
 		return;
 	}
 	var newAvatar = getImage(newAvatarId, bitsy.sprite);
 	if (!newAvatar) {
 		throw new Error('Could not find sprite "' + newAvatarId + '" for room "' + currentRoom + '"');
 	}
-	bitsy.player().drw = newAvatar.drw;
+	player.drw = newAvatar.drw;
+	player.animation = Object.assign({}, newAvatar.animation);
 });
