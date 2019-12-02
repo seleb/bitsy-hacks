@@ -45,10 +45,17 @@ import {
 } from './helpers/kitsy-script-toolkit';
 
 export var hackOptions = {
-	// put your grammar entries here
+	grammar: {
+		// put your grammar entries here
+	},
 };
 
-var bitsyGrammar = tracery.createGrammar(hackOptions);
+var bitsyGrammar;
+
+before('onready', function () {
+	bitsyGrammar = tracery.createGrammar(hackOptions.grammar);
+});
+
 before('startDialog', function (dialogStr) {
 	return [bitsyGrammar.flatten(dialogStr)];
 });
