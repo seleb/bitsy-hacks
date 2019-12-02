@@ -48,12 +48,15 @@ export var hackOptions = {
 	grammar: {
 		// put your grammar entries here
 	},
+	// modifiers to include (if this is not provided, the default tracery-provided modifiers like `.capitalize` are used)
+	modifiers: undefined,
 };
 
 var bitsyGrammar;
 
 before('onready', function () {
 	bitsyGrammar = tracery.createGrammar(hackOptions.grammar);
+	bitsyGrammar.addModifiers(hackOptions.modifiers || tracery.baseEngModifiers);
 });
 
 before('startDialog', function (dialogStr) {
