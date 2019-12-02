@@ -3,7 +3,7 @@
 @file tracery processing
 @summary process all dialog text with a tracery grammar
 @license MIT
-@version 2.0.3
+@version 3.0.0
 @author Sean S. LeBlanc
 
 @description
@@ -43,7 +43,11 @@ this.hacks = this.hacks || {};
 (function (exports, bitsy) {
 'use strict';
 var hackOptions = {
-	// put your grammar entries here
+	grammar: {
+		// put your grammar entries here
+	},
+	// modifiers to include (if this is not provided, the default tracery-provided modifiers like `.capitalize` are used)
+	modifiers: undefined,
 };
 
 bitsy = bitsy && bitsy.hasOwnProperty('default') ? bitsy['default'] : bitsy;
@@ -1084,7 +1088,13 @@ function _reinitEngine() {
 
 
 
-var bitsyGrammar = tracery_1.createGrammar(hackOptions);
+var bitsyGrammar;
+
+before('onready', function () {
+	bitsyGrammar = tracery_1.createGrammar(hackOptions.grammar);
+	bitsyGrammar.addModifiers(hackOptions.modifiers || tracery_1.baseEngModifiers);
+});
+
 before('startDialog', function (dialogStr) {
 	return [bitsyGrammar.flatten(dialogStr)];
 });
