@@ -45,6 +45,8 @@ function updateBg() {
 before('moveSprites', getBg);
 before('movePlayer', getBg);
 before('parseWorld', getBg);
+before('movePlayerThroughExit', getBg);
 after('moveSprites', updateBg);
 after('movePlayer', updateBg);
 after('parseWorld', updateBg);
+after('movePlayerThroughExit', updateBg);
