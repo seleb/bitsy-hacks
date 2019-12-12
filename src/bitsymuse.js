@@ -58,7 +58,7 @@ export var hackOptions = {
 		h: 'a song ID for a room with a non-numeric ID',
 		'my room': 'a song ID for a room with a user-defined name',
 	},
-	silenceId: 'S', // Use this song ID of to make a room fall silent.
+	silenceId: 'S', // Use this song ID to make a room fall silent.
 	resume: false, // If true, songs will pause/resume on change; otherwise, they'll stop/play (doesn't affect sound effects)
 };
 
