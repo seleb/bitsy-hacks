@@ -19,13 +19,13 @@ HOW TO USE:
 3. Copy-paste this script into a script tag after the bitsy source.
 4. Edit hackOptions below to set up the TRACK LIST for rooms you move through.
 
-In addition to the track list, which will play audio based on the room number/name,
+In addition to the track list, which will play audio based on the room id/name,
 you have access to the following commands you can add to dialogue:
 
-1. (soundeffectNow "<sound ID>") will play a sound without interrupting the music as soon as it is called in the dialogue
-2. (soundeffect "<sound ID>") will play a sound without interrupting the music once the dialogue box closes
-3. (musicNow "<sound ID>") will change the music as soon as it is called in the dialogue
-4. (music "<sound ID>") will change the music once the dialogue box closes
+1. (soundeffectNow "<audio ID>") will play a sound without interrupting the music as soon as it is called in the dialogue
+2. (soundeffect "<audio ID>") will play a sound without interrupting the music once the dialogue box closes
+3. (musicNow "<audio ID>") will change the music as soon as it is called in the dialogue
+4. (music "<audio ID>") will change the music once the dialogue box closes
 
 You can call both musicNow and music in the same dialogue, to e.g. change the music while you speak to a character
 and then restart the regular room music once you stop speaking to them.
