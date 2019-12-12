@@ -62,6 +62,7 @@ export var hackOptions = {
 	resume: false, // If true, songs will pause/resume on change; otherwise, they'll stop/play (doesn't affect sound effects)
 };
 
+var audioElementsById = {};
 var currentMusic;
 var roomMusicFlag = null;
 
@@ -85,10 +86,9 @@ after('onPlayerMoved', function () {
 	}
 });
 
-var audioCache = {};
 
 function getAudio(id) {
-	var el = audioCache[id] || (audioCache[id] = document.getElementById(id));
+	var el = audioElementsById[id] || (audioElementsById[id] = document.getElementById(id));
 	if (!el) {
 		throw new Error("bitsymuse tried to use audio with id '" + id + "' but couldn't find one on the page!");
 	}
