@@ -3,7 +3,7 @@
 @file bitsymuse
 @summary A variety of Bitsy sound and music handlers
 @license MIT
-@version 3.0.6
+@version 3.0.7
 @requires 4.8, 4.9
 @author David Mowatt
 
@@ -393,6 +393,15 @@ after('load_game', function () {
 				hackOptions.musicByRoom[room.id] = hackOptions.musicByRoom[i];
 			}
 		}
+	}
+});
+
+// handle autoplay restriction
+var playedOnMoveOnce = true;
+after('onPlayerMoved', function () {
+	if (playedOnMoveOnce && currentMusic !== hackOptions.silenceId) {
+		playedOnMoveOnce = false;
+		getAudio(currentMusic).play();
 	}
 });
 
