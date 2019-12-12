@@ -78,6 +78,15 @@ after('load_game', function () {
 	}
 });
 
+// handle autoplay restriction
+var playedOnMoveOnce = true;
+after('onPlayerMoved', function () {
+	if (playedOnMoveOnce && currentMusic !== hackOptions.silenceId) {
+		playedOnMoveOnce = false;
+		getAudio(currentMusic).play();
+	}
+});
+
 var audioCache = {};
 
 function getAudio(id) {
