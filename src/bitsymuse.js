@@ -68,14 +68,12 @@ var roomMusicFlag = null;
 // expand the map to include ids of rooms listed by name
 after('load_game', function () {
 	var room;
-	for (var i in hackOptions.musicByRoom) {
-		if (Object.prototype.hasOwnProperty.call(hackOptions.musicByRoom, i)) {
-			room = getRoom(i);
-			if (room) {
-				hackOptions.musicByRoom[room.id] = hackOptions.musicByRoom[i];
-			}
+	Object.entries(hackOptions.musicByRoom).forEach(function (entry) {
+		room = getRoom(entry[0]);
+		if (room) {
+			hackOptions.musicByRoom[room.id] = entry[1];
 		}
-	}
+	});
 });
 
 // handle autoplay restriction
