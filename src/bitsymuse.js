@@ -13,11 +13,8 @@ If the same song is played as you move between rooms, the audio file will contin
 
 HOW TO USE:
 1. Place your audio files somewhere relative to your bitsy html file (in the zip if you're uploading to itch.io)
-2. Copy-paste `<audio id="sound ID" src="relative path to sound file"></audio>` into the <head> of your document.
-   You need to do it once for each sound file you are adding, and each needs a unique sound ID. Add `loop` after the `src=""`
-   tag if it's music that's going to loop (e.g. `<audio id="sound ID" src="./mySong.mp3" loop></audio>`)
-3. Copy-paste this script into a script tag after the bitsy source.
-4. Edit hackOptions below to set up the TRACK LIST for rooms you move through.
+2. Copy-paste this script into a script tag after the bitsy source.
+3. Edit hackOptions below to set up the track list for rooms you move through.
 
 In addition to the track list, which will play audio based on the room id/name,
 you have access to the following commands you can add to dialogue:
@@ -46,13 +43,21 @@ import {
 } from './helpers/kitsy-script-toolkit';
 
 export var hackOptions = {
-	// You need to put an entry in this list for every room ID or name that is accessible by the player,
-	// and then specify the song ID for each room. Expand this list to as many rooms as you need.
-	// If the player moves between rooms with the same audio ID the music keeps playing seamlessly.
+	// Put entries in this list for each audio file you want to use
+	// the key will be the id needed to play it in dialog tags and the musicByRoom options below,
+	// and the value will be the properties of the corresponding <audio> tag (e.g. src, loop, volume)
+	// Note: you can add <audio> tags to the html manually if you prefer
+	audio: {
+		// Note: the entries below are examples that should be removed and replaced with your own audio files
+		'example song ID': { src: './example song filepath.mp3', loop: true },
+		'example sfx ID': { src: './example sfx filepath.mp3', volume: 0.5 },
+	},
+	// Put entries in this list for every room ID or name that will change the music
+	// If the player moves between rooms with the same audio ID, the music keeps playing seamlessly.
 	// Undefined rooms will keep playing whatever music they were last playing
 	musicByRoom: {
 		// Note: the entries below are examples that should be removed and replaced with your own room -> audio id mappings
-		0: 'song ID',
+		0: 'example song ID',
 		1: 'S', // This room is silent - it will stop music when you enter (see `silenceId` below)
 		2: 'another song ID',
 		h: 'a song ID for a room with a non-numeric ID',
@@ -66,14 +71,22 @@ var audioElementsById = {};
 var currentMusic;
 var roomMusicFlag = null;
 
-// expand the map to include ids of rooms listed by name
 after('load_game', function () {
 	var room;
+	// expand the map to include ids of rooms listed by name
 	Object.entries(hackOptions.musicByRoom).forEach(function (entry) {
 		room = getRoom(entry[0]);
 		if (room) {
 			hackOptions.musicByRoom[room.id] = entry[1];
 		}
+	});
+	// add audio tags from options
+	Object.entries(hackOptions.audio).forEach(function (entry) {
+		var el = document.createElement('audio');
+		el.id = entry[0];
+		Object.assign(el, entry[1]);
+		document.body.appendChild(el);
+		audioElementsById[el.id] = el;
 	});
 });
 
