@@ -59,6 +59,6 @@ before('onready', function () {
 	bitsyGrammar.addModifiers(hackOptions.modifiers || tracery.baseEngModifiers);
 });
 
-before('startDialog', function (dialogStr) {
-	return [bitsyGrammar.flatten(dialogStr)];
+before('startDialog', function (dialogStr, dialogId) {
+	return [bitsyGrammar.flatten(dialogStr, dialogId)];
 });
