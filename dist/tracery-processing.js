@@ -3,7 +3,7 @@
 @file tracery processing
 @summary process all dialog text with a tracery grammar
 @license MIT
-@version 3.0.0
+@version 3.0.1
 @author Sean S. LeBlanc
 
 @description
@@ -1095,8 +1095,8 @@ before('onready', function () {
 	bitsyGrammar.addModifiers(hackOptions.modifiers || tracery_1.baseEngModifiers);
 });
 
-before('startDialog', function (dialogStr) {
-	return [bitsyGrammar.flatten(dialogStr)];
+before('startDialog', function (dialogStr, dialogId) {
+	return [bitsyGrammar.flatten(dialogStr, dialogId)];
 });
 
 exports.hackOptions = hackOptions;
