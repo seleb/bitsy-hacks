@@ -148,9 +148,6 @@ function editPalette(environment, parameters) {
 
 	// set palette
 	tgtObj.col = palObj;
-
-	// update images in cache
-	bitsy.renderImageForAllPalettes(tgtObj);
 }
 
 // hook up the dialog tags
