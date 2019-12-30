@@ -46,9 +46,5 @@
 		"no-multi-assign": "off",
 		"no-plusplus": "off",
 		"no-continue": "off",
-		
-		// only a warning b/c of so many existing violating cases;
-		// should re-enable after having fixed them
-		"no-restricted-syntax": "warn"
 	}
 }

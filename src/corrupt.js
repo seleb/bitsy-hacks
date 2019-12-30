@@ -3,7 +3,7 @@
 @file corrupt
 @summary corrupts gamedata at runtime
 @license MIT
-@version 3.0.5
+@version 3.0.6
 @requires 5.5
 @author Sean S. LeBlanc
 
@@ -104,13 +104,11 @@ function corrupt() {
 
 	// corrupt pixels of visible sprites
 	var visibleSprites = {};
-	for (var spr in bitsy.sprite) {
-		if (Object.prototype.hasOwnProperty.call(bitsy.sprite, spr)) {
-			if (bitsy.sprite[spr].room === bitsy.curRoom) {
-				visibleSprites[spr] = true;
-			}
+	Object.keys(bitsy.sprite).forEach(function (spr) {
+		if (bitsy.sprite[spr].room === bitsy.curRoom) {
+			visibleSprites[spr] = true;
 		}
-	}
+	});
 	visibleSprites = Object.keys(visibleSprites);
 	iterate(hackOptions.spritePixelsFreq * hackOptions.globalFreq, function () {
 		var t = rndItem(visibleSprites);

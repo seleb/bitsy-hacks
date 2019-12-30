@@ -3,7 +3,7 @@
 @file unique items
 @summary items which, when picked up, remove all other instances of that item from the game
 @license MIT
-@version 2.0.5
+@version 2.0.6
 @author Sean S. LeBlanc
 
 @description
@@ -29,15 +29,11 @@ export var hackOptions = {
 };
 
 after('onInventoryChanged', function (id) {
-	var r;
 	if (hackOptions.itemIsUnique(bitsy.item[id])) {
-		for (r in bitsy.room) {
-			if (Object.prototype.hasOwnProperty.call(bitsy.room, r)) {
-				r = bitsy.room[r];
-				r.items = r.items.filter(function (i) {
-					return i.id !== id;
-				});
-			}
-		}
+		Object.values(bitsy.room).forEach(function (room) {
+			room.items = room.items.filter(function (i) {
+				return i.id !== id;
+			});
+		});
 	}
 });

@@ -3,7 +3,7 @@
 @file favicon-from-sprite
 @summary generate a browser favicon (tab icon) from a Bitsy sprite, including animation!
 @license WTFPL (do WTF you want)
-@version 3.0.4
+@version 3.0.5
 @requires Bitsy Version: 5.5
 @author @mildmojo
 
@@ -299,20 +299,16 @@ function drawFrame(frameData) {
 
 	// Draw sprite foreground.
 	ctx.fillStyle = rgb(spriteColor);
-	for (var y in frameData) {
-		if (Object.prototype.hasOwnProperty.call(frameData, y)) {
-			for (var x in frameData[y]) {
-				if (Object.prototype.hasOwnProperty.call(frameData[y], x)) {
-					if (frameData[y][x] === 1) {
-						ctx.fillRect(x * ONE_PIXEL_SCALED + hackOptions.PIXEL_PADDING,
-							y * ONE_PIXEL_SCALED + hackOptions.PIXEL_PADDING,
-							ONE_PIXEL_SCALED,
-							ONE_PIXEL_SCALED);
-					}
-				}
+	Object.keys(frameData).forEach(function (y) {
+		Object.keys(frameData).forEach(function (x) {
+			if (frameData[y][x] === 1) {
+				ctx.fillRect(x * ONE_PIXEL_SCALED + hackOptions.PIXEL_PADDING,
+					y * ONE_PIXEL_SCALED + hackOptions.PIXEL_PADDING,
+					ONE_PIXEL_SCALED,
+					ONE_PIXEL_SCALED);
 			}
-		}
-	}
+		});
+	});
 
 	return canvas.toDataURL('image/x-icon');
 }

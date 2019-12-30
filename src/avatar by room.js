@@ -3,7 +3,7 @@
 @file avatar by room
 @summary change the avatar in certain rooms
 @license MIT
-@version 1.1.8
+@version 1.1.9
 @requires 5.3
 @author Sean S. LeBlanc
 
@@ -47,14 +47,12 @@ var originalDrw;
 var originalAnimation;
 after('load_game', function () {
 	var room;
-	for (var i in hackOptions.avatarByRoom) {
-		if (Object.prototype.hasOwnProperty.call(hackOptions.avatarByRoom, i)) {
-			room = getRoom(i);
-			if (room) {
-				hackOptions.avatarByRoom[room.id] = hackOptions.avatarByRoom[i];
-			}
+	Object.keys(hackOptions.avatarByRoom).forEach(function (i) {
+		room = getRoom(i);
+		if (room) {
+			hackOptions.avatarByRoom[room.id] = hackOptions.avatarByRoom[i];
 		}
-	}
+	});
 	originalDrw = bitsy.player().drw;
 	originalAnimation = bitsy.player().animation;
 });

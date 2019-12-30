@@ -3,7 +3,7 @@
 @file custom text effect
 @summary make {custom}text effects{custom}
 @license MIT
-@version 2.1.5
+@version 2.1.6
 @requires 5.3
 @author Sean S. LeBlanc
 
@@ -195,12 +195,10 @@ window.customTextEffects = {
 // generate code for each text effect
 var functionMapCode = '';
 var textEffectCode = '';
-for (var i in hackOptions) {
-	if (Object.prototype.hasOwnProperty.call(hackOptions, i)) {
-		functionMapCode += 'functionMap.set("' + i + '", function (environment, parameters, onReturn) {addOrRemoveTextEffect(environment, "' + i + '");onReturn(null);});';
-		textEffectCode += 'TextEffects["' + i + '"] = new (' + hackOptions[i].toString() + ')();';
-	}
-}
+Object.entries(hackOptions).forEach(function (entry) {
+	functionMapCode += 'functionMap.set("' + entry[0] + '", function (environment, parameters, onReturn) {addOrRemoveTextEffect(environment, "' + entry[0] + '");onReturn(null);});';
+	textEffectCode += 'TextEffects["' + entry[0] + '"] = new (' + entry[1].toString() + ')();';
+});
 
 // inject custom text effect code
 inject(/(var functionMap = new Map\(\);)/, '$1' + functionMapCode);
