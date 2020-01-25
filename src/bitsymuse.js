@@ -88,15 +88,25 @@ after('load_game', function () {
 		document.body.appendChild(el);
 		audioElementsById[el.id] = el;
 	});
-});
 
-// handle autoplay restriction
-var playedOnMoveOnce = true;
-after('onPlayerMoved', function () {
-	if (playedOnMoveOnce && currentMusic !== hackOptions.silenceId) {
-		playedOnMoveOnce = false;
-		getAudio(currentMusic).play();
+	// handle autoplay restrictions by playing then pausing
+	// every audio element on the first user interaction
+	function handleAutoPlayRestrictions() {
+		Object.values(audioElementsById).forEach(function (audio) {
+			audio.play();
+			// let the current song play
+			if (currentMusic === audio.id) {
+				return;
+			}
+			audio.pause();
+			audio.currentTime = 0;
+		});
+		document.body.removeEventListener('pointerup', handleAutoPlayRestrictions);
+		document.body.removeEventListener('keydown', handleAutoPlayRestrictions);
 	}
+
+	document.body.addEventListener('pointerup', handleAutoPlayRestrictions);
+	document.body.addEventListener('keydown', handleAutoPlayRestrictions);
 });
 
 
