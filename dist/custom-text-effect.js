@@ -3,7 +3,7 @@
 @file custom text effect
 @summary make {custom}text effects{custom}
 @license MIT
-@version 2.1.6
+@version 2.2.0
 @requires 5.3
 @author Sean S. LeBlanc
 
@@ -156,6 +156,61 @@ var hackOptions = {
 			}
 			lastCol = char.col;
 			char.offset.y -= ((char.col - lastSpace) ** 1.5) * (Math.sin(time / 120 + char.col / 2));
+		};
+	},
+	// some common formatting effects for general use
+	i: function () {
+		// renders text with an italic slant
+		// note that with higher steps, some characters will be cut off on the edges
+		var steps = 2;
+		this.DoEffect = function (char) {
+			var font = window.fontManager.Get(window.fontName);
+			var w = font.getWidth();
+			var h = font.getHeight();
+			window.customTextEffects.editBitmapCopy(char, function (bitmap) {
+				for (var y = 0; y < h; ++y) {
+					var o = Math.floor(y / h * steps - steps / 2) + 1;
+					for (var x = 0; x < w; ++x) {
+						bitmap[x + y * w] = x + o < 0 || x + 0 >= w ? 0 : char.originalBitmap[x + o + y * w];
+					}
+				}
+			});
+		};
+	},
+	b: function () {
+		// renders text with extra thickness
+		// note that with higher weight, some characters will be cut off on the edges
+		var weight = 2;
+		this.DoEffect = function (char) {
+			var font = window.fontManager.Get(window.fontName);
+			var w = font.getWidth();
+			var h = font.getHeight();
+			window.customTextEffects.editBitmapCopy(char, function (bitmap) {
+				for (var y = 0; y < h; ++y) {
+					for (var x = 0; x < w; ++x) {
+						for (var x2 = 0; x2 < weight; ++x2) {
+							var x3 = x + x2 - Math.floor(weight / 2);
+							if (x3 < 0 || x3 >= w) {
+								continue;
+							}
+							bitmap[x3 + y * w] = bitmap[x3 + y * w] || char.originalBitmap[x + y * w];
+						}
+					}
+				}
+			});
+		};
+	},
+	u: function () {
+		// renders text with an underline
+		this.DoEffect = function (char) {
+			var font = window.fontManager.Get(window.fontName);
+			var w = font.getWidth();
+			var h = font.getHeight();
+			window.customTextEffects.editBitmapCopy(char, function (bitmap) {
+				for (var x = 0; x < w; ++x) {
+					bitmap[x + (h - 1) * w] = 1;
+				}
+			});
 		};
 	},
 };
