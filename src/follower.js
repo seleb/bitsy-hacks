@@ -3,7 +3,7 @@
 @file follower
 @summary makes a single sprite follow the player
 @license MIT
-@version 2.1.5
+@version 2.2.0
 @author Sean S. LeBlanc
 
 @description
@@ -83,22 +83,32 @@ after('onPlayerMoved', function () {
 function filterFollowing(id) {
 	return follower === bitsy.sprite[id] ? null : id;
 }
-if (!hackOptions.allowFollowerCollision) {
-	// filter follower out of collisions
-	var originalGetSpriteLeft = bitsy.getSpriteLeft;
-	bitsy.getSpriteLeft = function () {
+// filter follower out of collisions
+var originalGetSpriteLeft = bitsy.getSpriteLeft;
+bitsy.getSpriteLeft = function () {
+	if (!hackOptions.allowFollowerCollision) {
 		return filterFollowing(originalGetSpriteLeft());
-	};
-	var originalGetSpriteRight = bitsy.getSpriteRight;
-	bitsy.getSpriteRight = function () {
+	}
+	return originalGetSpriteLeft();
+};
+var originalGetSpriteRight = bitsy.getSpriteRight;
+bitsy.getSpriteRight = function () {
+	if (!hackOptions.allowFollowerCollision) {
 		return filterFollowing(originalGetSpriteRight());
-	};
-	var originalGetSpriteUp = bitsy.getSpriteUp;
-	bitsy.getSpriteUp = function () {
+	}
+	return originalGetSpriteRight();
+};
+var originalGetSpriteUp = bitsy.getSpriteUp;
+bitsy.getSpriteUp = function () {
+	if (!hackOptions.allowFollowerCollision) {
 		return filterFollowing(originalGetSpriteUp());
-	};
-	var originalGetSpriteDown = bitsy.getSpriteDown;
-	bitsy.getSpriteDown = function () {
+	}
+	return originalGetSpriteUp();
+};
+var originalGetSpriteDown = bitsy.getSpriteDown;
+bitsy.getSpriteDown = function () {
+	if (!hackOptions.allowFollowerCollision) {
 		return filterFollowing(originalGetSpriteDown());
-	};
-}
+	}
+	return originalGetSpriteDown();
+};

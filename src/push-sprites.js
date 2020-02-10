@@ -31,6 +31,7 @@ SPRITE FLIPPING:
 allow or disallow drawing flips when a sprite is pushed
 
 */
+/* eslint-disable no-restricted-syntax */
 import bitsy from 'bitsy';
 import {
 	after,

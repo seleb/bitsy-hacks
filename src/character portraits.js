@@ -3,7 +3,7 @@
 @file character portraits
 @summary high quality anime jpegs (or pngs i guess)
 @license MIT
-@version 2.0.4
+@version 2.0.5
 @requires Bitsy Version: 5.3
 @author Sean S. LeBlanc
 
@@ -66,12 +66,10 @@ export var state = {
 
 // preload images into a cache
 after('startExportedGame', function () {
-	for (var i in hackOptions.portraits) {
-		if (Object.prototype.hasOwnProperty.call(hackOptions.portraits, i)) {
-			state.portraits[i] = new Image();
-			state.portraits[i].src = hackOptions.portraits[i];
-		}
-	}
+	Object.keys(hackOptions.portraits).forEach(function (i) {
+		state.portraits[i] = new Image();
+		state.portraits[i].src = hackOptions.portraits[i];
+	});
 });
 
 // hook up dialog tag

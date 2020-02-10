@@ -3,7 +3,7 @@
 @file bitsymuse
 @summary A variety of Bitsy sound and music handlers
 @license MIT
-@version 3.0.6
+@version 3.1.1
 @requires 4.8, 4.9
 @author David Mowatt
 
@@ -13,19 +13,16 @@ If the same song is played as you move between rooms, the audio file will contin
 
 HOW TO USE:
 1. Place your audio files somewhere relative to your bitsy html file (in the zip if you're uploading to itch.io)
-2. Copy-paste `<audio id="sound ID" src="relative path to sound file"></audio>` into the <head> of your document.
-   You need to do it once for each sound file you are adding, and each needs a unique sound ID. Add `loop` after the `src=""`
-   tag if it's music that's going to loop (e.g. `<audio id="sound ID" src="./mySong.mp3" loop></audio>`)
-3. Copy-paste this script into a script tag after the bitsy source.
-4. Edit hackOptions below to set up the TRACK LIST for rooms you move through.
+2. Copy-paste this script into a script tag after the bitsy source.
+3. Edit hackOptions below to set up the track list for rooms you move through.
 
-In addition to the track list, which will play audio based on the room number/name,
+In addition to the track list, which will play audio based on the room id/name,
 you have access to the following commands you can add to dialogue:
 
-1. (soundeffectNow "<sound ID>") will play a sound without interrupting the music as soon as it is called in the dialogue
-2. (soundeffect "<sound ID>") will play a sound without interrupting the music once the dialogue box closes
-3. (musicNow "<sound ID>") will change the music as soon as it is called in the dialogue
-4. (music "<sound ID>") will change the music once the dialogue box closes
+1. (soundeffectNow "<audio ID>") will play a sound without interrupting the music as soon as it is called in the dialogue
+2. (soundeffect "<audio ID>") will play a sound without interrupting the music once the dialogue box closes
+3. (musicNow "<audio ID>") will change the music as soon as it is called in the dialogue
+4. (music "<audio ID>") will change the music once the dialogue box closes
 
 You can call both musicNow and music in the same dialogue, to e.g. change the music while you speak to a character
 and then restart the regular room music once you stop speaking to them.
@@ -46,42 +43,75 @@ import {
 } from './helpers/kitsy-script-toolkit';
 
 export var hackOptions = {
-	// You need to put an entry in this list for every room ID or name that is accessible by the player,
-	// and then specify the song ID for each room. Expand this list to as many rooms as you need.
-	// If the player moves between rooms with the same audio ID the music keeps playing seamlessly.
+	// Put entries in this list for each audio file you want to use
+	// the key will be the id needed to play it in dialog tags and the musicByRoom options below,
+	// and the value will be the properties of the corresponding <audio> tag (e.g. src, loop, volume)
+	// Note: you can add <audio> tags to the html manually if you prefer
+	audio: {
+		// Note: the entries below are examples that should be removed and replaced with your own audio files
+		'example song ID': { src: './example song filepath.mp3', loop: true },
+		'example sfx ID': { src: './example sfx filepath.mp3', volume: 0.5 },
+	},
+	// Put entries in this list for every room ID or name that will change the music
+	// If the player moves between rooms with the same audio ID, the music keeps playing seamlessly.
 	// Undefined rooms will keep playing whatever music they were last playing
 	musicByRoom: {
 		// Note: the entries below are examples that should be removed and replaced with your own room -> audio id mappings
-		0: 'song ID',
+		0: 'example song ID',
 		1: 'S', // This room is silent - it will stop music when you enter (see `silenceId` below)
 		2: 'another song ID',
 		h: 'a song ID for a room with a non-numeric ID',
 		'my room': 'a song ID for a room with a user-defined name',
 	},
-	silenceId: 'S', // Use this song ID of to make a room fall silent.
+	silenceId: 'S', // Use this song ID to make a room fall silent.
 	resume: false, // If true, songs will pause/resume on change; otherwise, they'll stop/play (doesn't affect sound effects)
 };
 
+var audioElementsById = {};
 var currentMusic;
 var roomMusicFlag = null;
 
-// expand the map to include ids of rooms listed by name
 after('load_game', function () {
 	var room;
-	for (var i in hackOptions.musicByRoom) {
-		if (Object.prototype.hasOwnProperty.call(hackOptions.musicByRoom, i)) {
-			room = getRoom(i);
-			if (room) {
-				hackOptions.musicByRoom[room.id] = hackOptions.musicByRoom[i];
-			}
+	// expand the map to include ids of rooms listed by name
+	Object.entries(hackOptions.musicByRoom).forEach(function (entry) {
+		room = getRoom(entry[0]);
+		if (room) {
+			hackOptions.musicByRoom[room.id] = entry[1];
 		}
+	});
+	// add audio tags from options
+	Object.entries(hackOptions.audio).forEach(function (entry) {
+		var el = document.createElement('audio');
+		el.id = entry[0];
+		Object.assign(el, entry[1]);
+		document.body.appendChild(el);
+		audioElementsById[el.id] = el;
+	});
+
+	// handle autoplay restrictions by playing then pausing
+	// every audio element on the first user interaction
+	function handleAutoPlayRestrictions() {
+		Object.values(audioElementsById).forEach(function (audio) {
+			audio.play();
+			// let the current song play
+			if (currentMusic === audio.id) {
+				return;
+			}
+			audio.pause();
+			audio.currentTime = 0;
+		});
+		document.body.removeEventListener('pointerup', handleAutoPlayRestrictions);
+		document.body.removeEventListener('keydown', handleAutoPlayRestrictions);
 	}
+
+	document.body.addEventListener('pointerup', handleAutoPlayRestrictions);
+	document.body.addEventListener('keydown', handleAutoPlayRestrictions);
 });
 
-var audioCache = {};
 
 function getAudio(id) {
-	var el = audioCache[id] || (audioCache[id] = document.getElementById(id));
+	var el = audioElementsById[id] || (audioElementsById[id] = document.getElementById(id));
 	if (!el) {
 		throw new Error("bitsymuse tried to use audio with id '" + id + "' but couldn't find one on the page!");
 	}

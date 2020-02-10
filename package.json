@@ -6,7 +6,7 @@
 		"hacks"
 	],
 	"main": "index.mjs",
-	"version": "7.7.1",
+	"version": "8.3.0",
 	"scripts": {
 		"build": "rollup -c",
 		"test": "jest --runInBand",
@@ -25,20 +25,20 @@
 		"babylonjs": "^4.0.3",
 		"input-gamepads.js": "^2.0.2",
 		"omggif": "^1.0.10",
-		"rollup": "^1.27.5",
+		"rollup": "^1.27.14",
 		"rollup-plugin-commonjs": "^10.1.0",
 		"rollup-plugin-node-resolve": "^5.2.0",
 		"tracery-grammar": "^2.7.4",
 		"webglazy": "^3.0.3"
 	},
 	"devDependencies": {
-		"@babel/plugin-transform-runtime": "^7.7.4",
-		"@babel/preset-env": "^7.7.4",
-		"@babel/runtime": "^7.7.4",
+		"@babel/plugin-transform-runtime": "^7.7.6",
+		"@babel/preset-env": "^7.7.7",
+		"@babel/runtime": "^7.7.7",
 		"doctrine": "^3.0.0",
-		"eslint": "^6.7.1",
+		"eslint": "^6.8.0",
 		"eslint-config-airbnb-base": "^14.0.0",
-		"eslint-plugin-import": "^2.18.2",
+		"eslint-plugin-import": "^2.19.1",
 		"jest": "^24.9.0",
 		"jest-image-snapshot": "^2.11.1",
 		"puppeteer": "^2.0.0"

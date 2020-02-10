@@ -3,7 +3,7 @@
 @file tracery processing
 @summary process all dialog text with a tracery grammar
 @license MIT
-@version 2.0.3
+@version 3.0.2
 @author Sean S. LeBlanc
 
 @description
@@ -45,10 +45,20 @@ import {
 } from './helpers/kitsy-script-toolkit';
 
 export var hackOptions = {
-	// put your grammar entries here
+	grammar: {
+		// put your grammar entries here
+	},
+	// modifiers to include (if this is not provided, the default tracery-provided modifiers like `.capitalize` are used)
+	modifiers: undefined,
 };
 
-var bitsyGrammar = tracery.createGrammar(hackOptions);
-before('startDialog', function (dialogStr) {
-	return [bitsyGrammar.flatten(dialogStr)];
+var bitsyGrammar;
+
+before('onready', function () {
+	bitsyGrammar = tracery.createGrammar(hackOptions.grammar);
+	bitsyGrammar.addModifiers(hackOptions.modifiers || tracery.baseEngModifiers);
+});
+
+before('startDialog', function (dialogStr, dialogId) {
+	return [bitsyGrammar.flatten(dialogStr), dialogId];
 });

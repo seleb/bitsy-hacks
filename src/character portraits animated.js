@@ -3,7 +3,7 @@
 @file character portraits animated
 @summary high quality anime gifs
 @license MIT
-@version 1.0.5
+@version 1.0.6
 @requires Bitsy Version: 5.3
 @author Sean S. LeBlanc
 
@@ -61,66 +61,64 @@ before('startExportedGame', function () {
 // convert portrait state to new format supporting multiple frames
 // and load the frames of animated gifs
 after('startExportedGame', function () {
-	for (var portrait in state.portraits) {
-		if (Object.prototype.hasOwnProperty.call(state.portraits, portrait)) {
-			var src = state.portraits[portrait].src;
+	Object.keys(state.portraits).forEach(function (portrait) {
+		var src = state.portraits[portrait].src;
 
-			if (src.substr(-4).toUpperCase() !== '.GIF') {
-				state.portraits[portrait] = {
-					loop: false,
-					duration: 0,
-					frames: [{
-						delay: 0,
-						img: state.portraits[portrait],
-					}],
-				};
-				continue;
-			}
-
-			fetch(src)
-				.then(function (response) {
-					return response.arrayBuffer();
-				})
-				.then(function (arrayBuffer) {
-					var data = new window.Uint8Array(arrayBuffer);
-					var reader = new GifReader(data);
-					var numFrames = reader.numFrames();
-					var width = reader.width;
-					var height = reader.height;
-					var prev = document.createElement('canvas');
-					prev.width = width;
-					prev.height = height;
-					var prevCtx = prev.getContext('2d');
-					var frames = [];
-					var duration = 0;
-					for (var i = 0; i < numFrames; ++i) {
-						var canvas = document.createElement('canvas');
-						canvas.width = width;
-						canvas.height = height;
-						var ctx = canvas.getContext('2d');
-						var imgData = ctx.createImageData(width, height);
-						reader.decodeAndBlitFrameRGBA(i, imgData.data);
-						ctx.putImageData(imgData, 0, 0);
-						if (reader.frameInfo(i).disposal === 2) { // handle bg dispose
-							prevCtx.clearRect(0, 0, prev.width, prev.height);
-						}
-						prevCtx.drawImage(canvas, 0, 0);
-						ctx.drawImage(prev, 0, 0);
-						var delay = Math.max((1 / 60) * 1000, reader.frameInfo(i).delay * 10); // maximum speed of 60fps
-						duration += delay;
-						frames.push({
-							img: canvas,
-							delay,
-						});
-					}
-					state.portraits[this] = {
-						loop: reader.loopCount() !== null, // either loop infinitely or only place once; ignores other loop counts for now
-						duration,
-						frames,
-					};
-				}.bind(portrait));
+		if (src.substr(-4).toUpperCase() !== '.GIF') {
+			state.portraits[portrait] = {
+				loop: false,
+				duration: 0,
+				frames: [{
+					delay: 0,
+					img: state.portraits[portrait],
+				}],
+			};
+			return;
 		}
-	}
+
+		fetch(src)
+			.then(function (response) {
+				return response.arrayBuffer();
+			})
+			.then(function (arrayBuffer) {
+				var data = new window.Uint8Array(arrayBuffer);
+				var reader = new GifReader(data);
+				var numFrames = reader.numFrames();
+				var width = reader.width;
+				var height = reader.height;
+				var prev = document.createElement('canvas');
+				prev.width = width;
+				prev.height = height;
+				var prevCtx = prev.getContext('2d');
+				var frames = [];
+				var duration = 0;
+				for (var i = 0; i < numFrames; ++i) {
+					var canvas = document.createElement('canvas');
+					canvas.width = width;
+					canvas.height = height;
+					var ctx = canvas.getContext('2d');
+					var imgData = ctx.createImageData(width, height);
+					reader.decodeAndBlitFrameRGBA(i, imgData.data);
+					ctx.putImageData(imgData, 0, 0);
+					if (reader.frameInfo(i).disposal === 2) { // handle bg dispose
+						prevCtx.clearRect(0, 0, prev.width, prev.height);
+					}
+					prevCtx.drawImage(canvas, 0, 0);
+					ctx.drawImage(prev, 0, 0);
+					var delay = Math.max((1 / 60) * 1000, reader.frameInfo(i).delay * 10); // maximum speed of 60fps
+					duration += delay;
+					frames.push({
+						img: canvas,
+						delay,
+					});
+				}
+				state.portraits[this] = {
+					loop: reader.loopCount() !== null, // either loop infinitely or only place once; ignores other loop counts for now
+					duration,
+					frames,
+				};
+			}.bind(portrait));
+	});
 });
 
 // override portrait drawing to use frames

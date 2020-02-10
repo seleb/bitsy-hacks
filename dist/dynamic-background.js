@@ -3,7 +3,7 @@
 @file dynamic background
 @summary HTML background matching bitsy background
 @license MIT
-@version 2.1.4
+@version 2.1.5
 @author Sean S. LeBlanc
 
 @description
@@ -244,8 +244,10 @@ function updateBg() {
 before('moveSprites', getBg);
 before('movePlayer', getBg);
 before('parseWorld', getBg);
+before('movePlayerThroughExit', getBg);
 after('moveSprites', updateBg);
 after('movePlayer', updateBg);
 after('parseWorld', updateBg);
+after('movePlayerThroughExit', updateBg);
 
 }(window));

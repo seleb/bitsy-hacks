@@ -3,7 +3,7 @@
 @file edit image from dialog
 @summary edit sprites, items, and tiles from dialog
 @license MIT
-@version 1.2.7
+@version 1.2.8
 @requires 5.3
 @author Sean S. LeBlanc
 
@@ -148,9 +148,6 @@ function editPalette(environment, parameters) {
 
 	// set palette
 	tgtObj.col = palObj;
-
-	// update images in cache
-	bitsy.renderImageForAllPalettes(tgtObj);
 }
 
 // hook up the dialog tags
