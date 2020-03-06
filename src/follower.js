@@ -3,7 +3,7 @@
 @file follower
 @summary makes a single sprite follow the player
 @license MIT
-@version 3.0.0
+@version 3.0.1
 @author Sean S. LeBlanc
 
 @description
@@ -68,7 +68,7 @@ export var hackOptions = {
 var follower;
 
 function setFollower(followerName) {
-	follower = getImage(followerName, bitsy.sprite);
+	follower = followerName && getImage(followerName, bitsy.sprite);
 }
 
 after('startExportedGame', function () {
