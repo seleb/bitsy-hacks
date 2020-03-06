@@ -22,26 +22,26 @@
 	"dependencies": {
 		"@seansleblanc/pink-trombone": "^1.0.1",
 		"array-flat-polyfill": "^1.0.1",
-		"babylonjs": "^4.0.3",
+		"babylonjs": "^4.1.0",
 		"input-gamepads.js": "^2.0.2",
 		"omggif": "^1.0.10",
-		"rollup": "^1.27.14",
+		"rollup": "^1.32.0",
 		"rollup-plugin-commonjs": "^10.1.0",
 		"rollup-plugin-node-resolve": "^5.2.0",
 		"tracery-grammar": "^2.7.4",
 		"webglazy": "^3.0.3"
 	},
 	"devDependencies": {
-		"@babel/plugin-transform-runtime": "^7.7.6",
-		"@babel/preset-env": "^7.7.7",
-		"@babel/runtime": "^7.7.7",
+		"@babel/plugin-transform-runtime": "^7.8.3",
+		"@babel/preset-env": "^7.8.7",
+		"@babel/runtime": "^7.8.7",
 		"doctrine": "^3.0.0",
 		"eslint": "^6.8.0",
 		"eslint-config-airbnb-base": "^14.0.0",
-		"eslint-plugin-import": "^2.19.1",
+		"eslint-plugin-import": "^2.20.1",
 		"jest": "^24.9.0",
-		"jest-image-snapshot": "^2.11.1",
-		"puppeteer": "^2.0.0"
+		"jest-image-snapshot": "^2.12.0",
+		"puppeteer": "^2.1.1"
 	},
 	"jest": {
 		"testEnvironment": "node",
