@@ -15,6 +15,8 @@ Usage:
 	(follower "followerNameOrId")
 	(followerNow "followerNameOrId")
 	(followerCollision "true/false")
+	(followerDelay "frames")
+	(followerDelayNow "frames")
 
 Examples:
 	(follower "a") - the sprite with the id "a" starts following
@@ -22,6 +24,9 @@ Examples:
 	(follower) - stops a current follower
 	(followerCollision "true") - enables follower collision
 	(followerCollision "false") - disables follower collision
+	(followerDelay "0") - sets follower to move immediately after player
+	(followerDelay "200") - sets follower to move at normal speed
+	(followerDelay "1000") - sets follower to move once per second
 
 
 Known issues:
@@ -132,6 +137,9 @@ addDualDialogTag('follower', function (environment, parameters) {
 });
 addDialogTag('followerCollision', function (environment, parameters) {
 	hackOptions.allowFollowerCollision = parameters[0] !== 'false';
+});
+addDualDialogTag('followerDelay', function (environment, parameters) {
+	hackOptions.delay = parseInt(parameters[0], 10);
 });
 
 before('moveSprites', function () {
