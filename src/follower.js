@@ -27,6 +27,8 @@ import {
 } from './helpers/utils';
 import {
 	after,
+	addDualDialogTag,
+	addDialogTag,
 } from './helpers/kitsy-script-toolkit';
 
 export var hackOptions = {
@@ -35,8 +37,13 @@ export var hackOptions = {
 };
 
 var follower;
+
+function setFollower(followerName) {
+	follower = getImage(followerName, bitsy.sprite);
+}
+
 after('startExportedGame', function () {
-	follower = getImage(hackOptions.follower, bitsy.sprite);
+	setFollower(hackOptions.follower);
 
 	// remove + add player to sprite list to force rendering them on top of follower
 	var p = bitsy.sprite[bitsy.playerId];
@@ -64,8 +71,9 @@ after('onPlayerMoved', function () {
 		break;
 	default:
 		break;
+	if (follower) {
+		follower.walkingPath.push(step);
 	}
-	follower.walkingPath.push(step);
 });
 
 function filterFollowing(id) {
@@ -100,3 +108,10 @@ bitsy.getSpriteDown = function () {
 	}
 	return originalGetSpriteDown();
 };
+
+addDualDialogTag('follower', function (environment, parameters) {
+	setFollower(parameters[0]);
+});
+addDialogTag('followerCollision', function (environment, parameters) {
+	hackOptions.allowFollowerCollision = parameters[0] !== 'false';
+});
