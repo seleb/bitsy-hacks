@@ -8,18 +8,33 @@
 
 @description
 Makes a single sprite follow the player.
-Bitsy has a "walkingPath" built into the sprite system (I think this is a hold-over from the old pathfinding mouse controls).
-Paths can be assigned to any sprite to create different AI behaviours.
+The follower can optionally collide with the player,
+and can be changed at runtime with dialog commands.
 
-Includes an optional feature which filters the follower out of collisions.
+Usage:
+	(follower "followerNameOrId")
+	(followerNow "followerNameOrId")
+	(followerCollision "true/false")
+
+Examples:
+	(follower "a") - the sprite with the id "a" starts following
+	(follower "my follower") - the sprite with the name "my follower" starts following
+	(follower) - stops a current follower
+	(followerCollision "true") - enables follower collision
+	(followerCollision "false") - disables follower collision
+
 
 Known issues:
-- if the player uses an exit that puts them on top of another exit, the follower walks through the second exit.
-- the follower will warp to the player on the first movement. This can be avoided by placing them next to the player in bitsy.
+- Followers will warp to the player on their first movement.
+  This can be avoided by placing them next to or on the same tile as the player.
+- When collision is enabled, it's possible for the player to get stuck
+  between walls and their follower. Make sure to avoid single-tile width
+  spaces when using this (or design with that restriction in mind!)
 
 HOW TO USE:
 1. Copy-paste this script into a script tag after the bitsy source
-2. Edit `follower` to your intended sprite
+2. Edit hackOptions below to set up an initial follower
+3. Use dialog commands as needed
 */
 import bitsy from 'bitsy';
 import {
