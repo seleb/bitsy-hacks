@@ -73,6 +73,7 @@ after('onPlayerMoved', function () {
 		break;
 	default:
 		break;
+	}
 	if (follower) {
 		follower.walkingPath.push(step);
 	}
