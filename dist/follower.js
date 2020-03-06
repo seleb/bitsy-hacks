@@ -17,6 +17,8 @@ Usage:
 	(followerCollision "true/false")
 	(followerDelay "frames")
 	(followerDelayNow "frames")
+	(followerSync)
+	(followerSyncNow)
 
 Examples:
 	(follower "a") - the sprite with the id "a" starts following
@@ -27,6 +29,7 @@ Examples:
 	(followerDelay "0") - sets follower to move immediately after player
 	(followerDelay "200") - sets follower to move at normal speed
 	(followerDelay "1000") - sets follower to move once per second
+	(followerSync) - moves the follower on top of the player
 
 
 Known issues:
@@ -35,6 +38,10 @@ Known issues:
 - When collision is enabled, it's possible for the player to get stuck
   between walls and their follower. Make sure to avoid single-tile width
   spaces when using this (or design with that restriction in mind!)
+- The follower will only automatically follow the player through
+  natural placed exits; if combining this with exit-from-dialog,
+  you can use the (followerSync)/(followerSyncNow) commands
+  to keep them together
 
 HOW TO USE:
 1. Copy-paste this script into a script tag after the bitsy source
@@ -462,6 +469,15 @@ addDialogTag('followerCollision', function (environment, parameters) {
 });
 addDualDialogTag('followerDelay', function (environment, parameters) {
 	hackOptions.delay = parseInt(parameters[0], 10);
+});
+addDualDialogTag('followerSync', function () {
+	if (follower) {
+		var player = bitsy.player();
+		follower.room = player.room;
+		follower.x = player.x;
+		follower.y = player.y;
+		follower.walkingPath.length = 0;
+	}
 });
 
 before('moveSprites', function () {
