@@ -42,42 +42,30 @@ after('startExportedGame', function () {
 	var p = bitsy.sprite[bitsy.playerId];
 	delete bitsy.sprite[bitsy.playerId];
 	bitsy.sprite[bitsy.playerId] = p;
-
-	lastRoom = bitsy.player().room;
 });
 
-var lastRoom;
 after('onPlayerMoved', function () {
-	// detect room change
-	if (lastRoom !== bitsy.player().room) {
-		// on room change, warp to player
-		lastRoom = follower.room = bitsy.player().room;
-		follower.x = bitsy.player().x;
-		follower.y = bitsy.player().y;
-		follower.walkingPath.length = 0;
-	} else {
-		var step = {
-			x: bitsy.player().x,
-			y: bitsy.player().y,
-		};
-		switch (bitsy.curPlayerDirection) {
-		case bitsy.Direction.Up:
-			step.y += 1;
-			break;
-		case bitsy.Direction.Down:
-			step.y -= 1;
-			break;
-		case bitsy.Direction.Left:
-			step.x += 1;
-			break;
-		case bitsy.Direction.Right:
-			step.x -= 1;
-			break;
-		default:
-			break;
-		}
-		follower.walkingPath.push(step);
+	var step = {
+		x: bitsy.player().x,
+		y: bitsy.player().y,
+	};
+	switch (bitsy.curPlayerDirection) {
+	case bitsy.Direction.Up:
+		step.y += 1;
+		break;
+	case bitsy.Direction.Down:
+		step.y -= 1;
+		break;
+	case bitsy.Direction.Left:
+		step.x += 1;
+		break;
+	case bitsy.Direction.Right:
+		step.x -= 1;
+		break;
+	default:
+		break;
 	}
+	follower.walkingPath.push(step);
 });
 
 function filterFollowing(id) {
