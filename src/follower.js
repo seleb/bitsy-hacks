@@ -3,23 +3,50 @@
 @file follower
 @summary makes a single sprite follow the player
 @license MIT
-@version 2.2.0
+@version 3.0.0
 @author Sean S. LeBlanc
 
 @description
 Makes a single sprite follow the player.
-Bitsy has a "walkingPath" built into the sprite system (I think this is a hold-over from the old pathfinding mouse controls).
-Paths can be assigned to any sprite to create different AI behaviours.
+The follower can optionally collide with the player,
+and can be changed at runtime with dialog commands.
 
-Includes an optional feature which filters the follower out of collisions.
+Usage:
+	(follower "followerNameOrId")
+	(followerNow "followerNameOrId")
+	(followerCollision "true/false")
+	(followerDelay "frames")
+	(followerDelayNow "frames")
+	(followerSync)
+	(followerSyncNow)
+
+Examples:
+	(follower "a") - the sprite with the id "a" starts following
+	(follower "my follower") - the sprite with the name "my follower" starts following
+	(follower) - stops a current follower
+	(followerCollision "true") - enables follower collision
+	(followerCollision "false") - disables follower collision
+	(followerDelay "0") - sets follower to move immediately after player
+	(followerDelay "200") - sets follower to move at normal speed
+	(followerDelay "1000") - sets follower to move once per second
+	(followerSync) - moves the follower on top of the player
+
 
 Known issues:
-- if the player uses an exit that puts them on top of another exit, the follower walks through the second exit.
-- the follower will warp to the player on the first movement. This can be avoided by placing them next to the player in bitsy.
+- Followers will warp to the player on their first movement.
+  This can be avoided by placing them next to or on the same tile as the player.
+- When collision is enabled, it's possible for the player to get stuck
+  between walls and their follower. Make sure to avoid single-tile width
+  spaces when using this (or design with that restriction in mind!)
+- The follower will only automatically follow the player through
+  natural placed exits; if combining this with exit-from-dialog,
+  you can use the (followerSync)/(followerSyncNow) commands
+  to keep them together
 
 HOW TO USE:
 1. Copy-paste this script into a script tag after the bitsy source
-2. Edit `follower` to your intended sprite
+2. Edit hackOptions below to set up an initial follower
+3. Use dialog commands as needed
 */
 import bitsy from 'bitsy';
 import {
@@ -27,55 +54,54 @@ import {
 } from './helpers/utils';
 import {
 	after,
+	addDualDialogTag,
+	addDialogTag,
+	before,
 } from './helpers/kitsy-script-toolkit';
 
 export var hackOptions = {
 	allowFollowerCollision: false, // if true, the player can walk into the follower and talk to them (possible to get stuck this way)
 	follower: 'a', // id or name of sprite to be the follower
+	delay: 200, // delay between each follower step (0 is immediate, 400 is twice as slow as normal)
 };
 
 var follower;
+
+function setFollower(followerName) {
+	follower = getImage(followerName, bitsy.sprite);
+}
+
 after('startExportedGame', function () {
-	follower = getImage(hackOptions.follower, bitsy.sprite);
+	setFollower(hackOptions.follower);
 
 	// remove + add player to sprite list to force rendering them on top of follower
 	var p = bitsy.sprite[bitsy.playerId];
 	delete bitsy.sprite[bitsy.playerId];
 	bitsy.sprite[bitsy.playerId] = p;
-
-	lastRoom = bitsy.player().room;
 });
 
-var lastRoom;
 after('onPlayerMoved', function () {
-	// detect room change
-	if (lastRoom !== bitsy.player().room) {
-		// on room change, warp to player
-		lastRoom = follower.room = bitsy.player().room;
-		follower.x = bitsy.player().x;
-		follower.y = bitsy.player().y;
-		follower.walkingPath.length = 0;
-	} else {
-		var step = {
-			x: bitsy.player().x,
-			y: bitsy.player().y,
-		};
-		switch (bitsy.curPlayerDirection) {
-		case bitsy.Direction.Up:
-			step.y += 1;
-			break;
-		case bitsy.Direction.Down:
-			step.y -= 1;
-			break;
-		case bitsy.Direction.Left:
-			step.x += 1;
-			break;
-		case bitsy.Direction.Right:
-			step.x -= 1;
-			break;
-		default:
-			break;
-		}
+	var step = {
+		x: bitsy.player().x,
+		y: bitsy.player().y,
+	};
+	switch (bitsy.curPlayerDirection) {
+	case bitsy.Direction.Up:
+		step.y += 1;
+		break;
+	case bitsy.Direction.Down:
+		step.y -= 1;
+		break;
+	case bitsy.Direction.Left:
+		step.x += 1;
+		break;
+	case bitsy.Direction.Right:
+		step.x -= 1;
+		break;
+	default:
+		break;
+	}
+	if (follower) {
 		follower.walkingPath.push(step);
 	}
 });
@@ -112,3 +138,27 @@ bitsy.getSpriteDown = function () {
 	}
 	return originalGetSpriteDown();
 };
+
+addDualDialogTag('follower', function (environment, parameters) {
+	setFollower(parameters[0]);
+});
+addDialogTag('followerCollision', function (environment, parameters) {
+	hackOptions.allowFollowerCollision = parameters[0] !== 'false';
+});
+addDualDialogTag('followerDelay', function (environment, parameters) {
+	hackOptions.delay = parseInt(parameters[0], 10);
+});
+addDualDialogTag('followerSync', function () {
+	if (follower) {
+		var player = bitsy.player();
+		follower.room = player.room;
+		follower.x = player.x;
+		follower.y = player.y;
+		follower.walkingPath.length = 0;
+	}
+});
+
+before('moveSprites', function () {
+	bitsy.moveCounter -= bitsy.deltaTime; // cancel out default movement delay
+	bitsy.moveCounter += bitsy.deltaTime * (200 / hackOptions.delay); // apply movement delay from options
+});
