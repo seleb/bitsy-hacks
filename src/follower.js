@@ -44,13 +44,13 @@ import {
 	after,
 	addDualDialogTag,
 	addDialogTag,
-	inject,
+	before,
 } from './helpers/kitsy-script-toolkit';
 
 export var hackOptions = {
 	allowFollowerCollision: false, // if true, the player can walk into the follower and talk to them (possible to get stuck this way)
 	follower: 'a', // id or name of sprite to be the follower
-	delay: 200, // delay between each follower step
+	delay: 200, // delay between each follower step (0 is immediate, 400 is twice as slow as normal)
 };
 
 var follower;
@@ -134,4 +134,7 @@ addDialogTag('followerCollision', function (environment, parameters) {
 	hackOptions.allowFollowerCollision = parameters[0] !== 'false';
 });
 
-inject(/(var moveTime = )200;/, '$1' + hackOptions.delay + ';');
+before('moveSprites', function () {
+	bitsy.moveCounter -= bitsy.deltaTime; // cancel out default movement delay
+	bitsy.moveCounter += bitsy.deltaTime * (200 / hackOptions.delay); // apply movement delay from options
+});
