@@ -3,7 +3,7 @@
 @file follower
 @summary makes a single sprite follow the player
 @license MIT
-@version 2.2.0
+@version 3.0.0
 @author Sean S. LeBlanc
 
 @description
