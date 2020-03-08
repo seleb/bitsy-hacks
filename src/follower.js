@@ -58,7 +58,7 @@ import {
 
 export var hackOptions = {
 	allowFollowerCollision: false, // if true, the player can walk into the follower and talk to them (possible to get stuck this way)
-	follower: 'g', // id or name of sprite to be the follower; use '' to start without a follower
+	follower: 'a', // id or name of sprite to be the follower; use '' to start without a follower
 	delay: 200, // delay between each follower step (0 is immediate, 400 is twice as slow as normal)
 };
 
