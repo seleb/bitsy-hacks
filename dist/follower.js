@@ -3,7 +3,7 @@
 @file follower
 @summary makes a single sprite follow the player
 @license MIT
-@version 3.0.3
+@version 3.1.0
 @author Sean S. LeBlanc
 
 @description
@@ -385,10 +385,8 @@ function addDualDialogTag(tag, fn) {
 
 
 
-var follower;
-
 function setFollower(followerName) {
-	follower = followerName && getImage(followerName, bitsy.sprite);
+	exports.follower = followerName && getImage(followerName, bitsy.sprite);
 }
 
 after('startExportedGame', function () {
@@ -408,7 +406,7 @@ after('onPlayerMoved', function () {
 		return;
 	}
 
-	if (!follower) {
+	if (!exports.follower) {
 		return;
 	}
 
@@ -433,14 +431,14 @@ after('onPlayerMoved', function () {
 		step.x -= 1;
 		break;
 	}
-	follower.walkingPath.push(step);
+	exports.follower.walkingPath.push(step);
 });
 
 // make follower walk "through" exits
 before('movePlayerThroughExit', function (exit) {
-	if (follower) {
+	if (exports.follower) {
 		movedFollower = true;
-		follower.walkingPath.push({
+		exports.follower.walkingPath.push({
 			x: exit.dest.x,
 			y: exit.dest.y,
 			room: exit.dest.room,
@@ -453,7 +451,7 @@ before('movePlayerThroughExit', function (exit) {
 inject$1(/(spr\.y = nextPos\.y;)/, '$1\nspr.room = nextPos.room || spr.room;');
 
 function filterFollowing(id) {
-	return follower === bitsy.sprite[id] ? null : id;
+	return exports.follower === bitsy.sprite[id] ? null : id;
 }
 // filter follower out of collisions
 var originalGetSpriteLeft = bitsy.getSpriteLeft;
@@ -495,12 +493,12 @@ addDualDialogTag('followerDelay', function (environment, parameters) {
 	hackOptions.delay = parseInt(parameters[0], 10);
 });
 addDualDialogTag('followerSync', function () {
-	if (follower) {
+	if (exports.follower) {
 		var player = bitsy.player();
-		follower.room = player.room;
-		follower.x = player.x;
-		follower.y = player.y;
-		follower.walkingPath.length = 0;
+		exports.follower.room = player.room;
+		exports.follower.x = player.x;
+		exports.follower.y = player.y;
+		exports.follower.walkingPath.length = 0;
 	}
 });
 

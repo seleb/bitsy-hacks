@@ -3,7 +3,7 @@
 @file follower
 @summary makes a single sprite follow the player
 @license MIT
-@version 3.0.3
+@version 3.1.0
 @author Sean S. LeBlanc
 
 @description
@@ -62,7 +62,7 @@ export var hackOptions = {
 	delay: 200, // delay between each follower step (0 is immediate, 400 is twice as slow as normal)
 };
 
-var follower;
+export var follower;
 
 function setFollower(followerName) {
 	follower = followerName && getImage(followerName, bitsy.sprite);
