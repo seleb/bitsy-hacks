@@ -408,6 +408,10 @@ after('onPlayerMoved', function () {
 		return;
 	}
 
+	if (!follower) {
+		return;
+	}
+
 	// start at the player's current position (they have already moved)
 	var step = {
 		x: bitsy.player().x,
