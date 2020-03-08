@@ -3,7 +3,7 @@
 @file follower
 @summary makes a single sprite follow the player
 @license MIT
-@version 3.0.2
+@version 3.0.3
 @author Sean S. LeBlanc
 
 @description
@@ -117,12 +117,14 @@ after('onPlayerMoved', function () {
 
 // make follower walk "through" exits
 before('movePlayerThroughExit', function (exit) {
-	movedFollower = true;
-	follower.walkingPath.push({
-		x: exit.dest.x,
-		y: exit.dest.y,
-		room: exit.dest.room,
-	});
+	if (follower) {
+		movedFollower = true;
+		follower.walkingPath.push({
+			x: exit.dest.x,
+			y: exit.dest.y,
+			room: exit.dest.room,
+		});
+	}
 });
 
 // bitsy only uses the walking path for position by default;
