@@ -3,7 +3,7 @@
 @file follower
 @summary makes a single sprite follow the player
 @license MIT
-@version 3.0.1
+@version 3.0.2
 @author Sean S. LeBlanc
 
 @description
@@ -38,10 +38,6 @@ Known issues:
 - When collision is enabled, it's possible for the player to get stuck
   between walls and their follower. Make sure to avoid single-tile width
   spaces when using this (or design with that restriction in mind!)
-- The follower will only automatically follow the player through
-  natural placed exits; if combining this with exit-from-dialog,
-  you can use the (followerSync)/(followerSyncNow) commands
-  to keep them together
 
 HOW TO USE:
 1. Copy-paste this script into a script tag after the bitsy source
@@ -53,7 +49,7 @@ this.hacks = this.hacks || {};
 'use strict';
 var hackOptions = {
 	allowFollowerCollision: false, // if true, the player can walk into the follower and talk to them (possible to get stuck this way)
-	follower: 'a', // id or name of sprite to be the follower
+	follower: 'a', // id or name of sprite to be the follower; use '' to start without a follower
 	delay: 200, // delay between each follower step (0 is immediate, 400 is twice as slow as normal)
 };
 
@@ -404,11 +400,25 @@ after('startExportedGame', function () {
 	bitsy.sprite[bitsy.playerId] = p;
 });
 
+let movedFollower = false;
 after('onPlayerMoved', function () {
+	// skip walking if already moved due to exits
+	if (movedFollower) {
+		movedFollower = false;
+		return;
+	}
+
+	if (!follower) {
+		return;
+	}
+
+	// start at the player's current position (they have already moved)
 	var step = {
 		x: bitsy.player().x,
 		y: bitsy.player().y,
+		room: bitsy.player().room,
 	};
+	// adjust follower to be one step back
 	switch (bitsy.curPlayerDirection) {
 	case bitsy.Direction.Up:
 		step.y += 1;
@@ -423,10 +433,22 @@ after('onPlayerMoved', function () {
 		step.x -= 1;
 		break;
 	}
-	if (follower) {
-		follower.walkingPath.push(step);
-	}
+	follower.walkingPath.push(step);
 });
+
+// make follower walk "through" exits
+before('movePlayerThroughExit', function (exit) {
+	movedFollower = true;
+	follower.walkingPath.push({
+		x: exit.dest.x,
+		y: exit.dest.y,
+		room: exit.dest.room,
+	});
+});
+
+// bitsy only uses the walking path for position by default;
+// update it to also move through rooms
+inject$1(/(spr\.y = nextPos\.y;)/, '$1\nspr.room = nextPos.room || spr.room;');
 
 function filterFollowing(id) {
 	return follower === bitsy.sprite[id] ? null : id;
