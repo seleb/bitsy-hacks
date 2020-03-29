@@ -1,7 +1,7 @@
 /**
 📐
 @file textbox styler
-@summary 
+@summary customize the style and properties of the textbox
 @license MIT
 @version 1.0.0
 @requires Bitsy Version: 6.1
