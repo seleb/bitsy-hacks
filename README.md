@@ -53,7 +53,7 @@ A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamled
 - 🛑 [solid items](/dist/solid-items.js): treat some items like sprites that can be placed multiple times
 - ⏱️ [stopwatch](/dist/stopwatch.js): time player actions
 - 🗣 [text-to-speech](/dist/text-to-speech.js): text-to-speech for bitsy dialog
-- 📐 [textbox styler](/dist/textbox-styler.js): null
+- 📐 [textbox styler](/dist/textbox-styler.js): customize the style and properties of the textbox
 - 🏰 [tracery processing](/dist/tracery-processing.js): process all dialog text with a tracery grammar
 - 🎞 [transitions](/dist/transitions.js): customizable WebGL transitions
 - 👁️‍🗨️ [transparent dialog](/dist/transparent-dialog.js): makes the dialog box have a transparent background
