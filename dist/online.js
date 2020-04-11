@@ -40,7 +40,7 @@ var hackOptions = {
 	debug: false, // if true, includes web-rtc-mesh debug logs in console
 };
 
-bitsy = bitsy && bitsy.hasOwnProperty('default') ? bitsy['default'] : bitsy;
+bitsy = bitsy && Object.prototype.hasOwnProperty.call(bitsy, 'default') ? bitsy['default'] : bitsy;
 
 /**
 @file utils

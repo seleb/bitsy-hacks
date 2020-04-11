@@ -74,7 +74,7 @@ var hackOptions$1 = {
 	},
 };
 
-bitsy = bitsy && bitsy.hasOwnProperty('default') ? bitsy['default'] : bitsy;
+bitsy = bitsy && Object.prototype.hasOwnProperty.call(bitsy, 'default') ? bitsy['default'] : bitsy;
 
 /*
  * A speed-improved perlin and simplex noise algorithms for 2D.

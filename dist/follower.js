@@ -53,7 +53,7 @@ var hackOptions = {
 	delay: 200, // delay between each follower step (0 is immediate, 400 is twice as slow as normal)
 };
 
-bitsy = bitsy && bitsy.hasOwnProperty('default') ? bitsy['default'] : bitsy;
+bitsy = bitsy && Object.prototype.hasOwnProperty.call(bitsy, 'default') ? bitsy['default'] : bitsy;
 
 /**
 @file utils

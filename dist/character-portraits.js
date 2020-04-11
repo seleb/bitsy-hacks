@@ -56,7 +56,7 @@ var hackOptions = {
 	autoReset: true, // if true, automatically resets the portrait to blank when dialog is exited
 };
 
-bitsy = bitsy && bitsy.hasOwnProperty('default') ? bitsy['default'] : bitsy;
+bitsy = bitsy && Object.prototype.hasOwnProperty.call(bitsy, 'default') ? bitsy['default'] : bitsy;
 
 /**
 @file utils

@@ -52,7 +52,7 @@ var hackOptions = {
 	hurried: true, // disable this to let bitsy text animations play out normally (not recommended for automatic mode)
 };
 
-bitsy = bitsy && bitsy.hasOwnProperty('default') ? bitsy['default'] : bitsy;
+bitsy = bitsy && Object.prototype.hasOwnProperty.call(bitsy, 'default') ? bitsy['default'] : bitsy;
 
 /**
 @file utils

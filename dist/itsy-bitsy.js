@@ -31,7 +31,7 @@ var hackOptions = {
 	rows: 2, // number of rows per text box (bitsy default is 2)
 };
 
-bitsy = bitsy && bitsy.hasOwnProperty('default') ? bitsy['default'] : bitsy;
+bitsy = bitsy && Object.prototype.hasOwnProperty.call(bitsy, 'default') ? bitsy['default'] : bitsy;
 
 /**
 @file utils
