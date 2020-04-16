@@ -13,7 +13,7 @@ You can use this to edit the dialog of sprites/items through dialog.
 Parameters:
 	map:       Type of image (SPR or ITM)
 	target:    id/name of image to edit
-	newDialog: id/name of image to edit
+	newDialog: new dialog text
 
 Note: this hack disables bitsy's script caching.
 
