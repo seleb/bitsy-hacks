@@ -15,6 +15,9 @@ Parameters:
 	target:    id/name of image to edit
 	newDialog: new dialog text
 
+Examples:
+(dialog "SPR, a, I am not a cat")
+
 HOW TO USE:
 	Copy-paste this script into a new script tag after the Bitsy source code.
 
