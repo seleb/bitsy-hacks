@@ -63,9 +63,34 @@ export var hackOptions = {
 };
 
 export var follower;
+var paths = {};
 
 function setFollower(followerName) {
 	follower = followerName && getImage(followerName, bitsy.sprite);
+	paths[follower.id] = paths[follower.id] || [];
+	takeStep();
+}
+
+var walking = false;
+
+function takeStep() {
+	if (walking) {
+		return;
+	}
+	walking = true;
+	setTimeout(() => {
+		var path = paths[follower.id];
+		var point = path.shift();
+		if (point) {
+			follower.x = point.x;
+			follower.y = point.y;
+			follower.room = point.room;
+		}
+		walking = false;
+		if (path.length) {
+			takeStep();
+		}
+	}, hackOptions.delay);
 }
 
 after('startExportedGame', function () {
@@ -112,24 +137,22 @@ after('onPlayerMoved', function () {
 	default:
 		break;
 	}
-	follower.walkingPath.push(step);
+	paths[follower.id].push(step);
+	takeStep();
 });
 
 // make follower walk "through" exits
 before('movePlayerThroughExit', function (exit) {
 	if (follower) {
 		movedFollower = true;
-		follower.walkingPath.push({
+		paths[follower.id].push({
 			x: exit.dest.x,
 			y: exit.dest.y,
 			room: exit.dest.room,
 		});
+		takeStep();
 	}
 });
-
-// bitsy only uses the walking path for position by default;
-// update it to also move through rooms
-inject(/(spr\.y = nextPos\.y;)/, '$1\nspr.room = nextPos.room || spr.room;');
 
 function filterFollowing(id) {
 	return follower === bitsy.sprite[id] ? null : id;
@@ -179,7 +202,7 @@ addDualDialogTag('followerSync', function () {
 		follower.room = player.room;
 		follower.x = player.x;
 		follower.y = player.y;
-		follower.walkingPath.length = 0;
+		paths[follower.id].length = 0;
 	}
 });
 
