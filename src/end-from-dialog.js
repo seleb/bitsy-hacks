@@ -14,8 +14,8 @@ Using the (end) function in any part of a series of dialog will make the
 game end after the dialog is finished. Ending the game resets it back to the
 intro.
 
-If the text provided as an argument is a valid ending id,
-the corresponding ending text will be shown.
+If the text provided as an argument is a valid dialog id,
+the corresponding dialog will be shown.
 If not, the text provided will be used directly as ending text.
 
 Using (endNow) at the end of a sentence will display the whole sentence and
@@ -25,10 +25,10 @@ narration text will immediately exit the dialog, clear the background, and
 show the ending narration in an ending-style centered dialog box.
 
 Usage: (end)
-       (end "<ending id>")
+       (end "<dialog id>")
        (end "<ending narration>")
        (endNow)
-       (endNow "<ending id>")
+       (endNow "<dialog id>")
        (endNow "<ending narration>")
 
 Example: (end)
@@ -55,9 +55,18 @@ import {
 	addDualDialogTag,
 } from './helpers/kitsy-script-toolkit';
 
-// Implement the dialog functions
 addDualDialogTag('end', function (environment, parameters) {
+	// cleanup current dialog
 	bitsy.dialogBuffer.EndDialog();
-	bitsy.startNarrating(bitsy.ending[parameters[0]] || parameters[0] || '', true);
+
+	// end using dialog id
+	if (bitsy.dialog[parameters[0]]) {
+		return bitsy.startEndingDialog({
+			id: parameters[0],
+		});
+	}
+
+	// end using parameter as text
+	bitsy.startNarrating(parameters[0] || '', true);
+	return undefined;
 });
-// End of (end) dialog function mod
