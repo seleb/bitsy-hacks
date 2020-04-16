@@ -3,19 +3,22 @@
 @file end-from-dialog
 @summary trigger an ending from dialog, including narration text
 @license WTFPL (do WTF you want)
-@version 3.3.4
-@requires Bitsy Version: 4.5, 4.6
+@version 4.0.0
+@requires Bitsy Version: 7.0
 @author @mildmojo
 
 @description
 Lets you end the game from dialog (including inside conditionals).
 
+Note: Bitsy has a built-in implementation of end-from-dialog as of 7.0;
+before using this, you may want to check if it fulfills your needs.
+
 Using the (end) function in any part of a series of dialog will make the
 game end after the dialog is finished. Ending the game resets it back to the
 intro.
 
-If the text provided as an argument is a valid ending id,
-the corresponding ending text will be shown.
+If the text provided as an argument is a valid dialog id,
+the corresponding dialog will be shown.
 If not, the text provided will be used directly as ending text.
 
 Using (endNow) at the end of a sentence will display the whole sentence and
@@ -25,10 +28,10 @@ narration text will immediately exit the dialog, clear the background, and
 show the ending narration in an ending-style centered dialog box.
 
 Usage: (end)
-       (end "<ending id>")
+       (end "<dialog id>")
        (end "<ending narration>")
        (endNow)
-       (endNow "<ending id>")
+       (endNow "<dialog id>")
        (endNow "<ending narration>")
 
 Example: (end)
@@ -289,6 +292,13 @@ function addDialogFunction(tag, fn) {
 	kitsy.dialogFunctions[tag] = fn;
 }
 
+function injectDialogTag(tag, code) {
+	inject$1(
+		/(var functionMap = new Map\(\);[^]*?)(this.HasFunction)/m,
+		'$1\nfunctionMap.set("' + tag + '", ' + code + ');\n$2'
+	);
+}
+
 /**
  * Adds a custom dialog tag which executes the provided function.
  * For ease-of-use with the bitsy editor, tags can be written as
@@ -304,10 +314,7 @@ function addDialogFunction(tag, fn) {
  */
 function addDialogTag(tag, fn) {
 	addDialogFunction(tag, fn);
-	inject$1(
-		/(var functionMap = new Map\(\);)/,
-		'$1functionMap.set("' + tag + '", kitsy.dialogFunctions.' + tag + ');'
-	);
+	injectDialogTag(tag, 'kitsy.dialogFunctions["' + tag + '"]');
 }
 
 /**
@@ -326,10 +333,7 @@ function addDeferredDialogTag(tag, fn) {
 	addDialogFunction(tag, fn);
 	bitsy.kitsy.deferredDialogFunctions = bitsy.kitsy.deferredDialogFunctions || {};
 	var deferred = bitsy.kitsy.deferredDialogFunctions[tag] = [];
-	inject$1(
-		/(var functionMap = new Map\(\);)/,
-		'$1functionMap.set("' + tag + '", function(e, p, o){ kitsy.deferredDialogFunctions.' + tag + '.push({e:e,p:p}); o(null); });'
-	);
+	injectDialogTag(tag, 'function(e, p, o){ kitsy.deferredDialogFunctions["' + tag + '"].push({e:e,p:p}); o(null); }');
 	// Hook into the dialog finish event and execute the actual function
 	after('onExitDialog', function () {
 		while (deferred.length) {
@@ -365,11 +369,20 @@ function addDualDialogTag(tag, fn) {
 
 
 
-// Implement the dialog functions
 addDualDialogTag('end', function (environment, parameters) {
+	// cleanup current dialog
 	bitsy.dialogBuffer.EndDialog();
-	bitsy.startNarrating(bitsy.ending[parameters[0]] || parameters[0] || '', true);
+
+	// end using dialog id
+	if (bitsy.dialog[parameters[0]]) {
+		return bitsy.startEndingDialog({
+			id: parameters[0],
+		});
+	}
+
+	// end using parameter as text
+	bitsy.startNarrating(parameters[0] || '', true);
+	return undefined;
 });
-// End of (end) dialog function mod
 
 }(window));

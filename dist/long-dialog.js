@@ -3,8 +3,8 @@
 @file long dialog
 @summary put more words onscreen
 @license MIT
-@version 1.1.3
-@requires Bitsy Version: 6.1
+@version 2.0.0
+@requires 7.0
 @author Sean S. LeBlanc
 
 @description
@@ -265,6 +265,13 @@ function addDialogFunction(tag, fn) {
 	kitsy.dialogFunctions[tag] = fn;
 }
 
+function injectDialogTag(tag, code) {
+	inject$1(
+		/(var functionMap = new Map\(\);[^]*?)(this.HasFunction)/m,
+		'$1\nfunctionMap.set("' + tag + '", ' + code + ');\n$2'
+	);
+}
+
 /**
  * Adds a custom dialog tag which executes the provided function.
  * For ease-of-use with the bitsy editor, tags can be written as
@@ -280,10 +287,7 @@ function addDialogFunction(tag, fn) {
  */
 function addDialogTag(tag, fn) {
 	addDialogFunction(tag, fn);
-	inject$1(
-		/(var functionMap = new Map\(\);)/,
-		'$1functionMap.set("' + tag + '", kitsy.dialogFunctions.' + tag + ');'
-	);
+	injectDialogTag(tag, 'kitsy.dialogFunctions["' + tag + '"]');
 }
 
 /**
@@ -298,7 +302,7 @@ inject$1(/(this\.AddLinebreak = )/, 'this.AddParagraphBreak = function() { buffe
 @file paragraph-break
 @summary Adds paragraph breaks to the dialogue parser
 @license WTFPL (do WTF you want)
-@version 1.1.5
+@version 1.1.6
 @requires Bitsy Version: 5.0, 5.1
 @author Sean S. LeBlanc, David Mowatt
 
@@ -307,6 +311,9 @@ Adds a (p) tag to the dialogue parser that forces the following text to
 start on a fresh dialogue screen, eliminating the need to spend hours testing
 line lengths or adding multiple line breaks that then have to be reviewed
 when you make edits or change the font size.
+
+Note: Bitsy has a built-in implementation of paragraph-break as of 7.0;
+before using this, you may want to check if it fulfills your needs.
 
 Usage: (p)
 
@@ -346,7 +353,7 @@ inject$1(/textboxInfo\.height = .+;/,
 inject$1(/(if\(textboxInfo\.img == null\))/, '// $1');
 // rewrite hard-coded row limit
 inject$1(/(else if \(curRowIndex )== 0/g, '$1< ' + hackOptions.maxRows + ' - 1');
-inject$1(/(if\( lastPage\.length) <= 1( \) {)/, '$1 < ' + hackOptions.maxRows + ' $2');
+inject$1(/(if \(lastPage\.length) <= 1/, '$1 < ' + hackOptions.maxRows);
 
 exports.hackOptions = hackOptions;
 
