@@ -15,8 +15,6 @@ Parameters:
 	target:    id/name of image to edit
 	newDialog: new dialog text
 
-Note: this hack disables bitsy's script caching.
-
 HOW TO USE:
 	Copy-paste this script into a new script tag after the Bitsy source code.
 
@@ -67,10 +65,8 @@ function editDialog(environment, parameters) {
 		throw new Error('Target "' + tgtId + '" was not the id/name of a ' + mapId + '.');
 	}
 	bitsy.dialog[tgtObj.dlg].src = newDialog;
+	bitsy.scriptInterpreter.Compile(tgtObj.dlg, newDialog);
 }
 
 // hook up the dialog tag
 addDeferredDialogTag('dialog', editDialog);
-
-// disable bitsy's dialog caching
-inject(/startDialog\(dialogStr,dialogId\);/g, 'startDialog(dialogStr);');
