@@ -45,4 +45,4 @@ inject(/textboxInfo\.height = .+;/,
 inject(/(if\(textboxInfo\.img == null\))/, '// $1');
 // rewrite hard-coded row limit
 inject(/(else if \(curRowIndex )== 0/g, '$1< ' + hackOptions.maxRows + ' - 1');
-inject(/(if\( lastPage\.length) <= 1( \) {)/, '$1 < ' + hackOptions.maxRows + ' $2');
+inject(/(if \(lastPage\.length) <= 1/, '$1 < ' + hackOptions.maxRows);
