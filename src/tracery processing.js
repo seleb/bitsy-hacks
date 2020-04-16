@@ -39,9 +39,11 @@ can create
 
 See http://www.crystalcodepalace.com/traceryTut.html for more on how to use tracery
 */
+import bitsy from 'bitsy';
 import tracery from 'tracery-grammar';
 import {
 	before,
+	inject,
 } from './helpers/kitsy-script-toolkit';
 
 export var hackOptions = {
@@ -57,8 +59,8 @@ var bitsyGrammar;
 before('onready', function () {
 	bitsyGrammar = tracery.createGrammar(hackOptions.grammar);
 	bitsyGrammar.addModifiers(hackOptions.modifiers || tracery.baseEngModifiers);
+	window.tracery = window.tracery || bitsyGrammar.flatten.bind(bitsyGrammar);
 });
 
-before('startDialog', function (dialogStr, dialogId) {
-	return [bitsyGrammar.flatten(dialogStr), dialogId];
-});
+// pre-process LiteralNode values with tracery grammar
+inject(/onReturn\(this\.value\)/, 'onReturn(window.tracery(this.value))');
