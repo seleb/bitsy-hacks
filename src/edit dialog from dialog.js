@@ -66,7 +66,7 @@ function editDialog(environment, parameters) {
 	if (!tgtObj) {
 		throw new Error('Target "' + tgtId + '" was not the id/name of a ' + mapId + '.');
 	}
-	bitsy.dialog[tgtObj.dlg] = newDialog;
+	bitsy.dialog[tgtObj.dlg].src = newDialog;
 }
 
 // hook up the dialog tag
