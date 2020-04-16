@@ -3,8 +3,8 @@
 @file online
 @summary multiplayer bitsy
 @license MIT
-@version 2.1.9
-@requires 5.5
+@version 3.0.0
+@requires 7.0
 @author Sean S. LeBlanc
 @description
 Provides the groundwork for running a small online multiplayer bitsy game.
@@ -43,7 +43,6 @@ import './edit dialog from dialog';
 export var hackOptions = {
 	host: 'wss://your signalling server',
 	// room: "custom room", // sets the room on the server to use; otherwise, uses game title
-	immediateMode: true, // if true, teleports players to their reported positions; otherwise, queues movements and lets bitsy handle the walking (note: other players pick up items like this)
 	ghosts: false, // if true, sprites from players who disconnected while you were online won't go away until you restart
 	debug: false, // if true, includes web-rtc-mesh debug logs in console
 };
@@ -71,18 +70,9 @@ function onData(event) {
 		spr = bitsy.sprite[event.from];
 		if (spr) {
 			// move sprite
-			if (hackOptions.immediateMode) {
-				// do it now
-				spr.x = data.x;
-				spr.y = data.y;
-				spr.room = data.room;
-			} else {
-				// let bitsy handle it later
-				spr.walkingPath.push({
-					x: data.x,
-					y: data.y,
-				});
-			}
+			spr.x = data.x;
+			spr.y = data.y;
+			spr.room = data.room;
 		} else {
 			// got a move from an unknown player,
 			// so ask them who they are
@@ -109,7 +99,6 @@ function onData(event) {
 			drw: longname,
 			inventory: {},
 			name: event.from,
-			walkingPath: [],
 			x: data.x,
 			y: data.y,
 			room: data.room,

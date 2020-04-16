@@ -3,7 +3,7 @@
 @file paragraph-break
 @summary Adds paragraph breaks to the dialogue parser
 @license WTFPL (do WTF you want)
-@version 1.1.5
+@version 1.1.6
 @requires Bitsy Version: 5.0, 5.1
 @author Sean S. LeBlanc, David Mowatt
 
@@ -12,6 +12,9 @@ Adds a (p) tag to the dialogue parser that forces the following text to
 start on a fresh dialogue screen, eliminating the need to spend hours testing
 line lengths or adding multiple line breaks that then have to be reviewed
 when you make edits or change the font size.
+
+Note: Bitsy has a built-in implementation of paragraph-break as of 7.0;
+before using this, you may want to check if it fulfills your needs.
 
 Usage: (p)
 

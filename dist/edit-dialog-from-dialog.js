@@ -3,7 +3,8 @@
 @file edit dialog from dialog
 @summary edit dialog from dialog (yes really)
 @license MIT
-@version 1.1.5
+@version 2.0.0
+@requires 7.0
 @author Sean S. LeBlanc
 
 @description
@@ -13,9 +14,10 @@ You can use this to edit the dialog of sprites/items through dialog.
 Parameters:
 	map:       Type of image (SPR or ITM)
 	target:    id/name of image to edit
-	newDialog: id/name of image to edit
+	newDialog: new dialog text
 
-Note: this hack disables bitsy's script caching.
+Examples:
+(dialog "SPR, a, I am not a cat")
 
 HOW TO USE:
 	Copy-paste this script into a new script tag after the Bitsy source code.
@@ -281,6 +283,13 @@ function addDialogFunction(tag, fn) {
 	kitsy.dialogFunctions[tag] = fn;
 }
 
+function injectDialogTag(tag, code) {
+	inject$1(
+		/(var functionMap = new Map\(\);[^]*?)(this.HasFunction)/m,
+		'$1\nfunctionMap.set("' + tag + '", ' + code + ');\n$2'
+	);
+}
+
 /**
  * Adds a custom dialog tag which executes the provided function.
  * For ease-of-use with the bitsy editor, tags can be written as
@@ -297,10 +306,7 @@ function addDeferredDialogTag(tag, fn) {
 	addDialogFunction(tag, fn);
 	bitsy.kitsy.deferredDialogFunctions = bitsy.kitsy.deferredDialogFunctions || {};
 	var deferred = bitsy.kitsy.deferredDialogFunctions[tag] = [];
-	inject$1(
-		/(var functionMap = new Map\(\);)/,
-		'$1functionMap.set("' + tag + '", function(e, p, o){ kitsy.deferredDialogFunctions.' + tag + '.push({e:e,p:p}); o(null); });'
-	);
+	injectDialogTag(tag, 'function(e, p, o){ kitsy.deferredDialogFunctions["' + tag + '"].push({e:e,p:p}); o(null); }');
 	// Hook into the dialog finish event and execute the actual function
 	after('onExitDialog', function () {
 		while (deferred.length) {
@@ -348,13 +354,11 @@ function editDialog(environment, parameters) {
 	if (!tgtObj) {
 		throw new Error('Target "' + tgtId + '" was not the id/name of a ' + mapId + '.');
 	}
-	bitsy.dialog[tgtObj.dlg] = newDialog;
+	bitsy.dialog[tgtObj.dlg].src = newDialog;
+	bitsy.scriptInterpreter.Compile(tgtObj.dlg, newDialog);
 }
 
 // hook up the dialog tag
 addDeferredDialogTag('dialog', editDialog);
-
-// disable bitsy's dialog caching
-inject(/startDialog\(dialogStr,dialogId\);/g, 'startDialog(dialogStr);');
 
 }(window));

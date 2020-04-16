@@ -3,7 +3,8 @@
 @file edit dialog from dialog
 @summary edit dialog from dialog (yes really)
 @license MIT
-@version 1.1.5
+@version 2.0.0
+@requires 7.0
 @author Sean S. LeBlanc
 
 @description
@@ -13,9 +14,10 @@ You can use this to edit the dialog of sprites/items through dialog.
 Parameters:
 	map:       Type of image (SPR or ITM)
 	target:    id/name of image to edit
-	newDialog: id/name of image to edit
+	newDialog: new dialog text
 
-Note: this hack disables bitsy's script caching.
+Examples:
+(dialog "SPR, a, I am not a cat")
 
 HOW TO USE:
 	Copy-paste this script into a new script tag after the Bitsy source code.
@@ -66,11 +68,9 @@ function editDialog(environment, parameters) {
 	if (!tgtObj) {
 		throw new Error('Target "' + tgtId + '" was not the id/name of a ' + mapId + '.');
 	}
-	bitsy.dialog[tgtObj.dlg] = newDialog;
+	bitsy.dialog[tgtObj.dlg].src = newDialog;
+	bitsy.scriptInterpreter.Compile(tgtObj.dlg, newDialog);
 }
 
 // hook up the dialog tag
 addDeferredDialogTag('dialog', editDialog);
-
-// disable bitsy's dialog caching
-inject(/startDialog\(dialogStr,dialogId\);/g, 'startDialog(dialogStr);');

@@ -3,8 +3,8 @@
 @file online
 @summary multiplayer bitsy
 @license MIT
-@version 2.1.9
-@requires 5.5
+@version 3.0.0
+@requires 7.0
 @author Sean S. LeBlanc
 @description
 Provides the groundwork for running a small online multiplayer bitsy game.
@@ -35,7 +35,6 @@ this.hacks = this.hacks || {};
 var hackOptions = {
 	host: 'wss://your signalling server',
 	// room: "custom room", // sets the room on the server to use; otherwise, uses game title
-	immediateMode: true, // if true, teleports players to their reported positions; otherwise, queues movements and lets bitsy handle the walking (note: other players pick up items like this)
 	ghosts: false, // if true, sprites from players who disconnected while you were online won't go away until you restart
 	debug: false, // if true, includes web-rtc-mesh debug logs in console
 };
@@ -294,6 +293,13 @@ function addDialogFunction(tag, fn) {
 	kitsy.dialogFunctions[tag] = fn;
 }
 
+function injectDialogTag(tag, code) {
+	inject$1(
+		/(var functionMap = new Map\(\);[^]*?)(this.HasFunction)/m,
+		'$1\nfunctionMap.set("' + tag + '", ' + code + ');\n$2'
+	);
+}
+
 /**
  * Adds a custom dialog tag which executes the provided function.
  * For ease-of-use with the bitsy editor, tags can be written as
@@ -309,10 +315,7 @@ function addDialogFunction(tag, fn) {
  */
 function addDialogTag(tag, fn) {
 	addDialogFunction(tag, fn);
-	inject$1(
-		/(var functionMap = new Map\(\);)/,
-		'$1functionMap.set("' + tag + '", kitsy.dialogFunctions.' + tag + ');'
-	);
+	injectDialogTag(tag, 'kitsy.dialogFunctions["' + tag + '"]');
 }
 
 /**
@@ -331,10 +334,7 @@ function addDeferredDialogTag(tag, fn) {
 	addDialogFunction(tag, fn);
 	bitsy.kitsy.deferredDialogFunctions = bitsy.kitsy.deferredDialogFunctions || {};
 	var deferred = bitsy.kitsy.deferredDialogFunctions[tag] = [];
-	inject$1(
-		/(var functionMap = new Map\(\);)/,
-		'$1functionMap.set("' + tag + '", function(e, p, o){ kitsy.deferredDialogFunctions.' + tag + '.push({e:e,p:p}); o(null); });'
-	);
+	injectDialogTag(tag, 'function(e, p, o){ kitsy.deferredDialogFunctions["' + tag + '"].push({e:e,p:p}); o(null); }');
 	// Hook into the dialog finish event and execute the actual function
 	after('onExitDialog', function () {
 		while (deferred.length) {
@@ -373,7 +373,7 @@ function addDualDialogTag(tag, fn) {
 @file javascript dialog
 @summary execute arbitrary javascript from dialog
 @license MIT
-@version 3.2.5
+@version 3.2.6
 @requires Bitsy Version: 4.5, 4.6
 @author Sean S. LeBlanc
 
@@ -477,7 +477,7 @@ function setSpriteData(id, frame, newData) {
 @file edit image from dialog
 @summary edit sprites, items, and tiles from dialog
 @license MIT
-@version 1.2.8
+@version 1.2.9
 @requires 5.3
 @author Sean S. LeBlanc
 
@@ -621,7 +621,8 @@ addDualDialogTag('imagePal', editPalette);
 @file edit dialog from dialog
 @summary edit dialog from dialog (yes really)
 @license MIT
-@version 1.1.5
+@version 2.0.0
+@requires 7.0
 @author Sean S. LeBlanc
 
 @description
@@ -631,9 +632,10 @@ You can use this to edit the dialog of sprites/items through dialog.
 Parameters:
 	map:       Type of image (SPR or ITM)
 	target:    id/name of image to edit
-	newDialog: id/name of image to edit
+	newDialog: new dialog text
 
-Note: this hack disables bitsy's script caching.
+Examples:
+(dialog "SPR, a, I am not a cat")
 
 HOW TO USE:
 	Copy-paste this script into a new script tag after the Bitsy source code.
@@ -675,14 +677,12 @@ function editDialog(environment, parameters) {
 	if (!tgtObj) {
 		throw new Error('Target "' + tgtId + '" was not the id/name of a ' + mapId + '.');
 	}
-	bitsy.dialog[tgtObj.dlg] = newDialog;
+	bitsy.dialog[tgtObj.dlg].src = newDialog;
+	bitsy.scriptInterpreter.Compile(tgtObj.dlg, newDialog);
 }
 
 // hook up the dialog tag
 addDeferredDialogTag('dialog', editDialog);
-
-// disable bitsy's dialog caching
-inject(/startDialog\(dialogStr,dialogId\);/g, 'startDialog(dialogStr);');
 
 
 
@@ -711,18 +711,9 @@ function onData(event) {
 		spr = bitsy.sprite[event.from];
 		if (spr) {
 			// move sprite
-			if (hackOptions.immediateMode) {
-				// do it now
-				spr.x = data.x;
-				spr.y = data.y;
-				spr.room = data.room;
-			} else {
-				// let bitsy handle it later
-				spr.walkingPath.push({
-					x: data.x,
-					y: data.y,
-				});
-			}
+			spr.x = data.x;
+			spr.y = data.y;
+			spr.room = data.room;
 		} else {
 			// got a move from an unknown player,
 			// so ask them who they are
@@ -749,7 +740,6 @@ function onData(event) {
 			drw: longname,
 			inventory: {},
 			name: event.from,
-			walkingPath: [],
 			x: data.x,
 			y: data.y,
 			room: data.room,
