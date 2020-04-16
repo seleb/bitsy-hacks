@@ -10,6 +10,9 @@
 @description
 Lets you end the game from dialog (including inside conditionals).
 
+Note: Bitsy has a built-in implementation of end-from-dialog as of 7.0;
+before using this, you may want to check if it fulfills your needs.
+
 Using the (end) function in any part of a series of dialog will make the
 game end after the dialog is finished. Ending the game resets it back to the
 intro.

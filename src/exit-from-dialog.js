@@ -9,6 +9,10 @@
 
 @description
 Lets you exit to another room from dialog (including inside conditionals).
+
+Note: Bitsy has a built-in implementation of exit-from-dialog as of 7.0;
+before using this, you may want to check if it fulfills your needs.
+
 Use it to make an invisible sprite that acts as a conditional exit, use it to warp
 somewhere after a conversation, use it to put a guard at your gate who only
 lets you in once you're disguised, use it to require payment before the

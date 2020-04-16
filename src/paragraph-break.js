@@ -13,6 +13,9 @@ start on a fresh dialogue screen, eliminating the need to spend hours testing
 line lengths or adding multiple line breaks that then have to be reviewed
 when you make edits or change the font size.
 
+Note: Bitsy has a built-in implementation of paragraph-break as of 7.0;
+before using this, you may want to check if it fulfills your needs.
+
 Usage: (p)
 
 Example: I am a cat(p)and my dialogue contains multitudes
