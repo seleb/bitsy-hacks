@@ -3,8 +3,8 @@
 @file long dialog
 @summary put more words onscreen
 @license MIT
-@version 1.1.3
-@requires Bitsy Version: 6.1
+@version 2.0.0
+@requires 7.0
 @author Sean S. LeBlanc
 
 @description

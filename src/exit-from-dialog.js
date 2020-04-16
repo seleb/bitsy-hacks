@@ -3,8 +3,8 @@
 @file exit-from-dialog
 @summary exit to another room from dialog, including conditionals
 @license WTFPL (do WTF you want)
-@version 7.0.3
-@requires Bitsy Version: 6.0
+@version 8.0.0
+@requires Bitsy Version: 7.0
 @author @mildmojo
 
 @description
