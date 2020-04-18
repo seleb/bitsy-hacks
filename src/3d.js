@@ -70,7 +70,7 @@ useful for making more complex shapes and more organic silhouettes by shifting
 models a bit off the grid, and configuring plane-type meshes to face a specific direction
 #t(x,y,z) for translation, #r(x,y,z) for rotation (in degrees), #s(x,y,z) for scaling.
 #t(1,0,0.5') and '#t(1,,.5)' are both examples of valid input
-omiting the number is the same as writing 0. note that this won't change anything on
+omitting the number is the same as writing 0. note that this won't change anything on
 the given axis for rotation and translation, but it will for scaling
 
 * add #transparent(true)/#transparent(false) tag to the drawing's name to set
@@ -281,7 +281,7 @@ export var hackOptions = {
 		// children tag
 		// for now for animation to work gotta make sure that the parent drawing has as many frames as children
 		var childrenTag;
-		// make sure the mesh we are about to add children to doesn't have a parent on its own to avoid ifinite loops
+		// make sure the mesh we are about to add children to doesn't have a parent on its own to avoid infinite loops
 		// maybe add checking for parents of parents recursively up to a certain number to allow more complex combinations
 		if (!mesh.parent) {
 			childrenTag = name.match(/#children\(([\w-, ]+)\)/);
@@ -490,7 +490,7 @@ canvas:focus { outline: none; }
 		boxMesh.setVerticesData(BABYLON.VertexBuffer.UVKind, uvs);
 		boxMesh.isVisible = false;
 		boxMesh.doNotSyncBoundingInfo = true;
-		// adjust template position so that the instances will be displated correctly
+		// adjust template position so that the instances will be displayed correctly
 		transformGeometry(boxMesh, BABYLON.Matrix.Translation(0.0, i / 2 - 0.5, 0.0));
 		meshTemplates['tower' + i] = boxMesh;
 	}
@@ -742,7 +742,7 @@ before('drawRoom', function (room, context, frameIndex) {
 		playerRef.position.x = bitsy.player().x;
 		playerRef.position.z = bitsy.mapsize - 1 - bitsy.player().y;
 		// make sure playerPosNode moves with the player so that the camera can
-		// use it as a target to prevent crashing whith billboard-avatar
+		// use it as a target to prevent crashing with billboard-avatar
 		playerPosNode.position = playerRef.position;
 	}
 	return [room, fakeContext, frameIndex];
