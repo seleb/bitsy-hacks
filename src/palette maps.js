@@ -112,7 +112,7 @@ This hack is designed to be flexible. Here are some ideas for how to use it!
 - You can recolor areas for visual effects, like differently-lit, smokey, or underwater tiles.
 - Using the dialog tags (or JavaScript) you can recolor an area without needing duplicate rooms.
 */
-
+import bitsy from 'bitsy';
 import {
 	after,
 	inject,
@@ -280,7 +280,7 @@ function isPaletteOverridden(drawing) {
 			var p = drawing.name[paletteId + hackOptions.paletteTag.length];
 
 			// returns single digit/character after palette tag, if a valid palette
-			if (palette[p] != undefined) {
+			if (bitsy.palette[p] != undefined) {
 				return p;
 			}
 		}
@@ -292,11 +292,11 @@ function isPaletteOverridden(drawing) {
 function clearPaletteMap(roomId) {
 	// Trim and sanitize Room ID parameter, and set to current room if omitted
 	if (roomId == undefined) {
-		roomId = curRoom;
+		roomId = bitsy.curRoom;
 		// roomId = getRoom().id;
 	} else {
 		roomId = roomId.toString().trim();
-		if (roomId == '') { roomId = curRoom; } else if (room[roomId] == undefined) {
+		if (roomId == '') { roomId = bitsy.curRoom; } else if (bitsy.room[roomId] == undefined) {
 			console.log("CAN'T GET ROOM. ROOM ID (" + roomId + ') NOT FOUND.');
 			return;
 		}
@@ -331,11 +331,11 @@ function clearPaletteMap(roomId) {
 function resetPaletteMap(roomId) {
 	// Trim and sanitize Room ID parameter, and set to current room if omitted
 	if (roomId == undefined) {
-		roomId = curRoom;
+		roomId = bitsy.curRoom;
 		// roomId = getRoom().id;
 	} else {
 		roomId = roomId.toString().trim();
-		if (roomId == '') { roomId = curRoom; } else if (room[roomId] == undefined) {
+		if (roomId == '') { roomId = bitsy.curRoom; } else if (bitsy.room[roomId] == undefined) {
 			console.log("CAN'T GET ROOM. ROOM ID (" + roomId + ') NOT FOUND.');
 			return;
 		}
@@ -379,7 +379,7 @@ function resetPaletteMap(roomId) {
 			if (palRowArray != undefined) {
 				for (var c = 0; c < palRowArray.length; c++) {
 					// If Palette ID exists and matches a valid Palette, write it.
-					if (palRowArray[c] != undefined && palette[palRowArray[c]] != undefined) {
+					if (palRowArray[c] != undefined && bitsy.palette[palRowArray[c]] != undefined) {
 						paletteMap[roomId][r][c] = palRowArray[c];
 					} else {
 						paletteMap[roomId][r][c] = '-';
@@ -393,7 +393,7 @@ function resetPaletteMap(roomId) {
 function parsePaletteMaps() {
 	console.log('PARSING PALETTE MAPS');
 
-	for (id in room) { // Initialize Palette Maps for each Room
+	for (const id in bitsy.room) { // Initialize Palette Maps for each Room
 		resetPaletteMap(id);
 	}
 }
@@ -401,10 +401,10 @@ function parsePaletteMaps() {
 function setPaletteAt(p, x, y, roomId) {
 	// Trim and sanitize X Position parameter, and set relative positions, even if omitted.
 	if (x == undefined) {
-		x = player().x;
+		x = bitsy.player().x;
 	} else {
 		x = x.toString().trim();
-		if (x == '') { x = player().x; } else if (x.includes('+')) { x = player().x + parseInt(x.substring(1)); } else if (x.includes('-')) { x = player().x - parseInt(x.substring(1)); }
+		if (x == '') { x = bitsy.player().x; } else if (x.includes('+')) { x = bitsy.player().x + parseInt(x.substring(1)); } else if (x.includes('-')) { x = bitsy.player().x - parseInt(x.substring(1)); }
 	}
 	if (x < 0 || x > 15) {
 		console.log("CAN'T SET PALETTE. X POSITION (" + x + ') OUT OF BOUNDS. 0-15 EXPECTED.');
@@ -413,10 +413,10 @@ function setPaletteAt(p, x, y, roomId) {
 
 	// Trim and sanitize Y Position parameter, and set relative positions, even if omitted
 	if (y == undefined) {
-		y = player().y;
+		y = bitsy.player().y;
 	} else {
 		y = y.toString().trim();
-		if (y == '') { y = player().y; } else if (y.includes('+')) { y = player().y + parseInt(y.substring(1)); } else if (y.includes('-')) { y = player().y - parseInt(y.substring(1)); }
+		if (y == '') { y = bitsy.player().y; } else if (y.includes('+')) { y = bitsy.player().y + parseInt(y.substring(1)); } else if (y.includes('-')) { y = bitsy.player().y - parseInt(y.substring(1)); }
 	}
 	if (y < 0 || y > 15) {
 		console.log("CAN'T SET PALETTE. Y POSITION (" + y + ') OUT OF BOUNDS. 0-15 EXPECTED.');
@@ -425,11 +425,11 @@ function setPaletteAt(p, x, y, roomId) {
 
 	// Trim and sanitize Room ID parameter, and set to current room if omitted
 	if (roomId == undefined) {
-		roomId = curRoom;
+		roomId = bitsy.curRoom;
 		// roomId = getRoom().id;
 	} else {
 		roomId = roomId.toString().trim();
-		if (roomId == '') { roomId = curRoom; } else if (room[roomId] == undefined) {
+		if (roomId == '') { roomId = bitsy.curRoom; } else if (bitsy.room[roomId] == undefined) {
 			console.log("CAN'T GET ROOM. ROOM ID (" + roomId + ') NOT FOUND.');
 			return;
 		}
@@ -437,7 +437,7 @@ function setPaletteAt(p, x, y, roomId) {
 
 	if (p == undefined) {
 		p = '-';
-	} else if (palette[p] == undefined) {
+	} else if (bitsy.palette[p] == undefined) {
 		p = '-';
 	}
 	console.log('SET PALETTE AT ' + x + ',' + y + '(ROOM ' + roomId + ') TO ' + p);
@@ -447,11 +447,11 @@ function setPaletteAt(p, x, y, roomId) {
 function setRoomPalette(p, roomId) {
 	// Trim and sanitize Room ID parameter, and set to current room if omitted
 	if (roomId == undefined) {
-		roomId = curRoom;
+		roomId = bitsy.curRoom;
 		// roomId = getRoom().id;
 	} else {
 		roomId = roomId.toString().trim();
-		if (roomId == '') { roomId = curRoom; } else if (room[roomId] == undefined) {
+		if (roomId == '') { roomId = bitsy.curRoom; } else if (bitsy.room[roomId] == undefined) {
 			console.log("CAN'T SET ROOM PALETTE. ROOM ID (" + roomId + ') NOT FOUND.');
 			return;
 		}
@@ -459,14 +459,14 @@ function setRoomPalette(p, roomId) {
 
 	if (p == undefined) {
 		p = '-';
-	} else if (palette[p] == undefined) {
+	} else if (bitsy.palette[p] == undefined) {
 		p = '-';
 	}
 
 	// If given Palette ID matches an existing Palette, set room palette to that
-	if (palette[p] != undefined) {
+	if (bitsy.palette[p] != undefined) {
 		console.log('ROOM ' + roomId + ' DEFAULT PALETTE SET TO ' + p);
-		room[roomId].pal = p;
+		bitsy.room[roomId].pal = p;
 		return true;
 	}
 	console.log('ROOM ' + roomId + " DEFAULT PALETTE CAN'T BE SET TO " + p + '; INVALID PALETTE ID');
@@ -476,10 +476,10 @@ function setRoomPalette(p, roomId) {
 function getPaletteAt(x, y, roomId) {
 	// Trim and sanitize X Position parameter, and set relative positions, even if omitted.
 	if (x == undefined) {
-		x = player().x;
+		x = bitsy.player().x;
 	} else {
 		x = x.toString().trim();
-		if (x == '') { x = player().x; } else if (x.includes('+')) { x = player().x + parseInt(x.substring(1)); } else if (x.includes('-')) { x = player().x - parseInt(x.substring(1)); }
+		if (x == '') { x = bitsy.player().x; } else if (x.includes('+')) { x = bitsy.player().x + parseInt(x.substring(1)); } else if (x.includes('-')) { x = bitsy.player().x - parseInt(x.substring(1)); }
 	}
 	if (x < 0 || x > 15) {
 		console.log("CAN'T GET PALETTE. X POSITION (" + x + ') OUT OF BOUNDS. 0-15 EXPECTED.');
@@ -488,10 +488,10 @@ function getPaletteAt(x, y, roomId) {
 
 	// Trim and sanitize Y Position parameter, and set relative positions, even if omitted
 	if (y == undefined) {
-		y = player().y;
+		y = bitsy.player().y;
 	} else {
 		y = y.toString().trim();
-		if (y == '') { y = player().y; } else if (y.includes('+')) { y = player().y + parseInt(y.substring(1)); } else if (y.includes('-')) { y = player().y - parseInt(y.substring(1)); }
+		if (y == '') { y = bitsy.player().y; } else if (y.includes('+')) { y = bitsy.player().y + parseInt(y.substring(1)); } else if (y.includes('-')) { y = bitsy.player().y - parseInt(y.substring(1)); }
 	}
 	if (y < 0 || y > 15) {
 		console.log("CAN'T GET PALETTE. Y POSITION (" + y + ') OUT OF BOUNDS. 0-15 EXPECTED.');
@@ -500,10 +500,10 @@ function getPaletteAt(x, y, roomId) {
 
 	// Trim and sanitize Room ID parameter, and set to current room if omitted
 	if (roomId == undefined) {
-		roomId = curRoom;
+		roomId = bitsy.curRoom;
 	} else {
 		roomId = roomId.toString().trim();
-		if (roomId == '') { roomId = curRoom; } else if (room[roomId] == undefined) {
+		if (roomId == '') { roomId = bitsy.curRoom; } else if (bitsy.room[roomId] == undefined) {
 			console.log("CAN'T GET ROOM. ROOM ID (" + roomId + ') NOT FOUND.');
 			return;
 		}
@@ -520,15 +520,15 @@ function getPaletteAt(x, y, roomId) {
 	}
 
 	// Check for Palette Map for the room, if it exists. Defaults to -1 if undefined.
-	if (palette[p] == undefined) {
-		p = getRoom().pal;
+	if (bitsy.palette[p] == undefined) {
+		p = bitsy.getRoom().pal;
 	}
 	return p;
 }
 
 function overdrawRecoloredTiles(room, context, frameIndex) {
 	if (!context) { // optional pass in context;
-		context = ctx;
+		context = bitsy.ctx;
 	}
 	var paletteId = 'default';
 
@@ -537,13 +537,13 @@ function overdrawRecoloredTiles(room, context, frameIndex) {
 		return;
 	}
 	// set default paletteId to room's palette
-	if (room.pal != null && palette[paletteId] != undefined) {
+	if (room.pal != null && bitsy.palette[paletteId] != undefined) {
 		paletteId = room.pal;
 	}
 
 	// calculate tile dimensions for drawing recolored backgrounds on empty tiles
-	var tileWidth = canvas.width / 16;
-	var tileHeight = canvas.height / 16;
+	var tileWidth = bitsy.canvas.width / 16;
+	var tileHeight = bitsy.canvas.height / 16;
 
 	// overdraw any recolored tiles on top of existing room
 	for (var r in room.tilemap) {
@@ -553,22 +553,22 @@ function overdrawRecoloredTiles(room, context, frameIndex) {
 			var tilePaletteId = getPaletteAt(c, r);
 
 			// skip drawing tile, if it's invalid or already been drawn in default color
-			if (palette[tilePaletteId] != undefined || palette[tilePaletteId] != paletteId) {
+			if (bitsy.palette[tilePaletteId] != undefined || bitsy.palette[tilePaletteId] != paletteId) {
 				// draw backgrounds as colored rectangles
-				context.fillStyle = 'rgb(' + getPal(tilePaletteId)[0][0] + ',' + getPal(tilePaletteId)[0][1] + ',' + getPal(tilePaletteId)[0][2] + ')';
+				context.fillStyle = 'rgb(' + bitsy.getPal(tilePaletteId)[0][0] + ',' + bitsy.getPal(tilePaletteId)[0][1] + ',' + bitsy.getPal(tilePaletteId)[0][2] + ')';
 				context.fillRect(tileLeft, tileTop, tileLeft + tileWidth, tileTop + tileHeight);
 
 				var id = room.tilemap[r][c];
 				if (id != '0') {
-					if (tile[id] != null) {
+					if (bitsy.tile[id] != null) {
 						// If a tile has the #PAL tag, it overrides the tile's normal palette.
 						if (hackOptions.prioritizePaletteTag) {
-							var paletteOverrideId = isPaletteOverridden(tile[room.tilemap[r][c]]);
+							var paletteOverrideId = isPaletteOverridden(bitsy.tile[room.tilemap[r][c]]);
 							if (paletteOverrideId) {
 								var tilePaletteId = paletteOverrideId;
 							}
 						}
-						drawTile(getTileImage(tile[id], tilePaletteId, frameIndex), c, r, context);
+						bitsy.drawTile(bitsy.getTileImage(bitsy.tile[id], tilePaletteId, frameIndex), c, r, context);
 					}
 				}
 			}
@@ -580,24 +580,24 @@ function overdrawRecoloredTiles(room, context, frameIndex) {
 		var itm = room.items[i];
 
 		var itemPaletteId = getPaletteAt(itm.x, itm.y);
-		if (palette[itemPaletteId] != undefined || palette[itemPaletteId] != paletteId) {
+		if (bitsy.palette[itemPaletteId] != undefined || bitsy.palette[itemPaletteId] != paletteId) {
 			if (hackOptions.prioritizePaletteTag) {
-				var paletteOverrideId = isPaletteOverridden(item[itm.id]);
+				var paletteOverrideId = isPaletteOverridden(bitsy.item[itm.id]);
 				if (paletteOverrideId) {
 					itemPaletteId = paletteOverrideId;
 				}
 			}
-			drawItem(getItemImage(item[itm.id], itemPaletteId, frameIndex), itm.x, itm.y, context);
+			bitsy.drawItem(bitsy.getItemImage(bitsy.item[itm.id], itemPaletteId, frameIndex), itm.x, itm.y, context);
 		}
 	}
 
 	// draw sprites
-	for (id in sprite) {
-		var spr = sprite[id];
+	for (id in bitsy.sprite) {
+		var spr = bitsy.sprite[id];
 		if (spr.room === room.id) {
 			// Get palette map at sprite's coordinate
 			var spritePaletteId = getPaletteAt(spr.x, spr.y);
-			if (palette[spritePaletteId] != undefined || palette[spritePaletteId] != paletteId) {
+			if (bitsy.palette[spritePaletteId] != undefined || bitsy.palette[spritePaletteId] != paletteId) {
 				if (hackOptions.prioritizePaletteTag) {
 					var paletteOverrideId = isPaletteOverridden(spr);
 					if (paletteOverrideId) {
@@ -605,7 +605,7 @@ function overdrawRecoloredTiles(room, context, frameIndex) {
 					}
 				}
 			}
-			drawSprite(getSpriteImage(spr, spritePaletteId, frameIndex), spr.x, spr.y, context);
+			bitsy.drawSprite(bitsy.getSpriteImage(spr, spritePaletteId, frameIndex), spr.x, spr.y, context);
 		}
 	}
 }
