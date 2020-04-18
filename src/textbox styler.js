@@ -846,7 +846,7 @@ var textboxStyler = window.textboxStyler = {
 			x = curX;
 		} else {
 			x = x.toString().trim();
-			if (x == '') { x = curX; } else if (x.includes('+')) { x = curX + parseInt(x.substring(1)); } else if (x.includes('-')) { x = curX - parseInt(x.substring(1)); }
+			if (x == '') { x = curX; } else if (x.includes('+')) { x = curX + parseInt(x.substring(1), 10); } else if (x.includes('-')) { x = curX - parseInt(x.substring(1), 10); }
 		}
 		if (x < -128 || x > 128) {
 			console.log('CLAMPING X POSITION. XPOS (' + x + ') OUT OF BOUNDS. 0-128 EXPECTED.');
@@ -857,7 +857,7 @@ var textboxStyler = window.textboxStyler = {
 			y = curY;
 		} else {
 			y = y.toString().trim();
-			if (y == '') { y = curY; } else if (y.includes('+')) { y = curY + parseInt(y.substring(1)); } else if (y.includes('-')) { y = curY - parseInt(y.substring(1)); }
+			if (y == '') { y = curY; } else if (y.includes('+')) { y = curY + parseInt(y.substring(1), 10); } else if (y.includes('-')) { y = curY - parseInt(y.substring(1), 10); }
 		}
 		if (y < -128 || y > 128) {
 			console.log('CLAMPING Y POSITION. YPOS (' + y + ') OUT OF BOUNDS. 0-128 EXPECTED.');
@@ -868,7 +868,7 @@ var textboxStyler = window.textboxStyler = {
 			boxWidth = curWidth;
 		} else {
 			boxWidth = boxWidth.toString().trim();
-			if (boxWidth == '') { boxWidth = curWidth; } else if (boxWidth.includes('+')) { boxWidth = curWidth + parseInt(boxWidth.substring(1)); } else if (boxWidth.includes('-')) { boxWidth = curWidth - parseInt(boxWidth.substring(1)); }
+			if (boxWidth == '') { boxWidth = curWidth; } else if (boxWidth.includes('+')) { boxWidth = curWidth + parseInt(boxWidth.substring(1), 10); } else if (boxWidth.includes('-')) { boxWidth = curWidth - parseInt(boxWidth.substring(1), 10); }
 		}
 		if (boxWidth < 0 || boxWidth > 128) {
 			console.log('CLAMPING WIDTH (' + (boxWidth) + '). 0-128 EXPECTED.');
@@ -879,7 +879,7 @@ var textboxStyler = window.textboxStyler = {
 			boxMinLines = curMinLines;
 		} else {
 			boxMinLines = boxMinLines.toString().trim();
-			if (boxMinLines == '') { boxMinLines = curMinLines; } else if (boxMinLines.includes('+')) { boxMinLines = curMinLines + parseInt(boxMinLines.substring(1)); } else if (boxMinLines.includes('-')) { boxMinLines = curMinLines - parseInt(boxMinLines.substring(1)); }
+			if (boxMinLines == '') { boxMinLines = curMinLines; } else if (boxMinLines.includes('+')) { boxMinLines = curMinLines + parseInt(boxMinLines.substring(1), 10); } else if (boxMinLines.includes('-')) { boxMinLines = curMinLines - parseInt(boxMinLines.substring(1), 10); }
 		}
 		if (boxMinLines < 0 || boxMinLines > 128) {
 			console.log('CLAMPING TEXT MIN LINES (' + (boxMinLines) + '). 0-128 EXPECTED.');
@@ -890,7 +890,7 @@ var textboxStyler = window.textboxStyler = {
 			boxMaxLines = curMaxLines;
 		} else {
 			boxMaxLines = boxMaxLines.toString().trim();
-			if (boxMaxLines == '') { boxMaxLines = boxMaxLines; } else if (boxMaxLines.includes('+')) { boxMaxLines += parseInt(boxMaxLines.substring(1)); } else if (boxMaxLines.includes('-')) { boxMaxLines -= parseInt(boxMaxLines.substring(1)); }
+			if (boxMaxLines == '') { boxMaxLines = boxMaxLines; } else if (boxMaxLines.includes('+')) { boxMaxLines += parseInt(boxMaxLines.substring(1), 10); } else if (boxMaxLines.includes('-')) { boxMaxLines -= parseInt(boxMaxLines.substring(1), 10); }
 		}
 		if (boxMaxLines < 0 || boxMaxLines > 128) {
 			console.log('CLAMPING TEXT MAX LINES (' + (boxMaxLines) + '). 0-128 EXPECTED.');
@@ -920,7 +920,7 @@ var textboxStyler = window.textboxStyler = {
 			x1 = curX1;
 		} else {
 			x1 = x1.toString().trim();
-			if (x1 == '') { x1 = curX1; } else if (x1.includes('+')) { x1 = curX1 + parseInt(x1.substring(1)); } else if (x1.includes('-')) { x1 = curX1 - parseInt(x1.substring(1)); }
+			if (x1 == '') { x1 = curX1; } else if (x1.includes('+')) { x1 = curX1 + parseInt(x1.substring(1), 10); } else if (x1.includes('-')) { x1 = curX1 - parseInt(x1.substring(1), 10); }
 		}
 		if (x1 < 0 || x1 > 128) {
 			console.log('CLAMPING X1 POSITION. XPOS (' + x1 + ') OUT OF BOUNDS. 0-128 EXPECTED.');
@@ -931,7 +931,7 @@ var textboxStyler = window.textboxStyler = {
 			x2 = curX2;
 		} else {
 			x2 = x2.toString().trim();
-			if (x2 == '') { x2 = curX2; } else if (x2.includes('+')) { x2 = curX2 + parseInt(x2.substring(1)); } else if (x2.includes('-')) { x2 = curX2 - parseInt(x2.substring(1)); }
+			if (x2 == '') { x2 = curX2; } else if (x2.includes('+')) { x2 = curX2 + parseInt(x2.substring(1), 10); } else if (x2.includes('-')) { x2 = curX2 - parseInt(x2.substring(1), 10); }
 		}
 		if (x2 < 0 || x2 > 128) {
 			console.log('CLAMPING X2 POSITION. xPos (' + x2 + ') OUT OF BOUNDS. 0-128 EXPECTED.');
@@ -942,7 +942,7 @@ var textboxStyler = window.textboxStyler = {
 			y1 = curY1;
 		} else {
 			y1 = y1.toString().trim();
-			if (y1 == '') { y1 = curY1; } else if (y1.includes('+')) { y1 = curY1 + parseInt(y1.substring(1)); } else if (y1.includes('-')) { y1 = curY1 - parseInt(y1.substring(1)); }
+			if (y1 == '') { y1 = curY1; } else if (y1.includes('+')) { y1 = curY1 + parseInt(y1.substring(1), 10); } else if (y1.includes('-')) { y1 = curY1 - parseInt(y1.substring(1), 10); }
 		}
 		if (y1 < 0 || y1 > 128) {
 			console.log('CLAMPING Y1 POSITION. XPOS (' + y1 + ') OUT OF BOUNDS. 0-128 EXPECTED.');
@@ -953,7 +953,7 @@ var textboxStyler = window.textboxStyler = {
 			y2 = curY2;
 		} else {
 			y2 = y2.toString().trim();
-			if (y2 == '') { y2 = curY2; } else if (y2.includes('+')) { y2 = curY2 + parseInt(y2.substring(1)); } else if (y2.includes('-')) { y2 = curY2 - parseInt(y2.substring(1)); }
+			if (y2 == '') { y2 = curY2; } else if (y2.includes('+')) { y2 = curY2 + parseInt(y2.substring(1), 10); } else if (y2.includes('-')) { y2 = curY2 - parseInt(y2.substring(1), 10); }
 		}
 		if (y2 < 0 || y2 > 128) {
 			console.log('CLAMPING Y2 POSITION. xPos (' + y2 + ') OUT OF BOUNDS. 0-128 EXPECTED.');
