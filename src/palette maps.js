@@ -542,11 +542,11 @@ function overdrawRecoloredTiles(room, context, frameIndex) {
 	var tileHeight = bitsy.canvas.height / 16;
 
 	// overdraw any recolored tiles on top of existing room
-	for (var r in room.tilemap) {
-		for (var c in room.tilemap[r]) {
-			var tileTop = r * tileHeight;
-			var tileLeft = c * tileWidth;
-			var tilePaletteId = getPaletteAt(c, r);
+	Object.values(room.tilemap).forEach(function (row, y) {
+		Object.values(row).forEach(function (column, x) {
+			var tileTop = y * tileHeight;
+			var tileLeft = x * tileWidth;
+			var tilePaletteId = getPaletteAt(x, y);
 
 			// skip drawing tile, if it's invalid or already been drawn in default color
 			if (bitsy.palette[tilePaletteId] !== undefined || bitsy.palette[tilePaletteId] !== paletteId) {
@@ -554,22 +554,22 @@ function overdrawRecoloredTiles(room, context, frameIndex) {
 				context.fillStyle = 'rgb(' + bitsy.getPal(tilePaletteId)[0][0] + ',' + bitsy.getPal(tilePaletteId)[0][1] + ',' + bitsy.getPal(tilePaletteId)[0][2] + ')';
 				context.fillRect(tileLeft, tileTop, tileLeft + tileWidth, tileTop + tileHeight);
 
-				var id = room.tilemap[r][c];
+				var id = room.tilemap[y][x];
 				if (id !== '0') {
 					if (bitsy.tile[id] !== null) {
 						// If a tile has the #PAL tag, it overrides the tile's normal palette.
 						if (hackOptions.prioritizePaletteTag) {
-							var paletteOverrideId = isPaletteOverridden(bitsy.tile[room.tilemap[r][c]]);
+							var paletteOverrideId = isPaletteOverridden(bitsy.tile[room.tilemap[y][x]]);
 							if (paletteOverrideId) {
-								var tilePaletteId = paletteOverrideId;
+								tilePaletteId = paletteOverrideId;
 							}
 						}
-						bitsy.drawTile(bitsy.getTileImage(bitsy.tile[id], tilePaletteId, frameIndex), c, r, context);
+						bitsy.drawTile(bitsy.getTileImage(bitsy.tile[id], tilePaletteId, frameIndex), x, y, context);
 					}
 				}
 			}
-		}
-	}
+		});
+	});
 
 	// draw items
 	for (var i = 0; i < room.items.length; i++) {
@@ -578,30 +578,23 @@ function overdrawRecoloredTiles(room, context, frameIndex) {
 		var itemPaletteId = getPaletteAt(itm.x, itm.y);
 		if (bitsy.palette[itemPaletteId] !== undefined || bitsy.palette[itemPaletteId] !== paletteId) {
 			if (hackOptions.prioritizePaletteTag) {
-				var paletteOverrideId = isPaletteOverridden(bitsy.item[itm.id]);
-				if (paletteOverrideId) {
-					itemPaletteId = paletteOverrideId;
-				}
+				itemPaletteId = isPaletteOverridden(bitsy.item[itm.id]) || itemPaletteId;
 			}
 			bitsy.drawItem(bitsy.getItemImage(bitsy.item[itm.id], itemPaletteId, frameIndex), itm.x, itm.y, context);
 		}
 	}
 
 	// draw sprites
-	for (id in bitsy.sprite) {
-		var spr = bitsy.sprite[id];
+	Object.values(bitsy.sprite).forEach(function (spr) {
 		if (spr.room === room.id) {
 			// Get palette map at sprite's coordinate
 			var spritePaletteId = getPaletteAt(spr.x, spr.y);
 			if (bitsy.palette[spritePaletteId] !== undefined || bitsy.palette[spritePaletteId] !== paletteId) {
 				if (hackOptions.prioritizePaletteTag) {
-					var paletteOverrideId = isPaletteOverridden(spr);
-					if (paletteOverrideId) {
-						spritePaletteId = paletteOverrideId;
-					}
+					spritePaletteId = isPaletteOverridden(spr) || spritePaletteId;
 				}
 			}
 			bitsy.drawSprite(bitsy.getSpriteImage(spr, spritePaletteId, frameIndex), spr.x, spr.y, context);
 		}
-	}
+	});
 }
