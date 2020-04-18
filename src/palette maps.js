@@ -513,8 +513,8 @@ function overdrawRecoloredTiles(room, context, frameIndex) {
 	var tileHeight = bitsy.canvas.height / 16;
 
 	// overdraw any recolored tiles on top of existing room
-	Object.values(room.tilemap).forEach(function (row, y) {
-		Object.values(row).forEach(function (column, x) {
+	for (var y = 0; y < room.tilemap.length; ++y) {
+		for (var x = 0; x < room.tilemap[y].length; ++x) {
 			var tileTop = y * tileHeight;
 			var tileLeft = x * tileWidth;
 			var tilePaletteId = getPaletteAt(x, y);
@@ -539,8 +539,8 @@ function overdrawRecoloredTiles(room, context, frameIndex) {
 					}
 				}
 			}
-		});
-	});
+		}
+	}
 
 	// draw items
 	for (var i = 0; i < room.items.length; i++) {
