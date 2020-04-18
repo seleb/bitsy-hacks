@@ -3,7 +3,7 @@
 @file directional avatar
 @summary flips the player's sprite based on directional movement
 @license MIT
-@version 1.1.8
+@version 2.0.0
 @requires 5.3
 @author Sean S. LeBlanc
 
@@ -18,14 +18,18 @@ this.hacks = this.hacks || {};
 (function (exports, bitsy) {
 'use strict';
 var hackOptions = {
-	// If `horizontalFlipAllowed` is true:
-	// 	pressing left will make the player's sprite face backwards
-	// 	pressing right will make the player's sprite face forwards
-	horizontalFlipAllowed: true,
-	// If `verticalFlipAllowed` is true:
-	// 	pressing down will make the player's sprite upside-down
-	// 	pressing up will make the player's sprite right-side up
-	verticalFlipAllowed: false,
+	allowed: function () {
+		return {
+			// If `horizontalFlipAllowed` is true:
+			// 	pressing left will make the player's sprite face backwards
+			// 	pressing right will make the player's sprite face forwards
+			horizontalFlipAllowed: true,
+			// If `verticalFlipAllowed` is true:
+			// 	pressing down will make the player's sprite upside-down
+			// 	pressing up will make the player's sprite right-side up
+			verticalFlipAllowed: false,
+		};
+	},
 };
 
 bitsy = bitsy && Object.prototype.hasOwnProperty.call(bitsy, 'default') ? bitsy['default'] : bitsy;
@@ -364,15 +368,16 @@ after('updateInput', function () {
 	}
 
 	// determine which directions need flipping
+	var allowed = hackOptions.allowed();
 	switch (bitsy.curPlayerDirection) {
 	case bitsy.Direction.Up:
 		vflip = false;
 		break;
 	case bitsy.Direction.Down:
-		vflip = hackOptions.verticalFlipAllowed;
+		vflip = allowed.verticalFlipAllowed;
 		break;
 	case bitsy.Direction.Left:
-		hflip = hackOptions.horizontalFlipAllowed;
+		hflip = allowed.horizontalFlipAllowed;
 		break;
 	case bitsy.Direction.Right:
 		hflip = false;
