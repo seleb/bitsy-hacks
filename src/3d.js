@@ -290,8 +290,9 @@ export var hackOptions = {
 			// parse args and get the actual drawings
 			var children = childrenTag[1].split(/, |,/).map(function (arg) {
 				if (arg) {
-					var type; var id; var
-						map;
+					var type;
+					var id;
+					var map;
 					[type, id] = arg.split(/[ _-]/);
 					if (type && id) {
 						switch (type[0].toLowerCase()) {
@@ -303,12 +304,16 @@ export var hackOptions = {
 							break;
 						case 's':
 							map = bitsy.sprite;
+							break;
+						default:
+							break;
 						}
 						if (map) {
 							return map[id];
 						}
 					}
 				}
+				return undefined;
 			}).filter(Boolean);
 
 			// add specified drawings to the scene as child meshes
@@ -321,7 +326,7 @@ export var hackOptions = {
 				mesh.addChild(childMesh);
 				applyBehaviours(childMesh, childDrawing);
 				// make sure children can move if they are parented to the avatar
-				if (drawing == bitsy.player()) {
+				if (drawing === bitsy.player()) {
 					childMesh.unfreezeWorldMatrix();
 				}
 			});
