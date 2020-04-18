@@ -672,7 +672,7 @@ inject(/(if\( lastPage\.length) <= 1( \) {)/, '$1 < textboxStyler.activeStyle.te
 // =============================================================
 
 // Make them accessible at a higher scope, so Dialog functions can see them.
-window.textboxStyler = {
+var textboxStyler = window.textboxStyler = {
 	defaultStyle: {
 		verticalPosition: hackOptions.verticalPosition,
 		horizontalPosition: hackOptions.horizontalPosition,
