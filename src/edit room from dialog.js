@@ -92,7 +92,7 @@ Information:
 
 Parameters:
 - targetType:	Type of room contents to target for replacing (ANY, TIL, ITM, or SPR).
-				Anything (ANY): Targetting anything will target all valid Tiles, Items, and Sprites.
+				Anything (ANY): Targeting anything will target all valid Tiles, Items, and Sprites.
 				Tile (TIL): Replacing a Tile will remove it, leaving behind walkable space.
 				Item (ITM): Replacing an Item affects all valid items, even if there are more than one.
 				Sprite (SPR): Replacing a Sprite removes it from a room, but it will remember dialog progress, etc.
@@ -128,7 +128,7 @@ Information:
 
 Parameters:
 - type:				Type of room contents to target for copying (ANY, TIL, ITM, or SPR).
-					Anything (ANY): Targetting anything will copy all valid Tiles, Items, and Sprites.
+					Anything (ANY): Targeting anything will copy all valid Tiles, Items, and Sprites.
 					Tile (TIL): Each location can have only one Tile. Copying over an existing tile replaces it.
 					Item (ITM): Multiple items can exist in one spot, and all valid items will be copied.
 					Sprite (SPR): Only one copy of each Sprite can exist at a time; copying a sprite moves it.

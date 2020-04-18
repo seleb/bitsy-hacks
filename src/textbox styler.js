@@ -479,7 +479,7 @@ export var hackOptions = {
 // =============================================================
 // Replaces initial textbox parameters, based on currently active style (or defaults).
 // Makes textboxInfo available at the window level
-// Recalculates textbox parameters, even values no longer used with hack, for compatability.
+// Recalculates textbox parameters, even values no longer used with hack, for compatibility.
 var textboxInfoReplace = `var textboxInfo = {
 	img : null,
 	width : textboxStyler.activeStyle.textboxWidth,
@@ -649,7 +649,7 @@ var fontSizeInject = `else if (args[0] == "SIZE") {
 inject(/else if \(args\[0\] == "SIZE"\) {[^]*?}/, fontSizeInject);
 console.log(fontSizeInject);
 // =============================================================
-// | RE-IMPLIMENTED LONG DIALOG HACK INJECTS |/////////////////|
+// | RE-IMPLEMENTED LONG DIALOG HACK INJECTS |/////////////////|
 // =============================================================
 // Modified from Sean leBlanc's Long Dialog hack, to include textbox borders and padding
 // Needed to recalculate textbox height, based on current style parameters.
