@@ -196,6 +196,14 @@ export var hackOptions = {
 	},
 };
 
+// The "default" Palette Map is applied to all rooms that don't have a Palette Map defined.
+// Normally each coordinate is set to use the Room's Default Palette using "-", but this can be edited.
+// These Palette Maps can be accessed via JS using "paletteMap.roomId[y/row][x/column]"
+var defaultMap = new Array(bitsy.mapsize).fill(0).map(function () {
+	return new Array(bitsy.mapsize).fill('-');
+});
+var paletteMap = {};
+
 // Once world is parsed, parse the Palette Map data
 after('parseWorld', parsePaletteMaps);
 
@@ -223,14 +231,6 @@ addDualDialogTag('clearTilePalette', function (environment, parameters) {
 addDualDialogTag('resetTilePalette', function (environment, parameters) {
 	resetPaletteMap(parameters[0]);
 });
-
-// The "default" Palette Map is applied to all rooms that don't have a Palette Map defined.
-// Normally each coordinate is set to use the Room's Default Palette using "-", but this can be edited.
-// These Palette Maps can be accessed via JS using "paletteMap.roomId[y/row][x/column]"
-var defaultMap = new Array(bitsy.mapsize).fill(0).map(function () {
-	return new Array(bitsy.mapsize).fill('-');
-});
-var paletteMap = {};
 
 function getPaletteOverride(drawing) {
 	if (!hackOptions.prioritizePaletteTag) {
