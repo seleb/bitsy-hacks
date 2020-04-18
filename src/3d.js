@@ -288,20 +288,21 @@ export var hackOptions = {
 		}
 		if (childrenTag) {
 			// parse args and get the actual drawings
-			var children = childrenTag[1].split(/, |,/).map(function(arg) {
+			var children = childrenTag[1].split(/, |,/).map(function (arg) {
 				if (arg) {
-					var type, id, map;
+					var type; var id; var
+						map;
 					[type, id] = arg.split(/[ _-]/);
 					if (type && id) {
 						switch (type[0].toLowerCase()) {
-							case 't':
-								map = bitsy.tile;
-								break;
-							case 'i':
-								map = bitsy.item;
-								break;
-							case 's':
-								map = bitsy.sprite;
+						case 't':
+							map = bitsy.tile;
+							break;
+						case 'i':
+							map = bitsy.item;
+							break;
+						case 's':
+							map = bitsy.sprite;
 						}
 						if (map) {
 							return map[id];
@@ -311,7 +312,7 @@ export var hackOptions = {
 			}).filter(Boolean);
 
 			// add specified drawings to the scene as child meshes
-			children.forEach(function(childDrawing) {
+			children.forEach(function (childDrawing) {
 				var childMesh = getMesh(childDrawing, bitsy.curPal());
 				childMesh = childMesh.createInstance();
 				childMesh.position.x = mesh.position.x;
@@ -499,7 +500,7 @@ canvas:focus { outline: none; }
 	transformGeometry(floorMesh, BABYLON.Matrix.Translation(0.0, 0.0, 0.5));
 	// have to transform geometry instead of using regular rotation
 	// or it will mess up children transforms when using combine tag
-	transformGeometry(floorMesh, BABYLON.Matrix.RotationX(Math.PI/2));
+	transformGeometry(floorMesh, BABYLON.Matrix.RotationX(Math.PI / 2));
 	floorMesh.isVisible = false;
 	floorMesh.doNotSyncBoundingInfo = true;
 	meshTemplates.floor = floorMesh;

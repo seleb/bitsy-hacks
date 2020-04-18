@@ -146,23 +146,23 @@ Parameters:
 					For copyBox, this position marks the upper-left corner of the pasted box.
 - pasteRoom:		As above, but marks the ID (number/letter) of the room you're pasting into.
 					Leave blank to default to paste to the room the player is currently in.
-**/
+* */
 
 import {
 	addDialogTag,
-	addDeferredDialogTag
+	addDeferredDialogTag,
 } from './helpers/kitsy-script-toolkit';
 
 // Draws an Item, Sprite, or Tile at a location in a room
 // {draw "mapId, sourceId, xPos, yPos, roomID"}
 // {drawNow "mapId, sourceId, xPos, yPos, roomID"}
 addDialogTag('drawNow', function (environment, parameters, onReturn) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {undefined};
+	var params = (parameters[0] != undefined) ? parameters[0].split(',') : { undefined };
 	drawAt(params[0], params[1], params[2], params[3], params[4]);
 	onReturn(null);
 });
 addDeferredDialogTag('draw', function (environment, parameters) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {undefined};
+	var params = (parameters[0] != undefined) ? parameters[0].split(',') : { undefined };
 	drawAt(params[0], params[1], params[2], params[3], params[4]);
 });
 
@@ -170,12 +170,12 @@ addDeferredDialogTag('draw', function (environment, parameters) {
 // {drawBox "mapId, sourceId, x1, y1, x2, y2, roomID"}
 // {drawBoxNow "mapId, sourceId, x1, y1, x2, y2, roomID"}
 addDialogTag('drawBoxNow', function (environment, parameters, onReturn) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {undefined};
+	var params = (parameters[0] != undefined) ? parameters[0].split(',') : { undefined };
 	drawBoxAt(params[0], params[1], params[2], params[3], params[4], params[5], params[6]);
 	onReturn(null);
 });
 addDeferredDialogTag('drawBox', function (environment, parameters) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {undefined};
+	var params = (parameters[0] != undefined) ? parameters[0].split(',') : { undefined };
 	drawBoxAt(params[0], params[1], params[2], params[3], params[4], params[5], params[6]);
 });
 
@@ -183,12 +183,12 @@ addDeferredDialogTag('drawBox', function (environment, parameters) {
 // {drawAll "mapId, sourceId, roomID"}
 // {drawAllNow "mapId, sourceId, roomID"}
 addDialogTag('drawAllNow', function (environment, parameters, onReturn) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {undefined};
+	var params = (parameters[0] != undefined) ? parameters[0].split(',') : { undefined };
 	drawBoxAt(params[0], params[1], 0, 0, 15, 15, params[2]);
 	onReturn(null);
 });
 addDeferredDialogTag('drawAll', function (environment, parameters) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {undefined};
+	var params = (parameters[0] != undefined) ? parameters[0].split(',') : { undefined };
 	drawBoxAt(params[0], params[1], 0, 0, 15, 15, params[2]);
 });
 
@@ -196,37 +196,37 @@ addDeferredDialogTag('drawAll', function (environment, parameters) {
 // {erase "mapId, targetId, xPos, yPos, roomID"}
 // {eraseNow "mapId, targetId, xPos, yPos, roomID"}
 addDialogTag('eraseNow', function (environment, parameters, onReturn) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {undefined};
+	var params = (parameters[0] != undefined) ? parameters[0].split(',') : { undefined };
 	eraseAt(params[0], params[1], params[2], params[3], params[4]);
 });
 addDeferredDialogTag('erase', function (environment, parameters) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {undefined};
+	var params = (parameters[0] != undefined) ? parameters[0].split(',') : { undefined };
 	eraseAt(params[0], params[1], params[2], params[3], params[4]);
 });
 
 // As above, but affects a box area, between two corners.
 // {eraseBox "mapId, targetId, x1, y1, x2, y2, roomID"}
 // {eraseBoxNow "mapId, targetId, x1, y1, x2, y2, roomID"}
-addDialogTag('eraseBoxNow', function (environment, parameters, onReturn) { 
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {undefined};
+addDialogTag('eraseBoxNow', function (environment, parameters, onReturn) {
+	var params = (parameters[0] != undefined) ? parameters[0].split(',') : { undefined };
 	eraseBoxAt(params[0], params[1], params[2], params[3], params[4], params[5], params[6]);
 	onReturn(null);
 });
 addDeferredDialogTag('eraseBox', function (environment, parameters) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {undefined};
+	var params = (parameters[0] != undefined) ? parameters[0].split(',') : { undefined };
 	eraseBoxAt(params[0], params[1], params[2], params[3], params[4], params[5], params[6]);
 });
 
 // As above, but affects an entire room.
 // {eraseAll "mapId, targetId, roomID"}
 // {eraseAllNow "mapId, targetId, roomID"}
-addDialogTag('eraseAllNow', function (environment, parameters, onReturn) { 
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {undefined};
+addDialogTag('eraseAllNow', function (environment, parameters, onReturn) {
+	var params = (parameters[0] != undefined) ? parameters[0].split(',') : { undefined };
 	eraseBoxAt(params[0], params[1], 0, 0, 15, 15, params[2]);
 	onReturn(null);
 });
 addDeferredDialogTag('eraseAll', function (environment, parameters) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {undefined};
+	var params = (parameters[0] != undefined) ? parameters[0].split(',') : { undefined };
 	eraseBoxAt(params[0], params[1], 0, 0, 15, 15, params[2]);
 });
 
@@ -234,11 +234,11 @@ addDeferredDialogTag('eraseAll', function (environment, parameters) {
 // {replace "targetMapId, targetId, newMapId, newId, xPos, yPos, roomID"}
 // {replaceNow "targetMapId, targetId, newMapId, newId, xPos, yPos, roomID"}
 addDialogTag('replaceNow', function (environment, parameters, onReturn) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {undefined};
+	var params = (parameters[0] != undefined) ? parameters[0].split(',') : { undefined };
 	replaceAt(params[0], params[1], params[2], params[3], params[4], params[5], params[6]);
 });
 addDeferredDialogTag('replace', function (environment, parameters) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {undefined};
+	var params = (parameters[0] != undefined) ? parameters[0].split(',') : { undefined };
 	replaceAt(params[0], params[1], params[2], params[3], params[4], params[5], params[6]);
 });
 
@@ -246,11 +246,11 @@ addDeferredDialogTag('replace', function (environment, parameters) {
 // {replaceBox "targetMapId, targetId, newMapId, newId, x1, y1, x2, y2, roomID"}
 // {replaceBoxNow "targetMapId, targetId, newMapId, newId, x1, y1, x2, y2, roomID"}
 addDialogTag('replaceBoxNow', function (environment, parameters, onReturn) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {undefined};
+	var params = (parameters[0] != undefined) ? parameters[0].split(',') : { undefined };
 	replaceBoxAt(params[0], params[1], params[2], params[3], params[4], params[5], params[6], params[7], params[8]);
 });
 addDeferredDialogTag('replaceBox', function (environment, parameters) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {undefined};
+	var params = (parameters[0] != undefined) ? parameters[0].split(',') : { undefined };
 	replaceBoxAt(params[0], params[1], params[2], params[3], params[4], params[5], params[6], params[7], params[8]);
 });
 
@@ -258,11 +258,11 @@ addDeferredDialogTag('replaceBox', function (environment, parameters) {
 // {replaceAll "targetMapId, targetId, newMapId, roomID"}
 // {replaceAllNow "targetMapId, targetId, newMapId, newId, roomID"}
 addDialogTag('replaceAllNow', function (environment, parameters, onReturn) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {undefined};
+	var params = (parameters[0] != undefined) ? parameters[0].split(',') : { undefined };
 	replaceBoxAt(params[0], params[1], params[2], params[3], 0, 0, 15, 15, params[4]);
 });
 addDeferredDialogTag('replaceAll', function (environment, parameters) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {undefined};
+	var params = (parameters[0] != undefined) ? parameters[0].split(',') : { undefined };
 	replaceBoxAt(params[0], params[1], params[2], params[3], 0, 0, 15, 15, params[4]);
 });
 
@@ -270,12 +270,12 @@ addDeferredDialogTag('replaceAll', function (environment, parameters) {
 // {copy "mapId, targetId, copyX, copyY, copyRoom, pasteX, pasteY, pasteRoom"}
 // {copyNow "mapId, targetId, copyX, copyY, copyRoom, pasteX, pasteY, pasteRoom"}
 addDialogTag('copyNow', function (environment, parameters, onReturn) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {undefined};
+	var params = (parameters[0] != undefined) ? parameters[0].split(',') : { undefined };
 	copyAt(params[0], params[1], params[2], params[3], params[4], params[5], params[6], params[7]);
 	onReturn(null);
 });
 addDeferredDialogTag('copy', function (environment, parameters) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {undefined};
+	var params = (parameters[0] != undefined) ? parameters[0].split(',') : { undefined };
 	copyAt(params[0], params[1], params[2], params[3], params[4], params[5], params[6], params[7]);
 });
 
@@ -284,12 +284,12 @@ addDeferredDialogTag('copy', function (environment, parameters) {
 // {copyBox "mapId, targetId, copyX1, copyY1, copyX2, copyY2, copyRoom, pasteX, pasteY, pasteRoom"}
 // {copyBoxNow "mapId, targetId, copyX1, copyY1, copyX2, copyY2, copyRoom, pasteX, pasteY, pasteRoom"}
 addDialogTag('copyBoxNow', function (environment, parameters, onReturn) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {undefined};
+	var params = (parameters[0] != undefined) ? parameters[0].split(',') : { undefined };
 	copyBoxAt(params[0], params[1], params[2], params[3], params[4], params[5], params[6], params[7], params[8], params[9]);
 	onReturn(null);
 });
 addDeferredDialogTag('copyBox', function (environment, parameters) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {undefined};
+	var params = (parameters[0] != undefined) ? parameters[0].split(',') : { undefined };
 	copyBoxAt(params[0], params[1], params[2], params[3], params[4], params[5], params[6], params[7], params[8], params[9]);
 });
 
@@ -297,108 +297,97 @@ addDeferredDialogTag('copyBox', function (environment, parameters) {
 // {copyAll "mapId, targetId, copyRoom, pasteRoom"}
 // {copyAllNow "mapId, targetId, copyRoom, pasteRoom"}
 addDialogTag('copyAllNow', function (environment, parameters, onReturn) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {undefined};
+	var params = (parameters[0] != undefined) ? parameters[0].split(',') : { undefined };
 	copyBoxAt(params[0], params[1], 0, 0, 15, 15, params[3], 0, 0, params[4]);
 	onReturn(null);
 });
 addDeferredDialogTag('copyAll', function (environment, parameters) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {undefined};
+	var params = (parameters[0] != undefined) ? parameters[0].split(',') : { undefined };
 	copyBoxAt(params[0], params[1], 0, 0, 15, 15, params[3], 0, 0, params[4]);
 });
 
-function drawAt (mapId, sourceId, xPos, yPos, roomId) {
+function drawAt(mapId, sourceId, xPos, yPos, roomId) {
 	// Trim and sanitize Map ID / Type parameter, and return if not provided.
 	if (mapId == undefined) {
 		console.log("CAN'T DRAW. DRAW TYPE IS UNDEFINED. TIL, ITM, OR SPR EXPECTED.");
 		return;
 	}
-	else {
-		mapId = mapId.toString().trim();
-		if (mapId == "" || !(mapId.toUpperCase() == "TIL" || mapId.toUpperCase() == "ITM" || mapId.toUpperCase() == "SPR")) {
-			console.log("CAN'T DRAW. UNEXPECTED DRAW TYPE ("+mapId+"). TIL, ITM, OR SPR EXPECTED.");
-			return;
-		}
+
+	mapId = mapId.toString().trim();
+	if (mapId == '' || !(mapId.toUpperCase() == 'TIL' || mapId.toUpperCase() == 'ITM' || mapId.toUpperCase() == 'SPR')) {
+		console.log("CAN'T DRAW. UNEXPECTED DRAW TYPE (" + mapId + '). TIL, ITM, OR SPR EXPECTED.');
+		return;
 	}
+
 
 	// Trim and sanitize Source ID parameter, and return if not provided
 	if (sourceId == undefined) {
 		console.log("CAN'T DRAW. SOURCE ID IS UNDEFINED. TILE, ITEM, OR SPRITE ID EXPECTED.");
 		return;
 	}
-	else {
-		sourceId = sourceId.toString().trim();
-		if (sourceId == "") {
-			console.log("CAN'T DRAW. NO SOURCE ID GIVEN. TILE, ITEM, OR SPRITE ID EXPECTED.");
-			return;
-		}
+
+	sourceId = sourceId.toString().trim();
+	if (sourceId == '') {
+		console.log("CAN'T DRAW. NO SOURCE ID GIVEN. TILE, ITEM, OR SPRITE ID EXPECTED.");
+		return;
 	}
+
 
 	// Trim and sanitize X Position parameter, and set relative positions, even if omitted.
 	if (xPos == undefined) {
 		xPos = player().x;
-	}
-	else {
+	} else {
 		xPos = xPos.toString().trim();
-		if (xPos == "" ) { xPos = player().x; }
-		else if (xPos.includes("+")) { xPos = player().x + parseInt(xPos.substring(1)); }
-		else if (xPos.includes("-")) { xPos = player().x - parseInt(xPos.substring(1)); }
+		if (xPos == '') { xPos = player().x; } else if (xPos.includes('+')) { xPos = player().x + parseInt(xPos.substring(1)); } else if (xPos.includes('-')) { xPos = player().x - parseInt(xPos.substring(1)); }
 	}
 	if (xPos < 0 || xPos > 15) {
-		console.log("CAN'T DRAW. X POSITION ("+xPos+") OUT OF BOUNDS. 0-15 EXPECTED.");
+		console.log("CAN'T DRAW. X POSITION (" + xPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		return;
 	}
 
 	// Trim and sanitize Y Position parameter, and set relative positions, even if omitted
 	if (yPos == undefined) {
 		yPos = player().y;
-	}
-	else {
+	} else {
 		yPos = yPos.toString().trim();
-		if (yPos == "" ) { yPos = player().y; }
-		else if (yPos.includes("+")) { yPos = player().y + parseInt(yPos.substring(1)); }
-		else if (yPos.includes("-")) { yPos = player().y - parseInt(yPos.substring(1)); }
+		if (yPos == '') { yPos = player().y; } else if (yPos.includes('+')) { yPos = player().y + parseInt(yPos.substring(1)); } else if (yPos.includes('-')) { yPos = player().y - parseInt(yPos.substring(1)); }
 	}
 	if (yPos < 0 || yPos > 15) {
-		console.log("CAN'T DRAW. Y POSITION ("+yPos+") OUT OF BOUNDS. 0-15 EXPECTED.");
+		console.log("CAN'T DRAW. Y POSITION (" + yPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		return;
 	}
-	
+
 	// Trim and sanitize Room ID parameter, and set to current room if omitted
 	if (roomId == undefined) {
 		roomId = curRoom;
-	}
-	else {
+	} else {
 		roomId = roomId.toString().trim();
-		if (roomId == "" ) { roomId = curRoom; }
-		else if (room[roomId] == undefined) {
-			console.log("CAN'T DRAW. ROOM ID ("+roomId+") NOT FOUND.")
+		if (roomId == '') { roomId = curRoom; } else if (room[roomId] == undefined) {
+			console.log("CAN'T DRAW. ROOM ID (" + roomId + ') NOT FOUND.');
 			return;
 		}
 	}
 
-	//console.log ("DRAWING "+mapId+" "+sourceId+" at "+xPos+","+yPos+"(Room "+roomId+")");
+	// console.log ("DRAWING "+mapId+" "+sourceId+" at "+xPos+","+yPos+"(Room "+roomId+")");
 
-	if (mapId.toUpperCase() == "TIL") {
+	if (mapId.toUpperCase() == 'TIL') {
 		if (tile[sourceId] != undefined) {
 			room[roomId].tilemap[yPos][xPos] = sourceId;
 		}
-	}
-	else if (mapId.toUpperCase() == "ITM") {
+	} else if (mapId.toUpperCase() == 'ITM') {
 		if (item[sourceId] != undefined) {
 			var newItem = {
 				id: sourceId,
 				x: xPos,
-				y: yPos
+				y: yPos,
 			};
 			room[roomId].items.push(newItem);
 		}
-	}
-	else if (mapId.toUpperCase() == "SPR") {
+	} else if (mapId.toUpperCase() == 'SPR') {
 		if (sprite[sourceId] != undefined) {
-			if (sprite[sourceId].id == "A") {
-				console.log("CAN'T TARGET AVATAR. SKIPPING.")
-			}
-			else if (room[roomId] != undefined) {
+			if (sprite[sourceId].id == 'A') {
+				console.log("CAN'T TARGET AVATAR. SKIPPING.");
+			} else if (room[roomId] != undefined) {
 				sprite[sourceId].room = roomId;
 				sprite[sourceId].x = xPos;
 				sprite[sourceId].y = yPos;
@@ -407,62 +396,49 @@ function drawAt (mapId, sourceId, xPos, yPos, roomId) {
 	}
 }
 
-function drawBoxAt (mapId, sourceId, x1, y1, x2, y2, roomId) {
-	
+function drawBoxAt(mapId, sourceId, x1, y1, x2, y2, roomId) {
 	// Trim and sanitize X and Y Positions, and set relative positions if omitted.
 	if (x1 == undefined) {
 		x1 = player().x;
-	}
-	else {
+	} else {
 		x1 = x1.toString().trim();
-		if (x1 == "" ) { x1 = player().x; }
-		else if (x1.includes("+")) { x1 = player().x + parseInt(x1.substring(1)); }
-		else if (x1.includes("-")) { x1 = player().x - parseInt(x1.substring(1)); }
+		if (x1 == '') { x1 = player().x; } else if (x1.includes('+')) { x1 = player().x + parseInt(x1.substring(1)); } else if (x1.includes('-')) { x1 = player().x - parseInt(x1.substring(1)); }
 	}
 	if (x1 < 0 || x1 > 15) {
-		console.log("CLAMPING X1 POSITION. XPOS ("+x1+") OUT OF BOUNDS. 0-15 EXPECTED.");
+		console.log('CLAMPING X1 POSITION. XPOS (' + x1 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		x1 = Math.max(0, Math.min(x1, 15));
 	}
 	// X2
 	if (x2 == undefined) {
 		x2 = player().x;
-	}
-	else {
+	} else {
 		x2 = x2.toString().trim();
-		if (x2 == "" ) { x2 = player().x; }
-		else if (x2.includes("+")) { x2 = player().x + parseInt(x2.substring(1)); }
-		else if (x2.includes("-")) { x2 = player().x - parseInt(x2.substring(1)); }
+		if (x2 == '') { x2 = player().x; } else if (x2.includes('+')) { x2 = player().x + parseInt(x2.substring(1)); } else if (x2.includes('-')) { x2 = player().x - parseInt(x2.substring(1)); }
 	}
 	if (x2 < 0 || x2 > 15) {
-		console.log("CLAMPING X2 POSITION. xPos ("+x2+") OUT OF BOUNDS. 0-15 EXPECTED.");
+		console.log('CLAMPING X2 POSITION. xPos (' + x2 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		x2 = Math.max(0, Math.min(x2, 15));
 	}
 	// Y1
 	if (y1 == undefined) {
 		y1 = player().y;
-	}
-	else {
+	} else {
 		y1 = y1.toString().trim();
-		if (y1 == "" ) { y1 = player().y; }
-		else if (y1.includes("+")) { y1 = player().y + parseInt(y1.substring(1)); }
-		else if (y1.includes("-")) { y1 = player().y - parseInt(y1.substring(1)); }
+		if (y1 == '') { y1 = player().y; } else if (y1.includes('+')) { y1 = player().y + parseInt(y1.substring(1)); } else if (y1.includes('-')) { y1 = player().y - parseInt(y1.substring(1)); }
 	}
 	if (y1 < 0 || y1 > 15) {
-		console.log("CLAMPING Y1 POSITION. XPOS ("+y1+") OUT OF BOUNDS. 0-15 EXPECTED.");
+		console.log('CLAMPING Y1 POSITION. XPOS (' + y1 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		y1 = Math.max(0, Math.min(y1, 15));
 	}
 	// Y2
 	if (y2 == undefined) {
 		y2 = player().y;
-	}
-	else {
+	} else {
 		y2 = y2.toString().trim();
-		if (y2 == "" ) { y2 = player().y; }
-		else if (y2.includes("+")) { y2 = player().y + parseInt(y2.substring(1)); }
-		else if (y2.includes("-")) { y2 = player().y - parseInt(y2.substring(1)); }
+		if (y2 == '') { y2 = player().y; } else if (y2.includes('+')) { y2 = player().y + parseInt(y2.substring(1)); } else if (y2.includes('-')) { y2 = player().y - parseInt(y2.substring(1)); }
 	}
 	if (y2 < 0 || y2 > 15) {
-		console.log("CLAMPING Y2 POSITION. xPos ("+y2+") OUT OF BOUNDS. 0-15 EXPECTED.");
+		console.log('CLAMPING Y2 POSITION. xPos (' + y2 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		y2 = Math.max(0, Math.min(y2, 15));
 	}
 
@@ -479,181 +455,156 @@ function drawBoxAt (mapId, sourceId, x1, y1, x2, y2, roomId) {
 	}
 }
 
-function eraseAt (mapId, targetId, xPos, yPos, roomId) {
+function eraseAt(mapId, targetId, xPos, yPos, roomId) {
 	// Trim and sanitize Map ID / Type parameter, and use any if not provided.
 	if (mapId == undefined) {
-		//console.log("ERASE TYPE IS UNDEFINED. DEFAULTING TO ANY (TIL, ITM, OR SPR).");
-		mapId = "ANY";
-	}
-	else {
+		// console.log("ERASE TYPE IS UNDEFINED. DEFAULTING TO ANY (TIL, ITM, OR SPR).");
+		mapId = 'ANY';
+	} else {
 		mapId = mapId.toString().trim();
-		if (mapId == "" || !(mapId.toUpperCase() == "ANY" || mapId.toUpperCase() == "TIL" || mapId.toUpperCase() == "ITM" || mapId.toUpperCase() == "SPR")) {
-			//console.log("UNEXPECTED ERASE TYPE ("+mapId+"). DEFAULTING TO ANY (TIL, ITM, OR SPR).");
-			mapId = "ANY";
+		if (mapId == '' || !(mapId.toUpperCase() == 'ANY' || mapId.toUpperCase() == 'TIL' || mapId.toUpperCase() == 'ITM' || mapId.toUpperCase() == 'SPR')) {
+			// console.log("UNEXPECTED ERASE TYPE ("+mapId+"). DEFAULTING TO ANY (TIL, ITM, OR SPR).");
+			mapId = 'ANY';
 		}
 	}
 
 	// Trim and sanitize Target ID parameter, and use any if not provided
 	if (targetId == undefined) {
-		//console.log("TARGET ID UNDEFINED. DEFAULTING TO ANY (ANYTHING OF VALID TYPE).");
-		targetId = "ANY";
-	}
-	else {
+		// console.log("TARGET ID UNDEFINED. DEFAULTING TO ANY (ANYTHING OF VALID TYPE).");
+		targetId = 'ANY';
+	} else {
 		targetId = targetId.toString().trim();
-		if (targetId == "") {
-			//console.log("NO TARGET ID GIVEN. DEFAULTING TO ANY (ANYTHING OF VALID TYPE).");
-			targetId = "ANY";
+		if (targetId == '') {
+			// console.log("NO TARGET ID GIVEN. DEFAULTING TO ANY (ANYTHING OF VALID TYPE).");
+			targetId = 'ANY';
 		}
-		//mapId = (mapId != "" || mapId.toUpperCase() != "ANY") ? mapId : "ANY";
+		// mapId = (mapId != "" || mapId.toUpperCase() != "ANY") ? mapId : "ANY";
 	}
 
 	// Trim and sanitize X Position parameter, and set relative positions, even if omitted.
 	if (xPos == undefined) {
 		xPos = player().x;
-	}
-	else {
+	} else {
 		xPos = xPos.toString().trim();
-		if (xPos == "" ) { xPos = player().x; }
-		else if (xPos.includes("+")) { xPos = player().x + parseInt(xPos.substring(1)); }
-		else if (xPos.includes("-")) { xPos = player().x - parseInt(xPos.substring(1)); }
+		if (xPos == '') { xPos = player().x; } else if (xPos.includes('+')) { xPos = player().x + parseInt(xPos.substring(1)); } else if (xPos.includes('-')) { xPos = player().x - parseInt(xPos.substring(1)); }
 	}
 	if (xPos < 0 || xPos > 15) {
-		console.log("CAN'T DRAW. X POSITION ("+xPos+") OUT OF BOUNDS. 0-15 EXPECTED.");
+		console.log("CAN'T DRAW. X POSITION (" + xPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		return;
 	}
 
 	// Trim and sanitize Y Position parameter, and set relative positions, even if omitted
 	if (yPos == undefined) {
 		yPos = player().y;
-	}
-	else {
+	} else {
 		yPos = yPos.toString().trim();
-		if (yPos == "" ) { yPos = player().y; }
-		else if (yPos.includes("+")) { yPos = player().y + parseInt(yPos.substring(1)); }
-		else if (yPos.includes("-")) { yPos = player().y - parseInt(yPos.substring(1)); }
+		if (yPos == '') { yPos = player().y; } else if (yPos.includes('+')) { yPos = player().y + parseInt(yPos.substring(1)); } else if (yPos.includes('-')) { yPos = player().y - parseInt(yPos.substring(1)); }
 	}
 	if (yPos < 0 || yPos > 15) {
-		console.log("CAN'T DRAW. Y POSITION ("+yPos+") OUT OF BOUNDS. 0-15 EXPECTED.");
+		console.log("CAN'T DRAW. Y POSITION (" + yPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		return;
 	}
-	
+
 	// Trim and sanitize Room ID parameter, and set to current room if omitted
 	if (roomId == undefined) {
 		roomId = curRoom;
-	}
-	else {
+	} else {
 		roomId = roomId.toString().trim();
-		if (roomId == "" ) { roomId = curRoom; }
-		else if (room[roomId] == undefined) {
-			console.log("CAN'T DRAW. ROOM ID ("+roomId+") NOT FOUND.")
+		if (roomId == '') { roomId = curRoom; } else if (room[roomId] == undefined) {
+			console.log("CAN'T DRAW. ROOM ID (" + roomId + ') NOT FOUND.');
 			return;
 		}
 	}
 
-	//console.log ("REMOVING "+mapId+" "+targetId+" at "+xPos+","+yPos+"(Room "+roomId+")");
-	
+	// console.log ("REMOVING "+mapId+" "+targetId+" at "+xPos+","+yPos+"(Room "+roomId+")");
+
 	// If TIL or undefined.
-	if (mapId.toUpperCase() != "ITM" && mapId.toUpperCase() != "SPR") {
-		if (targetId == "ANY" || room[roomId].tilemap[yPos][xPos] == targetId) {
-			room[roomId].tilemap[yPos][xPos] = "0";
+	if (mapId.toUpperCase() != 'ITM' && mapId.toUpperCase() != 'SPR') {
+		if (targetId == 'ANY' || room[roomId].tilemap[yPos][xPos] == targetId) {
+			room[roomId].tilemap[yPos][xPos] = '0';
 		}
 	}
-	
+
 	// If ITM or undefined.
-	if (mapId.toUpperCase() != "TIL" && mapId.toUpperCase() != "SPR") {
+	if (mapId.toUpperCase() != 'TIL' && mapId.toUpperCase() != 'SPR') {
 		// Iterate backwards through items, to prevent issues with removed indexes
-		for (var i = room[roomId].items.length-1; i >= 0; i--) {
+		for (var i = room[roomId].items.length - 1; i >= 0; i--) {
 			var targetItem = room[roomId].items[i];
-			if (targetId == "ANY" || targetId == targetItem.id) {
+			if (targetId == 'ANY' || targetId == targetItem.id) {
 				if (targetItem.x == xPos && targetItem.y == yPos) {
 					room[roomId].items.splice(i, 1);
 				}
 			}
 		}
 	}
-	
+
 	// If SPR or undefined.
-	if (mapId.toUpperCase() != "TIL" && mapId.toUpperCase() != "ITM") {
-		if (targetId == "ANY") {
+	if (mapId.toUpperCase() != 'TIL' && mapId.toUpperCase() != 'ITM') {
+		if (targetId == 'ANY') {
 			for (i in sprite) {
-				if (sprite[i].id == "A") {
-					console.log("CAN'T TARGET AVATAR. SKIPPING.")
-				}
-				else if (sprite[i].room == roomId && sprite[i].x == xPos && sprite[i].y == yPos) {
+				if (sprite[i].id == 'A') {
+					console.log("CAN'T TARGET AVATAR. SKIPPING.");
+				} else if (sprite[i].room == roomId && sprite[i].x == xPos && sprite[i].y == yPos) {
 					sprite[i].x = 0;
 					sprite[i].y = 0;
-					sprite[i].room = "default";
+					sprite[i].room = 'default';
 				}
 			}
-		}
-		else if (sprite[targetId] != undefined) {
-			if (sprite[targetId].id == "A") {
-				console.log("CAN'T TARGET AVATAR. SKIPPING.")
-			}
-			else if (sprite[targetId].room == roomId && sprite[targetId].x == xPos && sprite[targetId].y == yPos) {
+		} else if (sprite[targetId] != undefined) {
+			if (sprite[targetId].id == 'A') {
+				console.log("CAN'T TARGET AVATAR. SKIPPING.");
+			} else if (sprite[targetId].room == roomId && sprite[targetId].x == xPos && sprite[targetId].y == yPos) {
 				sprite[targetId].x = 0;
 				sprite[targetId].y = 0;
-				sprite[targetId].room = "default";
+				sprite[targetId].room = 'default';
 			}
 		}
 	}
 }
 
-function eraseBoxAt (mapId, targetId, x1, y1, x2, y2, roomId) {
+function eraseBoxAt(mapId, targetId, x1, y1, x2, y2, roomId) {
 	// Trim and sanitize X and Y Positions, and set relative positions if omitted.
 	if (x1 == undefined) {
 		x1 = player().x;
-	}
-	else {
+	} else {
 		x1 = x1.toString().trim();
-		if (x1 == "" ) { x1 = player().x; }
-		else if (x1.includes("+")) { x1 = player().x + parseInt(x1.substring(1)); }
-		else if (x1.includes("-")) { x1 = player().x - parseInt(x1.substring(1)); }
+		if (x1 == '') { x1 = player().x; } else if (x1.includes('+')) { x1 = player().x + parseInt(x1.substring(1)); } else if (x1.includes('-')) { x1 = player().x - parseInt(x1.substring(1)); }
 	}
 	if (x1 < 0 || x1 > 15) {
-		console.log("CLAMPING X1 POSITION. XPOS ("+x1+") OUT OF BOUNDS. 0-15 EXPECTED.");
+		console.log('CLAMPING X1 POSITION. XPOS (' + x1 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		x1 = Math.max(0, Math.min(x1, 15));
 	}
 	// X2
 	if (x2 == undefined) {
 		x2 = player().x;
-	}
-	else {
+	} else {
 		x2 = x2.toString().trim();
-		if (x2 == "" ) { x2 = player().x; }
-		else if (x2.includes("+")) { x2 = player().x + parseInt(x2.substring(1)); }
-		else if (x2.includes("-")) { x2 = player().x - parseInt(x2.substring(1)); }
+		if (x2 == '') { x2 = player().x; } else if (x2.includes('+')) { x2 = player().x + parseInt(x2.substring(1)); } else if (x2.includes('-')) { x2 = player().x - parseInt(x2.substring(1)); }
 	}
 	if (x2 < 0 || x2 > 15) {
-		console.log("CLAMPING X2 POSITION. xPos ("+x2+") OUT OF BOUNDS. 0-15 EXPECTED.");
+		console.log('CLAMPING X2 POSITION. xPos (' + x2 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		x2 = Math.max(0, Math.min(x2, 15));
 	}
 	// Y1
 	if (y1 == undefined) {
 		y1 = player().y;
-	}
-	else {
+	} else {
 		y1 = y1.trim();
-		if (y1 == "" ) { y1 = player().y; }
-		else if (y1.includes("+")) { y1 = player().y + parseInt(y1.substring(1)); }
-		else if (y1.includes("-")) { y1 = player().y - parseInt(y1.substring(1)); }
+		if (y1 == '') { y1 = player().y; } else if (y1.includes('+')) { y1 = player().y + parseInt(y1.substring(1)); } else if (y1.includes('-')) { y1 = player().y - parseInt(y1.substring(1)); }
 	}
 	if (y1 < 0 || y1 > 15) {
-		console.log("CLAMPING Y1 POSITION. XPOS ("+y1+") OUT OF BOUNDS. 0-15 EXPECTED.");
+		console.log('CLAMPING Y1 POSITION. XPOS (' + y1 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		y1 = Math.max(0, Math.min(y1, 15));
 	}
 	// Y2
 	if (y2 == undefined) {
 		y2 = player().y;
-	}
-	else {
+	} else {
 		y2 = y2.toString().trim();
-		if (y2 == "" ) { y2 = player().y; }
-		else if (y2.includes("+")) { y2 = player().y + parseInt(y2.substring(1)); }
-		else if (y2.includes("-")) { y2 = player().y - parseInt(y2.substring(1)); }
+		if (y2 == '') { y2 = player().y; } else if (y2.includes('+')) { y2 = player().y + parseInt(y2.substring(1)); } else if (y2.includes('-')) { y2 = player().y - parseInt(y2.substring(1)); }
 	}
 	if (y2 < 0 || y2 > 15) {
-		console.log("CLAMPING Y2 POSITION. xPos ("+y2+") OUT OF BOUNDS. 0-15 EXPECTED.");
+		console.log('CLAMPING Y2 POSITION. xPos (' + y2 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		y2 = Math.max(0, Math.min(y2, 15));
 	}
 
@@ -670,119 +621,109 @@ function eraseBoxAt (mapId, targetId, x1, y1, x2, y2, roomId) {
 	}
 }
 
-function replaceAt (targetMapId, targetId, newMapId, newId, xPos, yPos, roomId) {
+function replaceAt(targetMapId, targetId, newMapId, newId, xPos, yPos, roomId) {
 	// Trim and sanitize Target Map ID / Type parameter, and use any if not provided.
 	if (targetMapId == undefined) {
-		//console.log("TARGET TYPE IS UNDEFINED. DEFAULTING TO ANY (TIL, ITM, OR SPR).");
-		targetMapId = "ANY";
-	}
-	else {
+		// console.log("TARGET TYPE IS UNDEFINED. DEFAULTING TO ANY (TIL, ITM, OR SPR).");
+		targetMapId = 'ANY';
+	} else {
 		targetMapId = targetMapId.toString().trim();
-		if (targetMapId == "" || !(targetMapId.toUpperCase() == "ANY" || targetMapId.toUpperCase() == "TIL" || targetMapId.toUpperCase() == "ITM" || targetMapId.toUpperCase() == "SPR")) {
-			//console.log("UNEXPECTED TARGET TYPE ("+targetMapId+"). DEFAULTING TO ANY (TIL, ITM, OR SPR).");
-			targetMapId = "ANY";
+		if (targetMapId == '' || !(targetMapId.toUpperCase() == 'ANY' || targetMapId.toUpperCase() == 'TIL' || targetMapId.toUpperCase() == 'ITM' || targetMapId.toUpperCase() == 'SPR')) {
+			// console.log("UNEXPECTED TARGET TYPE ("+targetMapId+"). DEFAULTING TO ANY (TIL, ITM, OR SPR).");
+			targetMapId = 'ANY';
 		}
 	}
 
 	// Trim and sanitize Target ID parameter, and use any if not provided
 	if (targetId == undefined) {
-		//console.log("TARGET ID UNDEFINED. DEFAULTING TO ANY (ANYTHING OF VALID TYPE).");
-		targetId = "ANY";
-	}
-	else {
+		// console.log("TARGET ID UNDEFINED. DEFAULTING TO ANY (ANYTHING OF VALID TYPE).");
+		targetId = 'ANY';
+	} else {
 		targetId = targetId.toString().trim();
-		if (targetId == "") {
-			//console.log("NO TARGET ID GIVEN. DEFAULTING TO ANY (ANYTHING OF VALID TYPE).");
-			targetId = "ANY";
+		if (targetId == '') {
+			// console.log("NO TARGET ID GIVEN. DEFAULTING TO ANY (ANYTHING OF VALID TYPE).");
+			targetId = 'ANY';
 		}
 	}
 
 	// Trim and sanitize New Map ID / Type parameter, and return if not provided.
 	if (newMapId == undefined) {
-		console.log("CANNOT REPLACE. REPLACING TYPE IS UNDEFINED. TIL, ITM, OR SPR EXPECTED.");
+		console.log('CANNOT REPLACE. REPLACING TYPE IS UNDEFINED. TIL, ITM, OR SPR EXPECTED.');
 		return;
 	}
-	else {
-		newMapId = newMapId.toString().trim();
-		if (newMapId == "" || !(newMapId.toUpperCase() == "TIL" || newMapId.toUpperCase() == "ITM" || newMapId.toUpperCase() == "SPR")) {
-			console.log("CANNOT REPLACE. UNEXPECTED REPLACING TYPE ("+newMapId+"). TIL, ITM, OR SPR EXPECTED.");
-			return;
-		}
+
+	newMapId = newMapId.toString().trim();
+	if (newMapId == '' || !(newMapId.toUpperCase() == 'TIL' || newMapId.toUpperCase() == 'ITM' || newMapId.toUpperCase() == 'SPR')) {
+		console.log('CANNOT REPLACE. UNEXPECTED REPLACING TYPE (' + newMapId + '). TIL, ITM, OR SPR EXPECTED.');
+		return;
 	}
+
 
 	// Trim and sanitize New Target ID parameter, and return if not provided
 	if (newId == undefined) {
-		console.log("CANNOT REPLACE. NEW TARGET ID UNDEFINED. VALID ID EXPECTED).");
+		console.log('CANNOT REPLACE. NEW TARGET ID UNDEFINED. VALID ID EXPECTED).');
 		return;
 	}
-	else {
-		newId = newId.toString().trim();
-		if (newId == "") {
-			console.log("CANNOT REPLACE. NO NEW TARGET ID GIVEN. VALID ID EXPECTED");
-			return;
-		}
+
+	newId = newId.toString().trim();
+	if (newId == '') {
+		console.log('CANNOT REPLACE. NO NEW TARGET ID GIVEN. VALID ID EXPECTED');
+		return;
 	}
+
 
 	// Trim and sanitize X Position parameter, and set relative positions, even if omitted.
 	if (xPos == undefined) {
 		xPos = player().x;
-	}
-	else {
+	} else {
 		xPos = xPos.toString().trim();
-		if (xPos == "" ) { xPos = player().x; }
-		else if (xPos.includes("+")) { xPos = player().x + parseInt(xPos.substring(1)); }
-		else if (xPos.includes("-")) { xPos = player().x - parseInt(xPos.substring(1)); }
+		if (xPos == '') { xPos = player().x; } else if (xPos.includes('+')) { xPos = player().x + parseInt(xPos.substring(1)); } else if (xPos.includes('-')) { xPos = player().x - parseInt(xPos.substring(1)); }
 	}
 	if (xPos < 0 || xPos > 15) {
-		console.log("CAN'T REPLACE. X POSITION ("+xPos+") OUT OF BOUNDS. 0-15 EXPECTED.");
+		console.log("CAN'T REPLACE. X POSITION (" + xPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		return;
 	}
 
 	// Trim and sanitize Y Position parameter, and set relative positions, even if omitted
 	if (yPos == undefined) {
 		yPos = player().y;
-	}
-	else {
+	} else {
 		yPos = yPos.toString().trim();
-		if (yPos == "" ) { yPos = player().y; }
-		else if (yPos.includes("+")) { yPos = player().y + parseInt(yPos.substring(1)); }
-		else if (yPos.includes("-")) { yPos = player().y - parseInt(yPos.substring(1)); }
+		if (yPos == '') { yPos = player().y; } else if (yPos.includes('+')) { yPos = player().y + parseInt(yPos.substring(1)); } else if (yPos.includes('-')) { yPos = player().y - parseInt(yPos.substring(1)); }
 	}
 	if (yPos < 0 || yPos > 15) {
-		console.log("CAN'T REPLACE. Y POSITION ("+yPos+") OUT OF BOUNDS. 0-15 EXPECTED.");
+		console.log("CAN'T REPLACE. Y POSITION (" + yPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		return;
 	}
-	
+
 	// Trim and sanitize Room ID parameter, and set to current room if omitted
 	if (roomId == undefined) {
 		roomId = curRoom;
-	}
-	else {
+	} else {
 		roomId = roomId.toString().trim();
-		if (roomId == "" ) { roomId = curRoom; }
-		else if (room[roomId] == undefined) {
-			console.log("CAN'T REPLACE. ROOM ID ("+roomId+") NOT FOUND.")
+		if (roomId == '') { roomId = curRoom; } else if (room[roomId] == undefined) {
+			console.log("CAN'T REPLACE. ROOM ID (" + roomId + ') NOT FOUND.');
 			return;
 		}
 	}
 
-	//console.log ("REPLACING "+targetMapId+" "+targetId+" at "+xPos+","+yPos+"(Room "+roomId+")");
-	//console.log ("REPLACING WITH "+newMapId+" "+newId);
-	
+	// console.log ("REPLACING "+targetMapId+" "+targetId+" at "+xPos+","+yPos+"(Room "+roomId+")");
+	// console.log ("REPLACING WITH "+newMapId+" "+newId);
+
 	// If TIL or undefined.
-	if (targetMapId.toUpperCase() != "ITM" && targetMapId.toUpperCase() != "SPR") {
-		if (targetId == "ANY" || room[roomId].tilemap[yPos][xPos] == targetId) {
-			room[roomId].tilemap[yPos][xPos] = "0";
+	if (targetMapId.toUpperCase() != 'ITM' && targetMapId.toUpperCase() != 'SPR') {
+		if (targetId == 'ANY' || room[roomId].tilemap[yPos][xPos] == targetId) {
+			room[roomId].tilemap[yPos][xPos] = '0';
 			drawAt(newMapId, newId, xPos, yPos, roomId);
 		}
 	}
-	
+
 	// If ITM or undefined.
-	if (targetMapId.toUpperCase() != "TIL" && targetMapId.toUpperCase() != "SPR") {
+	if (targetMapId.toUpperCase() != 'TIL' && targetMapId.toUpperCase() != 'SPR') {
 		// Iterate backwards through items, to prevent issues with removed indexes
-		for (var i = room[roomId].items.length-1; i >= 0; i--) {
+		for (var i = room[roomId].items.length - 1; i >= 0; i--) {
 			var targetItem = room[roomId].items[i];
-			if (targetId == "ANY" || targetId == targetItem.id) {
+			if (targetId == 'ANY' || targetId == targetItem.id) {
 				if (targetItem.x == xPos && targetItem.y == yPos) {
 					room[roomId].items.splice(i, 1);
 					drawAt(newMapId, newId, xPos, yPos, roomId);
@@ -790,88 +731,74 @@ function replaceAt (targetMapId, targetId, newMapId, newId, xPos, yPos, roomId) 
 			}
 		}
 	}
-	
+
 	// If SPR or undefined.
-	if (targetMapId.toUpperCase() != "TIL" && targetMapId.toUpperCase() != "ITM") {
-		if (targetId == "ANY") {
+	if (targetMapId.toUpperCase() != 'TIL' && targetMapId.toUpperCase() != 'ITM') {
+		if (targetId == 'ANY') {
 			for (i in sprite) {
-				if (sprite[i].id == "A") {
-					console.log("CAN'T TARGET AVATAR. SKIPPING.")
-				}
-				else if (sprite[i].room == roomId && sprite[i].x == xPos && sprite[i].y == yPos) {
+				if (sprite[i].id == 'A') {
+					console.log("CAN'T TARGET AVATAR. SKIPPING.");
+				} else if (sprite[i].room == roomId && sprite[i].x == xPos && sprite[i].y == yPos) {
 					sprite[i].x = 0;
 					sprite[i].y = 0;
-					sprite[i].room = "default";
+					sprite[i].room = 'default';
 					drawAt(newMapId, newId, xPos, yPos, roomId);
 				}
 			}
-		}
-		else if (sprite[targetId] != undefined) {
-			if (sprite[targetId] != "A" && sprite[targetId].room == roomId && sprite[targetId].x == xPos && sprite[targetId].y == yPos) {
+		} else if (sprite[targetId] != undefined) {
+			if (sprite[targetId] != 'A' && sprite[targetId].room == roomId && sprite[targetId].x == xPos && sprite[targetId].y == yPos) {
 				sprite[targetId].x = 0;
 				sprite[targetId].y = 0;
-				sprite[targetId].room = "default";
+				sprite[targetId].room = 'default';
 				drawAt(newMapId, newId, xPos, yPos, roomId);
 			}
 		}
 	}
 }
 
-function replaceBoxAt (targetMapId, targetId, newMapId, newId, x1, y1, x2, y2, roomId) {
+function replaceBoxAt(targetMapId, targetId, newMapId, newId, x1, y1, x2, y2, roomId) {
 	// Trim and sanitize X and Y Positions, and set relative positions if omitted.
 	if (x1 == undefined) {
 		x1 = player().x;
-	}
-	else {
+	} else {
 		x1 = x1.toString().trim();
-		if (x1 == "" ) { x1 = player().x; }
-		else if (x1.includes("+")) { x1 = player().x + parseInt(x1.substring(1)); }
-		else if (x1.includes("-")) { x1 = player().x - parseInt(x1.substring(1)); }
+		if (x1 == '') { x1 = player().x; } else if (x1.includes('+')) { x1 = player().x + parseInt(x1.substring(1)); } else if (x1.includes('-')) { x1 = player().x - parseInt(x1.substring(1)); }
 	}
 	if (x1 < 0 || x1 > 15) {
-		console.log("CLAMPING X1 POSITION. XPOS ("+x1+") OUT OF BOUNDS. 0-15 EXPECTED.");
+		console.log('CLAMPING X1 POSITION. XPOS (' + x1 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		x1 = Math.max(0, Math.min(x1, 15));
 	}
 	// X2
 	if (x2 == undefined) {
 		x2 = player().x;
-	}
-	else {
+	} else {
 		x2 = x2.toString().trim();
-		if (x2 == "" ) { x2 = player().x; }
-		else if (x2.includes("+")) { x2 = player().x + parseInt(x2.substring(1)); }
-		else if (x2.includes("-")) { x2 = player().x - parseInt(x2.substring(1)); }
+		if (x2 == '') { x2 = player().x; } else if (x2.includes('+')) { x2 = player().x + parseInt(x2.substring(1)); } else if (x2.includes('-')) { x2 = player().x - parseInt(x2.substring(1)); }
 	}
 	if (x2 < 0 || x2 > 15) {
-		console.log("CLAMPING X2 POSITION. xPos ("+x2+") OUT OF BOUNDS. 0-15 EXPECTED.");
+		console.log('CLAMPING X2 POSITION. xPos (' + x2 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		x2 = Math.max(0, Math.min(x2, 15));
 	}
 	// Y1
 	if (y1 == undefined) {
 		y1 = player().y;
-	}
-	else {
+	} else {
 		y1 = y1.toString().trim();
-		if (y1 == "" ) { y1 = player().y; }
-		else if (y1.includes("+")) { y1 = player().y + parseInt(y1.substring(1)); }
-		else if (y1.includes("-")) { y1 = player().y - parseInt(y1.substring(1)); }
+		if (y1 == '') { y1 = player().y; } else if (y1.includes('+')) { y1 = player().y + parseInt(y1.substring(1)); } else if (y1.includes('-')) { y1 = player().y - parseInt(y1.substring(1)); }
 	}
 	if (y1 < 0 || y1 > 15) {
-		console.log("CLAMPING Y1 POSITION. XPOS ("+y1+") OUT OF BOUNDS. 0-15 EXPECTED.");
+		console.log('CLAMPING Y1 POSITION. XPOS (' + y1 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		y1 = Math.max(0, Math.min(y1, 15));
 	}
 	// Y2
 	if (y2 == undefined) {
 		y2 = player().y;
-	}
-	else {
+	} else {
 		y2 = y2.toString().trim();
-		if (y2 == "" ) { y2 = player().y; }
-		else if (y2.includes("+")) { y2 = player().y + parseInt(y2.substring(1)); }
-		else if (y2.includes("-")) { y2 = player().y - parseInt(y2.substring(1)); }
+		if (y2 == '') { y2 = player().y; } else if (y2.includes('+')) { y2 = player().y + parseInt(y2.substring(1)); } else if (y2.includes('-')) { y2 = player().y - parseInt(y2.substring(1)); }
 	}
 	if (y2 < 0 || y2 > 15) {
-		console.log("CLAMPING Y2 POSITION. xPos ("+y2+") OUT OF BOUNDS. 0-15 EXPECTED.");
+		console.log('CLAMPING Y2 POSITION. xPos (' + y2 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		y2 = Math.max(0, Math.min(y2, 15));
 	}
 
@@ -888,70 +815,60 @@ function replaceBoxAt (targetMapId, targetId, newMapId, newId, x1, y1, x2, y2, r
 	}
 }
 
-function copyAt (mapId, targetId, copyXPos, copyYPos, copyRoomId, pasteXPos, pasteYPos, pasteRoomId) {
+function copyAt(mapId, targetId, copyXPos, copyYPos, copyRoomId, pasteXPos, pasteYPos, pasteRoomId) {
 	// Trim and sanitize Target Map ID / Type parameter, and use any if not provided.
 	if (mapId == undefined) {
-		//console.log("TARGET TYPE IS UNDEFINED. DEFAULTING TO ANY (TIL, ITM, OR SPR).");
-		mapId = "ANY";
-	}
-	else {
+		// console.log("TARGET TYPE IS UNDEFINED. DEFAULTING TO ANY (TIL, ITM, OR SPR).");
+		mapId = 'ANY';
+	} else {
 		mapId = mapId.toString().trim();
-		if (mapId == "" || !(mapId.toUpperCase() == "ANY" || mapId.toUpperCase() == "TIL" || mapId.toUpperCase() == "ITM" || mapId.toUpperCase() == "SPR")) {
-			//console.log("UNEXPECTED TARGET TYPE ("+mapId+"). DEFAULTING TO ANY (TIL, ITM, OR SPR).");
-			mapId = "ANY";
+		if (mapId == '' || !(mapId.toUpperCase() == 'ANY' || mapId.toUpperCase() == 'TIL' || mapId.toUpperCase() == 'ITM' || mapId.toUpperCase() == 'SPR')) {
+			// console.log("UNEXPECTED TARGET TYPE ("+mapId+"). DEFAULTING TO ANY (TIL, ITM, OR SPR).");
+			mapId = 'ANY';
 		}
 	}
 
 	// Trim and sanitize Target ID parameter, and use any if not provided
 	if (targetId == undefined) {
-		//console.log("TARGET ID UNDEFINED. DEFAULTING TO ANY (ANYTHING OF VALID TYPE).");
-		targetId = "ANY";
-	}
-	else {
+		// console.log("TARGET ID UNDEFINED. DEFAULTING TO ANY (ANYTHING OF VALID TYPE).");
+		targetId = 'ANY';
+	} else {
 		targetId = targetId.toString().trim();
-		if (targetId == "") {
-			//console.log("NO TARGET ID GIVEN. DEFAULTING TO ANY (ANYTHING OF VALID TYPE).");
-			targetId = "ANY";
+		if (targetId == '') {
+			// console.log("NO TARGET ID GIVEN. DEFAULTING TO ANY (ANYTHING OF VALID TYPE).");
+			targetId = 'ANY';
 		}
 	}
 
 	// Trim and sanitize Copy Position parameters, and set relative positions, even if omitted.
 	if (copyXPos == undefined) {
 		copyXPos = player().x;
-	}
-	else {
+	} else {
 		copyXPos = copyXPos.toString().trim();
-		if (copyXPos == "" ) { copyXPos = player().x; }
-		else if (copyXPos.includes("+")) { copyXPos = player().x + parseInt(copyXPos.substring(1)); }
-		else if (copyXPos.includes("-")) { copyXPos = player().x - parseInt(copyXPos.substring(1)); }
+		if (copyXPos == '') { copyXPos = player().x; } else if (copyXPos.includes('+')) { copyXPos = player().x + parseInt(copyXPos.substring(1)); } else if (copyXPos.includes('-')) { copyXPos = player().x - parseInt(copyXPos.substring(1)); }
 	}
 	if (copyXPos < 0 || copyXPos > 15) {
-		console.log("CAN'T COPY. X POSITION ("+copyXPos+") OUT OF BOUNDS. 0-15 EXPECTED.");
+		console.log("CAN'T COPY. X POSITION (" + copyXPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		return;
 	}
 
 	if (copyYPos == undefined) {
 		copyYPos = player().y;
-	}
-	else {
+	} else {
 		copyYPos = copyYPos.toString().trim();
-		if (copyYPos == "" ) { copyYPos = player().y; }
-		else if (copyYPos.includes("+")) { copyYPos = player().y + parseInt(copyYPos.substring(1)); }
-		else if (copyYPos.includes("-")) { copyYPos = player().y - parseInt(copyYPos.substring(1)); }
+		if (copyYPos == '') { copyYPos = player().y; } else if (copyYPos.includes('+')) { copyYPos = player().y + parseInt(copyYPos.substring(1)); } else if (copyYPos.includes('-')) { copyYPos = player().y - parseInt(copyYPos.substring(1)); }
 	}
 	if (copyYPos < 0 || copyYPos > 15) {
-		console.log("CAN'T COPY. Y POSITION ("+copyYPos+") OUT OF BOUNDS. 0-15 EXPECTED.");
+		console.log("CAN'T COPY. Y POSITION (" + copyYPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		return;
 	}
-	
+
 	if (copyRoomId == undefined) {
 		copyRoomId = curRoom;
-	}
-	else {
+	} else {
 		copyRoomId = copyRoomId.trim();
-		if (copyRoomId == "" ) { copyRoomId = curRoom; }
-		else if (room[copyRoomId] == undefined) {
-			console.log("CAN'T COPY. ROOM ID ("+copyRoomId+") NOT FOUND.")
+		if (copyRoomId == '') { copyRoomId = curRoom; } else if (room[copyRoomId] == undefined) {
+			console.log("CAN'T COPY. ROOM ID (" + copyRoomId + ') NOT FOUND.');
 			return;
 		}
 	}
@@ -959,182 +876,156 @@ function copyAt (mapId, targetId, copyXPos, copyYPos, copyRoomId, pasteXPos, pas
 	// Trim and sanitize Paste Position parameters, and set relative positions, even if omitted.
 	if (pasteXPos == undefined) {
 		pasteXPos = player().x;
-	}
-	else {
+	} else {
 		pasteXPos = pasteXPos.toString().trim();
-		if (pasteXPos == "" ) { pasteXPos = player().x; }
-		else if (pasteXPos.includes("+")) { pasteXPos = player().x + parseInt(pasteXPos.substring(1)); }
-		else if (pasteXPos.includes("-")) { pasteXPos = player().x - parseInt(pasteXPos.substring(1)); }
+		if (pasteXPos == '') { pasteXPos = player().x; } else if (pasteXPos.includes('+')) { pasteXPos = player().x + parseInt(pasteXPos.substring(1)); } else if (pasteXPos.includes('-')) { pasteXPos = player().x - parseInt(pasteXPos.substring(1)); }
 	}
 	if (pasteXPos < 0 || pasteXPos > 15) {
-		console.log("CAN'T PASTE. X POSITION ("+pasteXPos+") OUT OF BOUNDS. 0-15 EXPECTED.");
+		console.log("CAN'T PASTE. X POSITION (" + pasteXPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		return;
 	}
 
 	if (pasteYPos == undefined) {
 		pasteYPos = player().y;
-	}
-	else {
+	} else {
 		pasteYPos = pasteYPos.toString().trim();
-		if (pasteYPos == "" ) { pasteYPos = player().y; }
-		else if (pasteYPos.includes("+")) { pasteYPos = player().y + parseInt(pasteYPos.substring(1)); }
-		else if (pasteYPos.includes("-")) { pasteYPos = player().y - parseInt(pasteYPos.substring(1)); }
+		if (pasteYPos == '') { pasteYPos = player().y; } else if (pasteYPos.includes('+')) { pasteYPos = player().y + parseInt(pasteYPos.substring(1)); } else if (pasteYPos.includes('-')) { pasteYPos = player().y - parseInt(pasteYPos.substring(1)); }
 	}
 	if (pasteYPos < 0 || pasteYPos > 15) {
-		console.log("CAN'T PASTE. Y POSITION ("+pasteYPos+") OUT OF BOUNDS. 0-15 EXPECTED.");
+		console.log("CAN'T PASTE. Y POSITION (" + pasteYPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		return;
 	}
-	
+
 	if (pasteRoomId == undefined) {
 		pasteRoomId = curRoom;
-	}
-	else {
+	} else {
 		pasteRoomId = pasteRoomId.toString().trim();
-		if (pasteRoomId == "" ) { pasteRoomId = curRoom; }
-		else if (room[pasteRoomId] == undefined) {
-			console.log("CAN'T PASTE. ROOM ID ("+pasteRoomId+") NOT FOUND.")
+		if (pasteRoomId == '') { pasteRoomId = curRoom; } else if (room[pasteRoomId] == undefined) {
+			console.log("CAN'T PASTE. ROOM ID (" + pasteRoomId + ') NOT FOUND.');
 			return;
 		}
 	}
 
-	//console.log ("COPYING "+mapId+" "+targetId+" at "+copyXPos+","+copyYPos+"(Room "+copyRoomId+")");
-	//console.log ("PASTING AT "+pasteXPos+","+pasteYPos+"(Room "+pasteRoomId+")");
-	
+	// console.log ("COPYING "+mapId+" "+targetId+" at "+copyXPos+","+copyYPos+"(Room "+copyRoomId+")");
+	// console.log ("PASTING AT "+pasteXPos+","+pasteYPos+"(Room "+pasteRoomId+")");
+
 	// If TIL or undefined.
-	if (mapId.toUpperCase() != "ITM" && mapId.toUpperCase() != "SPR") {
-		if (targetId == "ANY" || room[copyRoomId].tilemap[copyYPos][copyXPos] == targetId) {
+	if (mapId.toUpperCase() != 'ITM' && mapId.toUpperCase() != 'SPR') {
+		if (targetId == 'ANY' || room[copyRoomId].tilemap[copyYPos][copyXPos] == targetId) {
 			var copyId = room[copyRoomId].tilemap[copyYPos][copyXPos];
-			drawAt("TIL", copyId, pasteXPos, pasteYPos, pasteRoomId);
+			drawAt('TIL', copyId, pasteXPos, pasteYPos, pasteRoomId);
 		}
 	}
-	
+
 	// If ITM or undefined.
-	if (mapId.toUpperCase() != "TIL" && mapId.toUpperCase() != "SPR") {
+	if (mapId.toUpperCase() != 'TIL' && mapId.toUpperCase() != 'SPR') {
 		// Iterate backwards through items, to prevent issues with removed indexes
-		for (var i = room[copyRoomId].items.length-1; i >= 0; i--) {
+		for (var i = room[copyRoomId].items.length - 1; i >= 0; i--) {
 			var targetItem = room[copyRoomId].items[i];
-			if (targetId == "ANY" || targetId == targetItem.id) {
+			if (targetId == 'ANY' || targetId == targetItem.id) {
 				if (targetItem.x == copyXPos && targetItem.y == copyYPos) {
-					drawAt("ITM", targetItem.id, pasteXPos, pasteYPos, pasteRoomId);
+					drawAt('ITM', targetItem.id, pasteXPos, pasteYPos, pasteRoomId);
 				}
 			}
 		}
 	}
-	
+
 	// If SPR or undefined.
-	if (mapId.toUpperCase() != "TIL" && mapId.toUpperCase() != "ITM") {
-		if (targetId == "ANY") {
+	if (mapId.toUpperCase() != 'TIL' && mapId.toUpperCase() != 'ITM') {
+		if (targetId == 'ANY') {
 			for (i in sprite) {
-				if (sprite[i].id == "A") {
-					console.log("CAN'T TARGET AVATAR. SKIPPING.")
-				}
-				else if (sprite[i].room == copyRoomId && sprite[i].x == copyXPos && sprite[i].y == copyYPos) {
+				if (sprite[i].id == 'A') {
+					console.log("CAN'T TARGET AVATAR. SKIPPING.");
+				} else if (sprite[i].room == copyRoomId && sprite[i].x == copyXPos && sprite[i].y == copyYPos) {
 					var copyId = sprite[i].id;
-					drawAt("SPR", copyId, pasteXPos, pasteYPos, pasteRoomId);
+					drawAt('SPR', copyId, pasteXPos, pasteYPos, pasteRoomId);
 				}
 			}
-		}
-		else if (sprite[targetId] != undefined) {
-			if (sprite[targetId] != "A" && sprite[targetId].room == copyRoomId && sprite[targetId].x == copyXPos && sprite[targetId].y == copyYPos) {
+		} else if (sprite[targetId] != undefined) {
+			if (sprite[targetId] != 'A' && sprite[targetId].room == copyRoomId && sprite[targetId].x == copyXPos && sprite[targetId].y == copyYPos) {
 				var copyId = sprite[targetId].id;
-				drawAt("SPR", copyId, pasteXPos, pasteYPos, pasteRoomId);
+				drawAt('SPR', copyId, pasteXPos, pasteYPos, pasteRoomId);
 			}
 		}
 	}
 }
 
-function copyBoxAt (mapId, targetId, x1, y1, x2, y2, copyRoomId, pasteXPos, pasteYPos, pasteRoomId) {
+function copyBoxAt(mapId, targetId, x1, y1, x2, y2, copyRoomId, pasteXPos, pasteYPos, pasteRoomId) {
 	// Trim and sanitize X and Y Positions, and set relative positions if omitted.
 	if (x1 == undefined) {
 		x1 = player().x;
-	}
-	else {
+	} else {
 		x1 = x1.toString().trim();
-		if (x1 == "" ) { x1 = player().x; }
-		else if (x1.includes("+")) { x1 = player().x + parseInt(x1.substring(1)); }
-		else if (x1.includes("-")) { x1 = player().x - parseInt(x1.substring(1)); }
+		if (x1 == '') { x1 = player().x; } else if (x1.includes('+')) { x1 = player().x + parseInt(x1.substring(1)); } else if (x1.includes('-')) { x1 = player().x - parseInt(x1.substring(1)); }
 	}
 	if (x1 < 0 || x1 > 15) {
-		console.log("CLAMPING X1 POSITION. XPOS ("+x1+") OUT OF BOUNDS. 0-15 EXPECTED.");
+		console.log('CLAMPING X1 POSITION. XPOS (' + x1 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		x1 = Math.max(0, Math.min(x1, 15));
 	}
 	// X2
 	if (x2 == undefined) {
 		x2 = player().x;
-	}
-	else {
+	} else {
 		x2 = x2.toString().trim();
-		if (x2 == "" ) { x2 = player().x; }
-		else if (x2.includes("+")) { x2 = player().x + parseInt(x2.substring(1)); }
-		else if (x2.includes("-")) { x2 = player().x - parseInt(x2.substring(1)); }
+		if (x2 == '') { x2 = player().x; } else if (x2.includes('+')) { x2 = player().x + parseInt(x2.substring(1)); } else if (x2.includes('-')) { x2 = player().x - parseInt(x2.substring(1)); }
 	}
 	if (x2 < 0 || x2 > 15) {
-		console.log("CLAMPING X2 POSITION. xPos ("+x2+") OUT OF BOUNDS. 0-15 EXPECTED.");
+		console.log('CLAMPING X2 POSITION. xPos (' + x2 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		x2 = Math.max(0, Math.min(x2, 15));
 	}
 	// Y1
 	if (y1 == undefined) {
 		y1 = player().y;
-	}
-	else {
+	} else {
 		y1 = y1.toString().trim();
-		if (y1 == "" ) { y1 = player().y; }
-		else if (y1.includes("+")) { y1 = player().y + parseInt(y1.substring(1)); }
-		else if (y1.includes("-")) { y1 = player().y - parseInt(y1.substring(1)); }
+		if (y1 == '') { y1 = player().y; } else if (y1.includes('+')) { y1 = player().y + parseInt(y1.substring(1)); } else if (y1.includes('-')) { y1 = player().y - parseInt(y1.substring(1)); }
 	}
 	if (y1 < 0 || y1 > 15) {
-		console.log("CLAMPING Y1 POSITION. XPOS ("+y1+") OUT OF BOUNDS. 0-15 EXPECTED.");
+		console.log('CLAMPING Y1 POSITION. XPOS (' + y1 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		y1 = Math.max(0, Math.min(y1, 15));
 	}
 	// Y2
 	if (y2 == undefined) {
 		y2 = player().y;
-	}
-	else {
+	} else {
 		y2 = y2.toString().trim();
-		if (y2 == "" ) { y2 = player().y; }
-		else if (y2.includes("+")) { y2 = player().y + parseInt(y2.substring(1)); }
-		else if (y2.includes("-")) { y2 = player().y - parseInt(y2.substring(1)); }
+		if (y2 == '') { y2 = player().y; } else if (y2.includes('+')) { y2 = player().y + parseInt(y2.substring(1)); } else if (y2.includes('-')) { y2 = player().y - parseInt(y2.substring(1)); }
 	}
 	if (y2 < 0 || y2 > 15) {
-		console.log("CLAMPING Y2 POSITION. xPos ("+y2+") OUT OF BOUNDS. 0-15 EXPECTED.");
+		console.log('CLAMPING Y2 POSITION. xPos (' + y2 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		y2 = Math.max(0, Math.min(y2, 15));
 	}
 
 	// Trim and sanitize Target Map ID / Type parameter, and use any if not provided.
 	if (mapId == undefined) {
-		//console.log("TARGET TYPE IS UNDEFINED. DEFAULTING TO ANY (TIL, ITM, OR SPR).");
-		mapId = "ANY";
-	}
-	else {
+		// console.log("TARGET TYPE IS UNDEFINED. DEFAULTING TO ANY (TIL, ITM, OR SPR).");
+		mapId = 'ANY';
+	} else {
 		mapId = mapId.toString().trim();
-		if (mapId == "" || !(mapId.toUpperCase() == "ANY" || mapId.toUpperCase() == "TIL" || mapId.toUpperCase() == "ITM" || mapId.toUpperCase() == "SPR")) {
-			//console.log("UNEXPECTED TARGET TYPE ("+mapId+"). DEFAULTING TO ANY (TIL, ITM, OR SPR).");
-			mapId = "ANY";
+		if (mapId == '' || !(mapId.toUpperCase() == 'ANY' || mapId.toUpperCase() == 'TIL' || mapId.toUpperCase() == 'ITM' || mapId.toUpperCase() == 'SPR')) {
+			// console.log("UNEXPECTED TARGET TYPE ("+mapId+"). DEFAULTING TO ANY (TIL, ITM, OR SPR).");
+			mapId = 'ANY';
 		}
 	}
 
 	// Trim and sanitize Target ID parameter, and use any if not provided
 	if (targetId == undefined) {
-		//console.log("TARGET ID UNDEFINED. DEFAULTING TO ANY (ANYTHING OF VALID TYPE).");
-		targetId = "ANY";
-	}
-	else {
+		// console.log("TARGET ID UNDEFINED. DEFAULTING TO ANY (ANYTHING OF VALID TYPE).");
+		targetId = 'ANY';
+	} else {
 		targetId = targetId.toString().trim();
-		if (targetId == "") {
-			//console.log("NO TARGET ID GIVEN. DEFAULTING TO ANY (ANYTHING OF VALID TYPE).");
-			targetId = "ANY";
+		if (targetId == '') {
+			// console.log("NO TARGET ID GIVEN. DEFAULTING TO ANY (ANYTHING OF VALID TYPE).");
+			targetId = 'ANY';
 		}
 	}
 
 	if (copyRoomId == undefined) {
 		copyRoomId = curRoom;
-	}
-	else {
+	} else {
 		copyRoomId = copyRoomId.toString().trim();
-		if (copyRoomId == "" ) { copyRoomId = curRoom; }
-		else if (room[copyRoomId] == undefined) {
-			console.log("CAN'T COPY. ROOM ID ("+copyRoomId+") NOT FOUND.")
+		if (copyRoomId == '') { copyRoomId = curRoom; } else if (room[copyRoomId] == undefined) {
+			console.log("CAN'T COPY. ROOM ID (" + copyRoomId + ') NOT FOUND.');
 			return;
 		}
 	}
@@ -1142,46 +1033,38 @@ function copyBoxAt (mapId, targetId, x1, y1, x2, y2, copyRoomId, pasteXPos, past
 	// Trim and sanitize Paste Position parameters, and set relative positions, even if omitted.
 	if (pasteXPos == undefined) {
 		pasteXPos = player().x;
-	}
-	else {
+	} else {
 		pasteXPos = pasteXPos.toString().trim();
-		if (pasteXPos == "" ) { pasteXPos = player().x; }
-		else if (pasteXPos.includes("+")) { pasteXPos = player().x + parseInt(pasteXPos.substring(1)); }
-		else if (pasteXPos.includes("-")) { pasteXPos = player().x - parseInt(pasteXPos.substring(1)); }
+		if (pasteXPos == '') { pasteXPos = player().x; } else if (pasteXPos.includes('+')) { pasteXPos = player().x + parseInt(pasteXPos.substring(1)); } else if (pasteXPos.includes('-')) { pasteXPos = player().x - parseInt(pasteXPos.substring(1)); }
 	}
 	if (pasteXPos < 0 || pasteXPos > 15) {
-		console.log("CAN'T PASTE. X POSITION ("+pasteXPos+") OUT OF BOUNDS. 0-15 EXPECTED.");
+		console.log("CAN'T PASTE. X POSITION (" + pasteXPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		return;
 	}
-	else {
-		pasteXPos = parseInt(pasteXPos);
-	}
+
+	pasteXPos = parseInt(pasteXPos);
+
 
 	if (pasteYPos == undefined) {
 		pasteYPos = player().y;
-	}
-	else {
+	} else {
 		pasteYPos = pasteYPos.toString().trim();
-		if (pasteYPos == "" ) { pasteYPos = player().y; }
-		else if (pasteYPos.includes("+")) { pasteYPos = player().y + parseInt(pasteYPos.substring(1)); }
-		else if (pasteYPos.includes("-")) { pasteYPos = player().y - parseInt(pasteYPos.substring(1)); }
+		if (pasteYPos == '') { pasteYPos = player().y; } else if (pasteYPos.includes('+')) { pasteYPos = player().y + parseInt(pasteYPos.substring(1)); } else if (pasteYPos.includes('-')) { pasteYPos = player().y - parseInt(pasteYPos.substring(1)); }
 	}
 	if (pasteYPos < 0 || pasteYPos > 15) {
-		console.log("CAN'T PASTE. Y POSITION ("+pasteYPos+") OUT OF BOUNDS. 0-15 EXPECTED.");
+		console.log("CAN'T PASTE. Y POSITION (" + pasteYPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		return;
 	}
-	else {
-		pasteYPos = parseInt(pasteYPos);
-	}
-	
+
+	pasteYPos = parseInt(pasteYPos);
+
+
 	if (pasteRoomId == undefined) {
 		pasteRoomId = curRoom;
-	}
-	else {
+	} else {
 		pasteRoomId = pasteRoomId.toString().trim();
-		if (pasteRoomId == "" ) { pasteRoomId = curRoom; }
-		else if (room[pasteRoomId] == undefined) {
-			console.log("CAN'T PASTE. ROOM ID ("+pasteRoomId+") NOT FOUND.")
+		if (pasteRoomId == '') { pasteRoomId = curRoom; } else if (room[pasteRoomId] == undefined) {
+			console.log("CAN'T PASTE. ROOM ID (" + pasteRoomId + ') NOT FOUND.');
 			return;
 		}
 	}
@@ -1208,52 +1091,50 @@ function copyBoxAt (mapId, targetId, x1, y1, x2, y2, copyRoomId, pasteXPos, past
 		for (var yPos = topPos; yPos <= bottomPos; yPos++) {
 			colId++;
 			// If TIL or undefined.
-			if (mapId.toUpperCase() != "ITM" && mapId.toUpperCase() != "SPR") {
-				if (targetId == "ANY" || room[copyRoomId].tilemap[yPos][xPos] == targetId) {
+			if (mapId.toUpperCase() != 'ITM' && mapId.toUpperCase() != 'SPR') {
+				if (targetId == 'ANY' || room[copyRoomId].tilemap[yPos][xPos] == targetId) {
 					copyIds.push(room[copyRoomId].tilemap[yPos][xPos]);
-					copyMaps.push("TIL");
-					copyXs.push(pasteXPos+rowId);
-					copyYs.push(pasteYPos+colId);
+					copyMaps.push('TIL');
+					copyXs.push(pasteXPos + rowId);
+					copyYs.push(pasteYPos + colId);
 				}
 			}
-			
+
 			// If ITM or undefined.
-			if (mapId.toUpperCase() != "TIL" && mapId.toUpperCase() != "SPR") {
+			if (mapId.toUpperCase() != 'TIL' && mapId.toUpperCase() != 'SPR') {
 				// Iterate backwards through items, to prevent issues with removed indexes
-				for (var i = room[copyRoomId].items.length-1; i >= 0; i--) {
+				for (var i = room[copyRoomId].items.length - 1; i >= 0; i--) {
 					var targetItem = room[copyRoomId].items[i];
-					if (targetId == "ANY" || targetId == targetItem.id) {
+					if (targetId == 'ANY' || targetId == targetItem.id) {
 						if (targetItem.x == xPos && targetItem.y == yPos) {
 							copyIds.push(targetItem.id);
-							copyMaps.push("ITM");
-							copyXs.push(pasteXPos+xPos-1);
-							copyYs.push(pasteYPos+yPos-1);
+							copyMaps.push('ITM');
+							copyXs.push(pasteXPos + xPos - 1);
+							copyYs.push(pasteYPos + yPos - 1);
 						}
 					}
 				}
 			}
-			
+
 			// If SPR or undefined.
-			if (mapId.toUpperCase() != "TIL" && mapId.toUpperCase() != "ITM") {
-				if (targetId == "ANY") {
+			if (mapId.toUpperCase() != 'TIL' && mapId.toUpperCase() != 'ITM') {
+				if (targetId == 'ANY') {
 					for (i in sprite) {
-						if (sprite[i].id == "A") {
-							console.log("CAN'T TARGET AVATAR. SKIPPING.")
-						}
-						else if (sprite[i].room == copyRoomId && sprite[i].x == xPos && sprite[i].y == yPos) {
+						if (sprite[i].id == 'A') {
+							console.log("CAN'T TARGET AVATAR. SKIPPING.");
+						} else if (sprite[i].room == copyRoomId && sprite[i].x == xPos && sprite[i].y == yPos) {
 							copyIds.push(sprite[i].id);
-							copyMaps.push("SPR");
-							copyXs.push(pasteXPos+xPos-1);
-							copyYs.push(pasteYPos+yPos-1);
+							copyMaps.push('SPR');
+							copyXs.push(pasteXPos + xPos - 1);
+							copyYs.push(pasteYPos + yPos - 1);
 						}
 					}
-				}
-				else if (sprite[targetId] != undefined) {
-					if (sprite[targetId] != "A" && sprite[targetId].room == copyRoomId && sprite[targetId].x == xPos && sprite[targetId].y == yPos) {
+				} else if (sprite[targetId] != undefined) {
+					if (sprite[targetId] != 'A' && sprite[targetId].room == copyRoomId && sprite[targetId].x == xPos && sprite[targetId].y == yPos) {
 						copyIds.push(sprite[i].id);
-						copyMaps.push("SPR");
-						copyXs.push(pasteXPos+xPos-1);
-						copyYs.push(pasteYPos+yPos-1);
+						copyMaps.push('SPR');
+						copyXs.push(pasteXPos + xPos - 1);
+						copyYs.push(pasteYPos + yPos - 1);
 					}
 				}
 			}
