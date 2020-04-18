@@ -115,9 +115,7 @@ This hack is designed to be flexible. Here are some ideas for how to use it!
 import bitsy from 'bitsy';
 import {
 	after,
-	inject,
-	addDialogTag,
-	addDeferredDialogTag,
+	addDualDialogTag,
 } from './helpers/kitsy-script-toolkit';
 
 // Once world is parsed, parse the Palette Map data
@@ -131,42 +129,24 @@ after('drawRoom', function (room, context, frameIndex) {
 });
 
 // Implement tags to set a room's Default Palette
-addDialogTag('paletteNow', function (environment, parameters, onReturn) {
-	var params = parameters[0].split(',');
-	setRoomPalette(params[0], params[1]);
-	onReturn(null);
-});
-addDeferredDialogTag('palette', function (environment, parameters) {
+addDualDialogTag('palette', function (environment, parameters) {
 	var params = parameters[0].split(',');
 	setRoomPalette(params[0], params[1]);
 });
 
 // Implement tags to modify a room's Palette Map
-addDialogTag('tilePaletteNow', function (environment, parameters, onReturn) {
-	var params = parameters[0].split(',');
-	setPaletteAt(params[0], params[1], params[2], params[3]);
-	onReturn(null);
-});
-addDeferredDialogTag('tilePalette', function (environment, parameters) {
+addDualDialogTag('tilePalette', function (environment, parameters) {
 	var params = parameters[0].split(',');
 	setPaletteAt(params[0], params[1], params[2], params[3]);
 });
 
 // Implement tags to delete a room's Palette Map
-addDialogTag('clearTilePaletteNow', function (environment, parameters, onReturn) {
-	clearPaletteMap(parameters[0]);
-	onReturn(null);
-});
-addDeferredDialogTag('clearTilePalette', function (environment, parameters) {
+addDualDialogTag('clearTilePalette', function (environment, parameters) {
 	clearPaletteMap(parameters[0]);
 });
 
 // Implement tags to set a reset a room's Palette Map to starting values
-addDialogTag('resetTilePaletteNow', function (environment, parameters, onReturn) {
-	resetPaletteMap(parameters[0]);
-	onReturn(null);
-});
-addDeferredDialogTag('resetTilePalette', function (environment, parameters) {
+addDualDialogTag('resetTilePalette', function (environment, parameters) {
 	resetPaletteMap(parameters[0]);
 });
 
