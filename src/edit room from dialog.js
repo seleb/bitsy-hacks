@@ -148,6 +148,7 @@ Parameters:
 					Leave blank to default to paste to the room the player is currently in.
 * */
 
+import bitsy from 'bitsy';
 import {
 	addDialogTag,
 	addDeferredDialogTag,
@@ -335,10 +336,10 @@ function drawAt(mapId, sourceId, xPos, yPos, roomId) {
 
 	// Trim and sanitize X Position parameter, and set relative positions, even if omitted.
 	if (xPos == undefined) {
-		xPos = player().x;
+		xPos = bitsy.player().x;
 	} else {
 		xPos = xPos.toString().trim();
-		if (xPos == '') { xPos = player().x; } else if (xPos.includes('+')) { xPos = player().x + parseInt(xPos.substring(1)); } else if (xPos.includes('-')) { xPos = player().x - parseInt(xPos.substring(1)); }
+		if (xPos == '') { xPos = bitsy.player().x; } else if (xPos.includes('+')) { xPos = bitsy.player().x + parseInt(xPos.substring(1)); } else if (xPos.includes('-')) { xPos = bitsy.player().x - parseInt(xPos.substring(1)); }
 	}
 	if (xPos < 0 || xPos > 15) {
 		console.log("CAN'T DRAW. X POSITION (" + xPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
@@ -347,10 +348,10 @@ function drawAt(mapId, sourceId, xPos, yPos, roomId) {
 
 	// Trim and sanitize Y Position parameter, and set relative positions, even if omitted
 	if (yPos == undefined) {
-		yPos = player().y;
+		yPos = bitsy.player().y;
 	} else {
 		yPos = yPos.toString().trim();
-		if (yPos == '') { yPos = player().y; } else if (yPos.includes('+')) { yPos = player().y + parseInt(yPos.substring(1)); } else if (yPos.includes('-')) { yPos = player().y - parseInt(yPos.substring(1)); }
+		if (yPos == '') { yPos = bitsy.player().y; } else if (yPos.includes('+')) { yPos = bitsy.player().y + parseInt(yPos.substring(1)); } else if (yPos.includes('-')) { yPos = bitsy.player().y - parseInt(yPos.substring(1)); }
 	}
 	if (yPos < 0 || yPos > 15) {
 		console.log("CAN'T DRAW. Y POSITION (" + yPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
@@ -359,10 +360,10 @@ function drawAt(mapId, sourceId, xPos, yPos, roomId) {
 
 	// Trim and sanitize Room ID parameter, and set to current room if omitted
 	if (roomId == undefined) {
-		roomId = curRoom;
+		roomId = bitsy.curRoom;
 	} else {
 		roomId = roomId.toString().trim();
-		if (roomId == '') { roomId = curRoom; } else if (room[roomId] == undefined) {
+		if (roomId == '') { roomId = bitsy.curRoom; } else if (bitsy.room[roomId] == undefined) {
 			console.log("CAN'T DRAW. ROOM ID (" + roomId + ') NOT FOUND.');
 			return;
 		}
@@ -371,26 +372,26 @@ function drawAt(mapId, sourceId, xPos, yPos, roomId) {
 	// console.log ("DRAWING "+mapId+" "+sourceId+" at "+xPos+","+yPos+"(Room "+roomId+")");
 
 	if (mapId.toUpperCase() == 'TIL') {
-		if (tile[sourceId] != undefined) {
-			room[roomId].tilemap[yPos][xPos] = sourceId;
+		if (bitsy.tile[sourceId] != undefined) {
+			bitsy.room[roomId].tilemap[yPos][xPos] = sourceId;
 		}
 	} else if (mapId.toUpperCase() == 'ITM') {
-		if (item[sourceId] != undefined) {
+		if (bitsy.item[sourceId] != undefined) {
 			var newItem = {
 				id: sourceId,
 				x: xPos,
 				y: yPos,
 			};
-			room[roomId].items.push(newItem);
+			bitsy.room[roomId].items.push(newItem);
 		}
 	} else if (mapId.toUpperCase() == 'SPR') {
-		if (sprite[sourceId] != undefined) {
-			if (sprite[sourceId].id == 'A') {
+		if (bitsy.sprite[sourceId] != undefined) {
+			if (bitsy.sprite[sourceId].id == 'A') {
 				console.log("CAN'T TARGET AVATAR. SKIPPING.");
-			} else if (room[roomId] != undefined) {
-				sprite[sourceId].room = roomId;
-				sprite[sourceId].x = xPos;
-				sprite[sourceId].y = yPos;
+			} else if (bitsy.room[roomId] != undefined) {
+				bitsy.sprite[sourceId].room = roomId;
+				bitsy.sprite[sourceId].x = xPos;
+				bitsy.sprite[sourceId].y = yPos;
 			}
 		}
 	}
@@ -399,10 +400,10 @@ function drawAt(mapId, sourceId, xPos, yPos, roomId) {
 function drawBoxAt(mapId, sourceId, x1, y1, x2, y2, roomId) {
 	// Trim and sanitize X and Y Positions, and set relative positions if omitted.
 	if (x1 == undefined) {
-		x1 = player().x;
+		x1 = bitsy.player().x;
 	} else {
 		x1 = x1.toString().trim();
-		if (x1 == '') { x1 = player().x; } else if (x1.includes('+')) { x1 = player().x + parseInt(x1.substring(1)); } else if (x1.includes('-')) { x1 = player().x - parseInt(x1.substring(1)); }
+		if (x1 == '') { x1 = bitsy.player().x; } else if (x1.includes('+')) { x1 = bitsy.player().x + parseInt(x1.substring(1)); } else if (x1.includes('-')) { x1 = bitsy.player().x - parseInt(x1.substring(1)); }
 	}
 	if (x1 < 0 || x1 > 15) {
 		console.log('CLAMPING X1 POSITION. XPOS (' + x1 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
@@ -410,10 +411,10 @@ function drawBoxAt(mapId, sourceId, x1, y1, x2, y2, roomId) {
 	}
 	// X2
 	if (x2 == undefined) {
-		x2 = player().x;
+		x2 = bitsy.player().x;
 	} else {
 		x2 = x2.toString().trim();
-		if (x2 == '') { x2 = player().x; } else if (x2.includes('+')) { x2 = player().x + parseInt(x2.substring(1)); } else if (x2.includes('-')) { x2 = player().x - parseInt(x2.substring(1)); }
+		if (x2 == '') { x2 = bitsy.player().x; } else if (x2.includes('+')) { x2 = bitsy.player().x + parseInt(x2.substring(1)); } else if (x2.includes('-')) { x2 = bitsy.player().x - parseInt(x2.substring(1)); }
 	}
 	if (x2 < 0 || x2 > 15) {
 		console.log('CLAMPING X2 POSITION. xPos (' + x2 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
@@ -421,10 +422,10 @@ function drawBoxAt(mapId, sourceId, x1, y1, x2, y2, roomId) {
 	}
 	// Y1
 	if (y1 == undefined) {
-		y1 = player().y;
+		y1 = bitsy.player().y;
 	} else {
 		y1 = y1.toString().trim();
-		if (y1 == '') { y1 = player().y; } else if (y1.includes('+')) { y1 = player().y + parseInt(y1.substring(1)); } else if (y1.includes('-')) { y1 = player().y - parseInt(y1.substring(1)); }
+		if (y1 == '') { y1 = bitsy.player().y; } else if (y1.includes('+')) { y1 = bitsy.player().y + parseInt(y1.substring(1)); } else if (y1.includes('-')) { y1 = bitsy.player().y - parseInt(y1.substring(1)); }
 	}
 	if (y1 < 0 || y1 > 15) {
 		console.log('CLAMPING Y1 POSITION. XPOS (' + y1 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
@@ -432,10 +433,10 @@ function drawBoxAt(mapId, sourceId, x1, y1, x2, y2, roomId) {
 	}
 	// Y2
 	if (y2 == undefined) {
-		y2 = player().y;
+		y2 = bitsy.player().y;
 	} else {
 		y2 = y2.toString().trim();
-		if (y2 == '') { y2 = player().y; } else if (y2.includes('+')) { y2 = player().y + parseInt(y2.substring(1)); } else if (y2.includes('-')) { y2 = player().y - parseInt(y2.substring(1)); }
+		if (y2 == '') { y2 = bitsy.player().y; } else if (y2.includes('+')) { y2 = bitsy.player().y + parseInt(y2.substring(1)); } else if (y2.includes('-')) { y2 = bitsy.player().y - parseInt(y2.substring(1)); }
 	}
 	if (y2 < 0 || y2 > 15) {
 		console.log('CLAMPING Y2 POSITION. xPos (' + y2 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
@@ -483,10 +484,10 @@ function eraseAt(mapId, targetId, xPos, yPos, roomId) {
 
 	// Trim and sanitize X Position parameter, and set relative positions, even if omitted.
 	if (xPos == undefined) {
-		xPos = player().x;
+		xPos = bitsy.player().x;
 	} else {
 		xPos = xPos.toString().trim();
-		if (xPos == '') { xPos = player().x; } else if (xPos.includes('+')) { xPos = player().x + parseInt(xPos.substring(1)); } else if (xPos.includes('-')) { xPos = player().x - parseInt(xPos.substring(1)); }
+		if (xPos == '') { xPos = bitsy.player().x; } else if (xPos.includes('+')) { xPos = bitsy.player().x + parseInt(xPos.substring(1)); } else if (xPos.includes('-')) { xPos = bitsy.player().x - parseInt(xPos.substring(1)); }
 	}
 	if (xPos < 0 || xPos > 15) {
 		console.log("CAN'T DRAW. X POSITION (" + xPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
@@ -495,10 +496,10 @@ function eraseAt(mapId, targetId, xPos, yPos, roomId) {
 
 	// Trim and sanitize Y Position parameter, and set relative positions, even if omitted
 	if (yPos == undefined) {
-		yPos = player().y;
+		yPos = bitsy.player().y;
 	} else {
 		yPos = yPos.toString().trim();
-		if (yPos == '') { yPos = player().y; } else if (yPos.includes('+')) { yPos = player().y + parseInt(yPos.substring(1)); } else if (yPos.includes('-')) { yPos = player().y - parseInt(yPos.substring(1)); }
+		if (yPos == '') { yPos = bitsy.player().y; } else if (yPos.includes('+')) { yPos = bitsy.player().y + parseInt(yPos.substring(1)); } else if (yPos.includes('-')) { yPos = bitsy.player().y - parseInt(yPos.substring(1)); }
 	}
 	if (yPos < 0 || yPos > 15) {
 		console.log("CAN'T DRAW. Y POSITION (" + yPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
@@ -507,10 +508,10 @@ function eraseAt(mapId, targetId, xPos, yPos, roomId) {
 
 	// Trim and sanitize Room ID parameter, and set to current room if omitted
 	if (roomId == undefined) {
-		roomId = curRoom;
+		roomId = bitsy.curRoom;
 	} else {
 		roomId = roomId.toString().trim();
-		if (roomId == '') { roomId = curRoom; } else if (room[roomId] == undefined) {
+		if (roomId == '') { roomId = bitsy.curRoom; } else if (bitsy.room[roomId] == undefined) {
 			console.log("CAN'T DRAW. ROOM ID (" + roomId + ') NOT FOUND.');
 			return;
 		}
@@ -520,19 +521,19 @@ function eraseAt(mapId, targetId, xPos, yPos, roomId) {
 
 	// If TIL or undefined.
 	if (mapId.toUpperCase() != 'ITM' && mapId.toUpperCase() != 'SPR') {
-		if (targetId == 'ANY' || room[roomId].tilemap[yPos][xPos] == targetId) {
-			room[roomId].tilemap[yPos][xPos] = '0';
+		if (targetId == 'ANY' || bitsy.room[roomId].tilemap[yPos][xPos] == targetId) {
+			bitsy.room[roomId].tilemap[yPos][xPos] = '0';
 		}
 	}
 
 	// If ITM or undefined.
 	if (mapId.toUpperCase() != 'TIL' && mapId.toUpperCase() != 'SPR') {
 		// Iterate backwards through items, to prevent issues with removed indexes
-		for (var i = room[roomId].items.length - 1; i >= 0; i--) {
-			var targetItem = room[roomId].items[i];
+		for (var i = bitsy.room[roomId].items.length - 1; i >= 0; i--) {
+			var targetItem = bitsy.room[roomId].items[i];
 			if (targetId == 'ANY' || targetId == targetItem.id) {
 				if (targetItem.x == xPos && targetItem.y == yPos) {
-					room[roomId].items.splice(i, 1);
+					bitsy.room[roomId].items.splice(i, 1);
 				}
 			}
 		}
@@ -541,22 +542,22 @@ function eraseAt(mapId, targetId, xPos, yPos, roomId) {
 	// If SPR or undefined.
 	if (mapId.toUpperCase() != 'TIL' && mapId.toUpperCase() != 'ITM') {
 		if (targetId == 'ANY') {
-			for (i in sprite) {
-				if (sprite[i].id == 'A') {
+			for (i in bitsy.sprite) {
+				if (bitsy.sprite[i].id == 'A') {
 					console.log("CAN'T TARGET AVATAR. SKIPPING.");
-				} else if (sprite[i].room == roomId && sprite[i].x == xPos && sprite[i].y == yPos) {
-					sprite[i].x = 0;
-					sprite[i].y = 0;
-					sprite[i].room = 'default';
+				} else if (bitsy.sprite[i].room == roomId && bitsy.sprite[i].x == xPos && bitsy.sprite[i].y == yPos) {
+					bitsy.sprite[i].x = 0;
+					bitsy.sprite[i].y = 0;
+					bitsy.sprite[i].room = 'default';
 				}
 			}
-		} else if (sprite[targetId] != undefined) {
-			if (sprite[targetId].id == 'A') {
+		} else if (bitsy.sprite[targetId] != undefined) {
+			if (bitsy.sprite[targetId].id == 'A') {
 				console.log("CAN'T TARGET AVATAR. SKIPPING.");
-			} else if (sprite[targetId].room == roomId && sprite[targetId].x == xPos && sprite[targetId].y == yPos) {
-				sprite[targetId].x = 0;
-				sprite[targetId].y = 0;
-				sprite[targetId].room = 'default';
+			} else if (bitsy.sprite[targetId].room == roomId && bitsy.sprite[targetId].x == xPos && bitsy.sprite[targetId].y == yPos) {
+				bitsy.sprite[targetId].x = 0;
+				bitsy.sprite[targetId].y = 0;
+				bitsy.sprite[targetId].room = 'default';
 			}
 		}
 	}
@@ -565,10 +566,10 @@ function eraseAt(mapId, targetId, xPos, yPos, roomId) {
 function eraseBoxAt(mapId, targetId, x1, y1, x2, y2, roomId) {
 	// Trim and sanitize X and Y Positions, and set relative positions if omitted.
 	if (x1 == undefined) {
-		x1 = player().x;
+		x1 = bitsy.player().x;
 	} else {
 		x1 = x1.toString().trim();
-		if (x1 == '') { x1 = player().x; } else if (x1.includes('+')) { x1 = player().x + parseInt(x1.substring(1)); } else if (x1.includes('-')) { x1 = player().x - parseInt(x1.substring(1)); }
+		if (x1 == '') { x1 = bitsy.player().x; } else if (x1.includes('+')) { x1 = bitsy.player().x + parseInt(x1.substring(1)); } else if (x1.includes('-')) { x1 = bitsy.player().x - parseInt(x1.substring(1)); }
 	}
 	if (x1 < 0 || x1 > 15) {
 		console.log('CLAMPING X1 POSITION. XPOS (' + x1 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
@@ -576,10 +577,10 @@ function eraseBoxAt(mapId, targetId, x1, y1, x2, y2, roomId) {
 	}
 	// X2
 	if (x2 == undefined) {
-		x2 = player().x;
+		x2 = bitsy.player().x;
 	} else {
 		x2 = x2.toString().trim();
-		if (x2 == '') { x2 = player().x; } else if (x2.includes('+')) { x2 = player().x + parseInt(x2.substring(1)); } else if (x2.includes('-')) { x2 = player().x - parseInt(x2.substring(1)); }
+		if (x2 == '') { x2 = bitsy.player().x; } else if (x2.includes('+')) { x2 = bitsy.player().x + parseInt(x2.substring(1)); } else if (x2.includes('-')) { x2 = bitsy.player().x - parseInt(x2.substring(1)); }
 	}
 	if (x2 < 0 || x2 > 15) {
 		console.log('CLAMPING X2 POSITION. xPos (' + x2 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
@@ -587,10 +588,10 @@ function eraseBoxAt(mapId, targetId, x1, y1, x2, y2, roomId) {
 	}
 	// Y1
 	if (y1 == undefined) {
-		y1 = player().y;
+		y1 = bitsy.player().y;
 	} else {
 		y1 = y1.trim();
-		if (y1 == '') { y1 = player().y; } else if (y1.includes('+')) { y1 = player().y + parseInt(y1.substring(1)); } else if (y1.includes('-')) { y1 = player().y - parseInt(y1.substring(1)); }
+		if (y1 == '') { y1 = bitsy.player().y; } else if (y1.includes('+')) { y1 = bitsy.player().y + parseInt(y1.substring(1)); } else if (y1.includes('-')) { y1 = bitsy.player().y - parseInt(y1.substring(1)); }
 	}
 	if (y1 < 0 || y1 > 15) {
 		console.log('CLAMPING Y1 POSITION. XPOS (' + y1 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
@@ -598,10 +599,10 @@ function eraseBoxAt(mapId, targetId, x1, y1, x2, y2, roomId) {
 	}
 	// Y2
 	if (y2 == undefined) {
-		y2 = player().y;
+		y2 = bitsy.player().y;
 	} else {
 		y2 = y2.toString().trim();
-		if (y2 == '') { y2 = player().y; } else if (y2.includes('+')) { y2 = player().y + parseInt(y2.substring(1)); } else if (y2.includes('-')) { y2 = player().y - parseInt(y2.substring(1)); }
+		if (y2 == '') { y2 = bitsy.player().y; } else if (y2.includes('+')) { y2 = bitsy.player().y + parseInt(y2.substring(1)); } else if (y2.includes('-')) { y2 = bitsy.player().y - parseInt(y2.substring(1)); }
 	}
 	if (y2 < 0 || y2 > 15) {
 		console.log('CLAMPING Y2 POSITION. xPos (' + y2 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
@@ -674,10 +675,10 @@ function replaceAt(targetMapId, targetId, newMapId, newId, xPos, yPos, roomId) {
 
 	// Trim and sanitize X Position parameter, and set relative positions, even if omitted.
 	if (xPos == undefined) {
-		xPos = player().x;
+		xPos = bitsy.player().x;
 	} else {
 		xPos = xPos.toString().trim();
-		if (xPos == '') { xPos = player().x; } else if (xPos.includes('+')) { xPos = player().x + parseInt(xPos.substring(1)); } else if (xPos.includes('-')) { xPos = player().x - parseInt(xPos.substring(1)); }
+		if (xPos == '') { xPos = bitsy.player().x; } else if (xPos.includes('+')) { xPos = bitsy.player().x + parseInt(xPos.substring(1)); } else if (xPos.includes('-')) { xPos = bitsy.player().x - parseInt(xPos.substring(1)); }
 	}
 	if (xPos < 0 || xPos > 15) {
 		console.log("CAN'T REPLACE. X POSITION (" + xPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
@@ -686,10 +687,10 @@ function replaceAt(targetMapId, targetId, newMapId, newId, xPos, yPos, roomId) {
 
 	// Trim and sanitize Y Position parameter, and set relative positions, even if omitted
 	if (yPos == undefined) {
-		yPos = player().y;
+		yPos = bitsy.player().y;
 	} else {
 		yPos = yPos.toString().trim();
-		if (yPos == '') { yPos = player().y; } else if (yPos.includes('+')) { yPos = player().y + parseInt(yPos.substring(1)); } else if (yPos.includes('-')) { yPos = player().y - parseInt(yPos.substring(1)); }
+		if (yPos == '') { yPos = bitsy.player().y; } else if (yPos.includes('+')) { yPos = bitsy.player().y + parseInt(yPos.substring(1)); } else if (yPos.includes('-')) { yPos = bitsy.player().y - parseInt(yPos.substring(1)); }
 	}
 	if (yPos < 0 || yPos > 15) {
 		console.log("CAN'T REPLACE. Y POSITION (" + yPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
@@ -698,10 +699,10 @@ function replaceAt(targetMapId, targetId, newMapId, newId, xPos, yPos, roomId) {
 
 	// Trim and sanitize Room ID parameter, and set to current room if omitted
 	if (roomId == undefined) {
-		roomId = curRoom;
+		roomId = bitsy.curRoom;
 	} else {
 		roomId = roomId.toString().trim();
-		if (roomId == '') { roomId = curRoom; } else if (room[roomId] == undefined) {
+		if (roomId == '') { roomId = bitsy.curRoom; } else if (bitsy.room[roomId] == undefined) {
 			console.log("CAN'T REPLACE. ROOM ID (" + roomId + ') NOT FOUND.');
 			return;
 		}
@@ -712,8 +713,8 @@ function replaceAt(targetMapId, targetId, newMapId, newId, xPos, yPos, roomId) {
 
 	// If TIL or undefined.
 	if (targetMapId.toUpperCase() != 'ITM' && targetMapId.toUpperCase() != 'SPR') {
-		if (targetId == 'ANY' || room[roomId].tilemap[yPos][xPos] == targetId) {
-			room[roomId].tilemap[yPos][xPos] = '0';
+		if (targetId == 'ANY' || bitsy.room[roomId].tilemap[yPos][xPos] == targetId) {
+			bitsy.room[roomId].tilemap[yPos][xPos] = '0';
 			drawAt(newMapId, newId, xPos, yPos, roomId);
 		}
 	}
@@ -721,11 +722,11 @@ function replaceAt(targetMapId, targetId, newMapId, newId, xPos, yPos, roomId) {
 	// If ITM or undefined.
 	if (targetMapId.toUpperCase() != 'TIL' && targetMapId.toUpperCase() != 'SPR') {
 		// Iterate backwards through items, to prevent issues with removed indexes
-		for (var i = room[roomId].items.length - 1; i >= 0; i--) {
-			var targetItem = room[roomId].items[i];
+		for (var i = bitsy.room[roomId].items.length - 1; i >= 0; i--) {
+			var targetItem = bitsy.room[roomId].items[i];
 			if (targetId == 'ANY' || targetId == targetItem.id) {
 				if (targetItem.x == xPos && targetItem.y == yPos) {
-					room[roomId].items.splice(i, 1);
+					bitsy.room[roomId].items.splice(i, 1);
 					drawAt(newMapId, newId, xPos, yPos, roomId);
 				}
 			}
@@ -735,21 +736,21 @@ function replaceAt(targetMapId, targetId, newMapId, newId, xPos, yPos, roomId) {
 	// If SPR or undefined.
 	if (targetMapId.toUpperCase() != 'TIL' && targetMapId.toUpperCase() != 'ITM') {
 		if (targetId == 'ANY') {
-			for (i in sprite) {
-				if (sprite[i].id == 'A') {
+			for (i in bitsy.sprite) {
+				if (bitsy.sprite[i].id == 'A') {
 					console.log("CAN'T TARGET AVATAR. SKIPPING.");
-				} else if (sprite[i].room == roomId && sprite[i].x == xPos && sprite[i].y == yPos) {
-					sprite[i].x = 0;
-					sprite[i].y = 0;
-					sprite[i].room = 'default';
+				} else if (bitsy.sprite[i].room == roomId && bitsy.sprite[i].x == xPos && bitsy.sprite[i].y == yPos) {
+					bitsy.sprite[i].x = 0;
+					bitsy.sprite[i].y = 0;
+					bitsy.sprite[i].room = 'default';
 					drawAt(newMapId, newId, xPos, yPos, roomId);
 				}
 			}
-		} else if (sprite[targetId] != undefined) {
-			if (sprite[targetId] != 'A' && sprite[targetId].room == roomId && sprite[targetId].x == xPos && sprite[targetId].y == yPos) {
-				sprite[targetId].x = 0;
-				sprite[targetId].y = 0;
-				sprite[targetId].room = 'default';
+		} else if (bitsy.sprite[targetId] != undefined) {
+			if (bitsy.sprite[targetId] != 'A' && bitsy.sprite[targetId].room == roomId && bitsy.sprite[targetId].x == xPos && bitsy.sprite[targetId].y == yPos) {
+				bitsy.sprite[targetId].x = 0;
+				bitsy.sprite[targetId].y = 0;
+				bitsy.sprite[targetId].room = 'default';
 				drawAt(newMapId, newId, xPos, yPos, roomId);
 			}
 		}
@@ -759,10 +760,10 @@ function replaceAt(targetMapId, targetId, newMapId, newId, xPos, yPos, roomId) {
 function replaceBoxAt(targetMapId, targetId, newMapId, newId, x1, y1, x2, y2, roomId) {
 	// Trim and sanitize X and Y Positions, and set relative positions if omitted.
 	if (x1 == undefined) {
-		x1 = player().x;
+		x1 = bitsy.player().x;
 	} else {
 		x1 = x1.toString().trim();
-		if (x1 == '') { x1 = player().x; } else if (x1.includes('+')) { x1 = player().x + parseInt(x1.substring(1)); } else if (x1.includes('-')) { x1 = player().x - parseInt(x1.substring(1)); }
+		if (x1 == '') { x1 = bitsy.player().x; } else if (x1.includes('+')) { x1 = bitsy.player().x + parseInt(x1.substring(1)); } else if (x1.includes('-')) { x1 = bitsy.player().x - parseInt(x1.substring(1)); }
 	}
 	if (x1 < 0 || x1 > 15) {
 		console.log('CLAMPING X1 POSITION. XPOS (' + x1 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
@@ -770,10 +771,10 @@ function replaceBoxAt(targetMapId, targetId, newMapId, newId, x1, y1, x2, y2, ro
 	}
 	// X2
 	if (x2 == undefined) {
-		x2 = player().x;
+		x2 = bitsy.player().x;
 	} else {
 		x2 = x2.toString().trim();
-		if (x2 == '') { x2 = player().x; } else if (x2.includes('+')) { x2 = player().x + parseInt(x2.substring(1)); } else if (x2.includes('-')) { x2 = player().x - parseInt(x2.substring(1)); }
+		if (x2 == '') { x2 = bitsy.player().x; } else if (x2.includes('+')) { x2 = bitsy.player().x + parseInt(x2.substring(1)); } else if (x2.includes('-')) { x2 = bitsy.player().x - parseInt(x2.substring(1)); }
 	}
 	if (x2 < 0 || x2 > 15) {
 		console.log('CLAMPING X2 POSITION. xPos (' + x2 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
@@ -781,10 +782,10 @@ function replaceBoxAt(targetMapId, targetId, newMapId, newId, x1, y1, x2, y2, ro
 	}
 	// Y1
 	if (y1 == undefined) {
-		y1 = player().y;
+		y1 = bitsy.player().y;
 	} else {
 		y1 = y1.toString().trim();
-		if (y1 == '') { y1 = player().y; } else if (y1.includes('+')) { y1 = player().y + parseInt(y1.substring(1)); } else if (y1.includes('-')) { y1 = player().y - parseInt(y1.substring(1)); }
+		if (y1 == '') { y1 = bitsy.player().y; } else if (y1.includes('+')) { y1 = bitsy.player().y + parseInt(y1.substring(1)); } else if (y1.includes('-')) { y1 = bitsy.player().y - parseInt(y1.substring(1)); }
 	}
 	if (y1 < 0 || y1 > 15) {
 		console.log('CLAMPING Y1 POSITION. XPOS (' + y1 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
@@ -792,10 +793,10 @@ function replaceBoxAt(targetMapId, targetId, newMapId, newId, x1, y1, x2, y2, ro
 	}
 	// Y2
 	if (y2 == undefined) {
-		y2 = player().y;
+		y2 = bitsy.player().y;
 	} else {
 		y2 = y2.toString().trim();
-		if (y2 == '') { y2 = player().y; } else if (y2.includes('+')) { y2 = player().y + parseInt(y2.substring(1)); } else if (y2.includes('-')) { y2 = player().y - parseInt(y2.substring(1)); }
+		if (y2 == '') { y2 = bitsy.player().y; } else if (y2.includes('+')) { y2 = bitsy.player().y + parseInt(y2.substring(1)); } else if (y2.includes('-')) { y2 = bitsy.player().y - parseInt(y2.substring(1)); }
 	}
 	if (y2 < 0 || y2 > 15) {
 		console.log('CLAMPING Y2 POSITION. xPos (' + y2 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
@@ -842,10 +843,10 @@ function copyAt(mapId, targetId, copyXPos, copyYPos, copyRoomId, pasteXPos, past
 
 	// Trim and sanitize Copy Position parameters, and set relative positions, even if omitted.
 	if (copyXPos == undefined) {
-		copyXPos = player().x;
+		copyXPos = bitsy.player().x;
 	} else {
 		copyXPos = copyXPos.toString().trim();
-		if (copyXPos == '') { copyXPos = player().x; } else if (copyXPos.includes('+')) { copyXPos = player().x + parseInt(copyXPos.substring(1)); } else if (copyXPos.includes('-')) { copyXPos = player().x - parseInt(copyXPos.substring(1)); }
+		if (copyXPos == '') { copyXPos = bitsy.player().x; } else if (copyXPos.includes('+')) { copyXPos = bitsy.player().x + parseInt(copyXPos.substring(1)); } else if (copyXPos.includes('-')) { copyXPos = bitsy.player().x - parseInt(copyXPos.substring(1)); }
 	}
 	if (copyXPos < 0 || copyXPos > 15) {
 		console.log("CAN'T COPY. X POSITION (" + copyXPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
@@ -853,10 +854,10 @@ function copyAt(mapId, targetId, copyXPos, copyYPos, copyRoomId, pasteXPos, past
 	}
 
 	if (copyYPos == undefined) {
-		copyYPos = player().y;
+		copyYPos = bitsy.player().y;
 	} else {
 		copyYPos = copyYPos.toString().trim();
-		if (copyYPos == '') { copyYPos = player().y; } else if (copyYPos.includes('+')) { copyYPos = player().y + parseInt(copyYPos.substring(1)); } else if (copyYPos.includes('-')) { copyYPos = player().y - parseInt(copyYPos.substring(1)); }
+		if (copyYPos == '') { copyYPos = bitsy.player().y; } else if (copyYPos.includes('+')) { copyYPos = bitsy.player().y + parseInt(copyYPos.substring(1)); } else if (copyYPos.includes('-')) { copyYPos = bitsy.player().y - parseInt(copyYPos.substring(1)); }
 	}
 	if (copyYPos < 0 || copyYPos > 15) {
 		console.log("CAN'T COPY. Y POSITION (" + copyYPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
@@ -864,10 +865,10 @@ function copyAt(mapId, targetId, copyXPos, copyYPos, copyRoomId, pasteXPos, past
 	}
 
 	if (copyRoomId == undefined) {
-		copyRoomId = curRoom;
+		copyRoomId = bitsy.curRoom;
 	} else {
 		copyRoomId = copyRoomId.trim();
-		if (copyRoomId == '') { copyRoomId = curRoom; } else if (room[copyRoomId] == undefined) {
+		if (copyRoomId == '') { copyRoomId = bitsy.curRoom; } else if (bitsy.room[copyRoomId] == undefined) {
 			console.log("CAN'T COPY. ROOM ID (" + copyRoomId + ') NOT FOUND.');
 			return;
 		}
@@ -875,10 +876,10 @@ function copyAt(mapId, targetId, copyXPos, copyYPos, copyRoomId, pasteXPos, past
 
 	// Trim and sanitize Paste Position parameters, and set relative positions, even if omitted.
 	if (pasteXPos == undefined) {
-		pasteXPos = player().x;
+		pasteXPos = bitsy.player().x;
 	} else {
 		pasteXPos = pasteXPos.toString().trim();
-		if (pasteXPos == '') { pasteXPos = player().x; } else if (pasteXPos.includes('+')) { pasteXPos = player().x + parseInt(pasteXPos.substring(1)); } else if (pasteXPos.includes('-')) { pasteXPos = player().x - parseInt(pasteXPos.substring(1)); }
+		if (pasteXPos == '') { pasteXPos = bitsy.player().x; } else if (pasteXPos.includes('+')) { pasteXPos = bitsy.player().x + parseInt(pasteXPos.substring(1)); } else if (pasteXPos.includes('-')) { pasteXPos = bitsy.player().x - parseInt(pasteXPos.substring(1)); }
 	}
 	if (pasteXPos < 0 || pasteXPos > 15) {
 		console.log("CAN'T PASTE. X POSITION (" + pasteXPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
@@ -886,10 +887,10 @@ function copyAt(mapId, targetId, copyXPos, copyYPos, copyRoomId, pasteXPos, past
 	}
 
 	if (pasteYPos == undefined) {
-		pasteYPos = player().y;
+		pasteYPos = bitsy.player().y;
 	} else {
 		pasteYPos = pasteYPos.toString().trim();
-		if (pasteYPos == '') { pasteYPos = player().y; } else if (pasteYPos.includes('+')) { pasteYPos = player().y + parseInt(pasteYPos.substring(1)); } else if (pasteYPos.includes('-')) { pasteYPos = player().y - parseInt(pasteYPos.substring(1)); }
+		if (pasteYPos == '') { pasteYPos = bitsy.player().y; } else if (pasteYPos.includes('+')) { pasteYPos = bitsy.player().y + parseInt(pasteYPos.substring(1)); } else if (pasteYPos.includes('-')) { pasteYPos = bitsy.player().y - parseInt(pasteYPos.substring(1)); }
 	}
 	if (pasteYPos < 0 || pasteYPos > 15) {
 		console.log("CAN'T PASTE. Y POSITION (" + pasteYPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
@@ -897,10 +898,10 @@ function copyAt(mapId, targetId, copyXPos, copyYPos, copyRoomId, pasteXPos, past
 	}
 
 	if (pasteRoomId == undefined) {
-		pasteRoomId = curRoom;
+		pasteRoomId = bitsy.curRoom;
 	} else {
 		pasteRoomId = pasteRoomId.toString().trim();
-		if (pasteRoomId == '') { pasteRoomId = curRoom; } else if (room[pasteRoomId] == undefined) {
+		if (pasteRoomId == '') { pasteRoomId = bitsy.curRoom; } else if (bitsy.room[pasteRoomId] == undefined) {
 			console.log("CAN'T PASTE. ROOM ID (" + pasteRoomId + ') NOT FOUND.');
 			return;
 		}
@@ -911,8 +912,8 @@ function copyAt(mapId, targetId, copyXPos, copyYPos, copyRoomId, pasteXPos, past
 
 	// If TIL or undefined.
 	if (mapId.toUpperCase() != 'ITM' && mapId.toUpperCase() != 'SPR') {
-		if (targetId == 'ANY' || room[copyRoomId].tilemap[copyYPos][copyXPos] == targetId) {
-			var copyId = room[copyRoomId].tilemap[copyYPos][copyXPos];
+		if (targetId == 'ANY' || bitsy.room[copyRoomId].tilemap[copyYPos][copyXPos] == targetId) {
+			var copyId = bitsy.room[copyRoomId].tilemap[copyYPos][copyXPos];
 			drawAt('TIL', copyId, pasteXPos, pasteYPos, pasteRoomId);
 		}
 	}
@@ -920,8 +921,8 @@ function copyAt(mapId, targetId, copyXPos, copyYPos, copyRoomId, pasteXPos, past
 	// If ITM or undefined.
 	if (mapId.toUpperCase() != 'TIL' && mapId.toUpperCase() != 'SPR') {
 		// Iterate backwards through items, to prevent issues with removed indexes
-		for (var i = room[copyRoomId].items.length - 1; i >= 0; i--) {
-			var targetItem = room[copyRoomId].items[i];
+		for (var i = bitsy.room[copyRoomId].items.length - 1; i >= 0; i--) {
+			var targetItem = bitsy.room[copyRoomId].items[i];
 			if (targetId == 'ANY' || targetId == targetItem.id) {
 				if (targetItem.x == copyXPos && targetItem.y == copyYPos) {
 					drawAt('ITM', targetItem.id, pasteXPos, pasteYPos, pasteRoomId);
@@ -933,17 +934,17 @@ function copyAt(mapId, targetId, copyXPos, copyYPos, copyRoomId, pasteXPos, past
 	// If SPR or undefined.
 	if (mapId.toUpperCase() != 'TIL' && mapId.toUpperCase() != 'ITM') {
 		if (targetId == 'ANY') {
-			for (i in sprite) {
-				if (sprite[i].id == 'A') {
+			for (i in bitsy.sprite) {
+				if (bitsy.sprite[i].id == 'A') {
 					console.log("CAN'T TARGET AVATAR. SKIPPING.");
-				} else if (sprite[i].room == copyRoomId && sprite[i].x == copyXPos && sprite[i].y == copyYPos) {
-					var copyId = sprite[i].id;
+				} else if (bitsy.sprite[i].room == copyRoomId && bitsy.sprite[i].x == copyXPos && bitsy.sprite[i].y == copyYPos) {
+					var copyId = bitsy.sprite[i].id;
 					drawAt('SPR', copyId, pasteXPos, pasteYPos, pasteRoomId);
 				}
 			}
-		} else if (sprite[targetId] != undefined) {
-			if (sprite[targetId] != 'A' && sprite[targetId].room == copyRoomId && sprite[targetId].x == copyXPos && sprite[targetId].y == copyYPos) {
-				var copyId = sprite[targetId].id;
+		} else if (bitsy.sprite[targetId] != undefined) {
+			if (bitsy.sprite[targetId] != 'A' && bitsy.sprite[targetId].room == copyRoomId && bitsy.sprite[targetId].x == copyXPos && bitsy.sprite[targetId].y == copyYPos) {
+				var copyId = bitsy.sprite[targetId].id;
 				drawAt('SPR', copyId, pasteXPos, pasteYPos, pasteRoomId);
 			}
 		}
@@ -953,10 +954,10 @@ function copyAt(mapId, targetId, copyXPos, copyYPos, copyRoomId, pasteXPos, past
 function copyBoxAt(mapId, targetId, x1, y1, x2, y2, copyRoomId, pasteXPos, pasteYPos, pasteRoomId) {
 	// Trim and sanitize X and Y Positions, and set relative positions if omitted.
 	if (x1 == undefined) {
-		x1 = player().x;
+		x1 = bitsy.player().x;
 	} else {
 		x1 = x1.toString().trim();
-		if (x1 == '') { x1 = player().x; } else if (x1.includes('+')) { x1 = player().x + parseInt(x1.substring(1)); } else if (x1.includes('-')) { x1 = player().x - parseInt(x1.substring(1)); }
+		if (x1 == '') { x1 = bitsy.player().x; } else if (x1.includes('+')) { x1 = bitsy.player().x + parseInt(x1.substring(1)); } else if (x1.includes('-')) { x1 = bitsy.player().x - parseInt(x1.substring(1)); }
 	}
 	if (x1 < 0 || x1 > 15) {
 		console.log('CLAMPING X1 POSITION. XPOS (' + x1 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
@@ -964,10 +965,10 @@ function copyBoxAt(mapId, targetId, x1, y1, x2, y2, copyRoomId, pasteXPos, paste
 	}
 	// X2
 	if (x2 == undefined) {
-		x2 = player().x;
+		x2 = bitsy.player().x;
 	} else {
 		x2 = x2.toString().trim();
-		if (x2 == '') { x2 = player().x; } else if (x2.includes('+')) { x2 = player().x + parseInt(x2.substring(1)); } else if (x2.includes('-')) { x2 = player().x - parseInt(x2.substring(1)); }
+		if (x2 == '') { x2 = bitsy.player().x; } else if (x2.includes('+')) { x2 = bitsy.player().x + parseInt(x2.substring(1)); } else if (x2.includes('-')) { x2 = bitsy.player().x - parseInt(x2.substring(1)); }
 	}
 	if (x2 < 0 || x2 > 15) {
 		console.log('CLAMPING X2 POSITION. xPos (' + x2 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
@@ -975,10 +976,10 @@ function copyBoxAt(mapId, targetId, x1, y1, x2, y2, copyRoomId, pasteXPos, paste
 	}
 	// Y1
 	if (y1 == undefined) {
-		y1 = player().y;
+		y1 = bitsy.player().y;
 	} else {
 		y1 = y1.toString().trim();
-		if (y1 == '') { y1 = player().y; } else if (y1.includes('+')) { y1 = player().y + parseInt(y1.substring(1)); } else if (y1.includes('-')) { y1 = player().y - parseInt(y1.substring(1)); }
+		if (y1 == '') { y1 = bitsy.player().y; } else if (y1.includes('+')) { y1 = bitsy.player().y + parseInt(y1.substring(1)); } else if (y1.includes('-')) { y1 = bitsy.player().y - parseInt(y1.substring(1)); }
 	}
 	if (y1 < 0 || y1 > 15) {
 		console.log('CLAMPING Y1 POSITION. XPOS (' + y1 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
@@ -986,10 +987,10 @@ function copyBoxAt(mapId, targetId, x1, y1, x2, y2, copyRoomId, pasteXPos, paste
 	}
 	// Y2
 	if (y2 == undefined) {
-		y2 = player().y;
+		y2 = bitsy.player().y;
 	} else {
 		y2 = y2.toString().trim();
-		if (y2 == '') { y2 = player().y; } else if (y2.includes('+')) { y2 = player().y + parseInt(y2.substring(1)); } else if (y2.includes('-')) { y2 = player().y - parseInt(y2.substring(1)); }
+		if (y2 == '') { y2 = bitsy.player().y; } else if (y2.includes('+')) { y2 = bitsy.player().y + parseInt(y2.substring(1)); } else if (y2.includes('-')) { y2 = bitsy.player().y - parseInt(y2.substring(1)); }
 	}
 	if (y2 < 0 || y2 > 15) {
 		console.log('CLAMPING Y2 POSITION. xPos (' + y2 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
@@ -1021,10 +1022,10 @@ function copyBoxAt(mapId, targetId, x1, y1, x2, y2, copyRoomId, pasteXPos, paste
 	}
 
 	if (copyRoomId == undefined) {
-		copyRoomId = curRoom;
+		copyRoomId = bitsy.curRoom;
 	} else {
 		copyRoomId = copyRoomId.toString().trim();
-		if (copyRoomId == '') { copyRoomId = curRoom; } else if (room[copyRoomId] == undefined) {
+		if (copyRoomId == '') { copyRoomId = bitsy.curRoom; } else if (bitsy.room[copyRoomId] == undefined) {
 			console.log("CAN'T COPY. ROOM ID (" + copyRoomId + ') NOT FOUND.');
 			return;
 		}
@@ -1032,10 +1033,10 @@ function copyBoxAt(mapId, targetId, x1, y1, x2, y2, copyRoomId, pasteXPos, paste
 
 	// Trim and sanitize Paste Position parameters, and set relative positions, even if omitted.
 	if (pasteXPos == undefined) {
-		pasteXPos = player().x;
+		pasteXPos = bitsy.player().x;
 	} else {
 		pasteXPos = pasteXPos.toString().trim();
-		if (pasteXPos == '') { pasteXPos = player().x; } else if (pasteXPos.includes('+')) { pasteXPos = player().x + parseInt(pasteXPos.substring(1)); } else if (pasteXPos.includes('-')) { pasteXPos = player().x - parseInt(pasteXPos.substring(1)); }
+		if (pasteXPos == '') { pasteXPos = bitsy.player().x; } else if (pasteXPos.includes('+')) { pasteXPos = bitsy.player().x + parseInt(pasteXPos.substring(1)); } else if (pasteXPos.includes('-')) { pasteXPos = bitsy.player().x - parseInt(pasteXPos.substring(1)); }
 	}
 	if (pasteXPos < 0 || pasteXPos > 15) {
 		console.log("CAN'T PASTE. X POSITION (" + pasteXPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
@@ -1046,10 +1047,10 @@ function copyBoxAt(mapId, targetId, x1, y1, x2, y2, copyRoomId, pasteXPos, paste
 
 
 	if (pasteYPos == undefined) {
-		pasteYPos = player().y;
+		pasteYPos = bitsy.player().y;
 	} else {
 		pasteYPos = pasteYPos.toString().trim();
-		if (pasteYPos == '') { pasteYPos = player().y; } else if (pasteYPos.includes('+')) { pasteYPos = player().y + parseInt(pasteYPos.substring(1)); } else if (pasteYPos.includes('-')) { pasteYPos = player().y - parseInt(pasteYPos.substring(1)); }
+		if (pasteYPos == '') { pasteYPos = bitsy.player().y; } else if (pasteYPos.includes('+')) { pasteYPos = bitsy.player().y + parseInt(pasteYPos.substring(1)); } else if (pasteYPos.includes('-')) { pasteYPos = bitsy.player().y - parseInt(pasteYPos.substring(1)); }
 	}
 	if (pasteYPos < 0 || pasteYPos > 15) {
 		console.log("CAN'T PASTE. Y POSITION (" + pasteYPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
@@ -1060,10 +1061,10 @@ function copyBoxAt(mapId, targetId, x1, y1, x2, y2, copyRoomId, pasteXPos, paste
 
 
 	if (pasteRoomId == undefined) {
-		pasteRoomId = curRoom;
+		pasteRoomId = bitsy.curRoom;
 	} else {
 		pasteRoomId = pasteRoomId.toString().trim();
-		if (pasteRoomId == '') { pasteRoomId = curRoom; } else if (room[pasteRoomId] == undefined) {
+		if (pasteRoomId == '') { pasteRoomId = bitsy.curRoom; } else if (bitsy.room[pasteRoomId] == undefined) {
 			console.log("CAN'T PASTE. ROOM ID (" + pasteRoomId + ') NOT FOUND.');
 			return;
 		}
@@ -1092,8 +1093,8 @@ function copyBoxAt(mapId, targetId, x1, y1, x2, y2, copyRoomId, pasteXPos, paste
 			colId++;
 			// If TIL or undefined.
 			if (mapId.toUpperCase() != 'ITM' && mapId.toUpperCase() != 'SPR') {
-				if (targetId == 'ANY' || room[copyRoomId].tilemap[yPos][xPos] == targetId) {
-					copyIds.push(room[copyRoomId].tilemap[yPos][xPos]);
+				if (targetId == 'ANY' || bitsy.room[copyRoomId].tilemap[yPos][xPos] == targetId) {
+					copyIds.push(bitsy.room[copyRoomId].tilemap[yPos][xPos]);
 					copyMaps.push('TIL');
 					copyXs.push(pasteXPos + rowId);
 					copyYs.push(pasteYPos + colId);
@@ -1103,8 +1104,8 @@ function copyBoxAt(mapId, targetId, x1, y1, x2, y2, copyRoomId, pasteXPos, paste
 			// If ITM or undefined.
 			if (mapId.toUpperCase() != 'TIL' && mapId.toUpperCase() != 'SPR') {
 				// Iterate backwards through items, to prevent issues with removed indexes
-				for (var i = room[copyRoomId].items.length - 1; i >= 0; i--) {
-					var targetItem = room[copyRoomId].items[i];
+				for (var i = bitsy.room[copyRoomId].items.length - 1; i >= 0; i--) {
+					var targetItem = bitsy.room[copyRoomId].items[i];
 					if (targetId == 'ANY' || targetId == targetItem.id) {
 						if (targetItem.x == xPos && targetItem.y == yPos) {
 							copyIds.push(targetItem.id);
@@ -1119,19 +1120,19 @@ function copyBoxAt(mapId, targetId, x1, y1, x2, y2, copyRoomId, pasteXPos, paste
 			// If SPR or undefined.
 			if (mapId.toUpperCase() != 'TIL' && mapId.toUpperCase() != 'ITM') {
 				if (targetId == 'ANY') {
-					for (i in sprite) {
-						if (sprite[i].id == 'A') {
+					for (i in bitsy.sprite) {
+						if (bitsy.sprite[i].id == 'A') {
 							console.log("CAN'T TARGET AVATAR. SKIPPING.");
-						} else if (sprite[i].room == copyRoomId && sprite[i].x == xPos && sprite[i].y == yPos) {
-							copyIds.push(sprite[i].id);
+						} else if (bitsy.sprite[i].room == copyRoomId && bitsy.sprite[i].x == xPos && bitsy.sprite[i].y == yPos) {
+							copyIds.push(bitsy.sprite[i].id);
 							copyMaps.push('SPR');
 							copyXs.push(pasteXPos + xPos - 1);
 							copyYs.push(pasteYPos + yPos - 1);
 						}
 					}
-				} else if (sprite[targetId] != undefined) {
-					if (sprite[targetId] != 'A' && sprite[targetId].room == copyRoomId && sprite[targetId].x == xPos && sprite[targetId].y == yPos) {
-						copyIds.push(sprite[i].id);
+				} else if (bitsy.sprite[targetId] != undefined) {
+					if (bitsy.sprite[targetId] != 'A' && bitsy.sprite[targetId].room == copyRoomId && bitsy.sprite[targetId].x == xPos && bitsy.sprite[targetId].y == yPos) {
+						copyIds.push(bitsy.sprite[i].id);
 						copyMaps.push('SPR');
 						copyXs.push(pasteXPos + xPos - 1);
 						copyYs.push(pasteYPos + yPos - 1);
