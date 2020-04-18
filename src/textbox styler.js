@@ -121,7 +121,7 @@ TODO: For future versions
 - Redraw existing textbox contents in new style, when switching, and then continue.
 - Recalculate textbox's center position, considering textbox margins in center calculation?
 */
-
+import bitsy from 'bitsy';
 import {
 	inject,
 	addDialogTag,
@@ -983,27 +983,27 @@ var textboxStyler = window.textboxStyler = {
 	// Updates parameters of the textbox based on style settings.
 	// TODO: see if you can re-render existing textbox content in new style?
 	updateTextbox: function () {
-		textboxInfo.width = textboxStyler.activeStyle.textboxWidth;
-		// textboxInfo.height = textboxStyler.activeStyle.textPaddingY + textboxStyler.activeStyle.borderHeight - 2 + (2 * textboxStyler.activeStyle.textMinLines);
-		textboxInfo.top = textboxStyler.activeStyle.textboxMarginY;
-		textboxInfo.left = textboxStyler.activeStyle.textboxMarginX;
-		textboxInfo.bottom = textboxStyler.activeStyle.textboxMarginY;
-		textboxInfo.font_scale = textboxStyler.activeStyle.textScale / 4;
-		textboxInfo.padding_vert = textboxStyler.activeStyle.textPaddingY;
-		textboxInfo.padding_horz = textboxStyler.activeStyle.textPaddingX;
-		textboxInfo.arrow_height = textboxStyler.activeStyle.textPaddingY + textboxStyler.activeStyle.borderHeight - 4;
+		window.textboxInfo.width = textboxStyler.activeStyle.textboxWidth;
+		// window.textboxInfo.height = textboxStyler.activeStyle.textPaddingY + textboxStyler.activeStyle.borderHeight - 2 + (2 * textboxStyler.activeStyle.textMinLines);
+		window.textboxInfo.top = textboxStyler.activeStyle.textboxMarginY;
+		window.textboxInfo.left = textboxStyler.activeStyle.textboxMarginX;
+		window.textboxInfo.bottom = textboxStyler.activeStyle.textboxMarginY;
+		window.textboxInfo.font_scale = textboxStyler.activeStyle.textScale / 4;
+		window.textboxInfo.padding_vert = textboxStyler.activeStyle.textPaddingY;
+		window.textboxInfo.padding_horz = textboxStyler.activeStyle.textPaddingX;
+		window.textboxInfo.arrow_height = textboxStyler.activeStyle.textPaddingY + textboxStyler.activeStyle.borderHeight - 4;
 
-		pixelsPerRow = (textboxStyler.activeStyle.textboxWidth * 2) - (textboxStyler.activeStyle.borderWidth * 2) - (textboxStyler.activeStyle.textPaddingX * 2);
+		var pixelsPerRow = (textboxStyler.activeStyle.textboxWidth * 2) - (textboxStyler.activeStyle.borderWidth * 2) - (textboxStyler.activeStyle.textPaddingX * 2);
 
-		textboxInfo.img = ctx.createImageData(textboxInfo.width * scale, textboxInfo.height * scale);
+		window.textboxInfo.img = bitsy.ctx.createImageData(window.textboxInfo.width * bitsy.scale, window.textboxInfo.height * bitsy.scale);
 	},
 	// Draw border to the background of the textbox image, before rendering text or arrows.
 	drawBorder: function () {
 		// console.log ("DRAWING TEXTBOX BORDER");
 		// Iterates through each pixel of the textbox, and determines if a border pixel should be drawn.
 		// Compares 1D array of textbox pixels to 1D arrays for each border sprite, to determine whether to draw a pixel.
-		for (var y = 0; y < (4 / textboxStyler.activeStyle.borderScale) * textboxInfo.height; y++) {
-			for (var x = 0; x < (4 / textboxStyler.activeStyle.borderScale) * textboxInfo.width; x++) {
+		for (var y = 0; y < (4 / textboxStyler.activeStyle.borderScale) * window.textboxInfo.height; y++) {
+			for (var x = 0; x < (4 / textboxStyler.activeStyle.borderScale) * window.textboxInfo.width; x++) {
 				// NOTE: borderXId and borderYId translate message box coordinates to border tile coordinates.
 				// Use modulo to translate textbox space into tiles, for drawing borders pixel-by-pixel.
 				// For bottom/right borders, border sprites should be anchored to the bottom/right instead.
@@ -1011,13 +1011,13 @@ var textboxStyler = window.textboxStyler = {
 				// borderDId and borderRId get pixel coordinates anchored to down or right (for right/bottom edges)
 				var borderYId = (y % textboxStyler.activeStyle.borderHeight);
 				var borderXId = (x % textboxStyler.activeStyle.borderWidth);
-				var borderDId = ((y + ((4 / textboxStyler.activeStyle.borderScale) * textboxInfo.height)) % textboxStyler.activeStyle.borderHeight);
-				var borderRId = ((x + ((4 / textboxStyler.activeStyle.borderScale) * textboxInfo.width)) % textboxStyler.activeStyle.borderWidth);
+				var borderDId = ((y + ((4 / textboxStyler.activeStyle.borderScale) * window.textboxInfo.height)) % textboxStyler.activeStyle.borderHeight);
+				var borderRId = ((x + ((4 / textboxStyler.activeStyle.borderScale) * window.textboxInfo.width)) % textboxStyler.activeStyle.borderWidth);
 
 				// NOTE: There's a weird bug with odd vs even textbox heights. Here's a hacky fix for now.
 				// TODO: Handle decimal heights? Still bugs with those (may come up with bitsy's text scaling)
-				if (textboxInfo.height % textboxStyler.activeStyle.borderScale != 0) {
-					borderDId = ((y - 4 + ((4 / textboxStyler.activeStyle.borderScale) * textboxInfo.height)) % textboxStyler.activeStyle.borderHeight);
+				if (window.textboxInfo.height % textboxStyler.activeStyle.borderScale != 0) {
+					borderDId = ((y - 4 + ((4 / textboxStyler.activeStyle.borderScale) * window.textboxInfo.height)) % textboxStyler.activeStyle.borderHeight);
 				}
 
 				// Calculates index in the 1D array of the border sprite.
@@ -1028,9 +1028,9 @@ var textboxStyler = window.textboxStyler = {
 
 				// Determines if the current pixel is along one of the textbox's edges, or if it's in the center.
 				var borderTop = y < textboxStyler.activeStyle.borderHeight;
-				var borderBottom = y >= textboxInfo.height * (4 / textboxStyler.activeStyle.borderScale) - textboxStyler.activeStyle.borderHeight;
+				var borderBottom = y >= window.textboxInfo.height * (4 / textboxStyler.activeStyle.borderScale) - textboxStyler.activeStyle.borderHeight;
 				var borderLeft = x < textboxStyler.activeStyle.borderWidth;
-				var borderRight = x >= textboxInfo.width * (4 / textboxStyler.activeStyle.borderScale) - textboxStyler.activeStyle.borderWidth;
+				var borderRight = x >= window.textboxInfo.width * (4 / textboxStyler.activeStyle.borderScale) - textboxStyler.activeStyle.borderWidth;
 
 				// Does this pixel is draw???
 				// 1= draw a border pixel, 0= No! Draw a border bg pixel instead
@@ -1062,58 +1062,58 @@ var textboxStyler = window.textboxStyler = {
 				// scaling shenanigans (maps sprite scale pixels to bitsy/screen-scale pixels)
 				for (var sy = 0; sy < textboxStyler.activeStyle.borderScale; sy++) {
 					for (var sx = 0; sx < textboxStyler.activeStyle.borderScale; sx++) {
-						var pxl = 4 * ((((textboxStyler.activeStyle.borderScale * y) + sy) * (4 * textboxInfo.width)) + (textboxStyler.activeStyle.borderScale * x) + sx);
+						var pxl = 4 * ((((textboxStyler.activeStyle.borderScale * y) + sy) * (4 * window.textboxInfo.width)) + (textboxStyler.activeStyle.borderScale * x) + sx);
 
 						// If it's a border pixel, Retrieves RGBA values for the border, and draws it.
 						if (borderDraw) {
 							if (borderTop || borderBottom || borderLeft || borderRight) {
-								textboxInfo.img.data[pxl + 0] = textboxStyler.activeStyle.borderColor[0];
-								textboxInfo.img.data[pxl + 1] = textboxStyler.activeStyle.borderColor[1];
-								textboxInfo.img.data[pxl + 2] = textboxStyler.activeStyle.borderColor[2];
-								textboxInfo.img.data[pxl + 3] = textboxStyler.activeStyle.borderColor[3];
+								window.textboxInfo.img.data[pxl + 0] = textboxStyler.activeStyle.borderColor[0];
+								window.textboxInfo.img.data[pxl + 1] = textboxStyler.activeStyle.borderColor[1];
+								window.textboxInfo.img.data[pxl + 2] = textboxStyler.activeStyle.borderColor[2];
+								window.textboxInfo.img.data[pxl + 3] = textboxStyler.activeStyle.borderColor[3];
 							} else {
-								textboxInfo.img.data[pxl + 0] = textboxStyler.activeStyle.borderMidColor[0];
-								textboxInfo.img.data[pxl + 1] = textboxStyler.activeStyle.borderMidColor[1];
-								textboxInfo.img.data[pxl + 2] = textboxStyler.activeStyle.borderMidColor[2];
-								textboxInfo.img.data[pxl + 3] = textboxStyler.activeStyle.borderMidColor[3];
+								window.textboxInfo.img.data[pxl + 0] = textboxStyler.activeStyle.borderMidColor[0];
+								window.textboxInfo.img.data[pxl + 1] = textboxStyler.activeStyle.borderMidColor[1];
+								window.textboxInfo.img.data[pxl + 2] = textboxStyler.activeStyle.borderMidColor[2];
+								window.textboxInfo.img.data[pxl + 3] = textboxStyler.activeStyle.borderMidColor[3];
 							}
 							// DEBUG COLORS. UNCOMMENT TO DRAW PIXELS BASED ON TEXTBOX COORDINATES, 0-255
-							/* textboxInfo.img.data[pxl+0] = 204-(x);
-							textboxInfo.img.data[pxl+1] = 204-(x+y);
-							textboxInfo.img.data[pxl+2] = 204-(y*2);
-							textboxInfo.img.data[pxl+3] = 255;
+							/* window.textboxInfo.img.data[pxl+0] = 204-(x);
+							window.textboxInfo.img.data[pxl+1] = 204-(x+y);
+							window.textboxInfo.img.data[pxl+2] = 204-(y*2);
+							window.textboxInfo.img.data[pxl+3] = 255;
 							//DRAWS TOP-LEFT-ANCHORED GRID TILE COORDINATES IN GREY
 							if (y % borderHeight == 0 || x % borderWidth == 0) {
-								textboxInfo.img.data[pxl+0] = 128;
-								textboxInfo.img.data[pxl+1] = 128;
-								textboxInfo.img.data[pxl+2] = 128;
-								textboxInfo.img.data[pxl+3] = 255;
+								window.textboxInfo.img.data[pxl+0] = 128;
+								window.textboxInfo.img.data[pxl+1] = 128;
+								window.textboxInfo.img.data[pxl+2] = 128;
+								window.textboxInfo.img.data[pxl+3] = 255;
 							} */
 						}
 						// If it's a border BG pixel, gets RGBA colors based on if it's on an edge or in middle.
 						else {
 							if (borderTop || borderBottom || borderLeft || borderRight) {
-								textboxInfo.img.data[pxl + 0] = textboxStyler.activeStyle.borderBGColor[0];
-								textboxInfo.img.data[pxl + 1] = textboxStyler.activeStyle.borderBGColor[1];
-								textboxInfo.img.data[pxl + 2] = textboxStyler.activeStyle.borderBGColor[2];
-								textboxInfo.img.data[pxl + 3] = textboxStyler.activeStyle.borderBGColor[3];
+								window.textboxInfo.img.data[pxl + 0] = textboxStyler.activeStyle.borderBGColor[0];
+								window.textboxInfo.img.data[pxl + 1] = textboxStyler.activeStyle.borderBGColor[1];
+								window.textboxInfo.img.data[pxl + 2] = textboxStyler.activeStyle.borderBGColor[2];
+								window.textboxInfo.img.data[pxl + 3] = textboxStyler.activeStyle.borderBGColor[3];
 							} else {
-								textboxInfo.img.data[pxl + 0] = textboxStyler.activeStyle.textboxColor[0];
-								textboxInfo.img.data[pxl + 1] = textboxStyler.activeStyle.textboxColor[1];
-								textboxInfo.img.data[pxl + 2] = textboxStyler.activeStyle.textboxColor[2];
-								textboxInfo.img.data[pxl + 3] = textboxStyler.activeStyle.textboxColor[3];
+								window.textboxInfo.img.data[pxl + 0] = textboxStyler.activeStyle.textboxColor[0];
+								window.textboxInfo.img.data[pxl + 1] = textboxStyler.activeStyle.textboxColor[1];
+								window.textboxInfo.img.data[pxl + 2] = textboxStyler.activeStyle.textboxColor[2];
+								window.textboxInfo.img.data[pxl + 3] = textboxStyler.activeStyle.textboxColor[3];
 							}
 							// DEBUG COLORS. UNCOMMENT TO DRAW PIXELS BASED ON TEXTBOX COORDINATES, 0-255
-							/* textboxInfo.img.data[pxl+0] = (x)+102;
-							textboxInfo.img.data[pxl+1] = (x+y);
-							textboxInfo.img.data[pxl+2] = (y*2)+51;
-							textboxInfo.img.data[pxl+3] = 255;
+							/* window.textboxInfo.img.data[pxl+0] = (x)+102;
+							window.textboxInfo.img.data[pxl+1] = (x+y);
+							window.textboxInfo.img.data[pxl+2] = (y*2)+51;
+							window.textboxInfo.img.data[pxl+3] = 255;
 							//DRAWS TOP-LEFT-ANCHORED GRID COORDINATES IN GREY
 							if (y % borderHeight == 0 || x % borderWidth == 0) {
-								textboxInfo.img.data[pxl+0] = 76;
-								textboxInfo.img.data[pxl+1] = 76;
-								textboxInfo.img.data[pxl+2] = 76;
-								textboxInfo.img.data[pxl+3] = 255;
+								window.textboxInfo.img.data[pxl+0] = 76;
+								window.textboxInfo.img.data[pxl+1] = 76;
+								window.textboxInfo.img.data[pxl+2] = 76;
+								window.textboxInfo.img.data[pxl+3] = 255;
 							} */
 						}
 					}
