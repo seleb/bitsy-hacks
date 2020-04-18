@@ -410,7 +410,7 @@ function overdrawRecoloredTiles(room, context, frameIndex) {
 			return spr.room === room.id;
 		})
 		.forEach(function (spr) {
-		// Get palette map at sprite's coordinate
+			// Get palette map at sprite's coordinate
 			var spritePaletteId = getPaletteAt(spr.x, spr.y);
 			// skip if palette is invalid or default
 			if (!bitsy.palette[spritePaletteId] || bitsy.palette[spritePaletteId] === paletteId) {

@@ -345,15 +345,15 @@ export var hackOptions = {
 	],
 
 	dialogStyles: {
-	// You can define alternate Dialog Styles here, which can be switched to in-game from dialog.
-	// These can be switched between using the (Style "styleName") or (ApplyStyle "styleName") commands.
-	// These Dialog Styles are meant as examples. Feel free to edit, rename, or remove them.
+		// You can define alternate Dialog Styles here, which can be switched to in-game from dialog.
+		// These can be switched between using the (Style "styleName") or (ApplyStyle "styleName") commands.
+		// These Dialog Styles are meant as examples. Feel free to edit, rename, or remove them.
 		custom: {
-		// Copy any hackOptions from above into this section, and modify them, to create a new Style.
+			// Copy any hackOptions from above into this section, and modify them, to create a new Style.
 
 		},
 		vanilla: {
-		// An example style, which emulates the original Bitsy textbox.
+			// An example style, which emulates the original Bitsy textbox.
 			verticalPosition: 'shift',
 			horizontalPosition: 'center',
 			textboxWidth: 104,
@@ -377,12 +377,12 @@ export var hackOptions = {
 			],
 		},
 		centered: {
-		// An example style, that centers the textbox as with Starting or Ending text.
+			// An example style, that centers the textbox as with Starting or Ending text.
 			verticalPosition: 'center',
 			horizontalPosition: 'center',
 		},
 		vertical: {
-		// An example style, that positions the textbox vertically, on the left or right side.
+			// An example style, that positions the textbox vertically, on the left or right side.
 			verticalPosition: 'center',
 			horizontalPosition: 'shift',
 			textboxWidth: 48,
@@ -390,7 +390,7 @@ export var hackOptions = {
 			textMaxLines: 16,
 		},
 		corner: {
-		// An example style, which positions a resizing textbox in the corner opposite the player.
+			// An example style, which positions a resizing textbox in the corner opposite the player.
 			verticalPosition: 'shift',
 			horizontalPosition: 'shift',
 			textboxWidth: 64,
@@ -398,7 +398,7 @@ export var hackOptions = {
 			textMaxLines: 8,
 		},
 		inverted: {
-		// An example style, which inverts the normal textbox colors
+			// An example style, which inverts the normal textbox colors
 			textboxColor: [255, 255, 255, 255],
 			textColor: [0, 0, 0, 255],
 			borderColor: [128, 128, 128, 255],
@@ -408,7 +408,7 @@ export var hackOptions = {
 			arrowBGColor: [255, 255, 255, 255],
 		},
 		smallBorder: {
-		// An example style, which uses a smaller border with a blue background.
+			// An example style, which uses a smaller border with a blue background.
 			borderWidth: 4,
 			borderHeight: 4,
 			textPaddingX: 4,
@@ -846,7 +846,13 @@ var textboxStyler = window.textboxStyler = {
 			x = curX;
 		} else {
 			x = x.toString().trim();
-			if (x == '') { x = curX; } else if (x.includes('+')) { x = curX + parseInt(x.substring(1), 10); } else if (x.includes('-')) { x = curX - parseInt(x.substring(1), 10); }
+			if (x == '') {
+				x = curX;
+			} else if (x.includes('+')) {
+				x = curX + parseInt(x.substring(1), 10);
+			} else if (x.includes('-')) {
+				x = curX - parseInt(x.substring(1), 10);
+			}
 		}
 		if (x < -128 || x > 128) {
 			console.log('CLAMPING X POSITION. XPOS (' + x + ') OUT OF BOUNDS. 0-128 EXPECTED.');
@@ -857,7 +863,13 @@ var textboxStyler = window.textboxStyler = {
 			y = curY;
 		} else {
 			y = y.toString().trim();
-			if (y == '') { y = curY; } else if (y.includes('+')) { y = curY + parseInt(y.substring(1), 10); } else if (y.includes('-')) { y = curY - parseInt(y.substring(1), 10); }
+			if (y == '') {
+				y = curY;
+			} else if (y.includes('+')) {
+				y = curY + parseInt(y.substring(1), 10);
+			} else if (y.includes('-')) {
+				y = curY - parseInt(y.substring(1), 10);
+			}
 		}
 		if (y < -128 || y > 128) {
 			console.log('CLAMPING Y POSITION. YPOS (' + y + ') OUT OF BOUNDS. 0-128 EXPECTED.');
@@ -868,7 +880,13 @@ var textboxStyler = window.textboxStyler = {
 			boxWidth = curWidth;
 		} else {
 			boxWidth = boxWidth.toString().trim();
-			if (boxWidth == '') { boxWidth = curWidth; } else if (boxWidth.includes('+')) { boxWidth = curWidth + parseInt(boxWidth.substring(1), 10); } else if (boxWidth.includes('-')) { boxWidth = curWidth - parseInt(boxWidth.substring(1), 10); }
+			if (boxWidth == '') {
+				boxWidth = curWidth;
+			} else if (boxWidth.includes('+')) {
+				boxWidth = curWidth + parseInt(boxWidth.substring(1), 10);
+			} else if (boxWidth.includes('-')) {
+				boxWidth = curWidth - parseInt(boxWidth.substring(1), 10);
+			}
 		}
 		if (boxWidth < 0 || boxWidth > 128) {
 			console.log('CLAMPING WIDTH (' + (boxWidth) + '). 0-128 EXPECTED.');
@@ -879,7 +897,13 @@ var textboxStyler = window.textboxStyler = {
 			boxMinLines = curMinLines;
 		} else {
 			boxMinLines = boxMinLines.toString().trim();
-			if (boxMinLines == '') { boxMinLines = curMinLines; } else if (boxMinLines.includes('+')) { boxMinLines = curMinLines + parseInt(boxMinLines.substring(1), 10); } else if (boxMinLines.includes('-')) { boxMinLines = curMinLines - parseInt(boxMinLines.substring(1), 10); }
+			if (boxMinLines == '') {
+				boxMinLines = curMinLines;
+			} else if (boxMinLines.includes('+')) {
+				boxMinLines = curMinLines + parseInt(boxMinLines.substring(1), 10);
+			} else if (boxMinLines.includes('-')) {
+				boxMinLines = curMinLines - parseInt(boxMinLines.substring(1), 10);
+			}
 		}
 		if (boxMinLines < 0 || boxMinLines > 128) {
 			console.log('CLAMPING TEXT MIN LINES (' + (boxMinLines) + '). 0-128 EXPECTED.');
@@ -890,7 +914,13 @@ var textboxStyler = window.textboxStyler = {
 			boxMaxLines = curMaxLines;
 		} else {
 			boxMaxLines = boxMaxLines.toString().trim();
-			if (boxMaxLines == '') { boxMaxLines = boxMaxLines; } else if (boxMaxLines.includes('+')) { boxMaxLines += parseInt(boxMaxLines.substring(1), 10); } else if (boxMaxLines.includes('-')) { boxMaxLines -= parseInt(boxMaxLines.substring(1), 10); }
+			if (boxMaxLines == '') {
+				boxMaxLines = boxMaxLines;
+			} else if (boxMaxLines.includes('+')) {
+				boxMaxLines += parseInt(boxMaxLines.substring(1), 10);
+			} else if (boxMaxLines.includes('-')) {
+				boxMaxLines -= parseInt(boxMaxLines.substring(1), 10);
+			}
 		}
 		if (boxMaxLines < 0 || boxMaxLines > 128) {
 			console.log('CLAMPING TEXT MAX LINES (' + (boxMaxLines) + '). 0-128 EXPECTED.');
@@ -920,7 +950,13 @@ var textboxStyler = window.textboxStyler = {
 			x1 = curX1;
 		} else {
 			x1 = x1.toString().trim();
-			if (x1 == '') { x1 = curX1; } else if (x1.includes('+')) { x1 = curX1 + parseInt(x1.substring(1), 10); } else if (x1.includes('-')) { x1 = curX1 - parseInt(x1.substring(1), 10); }
+			if (x1 == '') {
+				x1 = curX1;
+			} else if (x1.includes('+')) {
+				x1 = curX1 + parseInt(x1.substring(1), 10);
+			} else if (x1.includes('-')) {
+				x1 = curX1 - parseInt(x1.substring(1), 10);
+			}
 		}
 		if (x1 < 0 || x1 > 128) {
 			console.log('CLAMPING X1 POSITION. XPOS (' + x1 + ') OUT OF BOUNDS. 0-128 EXPECTED.');
@@ -931,7 +967,13 @@ var textboxStyler = window.textboxStyler = {
 			x2 = curX2;
 		} else {
 			x2 = x2.toString().trim();
-			if (x2 == '') { x2 = curX2; } else if (x2.includes('+')) { x2 = curX2 + parseInt(x2.substring(1), 10); } else if (x2.includes('-')) { x2 = curX2 - parseInt(x2.substring(1), 10); }
+			if (x2 == '') {
+				x2 = curX2;
+			} else if (x2.includes('+')) {
+				x2 = curX2 + parseInt(x2.substring(1), 10);
+			} else if (x2.includes('-')) {
+				x2 = curX2 - parseInt(x2.substring(1), 10);
+			}
 		}
 		if (x2 < 0 || x2 > 128) {
 			console.log('CLAMPING X2 POSITION. xPos (' + x2 + ') OUT OF BOUNDS. 0-128 EXPECTED.');
@@ -942,7 +984,13 @@ var textboxStyler = window.textboxStyler = {
 			y1 = curY1;
 		} else {
 			y1 = y1.toString().trim();
-			if (y1 == '') { y1 = curY1; } else if (y1.includes('+')) { y1 = curY1 + parseInt(y1.substring(1), 10); } else if (y1.includes('-')) { y1 = curY1 - parseInt(y1.substring(1), 10); }
+			if (y1 == '') {
+				y1 = curY1;
+			} else if (y1.includes('+')) {
+				y1 = curY1 + parseInt(y1.substring(1), 10);
+			} else if (y1.includes('-')) {
+				y1 = curY1 - parseInt(y1.substring(1), 10);
+			}
 		}
 		if (y1 < 0 || y1 > 128) {
 			console.log('CLAMPING Y1 POSITION. XPOS (' + y1 + ') OUT OF BOUNDS. 0-128 EXPECTED.');
@@ -953,7 +1001,13 @@ var textboxStyler = window.textboxStyler = {
 			y2 = curY2;
 		} else {
 			y2 = y2.toString().trim();
-			if (y2 == '') { y2 = curY2; } else if (y2.includes('+')) { y2 = curY2 + parseInt(y2.substring(1), 10); } else if (y2.includes('-')) { y2 = curY2 - parseInt(y2.substring(1), 10); }
+			if (y2 == '') {
+				y2 = curY2;
+			} else if (y2.includes('+')) {
+				y2 = curY2 + parseInt(y2.substring(1), 10);
+			} else if (y2.includes('-')) {
+				y2 = curY2 - parseInt(y2.substring(1), 10);
+			}
 		}
 		if (y2 < 0 || y2 > 128) {
 			console.log('CLAMPING Y2 POSITION. xPos (' + y2 + ') OUT OF BOUNDS. 0-128 EXPECTED.');
@@ -1039,25 +1093,43 @@ var textboxStyler = window.textboxStyler = {
 				// Retrieve pixel data from appropriate sprite. Special handling for bottom/right borders!
 				if (borderBottom) {
 					// Bottom Left Corner
-					if (borderLeft) { borderDraw = textboxStyler.activeStyle.borderDL[bottomPxl]; }
+					if (borderLeft) {
+						borderDraw = textboxStyler.activeStyle.borderDL[bottomPxl];
+					}
 					// Bottom Right Corner
-					else if (borderRight) { borderDraw = textboxStyler.activeStyle.borderDR[bottomRightPxl]; }
+					else if (borderRight) {
+						borderDraw = textboxStyler.activeStyle.borderDR[bottomRightPxl];
+					}
 					// Bottom Middle Edge
-					else { borderDraw = textboxStyler.activeStyle.borderD[bottomPxl]; }
+					else {
+						borderDraw = textboxStyler.activeStyle.borderD[bottomPxl];
+					}
 				} else if (borderTop) {
 					// Top Left Corner
-					if (borderLeft) { borderDraw = textboxStyler.activeStyle.borderUL[borderPxl]; }
+					if (borderLeft) {
+						borderDraw = textboxStyler.activeStyle.borderUL[borderPxl];
+					}
 					// Top Right Corner
-					else if (borderRight) { borderDraw = textboxStyler.activeStyle.borderUR[rightPxl]; }
+					else if (borderRight) {
+						borderDraw = textboxStyler.activeStyle.borderUR[rightPxl];
+					}
 					// Top Middle Edge
-					else { borderDraw = textboxStyler.activeStyle.borderU[borderPxl]; }
+					else {
+						borderDraw = textboxStyler.activeStyle.borderU[borderPxl];
+					}
 				}
 				// Left Edge
-				else if (borderLeft) { borderDraw = textboxStyler.activeStyle.borderL[borderPxl]; }
+				else if (borderLeft) {
+					borderDraw = textboxStyler.activeStyle.borderL[borderPxl];
+				}
 				// Right Edge
-				else if (borderRight) { borderDraw = textboxStyler.activeStyle.borderR[rightPxl]; }
+				else if (borderRight) {
+					borderDraw = textboxStyler.activeStyle.borderR[rightPxl];
+				}
 				// Middle
-				else { borderDraw = textboxStyler.activeStyle.borderM[borderPxl]; }
+				else {
+					borderDraw = textboxStyler.activeStyle.borderM[borderPxl];
+				}
 
 				// scaling shenanigans (maps sprite scale pixels to bitsy/screen-scale pixels)
 				for (var sy = 0; sy < textboxStyler.activeStyle.borderScale; sy++) {
