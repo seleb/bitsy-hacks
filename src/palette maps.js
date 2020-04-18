@@ -118,38 +118,6 @@ import {
 	addDualDialogTag,
 } from './helpers/kitsy-script-toolkit';
 
-// Once world is parsed, parse the Palette Map data
-after('parseWorld', function () {
-	parsePaletteMaps();
-});
-
-// Do a second pass after drawRoom, to overdraw any tiles that aren't the default palette
-after('drawRoom', function (room, context, frameIndex) {
-	overdrawRecoloredTiles(room, context, frameIndex);
-});
-
-// Implement tags to set a room's Default Palette
-addDualDialogTag('palette', function (environment, parameters) {
-	var params = parameters[0].split(',');
-	setRoomPalette(params[0], params[1]);
-});
-
-// Implement tags to modify a room's Palette Map
-addDualDialogTag('tilePalette', function (environment, parameters) {
-	var params = parameters[0].split(',');
-	setPaletteAt(params[0], params[1], params[2], params[3]);
-});
-
-// Implement tags to delete a room's Palette Map
-addDualDialogTag('clearTilePalette', function (environment, parameters) {
-	clearPaletteMap(parameters[0]);
-});
-
-// Implement tags to set a reset a room's Palette Map to starting values
-addDualDialogTag('resetTilePalette', function (environment, parameters) {
-	resetPaletteMap(parameters[0]);
-});
-
 export var hackOptions = {
 	paletteTag: '#PAL',
 	// Add this flag to Tile/Sprite/Item Name, followed by a Palette ID (#PAL0, #PALa, etc.)
@@ -227,6 +195,38 @@ export var hackOptions = {
 		],
 	},
 };
+
+// Once world is parsed, parse the Palette Map data
+after('parseWorld', function () {
+	parsePaletteMaps();
+});
+
+// Do a second pass after drawRoom, to overdraw any tiles that aren't the default palette
+after('drawRoom', function (room, context, frameIndex) {
+	overdrawRecoloredTiles(room, context, frameIndex);
+});
+
+// Implement tags to set a room's Default Palette
+addDualDialogTag('palette', function (environment, parameters) {
+	var params = parameters[0].split(',');
+	setRoomPalette(params[0], params[1]);
+});
+
+// Implement tags to modify a room's Palette Map
+addDualDialogTag('tilePalette', function (environment, parameters) {
+	var params = parameters[0].split(',');
+	setPaletteAt(params[0], params[1], params[2], params[3]);
+});
+
+// Implement tags to delete a room's Palette Map
+addDualDialogTag('clearTilePalette', function (environment, parameters) {
+	clearPaletteMap(parameters[0]);
+});
+
+// Implement tags to set a reset a room's Palette Map to starting values
+addDualDialogTag('resetTilePalette', function (environment, parameters) {
+	resetPaletteMap(parameters[0]);
+});
 
 // The "default" Palette Map is applied to all rooms that don't have a Palette Map defined.
 // Normally each coordinate is set to use the Room's Default Palette using "-", but this can be edited.
