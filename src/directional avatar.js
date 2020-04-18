@@ -27,14 +27,18 @@ import {
 } from './helpers/edit image at runtime';
 
 export var hackOptions = {
-	// If `horizontalFlipAllowed` is true:
-	// 	pressing left will make the player's sprite face backwards
-	// 	pressing right will make the player's sprite face forwards
-	horizontalFlipAllowed: true,
-	// If `verticalFlipAllowed` is true:
-	// 	pressing down will make the player's sprite upside-down
-	// 	pressing up will make the player's sprite right-side up
-	verticalFlipAllowed: false,
+	allowed: function () {
+		return {
+			// If `horizontalFlipAllowed` is true:
+			// 	pressing left will make the player's sprite face backwards
+			// 	pressing right will make the player's sprite face forwards
+			horizontalFlipAllowed: true,
+			// If `verticalFlipAllowed` is true:
+			// 	pressing down will make the player's sprite upside-down
+			// 	pressing up will make the player's sprite right-side up
+			verticalFlipAllowed: false,
+		};
+	},
 };
 
 var hflip = false;
@@ -54,15 +58,16 @@ after('updateInput', function () {
 	}
 
 	// determine which directions need flipping
+	var allowed = hackOptions.allowed();
 	switch (bitsy.curPlayerDirection) {
 	case bitsy.Direction.Up:
 		vflip = false;
 		break;
 	case bitsy.Direction.Down:
-		vflip = hackOptions.verticalFlipAllowed;
+		vflip = allowed.verticalFlipAllowed;
 		break;
 	case bitsy.Direction.Left:
-		hflip = hackOptions.horizontalFlipAllowed;
+		hflip = allowed.horizontalFlipAllowed;
 		break;
 	case bitsy.Direction.Right:
 		hflip = false;
