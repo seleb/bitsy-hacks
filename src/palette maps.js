@@ -230,9 +230,7 @@ addDualDialogTag('resetTilePalette', function (environment, parameters) {
 var defaultMap = new Array(bitsy.mapsize).fill(0).map(function () {
 	return new Array(bitsy.mapsize).fill('-');
 });
-var paletteMap = {
-	default: JSON.parse(JSON.stringify(defaultMap)),
-};
+var paletteMap = {};
 
 function getPaletteOverride(drawing) {
 	if (!hackOptions.prioritizePaletteTag) {
@@ -256,25 +254,7 @@ function getPaletteOverride(drawing) {
 
 // TODO: If it's useful, replace this with a function to set every element of a Palette Map to an ID?
 function clearPaletteMap(roomId) {
-	// Trim and sanitize Room ID parameter, and set to current room if omitted
-	if (roomId === undefined) {
-		roomId = bitsy.curRoom;
-		// roomId = getRoom().id;
-	} else {
-		roomId = roomId.toString().trim();
-		if (roomId === '') {
-			roomId = bitsy.curRoom;
-		} else if (bitsy.room[roomId] === undefined) {
-			console.log("CAN'T GET ROOM. ROOM ID (" + roomId + ') NOT FOUND.');
-			return;
-		}
-	}
-
-	if (roomId.toLowerCase() === 'default') {
-		roomId = 'default';
-	}
-	console.log('CLEARING PALETTE MAP FOR ROOM ' + roomId);
-
+	console.log('Clearing palette map for room "' + roomId + '"');
 	paletteMap[roomId] = JSON.parse(JSON.stringify(defaultMap));
 }
 
@@ -284,7 +264,7 @@ function resetPaletteMap(roomId) {
 
 	// If given the Default parameter, resets the Default Map, and Returns.
 	if (roomId.toLowerCase() === 'default') {
-		paletteMap.default = JSON.parse(JSON.stringify(defaultMap));
+		clearPaletteMap('default');
 		return;
 	}
 
@@ -307,6 +287,7 @@ function resetPaletteMap(roomId) {
 
 function parsePaletteMaps() {
 	console.log('Parsing palette maps');
+	resetPaletteMap('default');
 	Object.keys(bitsy.room).forEach(resetPaletteMap); // Initialize Palette Maps for each Room
 }
 
