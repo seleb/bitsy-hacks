@@ -311,18 +311,9 @@ function clearPaletteMap(roomId) {
 
 
 function resetPaletteMap(roomId) {
-	// Trim and sanitize Room ID parameter, and set to current room if omitted
-	if (roomId === undefined) {
-		roomId = bitsy.curRoom;
-		// roomId = getRoom().id;
-	} else {
-		roomId = roomId.toString().trim();
-		if (roomId === '') {
-			roomId = bitsy.curRoom;
-		} else if (bitsy.room[roomId] === undefined) {
-			console.log("CAN'T GET ROOM. ROOM ID (" + roomId + ') NOT FOUND.');
-			return undefined;
-		}
+	var room = getRoom(roomId);
+	if (!room) {
+		console.log("CAN'T GET ROOM. ROOM ID (" + roomId + ') NOT FOUND.');
 	}
 	console.log('RESETTING PALETTE MAP FOR ROOM ' + roomId);
 
@@ -346,7 +337,7 @@ function resetPaletteMap(roomId) {
 			['-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-'],
 			['-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-'],
 		];
-		return true;
+		return;
 	}
 
 	// If it isn't the Default map, Deep Clone a new Palette Map object from it.
@@ -370,7 +361,6 @@ function resetPaletteMap(roomId) {
 			}
 		});
 	}
-	return undefined;
 }
 
 function parsePaletteMaps() {
@@ -392,55 +382,21 @@ function getPosition(position, axis) {
 	return position;
 }
 
-function setPaletteAt(p, x, y, roomId) {
-	// Trim and sanitize X Position parameter, and set relative positions, even if omitted.
-	if (x === undefined) {
-		x = bitsy.player().x;
-	} else {
-		x = x.toString().trim();
-		if (x === '') {
-			x = bitsy.player().x;
-		} else if (x.includes('+')) {
-			x = bitsy.player().x + parseInt(x.substring(1), 10);
-		} else if (x.includes('-')) {
-			x = bitsy.player().x - parseInt(x.substring(1), 10);
-		}
-	}
-	if (x < 0 || x > 15) {
-		console.log("CAN'T SET PALETTE. X POSITION (" + x + ') OUT OF BOUNDS. 0-15 EXPECTED.');
-		return;
-	}
+// Trim and sanitize Room ID parameter, falling back to current room if omitted
+function getRoom(roomId) {
+	roomId = (roomId === undefined ? bitsy.curRoom : roomId).toString().trim();
+	return bitsy.room[roomId];
+}
 
-	// Trim and sanitize Y Position parameter, and set relative positions, even if omitted
-	if (y === undefined) {
-		y = bitsy.player().y;
-	} else {
-		y = y.toString().trim();
-		if (y === '') {
-			y = bitsy.player().y;
-		} else if (y.includes('+')) {
-			y = bitsy.player().y + parseInt(y.substring(1), 10);
-		} else if (y.includes('-')) {
-			y = bitsy.player().y - parseInt(y.substring(1), 10);
-		}
-	}
-	if (y < 0 || y > 15) {
-		console.log("CAN'T SET PALETTE. Y POSITION (" + y + ') OUT OF BOUNDS. 0-15 EXPECTED.');
-		return;
-	}
+function setPaletteAt(p, x, y, roomId) {
+	x = getPosition(x, 'x');
+	y = getPosition(y, 'y');
+	var room = getRoom(roomId);
 
 	// Trim and sanitize Room ID parameter, and set to current room if omitted
-	if (roomId === undefined) {
-		roomId = bitsy.curRoom;
-		// roomId = getRoom().id;
-	} else {
-		roomId = roomId.toString().trim();
-		if (roomId === '') {
-			roomId = bitsy.curRoom;
-		} else if (bitsy.room[roomId] === undefined) {
-			console.log("CAN'T GET ROOM. ROOM ID (" + roomId + ') NOT FOUND.');
-			return;
-		}
+	if (!room) {
+		console.error('Could not set palette: room with id "' + roomId + '" not found');
+		return;
 	}
 
 	if (p === undefined) {
@@ -452,35 +408,18 @@ function setPaletteAt(p, x, y, roomId) {
 	paletteMap[roomId][y][x] = p;
 }
 
-function setRoomPalette(p, roomId) {
-	// Trim and sanitize Room ID parameter, and set to current room if omitted
-	if (roomId === undefined) {
-		roomId = bitsy.curRoom;
-		// roomId = getRoom().id;
-	} else {
-		roomId = roomId.toString().trim();
-		if (roomId === '') {
-			roomId = bitsy.curRoom;
-		} else if (bitsy.room[roomId] === undefined) {
-			console.log("CAN'T SET ROOM PALETTE. ROOM ID (" + roomId + ') NOT FOUND.');
-			return undefined;
-		}
+function setRoomPalette(paletteId, roomId) {
+	var room = getRoom(roomId);
+	if (!room) {
+		console.error('Could not set palette: room with id "' + roomId + '" not found');
+		return;
 	}
-
-	if (p === undefined) {
-		p = '-';
-	} else if (bitsy.palette[p] === undefined) {
-		p = '-';
+	var palette = bitsy.palette[paletteId];
+	if (!palette) {
+		console.error('Could not set palette: invalid palette "' + paletteId + '"');
+		return;
 	}
-
-	// If given Palette ID matches an existing Palette, set room palette to that
-	if (bitsy.palette[p] !== undefined) {
-		console.log('ROOM ' + roomId + ' DEFAULT PALETTE SET TO ' + p);
-		bitsy.room[roomId].pal = p;
-		return true;
-	}
-	console.log('ROOM ' + roomId + " DEFAULT PALETTE CAN'T BE SET TO " + p + '; INVALID PALETTE ID');
-	return false;
+	bitsy.room[roomId].pal = paletteId;
 }
 
 // get palette from palette map for room at provided position, falling back to current room palette
@@ -490,7 +429,7 @@ function getPaletteAt(x, y) {
 	var room = paletteMap[bitsy.curRoom];
 	var row = room && room[y];
 	var col = row && row[x];
-	return col || bitsy.getRoom().pal;
+	return (col !== '-' && col) || bitsy.getRoom().pal;
 }
 
 function overdrawRecoloredTiles(room, context, frameIndex) {
