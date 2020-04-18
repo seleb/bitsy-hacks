@@ -3,7 +3,7 @@
 @file palette maps
 @summary allows color pallettes to be defined on a tile-by-tile basis
 @license MIT
-@version 1.0.1
+@version 1.0.2
 @requires Bitsy Version: 6.1
 @author Dana Holdampf
 
@@ -83,7 +83,7 @@ Parameters:
 
 -- CLEARS THE PALETTE MAP FOR ALL TILES IN A ROOM -------------
 
-{clearTilePalette "roomId"} 
+{clearTilePalette "roomId"}
 {clearTilePaletteNow "roomId"}
 
 Information:
@@ -120,75 +120,75 @@ var hackOptions = {
 	// Add this flag to Tile/Sprite/Item Name, followed by a Palette ID (#PAL0, #PALa, etc.)
 	// This tile, sprite, or item will automatically be drawn with that palette.
 	// By default, this will override the room's default palette and the tile palette map.
-	
+
 	prioritizePaletteTag: true,
 	// Whether the Palette Tag above takes priority over a room's Palette Map, when recoloring a graphic.
 	// If true, Tile/Sprite/Item always uses the palette defined by it's Palette Tag, ignoring Palette Maps.
 	// If false, Tile/Sprite/Item's palette is overridden by a room's Palette Map (whenever not default/"-").
-	
+
 	paletteMapDefinitions: {
-	// You can define a Palette Map for any room here. Just copy or edit an element from this list.
-	// Each row is a string of Palette IDs, separated by commas. These match the coordinates in the Room.
-	// The Palette IDs in the grid are used to draw Tiles/Sprites/Items, instead of the room's default palette.
-	// The IDs in the Palette Map match the Palette IDs in your Game Data (0, 1, a, z, etc.)
-	// "-", or any ID that doesn't match a Palette ID, use the room's default palette.
-		
+		// You can define a Palette Map for any room here. Just copy or edit an element from this list.
+		// Each row is a string of Palette IDs, separated by commas. These match the coordinates in the Room.
+		// The Palette IDs in the grid are used to draw Tiles/Sprites/Items, instead of the room's default palette.
+		// The IDs in the Palette Map match the Palette IDs in your Game Data (0, 1, a, z, etc.)
+		// "-", or any ID that doesn't match a Palette ID, use the room's default palette.
+
 		// This is a blank Palette Map for Room ID 0. It can be edited, copied, or removed.
 		0: [
-			"-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-",
-			"-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-",
-			"-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-",
-			"-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-",
-			"-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-",
-			"-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-",
-			"-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-",
-			"-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-",
-			"-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-",
-			"-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-",
-			"-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-",
-			"-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-",
-			"-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-",
-			"-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-",
-			"-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-",
-			"-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-",
+			'-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-',
+			'-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-',
+			'-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-',
+			'-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-',
+			'-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-',
+			'-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-',
+			'-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-',
+			'-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-',
+			'-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-',
+			'-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-',
+			'-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-',
+			'-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-',
+			'-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-',
+			'-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-',
+			'-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-',
+			'-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-',
 		],
 		// This is a sample Palette Map for Room ID 100. It can be edited, copied, or removed.
 		100: [
-			"-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-",
-			"-,1,0,0,0,0,1,1,1,1,0,0,0,0,1,-",
-			"-,0,-,-,-,-,-,-,-,-,-,-,-,-,0,-",
-			"-,0,-,-,-,-,-,-,-,-,-,-,-,-,0,-",
-			"-,0,-,-,1,1,0,0,1,1,0,0,-,-,0,-",
-			"-,0,-,-,1,1,0,0,1,1,0,0,-,-,0,-",
-			"-,2,-,-,0,0,1,1,0,0,1,1,-,-,2,-",
-			"-,2,-,-,0,0,1,1,0,0,1,1,-,-,2,-",
-			"-,2,-,-,1,1,0,0,1,1,0,0,-,-,2,-",
-			"-,2,-,-,1,1,0,0,1,1,0,0,-,-,2,-",
-			"-,0,-,-,0,0,1,1,0,0,1,1,-,-,0,-",
-			"-,0,-,-,0,0,1,1,0,0,1,1,-,-,0,-",
-			"-,0,-,-,-,-,-,-,-,-,-,-,-,-,0,-",
-			"-,0,-,-,-,-,-,-,-,-,-,-,-,-,0,-",
-			"-,1,0,0,0,0,3,3,3,3,0,0,0,0,1,-",
-			"-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-",
+			'-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-',
+			'-,1,0,0,0,0,1,1,1,1,0,0,0,0,1,-',
+			'-,0,-,-,-,-,-,-,-,-,-,-,-,-,0,-',
+			'-,0,-,-,-,-,-,-,-,-,-,-,-,-,0,-',
+			'-,0,-,-,1,1,0,0,1,1,0,0,-,-,0,-',
+			'-,0,-,-,1,1,0,0,1,1,0,0,-,-,0,-',
+			'-,2,-,-,0,0,1,1,0,0,1,1,-,-,2,-',
+			'-,2,-,-,0,0,1,1,0,0,1,1,-,-,2,-',
+			'-,2,-,-,1,1,0,0,1,1,0,0,-,-,2,-',
+			'-,2,-,-,1,1,0,0,1,1,0,0,-,-,2,-',
+			'-,0,-,-,0,0,1,1,0,0,1,1,-,-,0,-',
+			'-,0,-,-,0,0,1,1,0,0,1,1,-,-,0,-',
+			'-,0,-,-,-,-,-,-,-,-,-,-,-,-,0,-',
+			'-,0,-,-,-,-,-,-,-,-,-,-,-,-,0,-',
+			'-,1,0,0,0,0,3,3,3,3,0,0,0,0,1,-',
+			'-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-',
 		],
 		// This is a blank Palette Map for Room ID ZZZ. It can be edited, copied, or removed.
 		ZZZ: [
-			"-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-",
-			"-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-",
-			"-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-",
-			"-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-",
-			"-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-",
-			"-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-",
-			"-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-",
-			"-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-",
-			"-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-",
-			"-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-",
-			"-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-",
-			"-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-",
-			"-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-",
-			"-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-",
-			"-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-",
-			"-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-",
+			'-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-',
+			'-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-',
+			'-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-',
+			'-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-',
+			'-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-',
+			'-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-',
+			'-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-',
+			'-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-',
+			'-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-',
+			'-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-',
+			'-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-',
+			'-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-',
+			'-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-',
+			'-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-',
+			'-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-',
+			'-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-',
 		],
 	},
 };
@@ -486,449 +486,253 @@ function addDeferredDialogTag(tag, fn) {
 	});
 }
 
+/**
+ * Adds two custom dialog tags which execute the provided function,
+ * one with the provided tagname executed after the dialog box,
+ * and one suffixed with 'Now' executed immediately when the tag is reached.
+ *
+ * i.e. helper for the (exit)/(exitNow) pattern.
+ *
+ * @param {string}   tag Name of tag
+ * @param {Function} fn  Function to execute, with signature `function(environment, parameters){}`
+ *                       environment: provides access to SetVariable/GetVariable (among other things, see Environment in the bitsy source for more info)
+ *                       parameters: array containing parameters as string in first element (i.e. `parameters[0]`)
+ */
+function addDualDialogTag(tag, fn) {
+	addDialogTag(tag + 'Now', function (environment, parameters, onReturn) {
+		fn(environment, parameters);
+		onReturn(null);
+	});
+	addDeferredDialogTag(tag, fn);
+}
 
 
-// Once world is parsed, parse the Palette Map data
-after("parseWorld", function() {
-	parsePaletteMaps();
-});
-
-// Do a second pass after drawRoom, to overdraw any tiles that aren't the default palette
-after("drawRoom", function(room,context,frameIndex) {
-	overdrawRecoloredTiles(room,context,frameIndex);
-});
-
-// Implement tags to set a room's Default Palette
-addDialogTag('paletteNow', function (environment, parameters, onReturn) {
-	var params = parameters[0].split(',');
-	setRoomPalette(params[0],params[1]);
-	onReturn(null);
-});
-addDeferredDialogTag('palette', function (environment, parameters) {
-	var params = parameters[0].split(',');
-	setRoomPalette(params[0],params[1]);
-});
-
-// Implement tags to modify a room's Palette Map
-addDialogTag('tilePaletteNow', function (environment, parameters, onReturn) {
-	var params = parameters[0].split(',');
-	setPaletteAt(params[0],params[1],params[2],params[3]);	
-	onReturn(null);
-});
-addDeferredDialogTag('tilePalette', function (environment, parameters) {
-	var params = parameters[0].split(',');
-	setPaletteAt(params[0],params[1],params[2],params[3]);	
-});
-
-// Implement tags to delete a room's Palette Map
-addDialogTag('clearTilePaletteNow', function (environment, parameters, onReturn) {
-	clearPaletteMap(parameters[0]);
-	onReturn(null);
-});
-addDeferredDialogTag('clearTilePalette', function (environment, parameters) {
-	clearPaletteMap(parameters[0]);
-});
-
-// Implement tags to set a reset a room's Palette Map to starting values
-addDialogTag('resetTilePaletteNow', function (environment, parameters, onReturn) {
-	resetPaletteMap(parameters[0]);
-	onReturn(null);
-});
-addDeferredDialogTag('resetTilePalette', function (environment, parameters) {
-	resetPaletteMap(parameters[0]);
-});
 
 
 
 // The "default" Palette Map is applied to all rooms that don't have a Palette Map defined.
 // Normally each coordinate is set to use the Room's Default Palette using "-", but this can be edited.
 // These Palette Maps can be accessed via JS using "paletteMap.roomId[y/row][x/column]"
-var paletteMap = {
-	default: [
-		["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-		["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-		["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-		["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-		["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-		["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-		["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-		["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-		["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-		["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-		["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-		["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-		["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-		["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-		["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-		["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-	]
-};
+var defaultMap = new Array(bitsy.mapsize).fill(0).map(function () {
+	return new Array(bitsy.mapsize).fill('-');
+});
+var paletteMap = {};
 
-function isPaletteOverridden (drawing) {
+// Once world is parsed, parse the Palette Map data
+after('parseWorld', parsePaletteMaps);
 
+// Do a second pass after drawRoom, to overdraw any tiles that aren't the default palette
+after('drawRoom', overdrawRecoloredTiles);
+
+// Implement tags to set a room's Default Palette
+addDualDialogTag('palette', function (environment, parameters) {
+	var params = parameters[0].split(',');
+	setRoomPalette(params[0], params[1]);
+});
+
+// Implement tags to modify a room's Palette Map
+addDualDialogTag('tilePalette', function (environment, parameters) {
+	var params = parameters[0].split(',');
+	setPaletteAt(params[0], params[1], params[2], params[3]);
+});
+
+// Implement tags to delete a room's Palette Map
+addDualDialogTag('clearTilePalette', function (environment, parameters) {
+	clearPaletteMap(parameters[0]);
+});
+
+// Implement tags to set a reset a room's Palette Map to starting values
+addDualDialogTag('resetTilePalette', function (environment, parameters) {
+	resetPaletteMap(parameters[0]);
+});
+
+function getPaletteOverride(drawing) {
+	if (!hackOptions.prioritizePaletteTag) {
+		return undefined;
+	}
 	// Checks if tile/sprite/item's name contains the Palette Override Tag
 	if (drawing.name) {
 		var paletteId = drawing.name.indexOf(hackOptions.paletteTag);
-		if (paletteId != -1) {
-			var p = drawing.name[paletteId+hackOptions.paletteTag.length];
+		if (paletteId !== -1) {
+			var p = drawing.name[paletteId + hackOptions.paletteTag.length];
 
+			// TODO: make this not a single character
 			// returns single digit/character after palette tag, if a valid palette
-			if (palette[p] != undefined) {
+			if (bitsy.palette[p] !== undefined) {
 				return p;
 			}
 		}
-		return false; //if palette tag isn't present, returns default character
 	}
+	return undefined;
 }
 
 // TODO: If it's useful, replace this with a function to set every element of a Palette Map to an ID?
 function clearPaletteMap(roomId) {
-	// Trim and sanitize Room ID parameter, and set to current room if omitted
-	if (roomId == undefined) {
-		roomId = curRoom;
-		//roomId = getRoom().id;
-	}
-	else {
-		roomId = roomId.toString().trim();
-		if (roomId == "" ) { roomId = curRoom; }
-		else if (room[roomId] == undefined) {
-			console.log("CAN'T GET ROOM. ROOM ID ("+roomId+") NOT FOUND.");
-			return;
-		}
-	}
-
-	if (roomId.toLowerCase() == "default") {
-		roomId = "default";
-	}
-	console.log("CLEARING PALETTE MAP FOR ROOM " + roomId);
-
-	paletteMap[roomId] = [
-			["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-			["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-			["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-			["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-			["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-			["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-			["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-			["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-			["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-			["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-			["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-			["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-			["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-			["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-			["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-			["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-		];
+	console.log('Clearing palette map for room "' + roomId + '"');
+	paletteMap[roomId] = JSON.parse(JSON.stringify(defaultMap));
 }
 
 
 function resetPaletteMap(roomId) {
-	// Trim and sanitize Room ID parameter, and set to current room if omitted
-	if (roomId == undefined) {
-		roomId = curRoom;
-		//roomId = getRoom().id;
-	}
-	else {
-		roomId = roomId.toString().trim();
-		if (roomId == "" ) { roomId = curRoom; }
-		else if (room[roomId] == undefined) {
-			console.log("CAN'T GET ROOM. ROOM ID ("+roomId+") NOT FOUND.");
-			return;
-		}
-	}
-	console.log("RESETTING PALETTE MAP FOR ROOM " + roomId);
+	console.log('Resetting palette map for room "' + roomId + '"');
 
 	// If given the Default parameter, resets the Default Map, and Returns.
-	if (roomId.toLowerCase() == "default") {
-		paletteMap["default"] = [
-			["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-			["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-			["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-			["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-			["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-			["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-			["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-			["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-			["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-			["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-			["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-			["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-			["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-			["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-			["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-			["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-		];
-		return true;
+	if (roomId.toLowerCase() === 'default') {
+		clearPaletteMap('default');
+		return;
 	}
 
 	// If it isn't the Default map, Deep Clone a new Palette Map object from it.
-	paletteMap[roomId] = JSON.parse(JSON.stringify(paletteMap["default"])); // Deep Clone the Default object.
-	
+	paletteMap[roomId] = JSON.parse(JSON.stringify(paletteMap.default));
+
 	// If Palette Map for current Room exists in Hack Options, overwrite the new map with this data.
-	if (hackOptions.paletteMapDefinitions[roomId] != undefined) {
+	if (hackOptions.paletteMapDefinitions[roomId]) {
 		var newPaletteData = hackOptions.paletteMapDefinitions[roomId];
-
-		newPaletteData.forEach(function (palRow, r) {
-			var palRowArray = palRow.split(",");
-
-			if (palRowArray != undefined) {
-				for (var c = 0; c < palRowArray.length; c++) {
-					
-					// If Palette ID exists and matches a valid Palette, write it.
-					if (palRowArray[c] != undefined && palette[ palRowArray[c] ] != undefined ) {
-						paletteMap[roomId][r][c] = palRowArray[c];
-					}
-					else {
-						paletteMap[roomId][r][c] = "-";
-					}
-				}	
+		for (var y = 0; y < newPaletteData.length; y++) {
+			var row = newPaletteData[y].split(',');
+			for (var x = 0; x < row.length; x++) {
+				var palette = row[x];
+				// If Palette ID exists and matches a valid Palette, write it.
+				paletteMap[roomId][y][x] = bitsy.palette[palette] ? palette : '-';
 			}
-		});
+		}
 	}
 }
 
 function parsePaletteMaps() {
-	console.log("PARSING PALETTE MAPS");
-
-	for (id in room) { // Initialize Palette Maps for each Room
-		resetPaletteMap(id);
-	}
+	console.log('Parsing palette maps');
+	resetPaletteMap('default');
+	Object.keys(bitsy.room).forEach(resetPaletteMap); // Initialize Palette Maps for each Room
 }
 
-function setPaletteAt(p,x,y,roomId) {
-	// Trim and sanitize X Position parameter, and set relative positions, even if omitted.
-	if (x == undefined) {
-		x = player().x;
+// Trim and sanitize position parameter, and set relative positions
+function getPosition(position, axis) {
+	var playerPosition = bitsy.player()[axis];
+	var p = (position === undefined ? playerPosition : position).toString().trim();
+	if (p.startsWith('+') || p.startsWith('-')) {
+		p = playerPosition + Number(p);
 	}
-	else {
-		x = x.toString().trim();
-		if (x == "" ) { x = player().x; }
-		else if (x.includes("+")) { x = player().x + parseInt(x.substring(1)); }
-		else if (x.includes("-")) { x = player().x - parseInt(x.substring(1)); }
+	if (p < 0 || p > bitsy.mapsize - 1) {
+		console.error('Position ' + p + '' + axis + ' out of bounds; 0-' + bitsy.mapsize - 1 + ' expected');
+		return undefined;
 	}
-	if (x < 0 || x > 15) {
-		console.log("CAN'T SET PALETTE. X POSITION ("+x+") OUT OF BOUNDS. 0-15 EXPECTED.");
-		return;
-	}
+	return position;
+}
 
-	// Trim and sanitize Y Position parameter, and set relative positions, even if omitted
-	if (y == undefined) {
-		y = player().y;
-	}
-	else {
-		y = y.toString().trim();
-		if (y == "" ) { y = player().y; }
-		else if (y.includes("+")) { y = player().y + parseInt(y.substring(1)); }
-		else if (y.includes("-")) { y = player().y - parseInt(y.substring(1)); }
-	}
-	if (y < 0 || y > 15) {
-		console.log("CAN'T SET PALETTE. Y POSITION ("+y+") OUT OF BOUNDS. 0-15 EXPECTED.");
-		return;
-	}
+// Trim and sanitize Room ID parameter, falling back to current room if omitted
+function getRoom(roomId) {
+	roomId = (roomId === undefined ? bitsy.curRoom : roomId).toString().trim();
+	return bitsy.room[roomId];
+}
+
+function setPaletteAt(p, x, y, roomId) {
+	x = getPosition(x, 'x');
+	y = getPosition(y, 'y');
+	var room = getRoom(roomId);
 
 	// Trim and sanitize Room ID parameter, and set to current room if omitted
-	if (roomId == undefined) {
-		roomId = curRoom;
-		//roomId = getRoom().id;
-	}
-	else {
-		roomId = roomId.toString().trim();
-		if (roomId == "" ) { roomId = curRoom; }
-		else if (room[roomId] == undefined) {
-			console.log("CAN'T GET ROOM. ROOM ID ("+roomId+") NOT FOUND.");
-			return;
-		}
+	if (!room) {
+		console.error('Could not set palette: room with id "' + roomId + '" not found');
+		return;
 	}
 
-	if (p == undefined) {
-		p = "-";
+	if (p === undefined) {
+		p = '-';
+	} else if (bitsy.palette[p] === undefined) {
+		p = '-';
 	}
-	else if (palette[p] == undefined) {
-		p = "-";
-	}
-	console.log("SET PALETTE AT " + x + "," + y + "(ROOM " + roomId + ") TO " + p);
+	console.log('Set palette at ' + x + ',' + y + '(room ' + roomId + ') to ' + p);
 	paletteMap[roomId][y][x] = p;
 }
 
-function setRoomPalette (p, roomId) {
-	// Trim and sanitize Room ID parameter, and set to current room if omitted
-	if (roomId == undefined) {
-		roomId = curRoom;
-		//roomId = getRoom().id;
-	}
-	else {
-		roomId = roomId.toString().trim();
-		if (roomId == "" ) { roomId = curRoom; }
-		else if (room[roomId] == undefined) {
-			console.log("CAN'T SET ROOM PALETTE. ROOM ID ("+roomId+") NOT FOUND.");
-			return;
-		}
-	}
-
-	if (p == undefined) {
-		p = "-";
-	}
-	else if (palette[p] == undefined) {
-		p = "-";
-	}
-
-	// If given Palette ID matches an existing Palette, set room palette to that
-	if (palette[p] != undefined ) {
-		console.log("ROOM " + roomId + " DEFAULT PALETTE SET TO " + p);
-		room[roomId].pal = p;
-		return true;
-	}
-	console.log("ROOM " + roomId + " DEFAULT PALETTE CAN'T BE SET TO " + p + "; INVALID PALETTE ID");
-	return false;
-}
-
-function getPaletteAt(x,y,roomId) {
-	// Trim and sanitize X Position parameter, and set relative positions, even if omitted.
-	if (x == undefined) {
-		x = player().x;
-	}
-	else {
-		x = x.toString().trim();
-		if (x == "" ) { x = player().x; }
-		else if (x.includes("+")) { x = player().x + parseInt(x.substring(1)); }
-		else if (x.includes("-")) { x = player().x - parseInt(x.substring(1)); }
-	}
-	if (x < 0 || x > 15) {
-		console.log("CAN'T GET PALETTE. X POSITION ("+x+") OUT OF BOUNDS. 0-15 EXPECTED.");
+function setRoomPalette(paletteId, roomId) {
+	var room = getRoom(roomId);
+	if (!room) {
+		console.error('Could not set palette: room with id "' + roomId + '" not found');
 		return;
 	}
-
-	// Trim and sanitize Y Position parameter, and set relative positions, even if omitted
-	if (y == undefined) {
-		y = player().y;
-	}
-	else {
-		y = y.toString().trim();
-		if (y == "" ) { y = player().y; }
-		else if (y.includes("+")) { y = player().y + parseInt(y.substring(1)); }
-		else if (y.includes("-")) { y = player().y - parseInt(y.substring(1)); }
-	}
-	if (y < 0 || y > 15) {
-		console.log("CAN'T GET PALETTE. Y POSITION ("+y+") OUT OF BOUNDS. 0-15 EXPECTED.");
+	var palette = bitsy.palette[paletteId];
+	if (!palette) {
+		console.error('Could not set palette: invalid palette "' + paletteId + '"');
 		return;
 	}
-
-	// Trim and sanitize Room ID parameter, and set to current room if omitted
-	if (roomId == undefined) {
-		roomId = curRoom;
-	}
-	else {
-		roomId = roomId.toString().trim();
-		if (roomId == "" ) { roomId = curRoom; }
-		else if (room[roomId] == undefined) {
-			console.log("CAN'T GET ROOM. ROOM ID ("+roomId+") NOT FOUND.");
-			return;
-		}
-	}
-
-	//if (roomId == undefined || room[roomId] == undefined) {
-	//	roomId = getRoom().id;
-	//}
-
-	// Check for Palette Map for the room, if it exists.
-	var p = -1;
-	if (paletteMap[roomId] != undefined) {
-		p = paletteMap[roomId][y][x];
-	}
-
-	// Check for Palette Map for the room, if it exists. Defaults to -1 if undefined.	
-	if (palette[p] == undefined) {
-		p = getRoom().pal;
-	}
-	return p;
+	bitsy.room[roomId].pal = paletteId;
 }
 
-function overdrawRecoloredTiles(room,context,frameIndex) {
-	if (!context) { //optional pass in context;
-		context = ctx;
-	}
-	var paletteId = "default";
+// get palette from palette map for room at provided position, falling back to current room palette
+function getPaletteAt(x, y) {
+	x = getPosition(x, 'x');
+	y = getPosition(y, 'y');
+	var room = paletteMap[bitsy.curRoom];
+	var row = room && room[y];
+	var col = row && row[x];
+	return (col !== '-' && col) || bitsy.getRoom().pal;
+}
+
+function overdrawRecoloredTiles(room, context, frameIndex) {
+	context = context || bitsy.ctx;
 
 	// protect against invalid rooms
 	if (room === undefined) {
 		return;
 	}
-	// set default paletteId to room's palette
-	if (room.pal != null && palette[paletteId] != undefined) {
-		paletteId = room.pal;
-	}
+	var paletteId = room.pal || 'default';
 
-	// calculate tile dimensions for drawing recolored backgrounds on empty tiles
-	var tileWidth = canvas.width/16;
-	var tileHeight = canvas.height/16;
+	// draw tiles
+	for (var y = 0; y < room.tilemap.length; ++y) {
+		for (var x = 0; x < room.tilemap[y].length; ++x) {
+			var tileTop = y * bitsy.tilesize;
+			var tileLeft = x * bitsy.tilesize;
+			var tilePaletteId = getPaletteAt(x, y);
 
-	//overdraw any recolored tiles on top of existing room
-	for (var r in room.tilemap) {
-		for (var c in room.tilemap[r]) {
-			
-			var tileTop = r*tileHeight;
-			var tileLeft = c*tileWidth;
-			var tilePaletteId = getPaletteAt(c,r);
-			
-			// skip drawing tile, if it's invalid or already been drawn in default color
-			if (palette[tilePaletteId] != undefined || palette[tilePaletteId] != paletteId) {
-				
-				//draw backgrounds as colored rectangles
-				context.fillStyle = "rgb(" + getPal(tilePaletteId)[0][0] + "," + getPal(tilePaletteId)[0][1] + "," + getPal(tilePaletteId)[0][2] + ")";
-				context.fillRect(tileLeft, tileTop, tileLeft+tileWidth, tileTop+tileHeight);
-
-				var id = room.tilemap[r][c];
-				if (id != "0") {
-					if (tile[id] != null) {
-						// If a tile has the #PAL tag, it overrides the tile's normal palette.
-						if (hackOptions.prioritizePaletteTag) {
-							var paletteOverrideId = isPaletteOverridden(tile[room.tilemap[r][c]]);
-							if (paletteOverrideId) {
-								var tilePaletteId = paletteOverrideId;
-							}
-						}
-						drawTile( getTileImage(tile[id],tilePaletteId,frameIndex), c, r, context );
-					}
-				}				
+			// skip if palette is invalid or default
+			if (!bitsy.palette[tilePaletteId] || bitsy.palette[tilePaletteId] === paletteId) {
+				continue;
 			}
+			// draw backgrounds as colored rectangles
+			context.fillStyle = 'rgb(' + bitsy.getPal(tilePaletteId)[0].join(',') + ')';
+			context.fillRect(tileLeft * bitsy.scale, tileTop * bitsy.scale, (tileLeft + bitsy.tilesize) * bitsy.scale, (tileTop + bitsy.tilesize) * bitsy.scale);
+
+			// skip if tile is empty/invalid
+			var id = room.tilemap[y][x];
+			if (id === '0' || !bitsy.tile[id]) {
+				continue;
+			}
+
+			// If a tile has the #PAL tag, it overrides the tile's normal palette.
+			tilePaletteId = getPaletteOverride(bitsy.tile[room.tilemap[y][x]]) || tilePaletteId;
+			bitsy.drawTile(bitsy.getTileImage(bitsy.tile[id], tilePaletteId, frameIndex), x, y, context);
 		}
 	}
 
-	//draw items
+	// draw items
 	for (var i = 0; i < room.items.length; i++) {
 		var itm = room.items[i];
 
-		var itemPaletteId = getPaletteAt(itm.x,itm.y);
-		if (palette[itemPaletteId] != undefined || palette[itemPaletteId] != paletteId) {
-			if (hackOptions.prioritizePaletteTag) {
-				var paletteOverrideId = isPaletteOverridden(item[itm.id]);
-				if (paletteOverrideId) {
-					itemPaletteId = paletteOverrideId;
-				}
-			}
-			drawItem( getItemImage(item[itm.id],itemPaletteId,frameIndex), itm.x, itm.y, context );		
+		var itemPaletteId = getPaletteAt(itm.x, itm.y);
+		// skip if palette is invalid or default
+		if (!bitsy.palette[itemPaletteId] || bitsy.palette[itemPaletteId] === paletteId) {
+			continue;
 		}
+		itemPaletteId = getPaletteOverride(bitsy.item[itm.id]) || itemPaletteId;
+		bitsy.drawItem(bitsy.getItemImage(bitsy.item[itm.id], itemPaletteId, frameIndex), itm.x, itm.y, context);
 	}
 
-	//draw sprites
-	for (id in sprite) {
-		var spr = sprite[id];
-		if (spr.room === room.id) {
-
+	// draw sprites
+	Object.values(bitsy.sprite)
+		.filter(function (spr) {
+			return spr.room === room.id;
+		})
+		.forEach(function (spr) {
 			// Get palette map at sprite's coordinate
-			var spritePaletteId = getPaletteAt(spr.x,spr.y);
-			if (palette[spritePaletteId] != undefined || palette[spritePaletteId] != paletteId) {
-				if (hackOptions.prioritizePaletteTag) {
-					var paletteOverrideId = isPaletteOverridden(spr);
-					if (paletteOverrideId) {
-						spritePaletteId = paletteOverrideId;
-					}
-				}
+			var spritePaletteId = getPaletteAt(spr.x, spr.y);
+			// skip if palette is invalid or default
+			if (!bitsy.palette[spritePaletteId] || bitsy.palette[spritePaletteId] === paletteId) {
+				return;
 			}
-			drawSprite( getSpriteImage(spr,spritePaletteId,frameIndex), spr.x, spr.y, context );
-		}
-	}
+			spritePaletteId = getPaletteOverride(spr) || spritePaletteId;
+			bitsy.drawSprite(bitsy.getSpriteImage(spr, spritePaletteId, frameIndex), spr.x, spr.y, context);
+		});
 }
 
 exports.hackOptions = hackOptions;

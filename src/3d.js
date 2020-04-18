@@ -70,7 +70,7 @@ useful for making more complex shapes and more organic silhouettes by shifting
 models a bit off the grid, and configuring plane-type meshes to face a specific direction
 #t(x,y,z) for translation, #r(x,y,z) for rotation (in degrees), #s(x,y,z) for scaling.
 #t(1,0,0.5') and '#t(1,,.5)' are both examples of valid input
-omiting the number is the same as writing 0. note that this won't change anything on
+omitting the number is the same as writing 0. note that this won't change anything on
 the given axis for rotation and translation, but it will for scaling
 
 * add #transparent(true)/#transparent(false) tag to the drawing's name to set
@@ -281,37 +281,43 @@ export var hackOptions = {
 		// children tag
 		// for now for animation to work gotta make sure that the parent drawing has as many frames as children
 		var childrenTag;
-		// make sure the mesh we are about to add children to doesn't have a parent on its own to avoid ifinite loops
+		// make sure the mesh we are about to add children to doesn't have a parent on its own to avoid infinite loops
 		// maybe add checking for parents of parents recursively up to a certain number to allow more complex combinations
 		if (!mesh.parent) {
 			childrenTag = name.match(/#children\(([\w-, ]+)\)/);
 		}
 		if (childrenTag) {
 			// parse args and get the actual drawings
-			var children = childrenTag[1].split(/, |,/).map(function(arg) {
+			var children = childrenTag[1].split(/, |,/).map(function (arg) {
 				if (arg) {
-					var type, id, map;
+					var type;
+					var id;
+					var map;
 					[type, id] = arg.split(/[ _-]/);
 					if (type && id) {
 						switch (type[0].toLowerCase()) {
-							case 't':
-								map = bitsy.tile;
-								break;
-							case 'i':
-								map = bitsy.item;
-								break;
-							case 's':
-								map = bitsy.sprite;
+						case 't':
+							map = bitsy.tile;
+							break;
+						case 'i':
+							map = bitsy.item;
+							break;
+						case 's':
+							map = bitsy.sprite;
+							break;
+						default:
+							break;
 						}
 						if (map) {
 							return map[id];
 						}
 					}
 				}
+				return undefined;
 			}).filter(Boolean);
 
 			// add specified drawings to the scene as child meshes
-			children.forEach(function(childDrawing) {
+			children.forEach(function (childDrawing) {
 				var childMesh = getMesh(childDrawing, bitsy.curPal());
 				childMesh = childMesh.createInstance();
 				childMesh.position.x = mesh.position.x;
@@ -320,7 +326,7 @@ export var hackOptions = {
 				mesh.addChild(childMesh);
 				applyBehaviours(childMesh, childDrawing);
 				// make sure children can move if they are parented to the avatar
-				if (drawing == bitsy.player()) {
+				if (drawing === bitsy.player()) {
 					childMesh.unfreezeWorldMatrix();
 				}
 			});
@@ -484,7 +490,7 @@ canvas:focus { outline: none; }
 		boxMesh.setVerticesData(BABYLON.VertexBuffer.UVKind, uvs);
 		boxMesh.isVisible = false;
 		boxMesh.doNotSyncBoundingInfo = true;
-		// adjust template position so that the instances will be displated correctly
+		// adjust template position so that the instances will be displayed correctly
 		transformGeometry(boxMesh, BABYLON.Matrix.Translation(0.0, i / 2 - 0.5, 0.0));
 		meshTemplates['tower' + i] = boxMesh;
 	}
@@ -499,7 +505,7 @@ canvas:focus { outline: none; }
 	transformGeometry(floorMesh, BABYLON.Matrix.Translation(0.0, 0.0, 0.5));
 	// have to transform geometry instead of using regular rotation
 	// or it will mess up children transforms when using combine tag
-	transformGeometry(floorMesh, BABYLON.Matrix.RotationX(Math.PI/2));
+	transformGeometry(floorMesh, BABYLON.Matrix.RotationX(Math.PI / 2));
 	floorMesh.isVisible = false;
 	floorMesh.doNotSyncBoundingInfo = true;
 	meshTemplates.floor = floorMesh;
@@ -736,7 +742,7 @@ before('drawRoom', function (room, context, frameIndex) {
 		playerRef.position.x = bitsy.player().x;
 		playerRef.position.z = bitsy.mapsize - 1 - bitsy.player().y;
 		// make sure playerPosNode moves with the player so that the camera can
-		// use it as a target to prevent crashing whith billboard-avatar
+		// use it as a target to prevent crashing with billboard-avatar
 		playerPosNode.position = playerRef.position;
 	}
 	return [room, fakeContext, frameIndex];

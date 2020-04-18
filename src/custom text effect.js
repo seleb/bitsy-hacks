@@ -170,7 +170,7 @@ export var hackOptions = {
 			var h = font.getHeight();
 			window.customTextEffects.editBitmapCopy(char, function (bitmap) {
 				for (var y = 0; y < h; ++y) {
-					var o = Math.floor(y / h * steps - steps / 2) + 1;
+					var o = Math.floor((y / h) * steps - steps / 2) + 1;
 					for (var x = 0; x < w; ++x) {
 						bitmap[x + y * w] = x + o < 0 || x + 0 >= w ? 0 : char.originalBitmap[x + o + y * w];
 					}
