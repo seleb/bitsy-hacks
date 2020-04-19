@@ -127,6 +127,7 @@ import {
 	addDualDialogTag,
 } from './helpers/kitsy-script-toolkit';
 import './paragraph-break';
+import { getRelativeNumber } from './helpers/utils';
 
 export var hackOptions = {
 	// Determines where the textbox is positioned. "shift" moves the textbox based on the player's position.
@@ -553,35 +554,13 @@ var textboxStyler = window.textboxStyler = {
 		var curMaxLines = textboxStyler.activeStyle.textboxMaxLines;
 
 		// X Position
-		if (x == undefined) {
-			x = curX;
-		} else {
-			x = x.toString().trim();
-			if (x == '') {
-				x = curX;
-			} else if (x.includes('+')) {
-				x = curX + parseInt(x.substring(1), 10);
-			} else if (x.includes('-')) {
-				x = curX - parseInt(x.substring(1), 10);
-			}
-		}
+		x = getRelativeNumber(x, curX);
 		if (x < -128 || x > 128) {
 			console.log('CLAMPING X POSITION. XPOS (' + x + ') OUT OF BOUNDS. 0-128 EXPECTED.');
 			x = Math.max(0, Math.min(x, 128));
 		}
 		// Y Position
-		if (y == undefined) {
-			y = curY;
-		} else {
-			y = y.toString().trim();
-			if (y == '') {
-				y = curY;
-			} else if (y.includes('+')) {
-				y = curY + parseInt(y.substring(1), 10);
-			} else if (y.includes('-')) {
-				y = curY - parseInt(y.substring(1), 10);
-			}
-		}
+		y = getRelativeNumber(y, curY);
 		if (y < -128 || y > 128) {
 			console.log('CLAMPING Y POSITION. YPOS (' + y + ') OUT OF BOUNDS. 0-128 EXPECTED.');
 			y = Math.max(0, Math.min(y, 128));
@@ -657,69 +636,25 @@ var textboxStyler = window.textboxStyler = {
 		var curY1 = textboxStyler.activeStyle.textboxMarginY;
 		var curY2 = curY1 + (textboxStyler.activeStyle.textPaddingY + textboxStyler.activeStyle.borderHeight - 2 + (2 * textboxStyler.activeStyle.textMinLines));
 
-		if (x1 == undefined) {
-			x1 = curX1;
-		} else {
-			x1 = x1.toString().trim();
-			if (x1 == '') {
-				x1 = curX1;
-			} else if (x1.includes('+')) {
-				x1 = curX1 + parseInt(x1.substring(1), 10);
-			} else if (x1.includes('-')) {
-				x1 = curX1 - parseInt(x1.substring(1), 10);
-			}
-		}
+		x1 = getRelativeNumber(x1, curX1);
 		if (x1 < 0 || x1 > 128) {
 			console.log('CLAMPING X1 POSITION. XPOS (' + x1 + ') OUT OF BOUNDS. 0-128 EXPECTED.');
 			x1 = Math.max(0, Math.min(x1, 128));
 		}
 		// X2
-		if (x2 == undefined) {
-			x2 = curX2;
-		} else {
-			x2 = x2.toString().trim();
-			if (x2 == '') {
-				x2 = curX2;
-			} else if (x2.includes('+')) {
-				x2 = curX2 + parseInt(x2.substring(1), 10);
-			} else if (x2.includes('-')) {
-				x2 = curX2 - parseInt(x2.substring(1), 10);
-			}
-		}
+		x2 = getRelativeNumber(x2, curX2);
 		if (x2 < 0 || x2 > 128) {
 			console.log('CLAMPING X2 POSITION. xPos (' + x2 + ') OUT OF BOUNDS. 0-128 EXPECTED.');
 			x2 = Math.max(0, Math.min(x2, 128));
 		}
 		// Y1
-		if (y1 == undefined) {
-			y1 = curY1;
-		} else {
-			y1 = y1.toString().trim();
-			if (y1 == '') {
-				y1 = curY1;
-			} else if (y1.includes('+')) {
-				y1 = curY1 + parseInt(y1.substring(1), 10);
-			} else if (y1.includes('-')) {
-				y1 = curY1 - parseInt(y1.substring(1), 10);
-			}
-		}
+		y1 = getRelativeNumber(y1, curY1);
 		if (y1 < 0 || y1 > 128) {
 			console.log('CLAMPING Y1 POSITION. XPOS (' + y1 + ') OUT OF BOUNDS. 0-128 EXPECTED.');
 			y1 = Math.max(0, Math.min(y1, 128));
 		}
 		// Y2
-		if (y2 == undefined) {
-			y2 = curY2;
-		} else {
-			y2 = y2.toString().trim();
-			if (y2 == '') {
-				y2 = curY2;
-			} else if (y2.includes('+')) {
-				y2 = curY2 + parseInt(y2.substring(1), 10);
-			} else if (y2.includes('-')) {
-				y2 = curY2 - parseInt(y2.substring(1), 10);
-			}
-		}
+		y2 = getRelativeNumber(y2, curY2);
 		if (y2 < 0 || y2 > 128) {
 			console.log('CLAMPING Y2 POSITION. xPos (' + y2 + ') OUT OF BOUNDS. 0-128 EXPECTED.');
 			y2 = Math.max(0, Math.min(y2, 128));
