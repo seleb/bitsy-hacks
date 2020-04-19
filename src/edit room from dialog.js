@@ -442,15 +442,15 @@ function eraseAt(mapId, targetId, xPos, yPos, roomId) {
 	// If SPR or undefined.
 	if (mapId.toUpperCase() != 'TIL' && mapId.toUpperCase() != 'ITM') {
 		if (targetId == 'ANY') {
-			for (i in bitsy.sprite) {
-				if (bitsy.sprite[i].id == 'A') {
+			Object.values(bitsy.sprite).forEach(function (spr) {
+				if (spr.id == 'A') {
 					console.log("CAN'T TARGET AVATAR. SKIPPING.");
-				} else if (bitsy.sprite[i].room == roomId && bitsy.sprite[i].x == xPos && bitsy.sprite[i].y == yPos) {
-					bitsy.sprite[i].x = 0;
-					bitsy.sprite[i].y = 0;
-					bitsy.sprite[i].room = 'default';
+				} else if (spr.room == roomId && spr.x == xPos && spr.y == yPos) {
+					spr.x = 0;
+					spr.y = 0;
+					spr.room = 'default';
 				}
-			}
+			});
 		} else if (bitsy.sprite[targetId] != undefined) {
 			if (bitsy.sprite[targetId].id == 'A') {
 				console.log("CAN'T TARGET AVATAR. SKIPPING.");
@@ -589,16 +589,16 @@ function replaceAt(targetMapId, targetId, newMapId, newId, xPos, yPos, roomId) {
 	// If SPR or undefined.
 	if (targetMapId.toUpperCase() != 'TIL' && targetMapId.toUpperCase() != 'ITM') {
 		if (targetId == 'ANY') {
-			for (i in bitsy.sprite) {
-				if (bitsy.sprite[i].id == 'A') {
+			Object.values(bitsy.sprite).forEach(function (spr) {
+				if (spr.id == 'A') {
 					console.log("CAN'T TARGET AVATAR. SKIPPING.");
-				} else if (bitsy.sprite[i].room == roomId && bitsy.sprite[i].x == xPos && bitsy.sprite[i].y == yPos) {
-					bitsy.sprite[i].x = 0;
-					bitsy.sprite[i].y = 0;
-					bitsy.sprite[i].room = 'default';
+				} else if (spr.room == roomId && spr.x == xPos && spr.y == yPos) {
+					spr.x = 0;
+					spr.y = 0;
+					spr.room = 'default';
 					drawAt(newMapId, newId, xPos, yPos, roomId);
 				}
-			}
+			});
 		} else if (bitsy.sprite[targetId] != undefined) {
 			if (bitsy.sprite[targetId] != 'A' && bitsy.sprite[targetId].room == roomId && bitsy.sprite[targetId].x == xPos && bitsy.sprite[targetId].y == yPos) {
 				bitsy.sprite[targetId].x = 0;
@@ -732,14 +732,14 @@ function copyAt(mapId, targetId, copyXPos, copyYPos, copyRoomId, pasteXPos, past
 	// If SPR or undefined.
 	if (mapId.toUpperCase() != 'TIL' && mapId.toUpperCase() != 'ITM') {
 		if (targetId == 'ANY') {
-			for (i in bitsy.sprite) {
-				if (bitsy.sprite[i].id == 'A') {
+			Object.values(bitsy.sprite).forEach(function (spr) {
+				if (spr.id == 'A') {
 					console.log("CAN'T TARGET AVATAR. SKIPPING.");
-				} else if (bitsy.sprite[i].room == copyRoomId && bitsy.sprite[i].x == copyXPos && bitsy.sprite[i].y == copyYPos) {
-					var copyId = bitsy.sprite[i].id;
+				} else if (spr.room == copyRoomId && spr.x == copyXPos && spr.y == copyYPos) {
+					var copyId = spr.id;
 					drawAt('SPR', copyId, pasteXPos, pasteYPos, pasteRoomId);
 				}
-			}
+			});
 		} else if (bitsy.sprite[targetId] != undefined) {
 			if (bitsy.sprite[targetId] != 'A' && bitsy.sprite[targetId].room == copyRoomId && bitsy.sprite[targetId].x == copyXPos && bitsy.sprite[targetId].y == copyYPos) {
 				var copyId = bitsy.sprite[targetId].id;
@@ -869,16 +869,16 @@ function copyBoxAt(mapId, targetId, x1, y1, x2, y2, copyRoomId, pasteXPos, paste
 			// If SPR or undefined.
 			if (mapId.toUpperCase() != 'TIL' && mapId.toUpperCase() != 'ITM') {
 				if (targetId == 'ANY') {
-					for (i in bitsy.sprite) {
-						if (bitsy.sprite[i].id == 'A') {
+					Object.values(bitsy.sprite).forEach(function (spr) {
+						if (spr.id == 'A') {
 							console.log("CAN'T TARGET AVATAR. SKIPPING.");
-						} else if (bitsy.sprite[i].room == copyRoomId && bitsy.sprite[i].x == xPos && bitsy.sprite[i].y == yPos) {
-							copyIds.push(bitsy.sprite[i].id);
+						} else if (spr.room == copyRoomId && spr.x == xPos && spr.y == yPos) {
+							copyIds.push(spr.id);
 							copyMaps.push('SPR');
 							copyXs.push(pasteXPos + xPos - 1);
 							copyYs.push(pasteYPos + yPos - 1);
 						}
-					}
+					});
 				} else if (bitsy.sprite[targetId] != undefined) {
 					if (bitsy.sprite[targetId] != 'A' && bitsy.sprite[targetId].room == copyRoomId && bitsy.sprite[targetId].x == xPos && bitsy.sprite[targetId].y == yPos) {
 						copyIds.push(bitsy.sprite[i].id);
