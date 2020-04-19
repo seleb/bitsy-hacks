@@ -888,16 +888,12 @@ function copyBoxAt(mapId, targetId, x1, y1, x2, y2, copyRoomId, pasteXPos, paste
 		return;
 	}
 
-	pasteXPos = parseInt(pasteXPos, 10);
-
 
 	pasteYPos = getRelativeNumber(pasteYPos, bitsy.player().y);
 	if (pasteYPos < 0 || pasteYPos > 15) {
 		console.log("CAN'T PASTE. Y POSITION (" + pasteYPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		return;
 	}
-
-	pasteYPos = parseInt(pasteYPos, 10);
 
 
 	if (pasteRoomId == undefined) {
