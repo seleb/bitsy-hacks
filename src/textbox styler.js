@@ -566,52 +566,19 @@ var textboxStyler = window.textboxStyler = {
 			y = Math.max(0, Math.min(y, 128));
 		}
 		// Width
-		if (boxWidth == undefined) {
-			boxWidth = curWidth;
-		} else {
-			boxWidth = boxWidth.toString().trim();
-			if (boxWidth == '') {
-				boxWidth = curWidth;
-			} else if (boxWidth.includes('+')) {
-				boxWidth = curWidth + parseInt(boxWidth.substring(1), 10);
-			} else if (boxWidth.includes('-')) {
-				boxWidth = curWidth - parseInt(boxWidth.substring(1), 10);
-			}
-		}
+		boxWidth = getRelativeNumber(boxWidth, curWidth);
 		if (boxWidth < 0 || boxWidth > 128) {
 			console.log('CLAMPING WIDTH (' + (boxWidth) + '). 0-128 EXPECTED.');
 			boxWidth = Math.max(0, Math.min(boxWidth, 128));
 		}
 		// Minimum Lines
-		if (boxMinLines == undefined) {
-			boxMinLines = curMinLines;
-		} else {
-			boxMinLines = boxMinLines.toString().trim();
-			if (boxMinLines == '') {
-				boxMinLines = curMinLines;
-			} else if (boxMinLines.includes('+')) {
-				boxMinLines = curMinLines + parseInt(boxMinLines.substring(1), 10);
-			} else if (boxMinLines.includes('-')) {
-				boxMinLines = curMinLines - parseInt(boxMinLines.substring(1), 10);
-			}
-		}
+		boxMinLines = getRelativeNumber(boxMinLines, curMinLines);
 		if (boxMinLines < 0 || boxMinLines > 128) {
 			console.log('CLAMPING TEXT MIN LINES (' + (boxMinLines) + '). 0-128 EXPECTED.');
 			boxMinLines = Math.max(0, Math.min(boxMinLines, 128));
 		}
 		// Maximum Lines
-		if (boxMaxLines == undefined) {
-			boxMaxLines = curMaxLines;
-		} else {
-			boxMaxLines = boxMaxLines.toString().trim();
-			if (boxMaxLines == '') {
-				boxMaxLines = boxMaxLines;
-			} else if (boxMaxLines.includes('+')) {
-				boxMaxLines += parseInt(boxMaxLines.substring(1), 10);
-			} else if (boxMaxLines.includes('-')) {
-				boxMaxLines -= parseInt(boxMaxLines.substring(1), 10);
-			}
-		}
+		boxMaxLines = getRelativeNumber(boxMaxLines, curMaxLines);
 		if (boxMaxLines < 0 || boxMaxLines > 128) {
 			console.log('CLAMPING TEXT MAX LINES (' + (boxMaxLines) + '). 0-128 EXPECTED.');
 			boxMaxLines = Math.max(0, Math.min(boxMaxLines, 128));
