@@ -54,6 +54,7 @@ these function calls with parentheses like the examples above.
 import bitsy from 'bitsy';
 import {
 	getRoom,
+	getRelativeNumber,
 } from './helpers/utils';
 import {
 	addDualDialogTag,
@@ -81,21 +82,8 @@ function getExitParams(parameters) {
 		room = bitsy.room[p.room];
 	}
 
-	if (!x) {
-		x = p.x;
-	} else if (x.startsWith('+') || x.startsWith('-')) {
-		x = p.x + Number(x);
-	} else {
-		x = Number(x);
-	}
-
-	if (!y) {
-		y = p.y;
-	} else if (y.startsWith('+') || y.startsWith('-')) {
-		y = p.y + Number(y);
-	} else {
-		y = Number(y);
-	}
+	x = getRelativeNumber(x, p.x);
+	y = getRelativeNumber(y, p.y);
 
 	return {
 		dest: {
