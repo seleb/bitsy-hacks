@@ -4,7 +4,7 @@
 @author Sean S. LeBlanc
 */
 
-import bitsy from "bitsy";
+import bitsy from 'bitsy';
 
 /*
 Helper used to replace code in a script tag based on a search regex
@@ -28,7 +28,7 @@ export function inject(searchRegex, replaceString) {
 
 	// error-handling
 	if (!code) {
-		throw 'Couldn\'t find "' + searchRegex + '" in script tags';
+		throw new Error('Couldn\'t find "' + searchRegex + '" in script tags');
 	}
 
 	// modify the content
@@ -41,14 +41,15 @@ export function inject(searchRegex, replaceString) {
 	scriptTag.remove();
 }
 
-/*helper for exposing getter/setter for private vars*/
+/* helper for exposing getter/setter for private vars */
+// eslint-disable-next-line no-eval
 var indirectEval = eval;
 export function expose(target) {
 	var code = target.toString();
-	code = code.substring(0, code.lastIndexOf("}"));
-	code += "this.get = function(name) {return eval(name);};";
+	code = code.substring(0, code.lastIndexOf('}'));
+	code += 'this.get = function(name) {return eval(name);};';
 	code += "this.set = function(name, value) {eval(name+'=value');};";
-	return indirectEval("[" + code + "}]")[0];
+	return indirectEval('[' + code + '}]')[0];
 }
 
 /*
@@ -62,7 +63,7 @@ Returns: the image in the given map with the given name/id
  */
 export function getImage(name, map) {
 	var id = Object.prototype.hasOwnProperty.call(map, name) ? name : Object.keys(map).find(function (e) {
-		return map[e].name == name;
+		return map[e].name === name;
 	});
 	return map[id];
 }
@@ -78,7 +79,7 @@ export function getRoom(name) {
 }
 
 /**
- * Helper for getting an array with unique elements 
+ * Helper for getting an array with unique elements
  * @param  {Array} array Original array
  * @return {Array}       Copy of array, excluding duplicates
  */
