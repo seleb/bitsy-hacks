@@ -152,7 +152,10 @@ import bitsy from 'bitsy';
 import {
 	addDualDialogTag,
 } from './helpers/kitsy-script-toolkit';
-import { getRelativeNumber } from './helpers/utils';
+import {
+	getRelativeNumber,
+	clamp,
+} from './helpers/utils';
 
 // Draws an Item, Sprite, or Tile at a location in a room
 // {draw "mapId, sourceId, xPos, yPos, roomID"}
@@ -175,7 +178,7 @@ addDualDialogTag('drawBox', function (environment, parameters) {
 // {drawAllNow "mapId, sourceId, roomID"}
 addDualDialogTag('drawAll', function (environment, parameters) {
 	var params = parameters[0].split(',');
-	drawBoxAt(params[0], params[1], 0, 0, 15, 15, params[2]);
+	drawBoxAt(params[0], params[1], 0, 0, bitsy.mapsize - 1, bitsy.mapsize - 1, params[2]);
 });
 
 // Removes Items, Sprites, and/or Tiles at a location in a room
@@ -199,7 +202,7 @@ addDualDialogTag('eraseBox', function (environment, parameters) {
 // {eraseAllNow "mapId, targetId, roomID"}
 addDualDialogTag('eraseAll', function (environment, parameters) {
 	var params = parameters[0].split(',');
-	eraseBoxAt(params[0], params[1], 0, 0, 15, 15, params[2]);
+	eraseBoxAt(params[0], params[1], 0, 0, bitsy.mapsize - 1, bitsy.mapsize - 1, params[2]);
 });
 
 // Converts instances of target Item, Sprite, or Tile at a location in a room into something new
@@ -223,7 +226,7 @@ addDualDialogTag('replaceBox', function (environment, parameters) {
 // {replaceAllNow "targetMapId, targetId, newMapId, newId, roomID"}
 addDualDialogTag('replaceAll', function (environment, parameters) {
 	var params = parameters[0].split(',');
-	replaceBoxAt(params[0], params[1], params[2], params[3], 0, 0, 15, 15, params[4]);
+	replaceBoxAt(params[0], params[1], params[2], params[3], 0, 0, bitsy.mapsize - 1, bitsy.mapsize - 1, params[4]);
 });
 
 // Duplicates Items, Sprites, and/or Tiles from one location in a room to another
@@ -248,7 +251,7 @@ addDualDialogTag('copyBox', function (environment, parameters) {
 // {copyAllNow "mapId, targetId, copyRoom, pasteRoom"}
 addDualDialogTag('copyAll', function (environment, parameters) {
 	var params = parameters[0].split(',');
-	copyBoxAt(params[0], params[1], 0, 0, 15, 15, params[3], 0, 0, params[4]);
+	copyBoxAt(params[0], params[1], 0, 0, bitsy.mapsize - 1, bitsy.mapsize - 1, params[3], 0, 0, params[4]);
 });
 
 function drawAt(mapId, sourceId, xPos, yPos, roomId) {
@@ -280,15 +283,15 @@ function drawAt(mapId, sourceId, xPos, yPos, roomId) {
 
 	// Trim and sanitize X Position parameter, and set relative positions, even if omitted.
 	xPos = getRelativeNumber(xPos, bitsy.player().x);
-	if (xPos < 0 || xPos > 15) {
-		console.log("CAN'T DRAW. X POSITION (" + xPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
+	if (xPos < 0 || xPos > bitsy.mapsize - 1) {
+		console.log("CAN'T DRAW. X POSITION (" + xPos + ') OUT OF BOUNDS. 0-' + bitsy.mapsize - 1 + ' EXPECTED.');
 		return;
 	}
 
 	// Trim and sanitize Y Position parameter, and set relative positions, even if omitted
 	yPos = getRelativeNumber(yPos, bitsy.player().y);
-	if (yPos < 0 || yPos > 15) {
-		console.log("CAN'T DRAW. Y POSITION (" + yPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
+	if (yPos < 0 || yPos > bitsy.mapsize - 1) {
+		console.log("CAN'T DRAW. Y POSITION (" + yPos + ') OUT OF BOUNDS. 0-' + bitsy.mapsize - 1 + ' EXPECTED.');
 		return;
 	}
 
@@ -336,27 +339,27 @@ function drawAt(mapId, sourceId, xPos, yPos, roomId) {
 function drawBoxAt(mapId, sourceId, x1, y1, x2, y2, roomId) {
 	// Trim and sanitize X and Y Positions, and set relative positions if omitted.
 	x1 = getRelativeNumber(x1, bitsy.player().x);
-	if (x1 < 0 || x1 > 15) {
-		console.log('CLAMPING X1 POSITION. XPOS (' + x1 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
-		x1 = Math.max(0, Math.min(x1, 15));
+	if (x1 < 0 || x1 > bitsy.mapsize - 1) {
+		console.log('CLAMPING X1 POSITION. XPOS (' + x1 + ') OUT OF BOUNDS. 0-' + bitsy.mapsize - 1 + ' EXPECTED.');
+		x1 = Math.max(0, Math.min(x1, bitsy.mapsize - 1));
 	}
 	// X2
 	x2 = getRelativeNumber(x2, bitsy.player().x);
-	if (x2 < 0 || x2 > 15) {
-		console.log('CLAMPING X2 POSITION. xPos (' + x2 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
-		x2 = Math.max(0, Math.min(x2, 15));
+	if (x2 < 0 || x2 > bitsy.mapsize - 1) {
+		console.log('CLAMPING X2 POSITION. xPos (' + x2 + ') OUT OF BOUNDS. 0-' + bitsy.mapsize - 1 + ' EXPECTED.');
+		x2 = Math.max(0, Math.min(x2, bitsy.mapsize - 1));
 	}
 	// Y1
 	y1 = getRelativeNumber(y1, bitsy.player().y);
-	if (y1 < 0 || y1 > 15) {
-		console.log('CLAMPING Y1 POSITION. XPOS (' + y1 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
-		y1 = Math.max(0, Math.min(y1, 15));
+	if (y1 < 0 || y1 > bitsy.mapsize - 1) {
+		console.log('CLAMPING Y1 POSITION. XPOS (' + y1 + ') OUT OF BOUNDS. 0-' + bitsy.mapsize - 1 + ' EXPECTED.');
+		y1 = Math.max(0, Math.min(y1, bitsy.mapsize - 1));
 	}
 	// Y2
 	y2 = getRelativeNumber(y2, bitsy.player().y);
-	if (y2 < 0 || y2 > 15) {
-		console.log('CLAMPING Y2 POSITION. xPos (' + y2 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
-		y2 = Math.max(0, Math.min(y2, 15));
+	if (y2 < 0 || y2 > bitsy.mapsize - 1) {
+		console.log('CLAMPING Y2 POSITION. xPos (' + y2 + ') OUT OF BOUNDS. 0-' + bitsy.mapsize - 1 + ' EXPECTED.');
+		y2 = Math.max(0, Math.min(y2, bitsy.mapsize - 1));
 	}
 
 	// Calculate which coordinates are the actual top left and bottom right.
@@ -400,15 +403,15 @@ function eraseAt(mapId, targetId, xPos, yPos, roomId) {
 
 	// Trim and sanitize X Position parameter, and set relative positions, even if omitted.
 	xPos = getRelativeNumber(xPos, bitsy.player().x);
-	if (xPos < 0 || xPos > 15) {
-		console.log("CAN'T DRAW. X POSITION (" + xPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
+	if (xPos < 0 || xPos > bitsy.mapsize - 1) {
+		console.log("CAN'T DRAW. X POSITION (" + xPos + ') OUT OF BOUNDS. 0-' + bitsy.mapsize - 1 + ' EXPECTED.');
 		return;
 	}
 
 	// Trim and sanitize Y Position parameter, and set relative positions, even if omitted
 	yPos = getRelativeNumber(yPos, bitsy.player().y);
-	if (yPos < 0 || yPos > 15) {
-		console.log("CAN'T DRAW. Y POSITION (" + yPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
+	if (yPos < 0 || yPos > bitsy.mapsize - 1) {
+		console.log("CAN'T DRAW. Y POSITION (" + yPos + ') OUT OF BOUNDS. 0-' + bitsy.mapsize - 1 + ' EXPECTED.');
 		return;
 	}
 
@@ -473,29 +476,10 @@ function eraseAt(mapId, targetId, xPos, yPos, roomId) {
 
 function eraseBoxAt(mapId, targetId, x1, y1, x2, y2, roomId) {
 	// Trim and sanitize X and Y Positions, and set relative positions if omitted.
-	x1 = getRelativeNumber(x1, bitsy.player().x);
-	if (x1 < 0 || x1 > 15) {
-		console.log('CLAMPING X1 POSITION. XPOS (' + x1 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
-		x1 = Math.max(0, Math.min(x1, 15));
-	}
-	// X2
-	x2 = getRelativeNumber(x2, bitsy.player().x);
-	if (x2 < 0 || x2 > 15) {
-		console.log('CLAMPING X2 POSITION. xPos (' + x2 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
-		x2 = Math.max(0, Math.min(x2, 15));
-	}
-	// Y1
-	y1 = getRelativeNumber(y1, bitsy.player().y);
-	if (y1 < 0 || y1 > 15) {
-		console.log('CLAMPING Y1 POSITION. XPOS (' + y1 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
-		y1 = Math.max(0, Math.min(y1, 15));
-	}
-	// Y2
-	y2 = getRelativeNumber(y2, bitsy.player().y);
-	if (y2 < 0 || y2 > 15) {
-		console.log('CLAMPING Y2 POSITION. xPos (' + y2 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
-		y2 = Math.max(0, Math.min(y2, 15));
-	}
+	x1 = clamp(getRelativeNumber(x1, bitsy.player().x), 0, bitsy.mapsize - 1);
+	x2 = clamp(getRelativeNumber(x2, bitsy.player().x), 0, bitsy.mapsize - 1);
+	y1 = clamp(getRelativeNumber(y1, bitsy.player().y), 0, bitsy.mapsize - 1);
+	y2 = clamp(getRelativeNumber(y2, bitsy.player().y), 0, bitsy.mapsize - 1);
 
 	// Calculate which coordinates are the actual top left and bottom right.
 	var topPos = Math.min(y1, y2);
@@ -563,15 +547,15 @@ function replaceAt(targetMapId, targetId, newMapId, newId, xPos, yPos, roomId) {
 
 	// Trim and sanitize X Position parameter, and set relative positions, even if omitted.
 	xPos = getRelativeNumber(xPos, bitsy.player().x);
-	if (xPos < 0 || xPos > 15) {
-		console.log("CAN'T REPLACE. X POSITION (" + xPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
+	if (xPos < 0 || xPos > bitsy.mapsize - 1) {
+		console.log("CAN'T REPLACE. X POSITION (" + xPos + ') OUT OF BOUNDS. 0-' + bitsy.mapsize - 1 + ' EXPECTED.');
 		return;
 	}
 
 	// Trim and sanitize Y Position parameter, and set relative positions, even if omitted
 	yPos = getRelativeNumber(yPos, bitsy.player().y);
-	if (yPos < 0 || yPos > 15) {
-		console.log("CAN'T REPLACE. Y POSITION (" + yPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
+	if (yPos < 0 || yPos > bitsy.mapsize - 1) {
+		console.log("CAN'T REPLACE. Y POSITION (" + yPos + ') OUT OF BOUNDS. 0-' + bitsy.mapsize - 1 + ' EXPECTED.');
 		return;
 	}
 
@@ -639,29 +623,10 @@ function replaceAt(targetMapId, targetId, newMapId, newId, xPos, yPos, roomId) {
 
 function replaceBoxAt(targetMapId, targetId, newMapId, newId, x1, y1, x2, y2, roomId) {
 	// Trim and sanitize X and Y Positions, and set relative positions if omitted.
-	x1 = getRelativeNumber(x1, bitsy.player().x);
-	if (x1 < 0 || x1 > 15) {
-		console.log('CLAMPING X1 POSITION. XPOS (' + x1 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
-		x1 = Math.max(0, Math.min(x1, 15));
-	}
-	// X2
-	x2 = getRelativeNumber(x2, bitsy.player().x);
-	if (x2 < 0 || x2 > 15) {
-		console.log('CLAMPING X2 POSITION. xPos (' + x2 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
-		x2 = Math.max(0, Math.min(x2, 15));
-	}
-	// Y1
-	y1 = getRelativeNumber(y1, bitsy.player().y);
-	if (y1 < 0 || y1 > 15) {
-		console.log('CLAMPING Y1 POSITION. XPOS (' + y1 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
-		y1 = Math.max(0, Math.min(y1, 15));
-	}
-	// Y2
-	y2 = getRelativeNumber(y2, bitsy.player().y);
-	if (y2 < 0 || y2 > 15) {
-		console.log('CLAMPING Y2 POSITION. xPos (' + y2 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
-		y2 = Math.max(0, Math.min(y2, 15));
-	}
+	x1 = clamp(getRelativeNumber(x1, bitsy.player().x), 0, bitsy.mapsize - 1);
+	x2 = clamp(getRelativeNumber(x2, bitsy.player().x), 0, bitsy.mapsize - 1);
+	y1 = clamp(getRelativeNumber(y1, bitsy.player().y), 0, bitsy.mapsize - 1);
+	y2 = clamp(getRelativeNumber(y2, bitsy.player().y), 0, bitsy.mapsize - 1);
 
 	// Calculate which coordinates are the actual top left and bottom right.
 	var topPos = Math.min(y1, y2);
@@ -703,14 +668,14 @@ function copyAt(mapId, targetId, copyXPos, copyYPos, copyRoomId, pasteXPos, past
 
 	// Trim and sanitize Copy Position parameters, and set relative positions, even if omitted.
 	copyXPos = getRelativeNumber(copyXPos, bitsy.player().x);
-	if (copyXPos < 0 || copyXPos > 15) {
-		console.log("CAN'T COPY. X POSITION (" + copyXPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
+	if (copyXPos < 0 || copyXPos > bitsy.mapsize - 1) {
+		console.log("CAN'T COPY. X POSITION (" + copyXPos + ') OUT OF BOUNDS. 0-' + bitsy.mapsize - 1 + ' EXPECTED.');
 		return;
 	}
 
 	copyYPos = getRelativeNumber(copyYPos, bitsy.player().y);
-	if (copyYPos < 0 || copyYPos > 15) {
-		console.log("CAN'T COPY. Y POSITION (" + copyYPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
+	if (copyYPos < 0 || copyYPos > bitsy.mapsize - 1) {
+		console.log("CAN'T COPY. Y POSITION (" + copyYPos + ') OUT OF BOUNDS. 0-' + bitsy.mapsize - 1 + ' EXPECTED.');
 		return;
 	}
 
@@ -728,14 +693,14 @@ function copyAt(mapId, targetId, copyXPos, copyYPos, copyRoomId, pasteXPos, past
 
 	// Trim and sanitize Paste Position parameters, and set relative positions, even if omitted.
 	pasteXPos = getRelativeNumber(pasteXPos, bitsy.player().x);
-	if (pasteXPos < 0 || pasteXPos > 15) {
-		console.log("CAN'T PASTE. X POSITION (" + pasteXPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
+	if (pasteXPos < 0 || pasteXPos > bitsy.mapsize - 1) {
+		console.log("CAN'T PASTE. X POSITION (" + pasteXPos + ') OUT OF BOUNDS. 0-' + bitsy.mapsize - 1 + ' EXPECTED.');
 		return;
 	}
 
 	pasteYPos = getRelativeNumber(pasteYPos, bitsy.player().y);
-	if (pasteYPos < 0 || pasteYPos > 15) {
-		console.log("CAN'T PASTE. Y POSITION (" + pasteYPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
+	if (pasteYPos < 0 || pasteYPos > bitsy.mapsize - 1) {
+		console.log("CAN'T PASTE. Y POSITION (" + pasteYPos + ') OUT OF BOUNDS. 0-' + bitsy.mapsize - 1 + ' EXPECTED.');
 		return;
 	}
 
@@ -797,29 +762,10 @@ function copyAt(mapId, targetId, copyXPos, copyYPos, copyRoomId, pasteXPos, past
 
 function copyBoxAt(mapId, targetId, x1, y1, x2, y2, copyRoomId, pasteXPos, pasteYPos, pasteRoomId) {
 	// Trim and sanitize X and Y Positions, and set relative positions if omitted.
-	x1 = getRelativeNumber(x1, bitsy.player().x);
-	if (x1 < 0 || x1 > 15) {
-		console.log('CLAMPING X1 POSITION. XPOS (' + x1 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
-		x1 = Math.max(0, Math.min(x1, 15));
-	}
-	// X2
-	x2 = getRelativeNumber(x2, bitsy.player().x);
-	if (x2 < 0 || x2 > 15) {
-		console.log('CLAMPING X2 POSITION. xPos (' + x2 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
-		x2 = Math.max(0, Math.min(x2, 15));
-	}
-	// Y1
-	y1 = getRelativeNumber(y1, bitsy.player().y);
-	if (y1 < 0 || y1 > 15) {
-		console.log('CLAMPING Y1 POSITION. XPOS (' + y1 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
-		y1 = Math.max(0, Math.min(y1, 15));
-	}
-	// Y2
-	y2 = getRelativeNumber(y2, bitsy.player().y);
-	if (y2 < 0 || y2 > 15) {
-		console.log('CLAMPING Y2 POSITION. xPos (' + y2 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
-		y2 = Math.max(0, Math.min(y2, 15));
-	}
+	x1 = clamp(getRelativeNumber(x1, bitsy.player().x), 0, bitsy.mapsize - 1);
+	x2 = clamp(getRelativeNumber(x2, bitsy.player().x), 0, bitsy.mapsize - 1);
+	y1 = clamp(getRelativeNumber(y1, bitsy.player().y), 0, bitsy.mapsize - 1);
+	y2 = clamp(getRelativeNumber(y2, bitsy.player().y), 0, bitsy.mapsize - 1);
 
 	// Trim and sanitize Target Map ID / Type parameter, and use any if not provided.
 	if (mapId == undefined) {
@@ -859,15 +805,15 @@ function copyBoxAt(mapId, targetId, x1, y1, x2, y2, copyRoomId, pasteXPos, paste
 
 	// Trim and sanitize Paste Position parameters, and set relative positions, even if omitted.
 	pasteXPos = getRelativeNumber(pasteXPos, bitsy.player().x);
-	if (pasteXPos < 0 || pasteXPos > 15) {
-		console.log("CAN'T PASTE. X POSITION (" + pasteXPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
+	if (pasteXPos < 0 || pasteXPos > bitsy.mapsize - 1) {
+		console.log("CAN'T PASTE. X POSITION (" + pasteXPos + ') OUT OF BOUNDS. 0-' + bitsy.mapsize - 1 + ' EXPECTED.');
 		return;
 	}
 
 
 	pasteYPos = getRelativeNumber(pasteYPos, bitsy.player().y);
-	if (pasteYPos < 0 || pasteYPos > 15) {
-		console.log("CAN'T PASTE. Y POSITION (" + pasteYPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
+	if (pasteYPos < 0 || pasteYPos > bitsy.mapsize - 1) {
+		console.log("CAN'T PASTE. Y POSITION (" + pasteYPos + ') OUT OF BOUNDS. 0-' + bitsy.mapsize - 1 + ' EXPECTED.');
 		return;
 	}
 
