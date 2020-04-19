@@ -314,7 +314,7 @@ function drawAt(mapId, sourceId, xPos, yPos, roomId) {
 		}
 	} else if (mapId.toUpperCase() == 'SPR') {
 		if (bitsy.sprite[sourceId] != undefined) {
-			if (bitsy.sprite[sourceId].id == 'A') {
+			if (bitsy.sprite[sourceId].id === bitsy.playerId) {
 				console.log("CAN'T TARGET AVATAR. SKIPPING.");
 			} else if (bitsy.room[roomId] != undefined) {
 				bitsy.sprite[sourceId].room = roomId;
@@ -443,7 +443,7 @@ function eraseAt(mapId, targetId, xPos, yPos, roomId) {
 	if (mapId.toUpperCase() != 'TIL' && mapId.toUpperCase() != 'ITM') {
 		if (targetId == 'ANY') {
 			Object.values(bitsy.sprite).forEach(function (spr) {
-				if (spr.id == 'A') {
+				if (spr.id === bity.playerId) {
 					console.log("CAN'T TARGET AVATAR. SKIPPING.");
 				} else if (spr.room == roomId && spr.x == xPos && spr.y == yPos) {
 					spr.x = 0;
@@ -452,7 +452,7 @@ function eraseAt(mapId, targetId, xPos, yPos, roomId) {
 				}
 			});
 		} else if (bitsy.sprite[targetId] != undefined) {
-			if (bitsy.sprite[targetId].id == 'A') {
+			if (bitsy.sprite[targetId].id === bity.playerId) {
 				console.log("CAN'T TARGET AVATAR. SKIPPING.");
 			} else if (bitsy.sprite[targetId].room == roomId && bitsy.sprite[targetId].x == xPos && bitsy.sprite[targetId].y == yPos) {
 				bitsy.sprite[targetId].x = 0;
@@ -590,7 +590,7 @@ function replaceAt(targetMapId, targetId, newMapId, newId, xPos, yPos, roomId) {
 	if (targetMapId.toUpperCase() != 'TIL' && targetMapId.toUpperCase() != 'ITM') {
 		if (targetId == 'ANY') {
 			Object.values(bitsy.sprite).forEach(function (spr) {
-				if (spr.id == 'A') {
+				if (spr.id === bity.playerId) {
 					console.log("CAN'T TARGET AVATAR. SKIPPING.");
 				} else if (spr.room == roomId && spr.x == xPos && spr.y == yPos) {
 					spr.x = 0;
@@ -600,7 +600,7 @@ function replaceAt(targetMapId, targetId, newMapId, newId, xPos, yPos, roomId) {
 				}
 			});
 		} else if (bitsy.sprite[targetId] != undefined) {
-			if (bitsy.sprite[targetId] != 'A' && bitsy.sprite[targetId].room == roomId && bitsy.sprite[targetId].x == xPos && bitsy.sprite[targetId].y == yPos) {
+			if (bitsy.sprite[targetId] !== bity.playerId && bitsy.sprite[targetId].room == roomId && bitsy.sprite[targetId].x == xPos && bitsy.sprite[targetId].y == yPos) {
 				bitsy.sprite[targetId].x = 0;
 				bitsy.sprite[targetId].y = 0;
 				bitsy.sprite[targetId].room = 'default';
@@ -733,7 +733,7 @@ function copyAt(mapId, targetId, copyXPos, copyYPos, copyRoomId, pasteXPos, past
 	if (mapId.toUpperCase() != 'TIL' && mapId.toUpperCase() != 'ITM') {
 		if (targetId == 'ANY') {
 			Object.values(bitsy.sprite).forEach(function (spr) {
-				if (spr.id == 'A') {
+				if (spr.id === bity.playerId) {
 					console.log("CAN'T TARGET AVATAR. SKIPPING.");
 				} else if (spr.room == copyRoomId && spr.x == copyXPos && spr.y == copyYPos) {
 					var copyId = spr.id;
@@ -741,7 +741,7 @@ function copyAt(mapId, targetId, copyXPos, copyYPos, copyRoomId, pasteXPos, past
 				}
 			});
 		} else if (bitsy.sprite[targetId] != undefined) {
-			if (bitsy.sprite[targetId] != 'A' && bitsy.sprite[targetId].room == copyRoomId && bitsy.sprite[targetId].x == copyXPos && bitsy.sprite[targetId].y == copyYPos) {
+			if (bitsy.sprite[targetId] !== bity.playerId && bitsy.sprite[targetId].room == copyRoomId && bitsy.sprite[targetId].x == copyXPos && bitsy.sprite[targetId].y == copyYPos) {
 				var copyId = bitsy.sprite[targetId].id;
 				drawAt('SPR', copyId, pasteXPos, pasteYPos, pasteRoomId);
 			}
@@ -870,7 +870,7 @@ function copyBoxAt(mapId, targetId, x1, y1, x2, y2, copyRoomId, pasteXPos, paste
 			if (mapId.toUpperCase() != 'TIL' && mapId.toUpperCase() != 'ITM') {
 				if (targetId == 'ANY') {
 					Object.values(bitsy.sprite).forEach(function (spr) {
-						if (spr.id == 'A') {
+						if (spr.id === bity.playerId) {
 							console.log("CAN'T TARGET AVATAR. SKIPPING.");
 						} else if (spr.room == copyRoomId && spr.x == xPos && spr.y == yPos) {
 							copyIds.push(spr.id);
@@ -880,7 +880,7 @@ function copyBoxAt(mapId, targetId, x1, y1, x2, y2, copyRoomId, pasteXPos, paste
 						}
 					});
 				} else if (bitsy.sprite[targetId] != undefined) {
-					if (bitsy.sprite[targetId] != 'A' && bitsy.sprite[targetId].room == copyRoomId && bitsy.sprite[targetId].x == xPos && bitsy.sprite[targetId].y == yPos) {
+					if (bitsy.sprite[targetId] !== bity.playerId && bitsy.sprite[targetId].room == copyRoomId && bitsy.sprite[targetId].x == xPos && bitsy.sprite[targetId].y == yPos) {
 						copyIds.push(bitsy.sprite[i].id);
 						copyMaps.push('SPR');
 						copyXs.push(pasteXPos + xPos - 1);
