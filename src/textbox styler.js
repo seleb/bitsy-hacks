@@ -735,19 +735,9 @@ var textboxStyler = window.textboxStyler = {
 		if (newStyle == undefined || textboxStyler.styles[newStyle] == undefined) {
 			textboxStyler.resetStyle();
 			console.log('UNDEFINED STYLE. RESETTING TO DEFAULT.');
-			return false;
+			return;
 		}
 		textboxStyler.activeStyle = Object.assign({}, textboxStyler.defaultStyle, textboxStyler.styles[newStyle]);
-		/*
-		Object.keys(textboxStyler.activeStyle).forEach(function(prop) {
-			if (textboxStyler.styles[newStyle].hasOwnProperty(prop)) {
-				textboxStyler.activeStyle[prop] = textboxStyler.styles[newStyle][prop];
-			}
-			else {
-				textboxStyler.activeStyle[prop] = textboxStyler.defaultStyle[prop];
-			}
-		});
-		*/
 		textboxStyler.updateTextbox(); // Updates values used for rendering text.
 	},
 	// Applies defined style parameters to the existing style, without changing anything else.
@@ -756,17 +746,9 @@ var textboxStyler = window.textboxStyler = {
 		// If newStyle doesn't exist, does nothing.
 		if (textboxStyler.styles[newStyle] == undefined) {
 			console.log('UNDEFINED STYLE.');
-			return false;
+			return;
 		}
 		textboxStyler.activeStyle = Object.assign({}, textboxStyler.activeStyle, textboxStyler.styles[newStyle]);
-		/*
-		Object.keys(textboxStyler.activeStyle).forEach(function(prop) {
-			if (textboxStyler.styles[newStyle].hasOwnProperty(prop))
-			{
-				textboxStyler.activeStyle[prop] = textboxStyler.styles[newStyle][prop];
-			}
-		});
-		*/
 		textboxStyler.updateTextbox();
 	},
 	// Manually sets a specific property of the active style.
@@ -776,7 +758,6 @@ var textboxStyler = window.textboxStyler = {
 		if (textboxStyler.activeStyle.hasOwnProperty(property)) {
 			if (value == undefined || value == 'default') {
 				console.log('UNDEFINED PROPERTY. SETTING TO DEFAULT.');
-				// textboxStyle.activeStyle[property] = textboxStyle.defaultStyle[property];
 				textboxStyler.activeStyle[property] = Object.assign({}, textboxStyler.defaultStyle)[property];
 			} else {
 				textboxStyler.activeStyle[property] = value;
@@ -788,7 +769,6 @@ var textboxStyler = window.textboxStyler = {
 	// Resets Active Textbox Style to Default Style
 	resetStyle: function () {
 		console.log('RESETTING TO DEFAULT TEXTBOX STYLE');
-		// textboxStyler.activeStyle = textboxStyler.defaultStyle;
 		textboxStyler.activeStyle = Object.assign({}, textboxStyler.defaultStyle);
 
 		textboxStyler.updateTextbox();
@@ -797,11 +777,10 @@ var textboxStyler = window.textboxStyler = {
 	resetProperty: function (property) {
 		console.log('RESETTING STYLE PROPERTY TO DEFAULT: ' + property);
 		if (textboxStyler.activeStyle.hasOwnProperty(property)) {
-			// textboxStyle.activeStyle[property] = textboxStyle.defaultStyle[property]; //Don't do it like this. Clone object instead of passing ref.
 			textboxStyler.activeStyle[property] = Object.assign({}, textboxStyler.defaultStyle)[property];
 		} else {
 			console.log('UNDEFINED PROPERTY.');
-			return false;
+			return;
 		}
 
 		textboxStyler.updateTextbox();
@@ -1020,8 +999,6 @@ var textboxStyler = window.textboxStyler = {
 		window.textboxInfo.padding_horz = textboxStyler.activeStyle.textPaddingX;
 		window.textboxInfo.arrow_height = textboxStyler.activeStyle.textPaddingY + textboxStyler.activeStyle.borderHeight - 4;
 
-		var pixelsPerRow = (textboxStyler.activeStyle.textboxWidth * 2) - (textboxStyler.activeStyle.borderWidth * 2) - (textboxStyler.activeStyle.textPaddingX * 2);
-
 		window.textboxInfo.img = bitsy.ctx.createImageData(window.textboxInfo.width * bitsy.scale, window.textboxInfo.height * bitsy.scale);
 	},
 	// Draw border to the background of the textbox image, before rendering text or arrows.
@@ -1122,44 +1099,18 @@ var textboxStyler = window.textboxStyler = {
 								window.textboxInfo.img.data[pxl + 2] = textboxStyler.activeStyle.borderMidColor[2];
 								window.textboxInfo.img.data[pxl + 3] = textboxStyler.activeStyle.borderMidColor[3];
 							}
-							// DEBUG COLORS. UNCOMMENT TO DRAW PIXELS BASED ON TEXTBOX COORDINATES, 0-255
-							/* window.textboxInfo.img.data[pxl+0] = 204-(x);
-							window.textboxInfo.img.data[pxl+1] = 204-(x+y);
-							window.textboxInfo.img.data[pxl+2] = 204-(y*2);
-							window.textboxInfo.img.data[pxl+3] = 255;
-							//DRAWS TOP-LEFT-ANCHORED GRID TILE COORDINATES IN GREY
-							if (y % borderHeight == 0 || x % borderWidth == 0) {
-								window.textboxInfo.img.data[pxl+0] = 128;
-								window.textboxInfo.img.data[pxl+1] = 128;
-								window.textboxInfo.img.data[pxl+2] = 128;
-								window.textboxInfo.img.data[pxl+3] = 255;
-							} */
 						}
 						// If it's a border BG pixel, gets RGBA colors based on if it's on an edge or in middle.
-						else {
-							if (borderTop || borderBottom || borderLeft || borderRight) {
-								window.textboxInfo.img.data[pxl + 0] = textboxStyler.activeStyle.borderBGColor[0];
-								window.textboxInfo.img.data[pxl + 1] = textboxStyler.activeStyle.borderBGColor[1];
-								window.textboxInfo.img.data[pxl + 2] = textboxStyler.activeStyle.borderBGColor[2];
-								window.textboxInfo.img.data[pxl + 3] = textboxStyler.activeStyle.borderBGColor[3];
-							} else {
-								window.textboxInfo.img.data[pxl + 0] = textboxStyler.activeStyle.textboxColor[0];
-								window.textboxInfo.img.data[pxl + 1] = textboxStyler.activeStyle.textboxColor[1];
-								window.textboxInfo.img.data[pxl + 2] = textboxStyler.activeStyle.textboxColor[2];
-								window.textboxInfo.img.data[pxl + 3] = textboxStyler.activeStyle.textboxColor[3];
-							}
-							// DEBUG COLORS. UNCOMMENT TO DRAW PIXELS BASED ON TEXTBOX COORDINATES, 0-255
-							/* window.textboxInfo.img.data[pxl+0] = (x)+102;
-							window.textboxInfo.img.data[pxl+1] = (x+y);
-							window.textboxInfo.img.data[pxl+2] = (y*2)+51;
-							window.textboxInfo.img.data[pxl+3] = 255;
-							//DRAWS TOP-LEFT-ANCHORED GRID COORDINATES IN GREY
-							if (y % borderHeight == 0 || x % borderWidth == 0) {
-								window.textboxInfo.img.data[pxl+0] = 76;
-								window.textboxInfo.img.data[pxl+1] = 76;
-								window.textboxInfo.img.data[pxl+2] = 76;
-								window.textboxInfo.img.data[pxl+3] = 255;
-							} */
+						else if (borderTop || borderBottom || borderLeft || borderRight) {
+							window.textboxInfo.img.data[pxl + 0] = textboxStyler.activeStyle.borderBGColor[0];
+							window.textboxInfo.img.data[pxl + 1] = textboxStyler.activeStyle.borderBGColor[1];
+							window.textboxInfo.img.data[pxl + 2] = textboxStyler.activeStyle.borderBGColor[2];
+							window.textboxInfo.img.data[pxl + 3] = textboxStyler.activeStyle.borderBGColor[3];
+						} else {
+							window.textboxInfo.img.data[pxl + 0] = textboxStyler.activeStyle.textboxColor[0];
+							window.textboxInfo.img.data[pxl + 1] = textboxStyler.activeStyle.textboxColor[1];
+							window.textboxInfo.img.data[pxl + 2] = textboxStyler.activeStyle.textboxColor[2];
+							window.textboxInfo.img.data[pxl + 3] = textboxStyler.activeStyle.textboxColor[3];
 						}
 					}
 				}
