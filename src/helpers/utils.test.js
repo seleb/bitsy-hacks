@@ -3,7 +3,8 @@ import {
 	getImage,
 	inject,
 	unique,
-	getRelativeNumber
+	getRelativeNumber,
+	clamp
 } from './utils';
 
 function constructor() {
@@ -116,5 +117,19 @@ describe('getRelativeNumber', () => {
 		expect(getRelativeNumber(1, 5)).toBe(1);
 		expect(getRelativeNumber(0, 5)).toBe(0);
 		expect(getRelativeNumber(-1, 5)).toBe(-1);
+	});
+});
+
+describe('clamp', () => {
+	it('returns the min if the value is less than the min', () => {
+		expect(clamp(0, 1, 3)).toBe(1);
+	});
+	it('returns the max if the value is greater than the max', () => {
+		expect(clamp(4, 1, 3)).toBe(3);
+	});
+	it('returns the value otherwise', () => {
+		expect(clamp(1, 1, 3)).toBe(1);
+		expect(clamp(2, 1, 3)).toBe(2);
+		expect(clamp(3, 1, 3)).toBe(3);
 	});
 });

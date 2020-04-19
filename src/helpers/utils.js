@@ -123,3 +123,13 @@ export function getRelativeNumber(value, relativeTo) {
 	}
 	return Number(v);
 }
+
+/**
+ * @param {number} value number to clamp
+ * @param {number} min minimum
+ * @param {number} max maximum
+ * @return min if value < min, max if value > max, value otherwise
+ */
+export function clamp(value, min, max) {
+	return Math.max(min, Math.min(max, value));
+}
