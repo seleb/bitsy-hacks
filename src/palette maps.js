@@ -117,6 +117,7 @@ import {
 	after,
 	addDualDialogTag,
 } from './helpers/kitsy-script-toolkit';
+import { getRelativeNumber } from './helpers/utils';
 
 export var hackOptions = {
 	paletteTag: '#PAL',
@@ -294,10 +295,7 @@ function parsePaletteMaps() {
 // Trim and sanitize position parameter, and set relative positions
 function getPosition(position, axis) {
 	var playerPosition = bitsy.player()[axis];
-	var p = (position === undefined ? playerPosition : position).toString().trim();
-	if (p.startsWith('+') || p.startsWith('-')) {
-		p = playerPosition + Number(p);
-	}
+	var p = getRelativeNumber(position, playerPosition);
 	if (p < 0 || p > bitsy.mapsize - 1) {
 		console.error('Position ' + p + '' + axis + ' out of bounds; 0-' + bitsy.mapsize - 1 + ' expected');
 		return undefined;
