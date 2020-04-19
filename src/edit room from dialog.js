@@ -152,6 +152,7 @@ import bitsy from 'bitsy';
 import {
 	addDualDialogTag,
 } from './helpers/kitsy-script-toolkit';
+import { getRelativeNumber } from './helpers/utils';
 
 // Draws an Item, Sprite, or Tile at a location in a room
 // {draw "mapId, sourceId, xPos, yPos, roomID"}
@@ -302,36 +303,14 @@ function drawAt(mapId, sourceId, xPos, yPos, roomId) {
 
 
 	// Trim and sanitize X Position parameter, and set relative positions, even if omitted.
-	if (xPos == undefined) {
-		xPos = bitsy.player().x;
-	} else {
-		xPos = xPos.toString().trim();
-		if (xPos == '') {
-			xPos = bitsy.player().x;
-		} else if (xPos.includes('+')) {
-			xPos = bitsy.player().x + parseInt(xPos.substring(1), 10);
-		} else if (xPos.includes('-')) {
-			xPos = bitsy.player().x - parseInt(xPos.substring(1), 10);
-		}
-	}
+	xPos = getRelativeNumber(xPos, bitsy.player().x);
 	if (xPos < 0 || xPos > 15) {
 		console.log("CAN'T DRAW. X POSITION (" + xPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		return;
 	}
 
 	// Trim and sanitize Y Position parameter, and set relative positions, even if omitted
-	if (yPos == undefined) {
-		yPos = bitsy.player().y;
-	} else {
-		yPos = yPos.toString().trim();
-		if (yPos == '') {
-			yPos = bitsy.player().y;
-		} else if (yPos.includes('+')) {
-			yPos = bitsy.player().y + parseInt(yPos.substring(1), 10);
-		} else if (yPos.includes('-')) {
-			yPos = bitsy.player().y - parseInt(yPos.substring(1), 10);
-		}
-	}
+	yPos = getRelativeNumber(yPos, bitsy.player().y);
 	if (yPos < 0 || yPos > 15) {
 		console.log("CAN'T DRAW. Y POSITION (" + yPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		return;
@@ -380,69 +359,25 @@ function drawAt(mapId, sourceId, xPos, yPos, roomId) {
 
 function drawBoxAt(mapId, sourceId, x1, y1, x2, y2, roomId) {
 	// Trim and sanitize X and Y Positions, and set relative positions if omitted.
-	if (x1 == undefined) {
-		x1 = bitsy.player().x;
-	} else {
-		x1 = x1.toString().trim();
-		if (x1 == '') {
-			x1 = bitsy.player().x;
-		} else if (x1.includes('+')) {
-			x1 = bitsy.player().x + parseInt(x1.substring(1), 10);
-		} else if (x1.includes('-')) {
-			x1 = bitsy.player().x - parseInt(x1.substring(1), 10);
-		}
-	}
+	x1 = getRelativeNumber(x1, bitsy.player().x);
 	if (x1 < 0 || x1 > 15) {
 		console.log('CLAMPING X1 POSITION. XPOS (' + x1 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		x1 = Math.max(0, Math.min(x1, 15));
 	}
 	// X2
-	if (x2 == undefined) {
-		x2 = bitsy.player().x;
-	} else {
-		x2 = x2.toString().trim();
-		if (x2 == '') {
-			x2 = bitsy.player().x;
-		} else if (x2.includes('+')) {
-			x2 = bitsy.player().x + parseInt(x2.substring(1), 10);
-		} else if (x2.includes('-')) {
-			x2 = bitsy.player().x - parseInt(x2.substring(1), 10);
-		}
-	}
+	x2 = getRelativeNumber(x2, bitsy.player().x);
 	if (x2 < 0 || x2 > 15) {
 		console.log('CLAMPING X2 POSITION. xPos (' + x2 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		x2 = Math.max(0, Math.min(x2, 15));
 	}
 	// Y1
-	if (y1 == undefined) {
-		y1 = bitsy.player().y;
-	} else {
-		y1 = y1.toString().trim();
-		if (y1 == '') {
-			y1 = bitsy.player().y;
-		} else if (y1.includes('+')) {
-			y1 = bitsy.player().y + parseInt(y1.substring(1), 10);
-		} else if (y1.includes('-')) {
-			y1 = bitsy.player().y - parseInt(y1.substring(1), 10);
-		}
-	}
+	y1 = getRelativeNumber(y1, bitsy.player().y);
 	if (y1 < 0 || y1 > 15) {
 		console.log('CLAMPING Y1 POSITION. XPOS (' + y1 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		y1 = Math.max(0, Math.min(y1, 15));
 	}
 	// Y2
-	if (y2 == undefined) {
-		y2 = bitsy.player().y;
-	} else {
-		y2 = y2.toString().trim();
-		if (y2 == '') {
-			y2 = bitsy.player().y;
-		} else if (y2.includes('+')) {
-			y2 = bitsy.player().y + parseInt(y2.substring(1), 10);
-		} else if (y2.includes('-')) {
-			y2 = bitsy.player().y - parseInt(y2.substring(1), 10);
-		}
-	}
+	y2 = getRelativeNumber(y2, bitsy.player().y);
 	if (y2 < 0 || y2 > 15) {
 		console.log('CLAMPING Y2 POSITION. xPos (' + y2 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		y2 = Math.max(0, Math.min(y2, 15));
@@ -488,36 +423,14 @@ function eraseAt(mapId, targetId, xPos, yPos, roomId) {
 	}
 
 	// Trim and sanitize X Position parameter, and set relative positions, even if omitted.
-	if (xPos == undefined) {
-		xPos = bitsy.player().x;
-	} else {
-		xPos = xPos.toString().trim();
-		if (xPos == '') {
-			xPos = bitsy.player().x;
-		} else if (xPos.includes('+')) {
-			xPos = bitsy.player().x + parseInt(xPos.substring(1), 10);
-		} else if (xPos.includes('-')) {
-			xPos = bitsy.player().x - parseInt(xPos.substring(1), 10);
-		}
-	}
+	xPos = getRelativeNumber(xPos, bitsy.player().x);
 	if (xPos < 0 || xPos > 15) {
 		console.log("CAN'T DRAW. X POSITION (" + xPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		return;
 	}
 
 	// Trim and sanitize Y Position parameter, and set relative positions, even if omitted
-	if (yPos == undefined) {
-		yPos = bitsy.player().y;
-	} else {
-		yPos = yPos.toString().trim();
-		if (yPos == '') {
-			yPos = bitsy.player().y;
-		} else if (yPos.includes('+')) {
-			yPos = bitsy.player().y + parseInt(yPos.substring(1), 10);
-		} else if (yPos.includes('-')) {
-			yPos = bitsy.player().y - parseInt(yPos.substring(1), 10);
-		}
-	}
+	yPos = getRelativeNumber(yPos, bitsy.player().y);
 	if (yPos < 0 || yPos > 15) {
 		console.log("CAN'T DRAW. Y POSITION (" + yPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		return;
@@ -584,69 +497,25 @@ function eraseAt(mapId, targetId, xPos, yPos, roomId) {
 
 function eraseBoxAt(mapId, targetId, x1, y1, x2, y2, roomId) {
 	// Trim and sanitize X and Y Positions, and set relative positions if omitted.
-	if (x1 == undefined) {
-		x1 = bitsy.player().x;
-	} else {
-		x1 = x1.toString().trim();
-		if (x1 == '') {
-			x1 = bitsy.player().x;
-		} else if (x1.includes('+')) {
-			x1 = bitsy.player().x + parseInt(x1.substring(1), 10);
-		} else if (x1.includes('-')) {
-			x1 = bitsy.player().x - parseInt(x1.substring(1), 10);
-		}
-	}
+	x1 = getRelativeNumber(x1, bitsy.player().x);
 	if (x1 < 0 || x1 > 15) {
 		console.log('CLAMPING X1 POSITION. XPOS (' + x1 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		x1 = Math.max(0, Math.min(x1, 15));
 	}
 	// X2
-	if (x2 == undefined) {
-		x2 = bitsy.player().x;
-	} else {
-		x2 = x2.toString().trim();
-		if (x2 == '') {
-			x2 = bitsy.player().x;
-		} else if (x2.includes('+')) {
-			x2 = bitsy.player().x + parseInt(x2.substring(1), 10);
-		} else if (x2.includes('-')) {
-			x2 = bitsy.player().x - parseInt(x2.substring(1), 10);
-		}
-	}
+	x2 = getRelativeNumber(x2, bitsy.player().x);
 	if (x2 < 0 || x2 > 15) {
 		console.log('CLAMPING X2 POSITION. xPos (' + x2 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		x2 = Math.max(0, Math.min(x2, 15));
 	}
 	// Y1
-	if (y1 == undefined) {
-		y1 = bitsy.player().y;
-	} else {
-		y1 = y1.trim();
-		if (y1 == '') {
-			y1 = bitsy.player().y;
-		} else if (y1.includes('+')) {
-			y1 = bitsy.player().y + parseInt(y1.substring(1), 10);
-		} else if (y1.includes('-')) {
-			y1 = bitsy.player().y - parseInt(y1.substring(1), 10);
-		}
-	}
+	y1 = getRelativeNumber(y1, bitsy.player().y);
 	if (y1 < 0 || y1 > 15) {
 		console.log('CLAMPING Y1 POSITION. XPOS (' + y1 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		y1 = Math.max(0, Math.min(y1, 15));
 	}
 	// Y2
-	if (y2 == undefined) {
-		y2 = bitsy.player().y;
-	} else {
-		y2 = y2.toString().trim();
-		if (y2 == '') {
-			y2 = bitsy.player().y;
-		} else if (y2.includes('+')) {
-			y2 = bitsy.player().y + parseInt(y2.substring(1), 10);
-		} else if (y2.includes('-')) {
-			y2 = bitsy.player().y - parseInt(y2.substring(1), 10);
-		}
-	}
+	y2 = getRelativeNumber(y2, bitsy.player().y);
 	if (y2 < 0 || y2 > 15) {
 		console.log('CLAMPING Y2 POSITION. xPos (' + y2 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		y2 = Math.max(0, Math.min(y2, 15));
@@ -717,36 +586,14 @@ function replaceAt(targetMapId, targetId, newMapId, newId, xPos, yPos, roomId) {
 
 
 	// Trim and sanitize X Position parameter, and set relative positions, even if omitted.
-	if (xPos == undefined) {
-		xPos = bitsy.player().x;
-	} else {
-		xPos = xPos.toString().trim();
-		if (xPos == '') {
-			xPos = bitsy.player().x;
-		} else if (xPos.includes('+')) {
-			xPos = bitsy.player().x + parseInt(xPos.substring(1), 10);
-		} else if (xPos.includes('-')) {
-			xPos = bitsy.player().x - parseInt(xPos.substring(1), 10);
-		}
-	}
+	xPos = getRelativeNumber(xPos, bitsy.player().x);
 	if (xPos < 0 || xPos > 15) {
 		console.log("CAN'T REPLACE. X POSITION (" + xPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		return;
 	}
 
 	// Trim and sanitize Y Position parameter, and set relative positions, even if omitted
-	if (yPos == undefined) {
-		yPos = bitsy.player().y;
-	} else {
-		yPos = yPos.toString().trim();
-		if (yPos == '') {
-			yPos = bitsy.player().y;
-		} else if (yPos.includes('+')) {
-			yPos = bitsy.player().y + parseInt(yPos.substring(1), 10);
-		} else if (yPos.includes('-')) {
-			yPos = bitsy.player().y - parseInt(yPos.substring(1), 10);
-		}
-	}
+	yPos = getRelativeNumber(yPos, bitsy.player().y);
 	if (yPos < 0 || yPos > 15) {
 		console.log("CAN'T REPLACE. Y POSITION (" + yPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		return;
@@ -816,69 +663,25 @@ function replaceAt(targetMapId, targetId, newMapId, newId, xPos, yPos, roomId) {
 
 function replaceBoxAt(targetMapId, targetId, newMapId, newId, x1, y1, x2, y2, roomId) {
 	// Trim and sanitize X and Y Positions, and set relative positions if omitted.
-	if (x1 == undefined) {
-		x1 = bitsy.player().x;
-	} else {
-		x1 = x1.toString().trim();
-		if (x1 == '') {
-			x1 = bitsy.player().x;
-		} else if (x1.includes('+')) {
-			x1 = bitsy.player().x + parseInt(x1.substring(1), 10);
-		} else if (x1.includes('-')) {
-			x1 = bitsy.player().x - parseInt(x1.substring(1), 10);
-		}
-	}
+	x1 = getRelativeNumber(x1, bitsy.player().x);
 	if (x1 < 0 || x1 > 15) {
 		console.log('CLAMPING X1 POSITION. XPOS (' + x1 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		x1 = Math.max(0, Math.min(x1, 15));
 	}
 	// X2
-	if (x2 == undefined) {
-		x2 = bitsy.player().x;
-	} else {
-		x2 = x2.toString().trim();
-		if (x2 == '') {
-			x2 = bitsy.player().x;
-		} else if (x2.includes('+')) {
-			x2 = bitsy.player().x + parseInt(x2.substring(1), 10);
-		} else if (x2.includes('-')) {
-			x2 = bitsy.player().x - parseInt(x2.substring(1), 10);
-		}
-	}
+	x2 = getRelativeNumber(x2, bitsy.player().x);
 	if (x2 < 0 || x2 > 15) {
 		console.log('CLAMPING X2 POSITION. xPos (' + x2 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		x2 = Math.max(0, Math.min(x2, 15));
 	}
 	// Y1
-	if (y1 == undefined) {
-		y1 = bitsy.player().y;
-	} else {
-		y1 = y1.toString().trim();
-		if (y1 == '') {
-			y1 = bitsy.player().y;
-		} else if (y1.includes('+')) {
-			y1 = bitsy.player().y + parseInt(y1.substring(1), 10);
-		} else if (y1.includes('-')) {
-			y1 = bitsy.player().y - parseInt(y1.substring(1), 10);
-		}
-	}
+	y1 = getRelativeNumber(y1, bitsy.player().y);
 	if (y1 < 0 || y1 > 15) {
 		console.log('CLAMPING Y1 POSITION. XPOS (' + y1 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		y1 = Math.max(0, Math.min(y1, 15));
 	}
 	// Y2
-	if (y2 == undefined) {
-		y2 = bitsy.player().y;
-	} else {
-		y2 = y2.toString().trim();
-		if (y2 == '') {
-			y2 = bitsy.player().y;
-		} else if (y2.includes('+')) {
-			y2 = bitsy.player().y + parseInt(y2.substring(1), 10);
-		} else if (y2.includes('-')) {
-			y2 = bitsy.player().y - parseInt(y2.substring(1), 10);
-		}
-	}
+	y2 = getRelativeNumber(y2, bitsy.player().y);
 	if (y2 < 0 || y2 > 15) {
 		console.log('CLAMPING Y2 POSITION. xPos (' + y2 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		y2 = Math.max(0, Math.min(y2, 15));
@@ -923,35 +726,13 @@ function copyAt(mapId, targetId, copyXPos, copyYPos, copyRoomId, pasteXPos, past
 	}
 
 	// Trim and sanitize Copy Position parameters, and set relative positions, even if omitted.
-	if (copyXPos == undefined) {
-		copyXPos = bitsy.player().x;
-	} else {
-		copyXPos = copyXPos.toString().trim();
-		if (copyXPos == '') {
-			copyXPos = bitsy.player().x;
-		} else if (copyXPos.includes('+')) {
-			copyXPos = bitsy.player().x + parseInt(copyXPos.substring(1), 10);
-		} else if (copyXPos.includes('-')) {
-			copyXPos = bitsy.player().x - parseInt(copyXPos.substring(1), 10);
-		}
-	}
+	copyXPos = getRelativeNumber(copyXPos, bitsy.player().x);
 	if (copyXPos < 0 || copyXPos > 15) {
 		console.log("CAN'T COPY. X POSITION (" + copyXPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		return;
 	}
 
-	if (copyYPos == undefined) {
-		copyYPos = bitsy.player().y;
-	} else {
-		copyYPos = copyYPos.toString().trim();
-		if (copyYPos == '') {
-			copyYPos = bitsy.player().y;
-		} else if (copyYPos.includes('+')) {
-			copyYPos = bitsy.player().y + parseInt(copyYPos.substring(1), 10);
-		} else if (copyYPos.includes('-')) {
-			copyYPos = bitsy.player().y - parseInt(copyYPos.substring(1), 10);
-		}
-	}
+	copyYPos = getRelativeNumber(copyYPos, bitsy.player().y);
 	if (copyYPos < 0 || copyYPos > 15) {
 		console.log("CAN'T COPY. Y POSITION (" + copyYPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		return;
@@ -970,35 +751,13 @@ function copyAt(mapId, targetId, copyXPos, copyYPos, copyRoomId, pasteXPos, past
 	}
 
 	// Trim and sanitize Paste Position parameters, and set relative positions, even if omitted.
-	if (pasteXPos == undefined) {
-		pasteXPos = bitsy.player().x;
-	} else {
-		pasteXPos = pasteXPos.toString().trim();
-		if (pasteXPos == '') {
-			pasteXPos = bitsy.player().x;
-		} else if (pasteXPos.includes('+')) {
-			pasteXPos = bitsy.player().x + parseInt(pasteXPos.substring(1), 10);
-		} else if (pasteXPos.includes('-')) {
-			pasteXPos = bitsy.player().x - parseInt(pasteXPos.substring(1), 10);
-		}
-	}
+	pasteXPos = getRelativeNumber(pasteXPos, bitsy.player().x);
 	if (pasteXPos < 0 || pasteXPos > 15) {
 		console.log("CAN'T PASTE. X POSITION (" + pasteXPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		return;
 	}
 
-	if (pasteYPos == undefined) {
-		pasteYPos = bitsy.player().y;
-	} else {
-		pasteYPos = pasteYPos.toString().trim();
-		if (pasteYPos == '') {
-			pasteYPos = bitsy.player().y;
-		} else if (pasteYPos.includes('+')) {
-			pasteYPos = bitsy.player().y + parseInt(pasteYPos.substring(1), 10);
-		} else if (pasteYPos.includes('-')) {
-			pasteYPos = bitsy.player().y - parseInt(pasteYPos.substring(1), 10);
-		}
-	}
+	pasteYPos = getRelativeNumber(pasteYPos, bitsy.player().y);
 	if (pasteYPos < 0 || pasteYPos > 15) {
 		console.log("CAN'T PASTE. Y POSITION (" + pasteYPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		return;
@@ -1062,69 +821,25 @@ function copyAt(mapId, targetId, copyXPos, copyYPos, copyRoomId, pasteXPos, past
 
 function copyBoxAt(mapId, targetId, x1, y1, x2, y2, copyRoomId, pasteXPos, pasteYPos, pasteRoomId) {
 	// Trim and sanitize X and Y Positions, and set relative positions if omitted.
-	if (x1 == undefined) {
-		x1 = bitsy.player().x;
-	} else {
-		x1 = x1.toString().trim();
-		if (x1 == '') {
-			x1 = bitsy.player().x;
-		} else if (x1.includes('+')) {
-			x1 = bitsy.player().x + parseInt(x1.substring(1), 10);
-		} else if (x1.includes('-')) {
-			x1 = bitsy.player().x - parseInt(x1.substring(1), 10);
-		}
-	}
+	x1 = getRelativeNumber(x1, bitsy.player().x);
 	if (x1 < 0 || x1 > 15) {
 		console.log('CLAMPING X1 POSITION. XPOS (' + x1 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		x1 = Math.max(0, Math.min(x1, 15));
 	}
 	// X2
-	if (x2 == undefined) {
-		x2 = bitsy.player().x;
-	} else {
-		x2 = x2.toString().trim();
-		if (x2 == '') {
-			x2 = bitsy.player().x;
-		} else if (x2.includes('+')) {
-			x2 = bitsy.player().x + parseInt(x2.substring(1), 10);
-		} else if (x2.includes('-')) {
-			x2 = bitsy.player().x - parseInt(x2.substring(1), 10);
-		}
-	}
+	x2 = getRelativeNumber(x2, bitsy.player().x);
 	if (x2 < 0 || x2 > 15) {
 		console.log('CLAMPING X2 POSITION. xPos (' + x2 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		x2 = Math.max(0, Math.min(x2, 15));
 	}
 	// Y1
-	if (y1 == undefined) {
-		y1 = bitsy.player().y;
-	} else {
-		y1 = y1.toString().trim();
-		if (y1 == '') {
-			y1 = bitsy.player().y;
-		} else if (y1.includes('+')) {
-			y1 = bitsy.player().y + parseInt(y1.substring(1), 10);
-		} else if (y1.includes('-')) {
-			y1 = bitsy.player().y - parseInt(y1.substring(1), 10);
-		}
-	}
+	y1 = getRelativeNumber(y1, bitsy.player().y);
 	if (y1 < 0 || y1 > 15) {
 		console.log('CLAMPING Y1 POSITION. XPOS (' + y1 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		y1 = Math.max(0, Math.min(y1, 15));
 	}
 	// Y2
-	if (y2 == undefined) {
-		y2 = bitsy.player().y;
-	} else {
-		y2 = y2.toString().trim();
-		if (y2 == '') {
-			y2 = bitsy.player().y;
-		} else if (y2.includes('+')) {
-			y2 = bitsy.player().y + parseInt(y2.substring(1), 10);
-		} else if (y2.includes('-')) {
-			y2 = bitsy.player().y - parseInt(y2.substring(1), 10);
-		}
-	}
+	y2 = getRelativeNumber(y2, bitsy.player().y);
 	if (y2 < 0 || y2 > 15) {
 		console.log('CLAMPING Y2 POSITION. xPos (' + y2 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		y2 = Math.max(0, Math.min(y2, 15));
@@ -1167,18 +882,7 @@ function copyBoxAt(mapId, targetId, x1, y1, x2, y2, copyRoomId, pasteXPos, paste
 	}
 
 	// Trim and sanitize Paste Position parameters, and set relative positions, even if omitted.
-	if (pasteXPos == undefined) {
-		pasteXPos = bitsy.player().x;
-	} else {
-		pasteXPos = pasteXPos.toString().trim();
-		if (pasteXPos == '') {
-			pasteXPos = bitsy.player().x;
-		} else if (pasteXPos.includes('+')) {
-			pasteXPos = bitsy.player().x + parseInt(pasteXPos.substring(1), 10);
-		} else if (pasteXPos.includes('-')) {
-			pasteXPos = bitsy.player().x - parseInt(pasteXPos.substring(1), 10);
-		}
-	}
+	pasteXPos = getRelativeNumber(pasteXPos, bitsy.player().x);
 	if (pasteXPos < 0 || pasteXPos > 15) {
 		console.log("CAN'T PASTE. X POSITION (" + pasteXPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		return;
@@ -1187,18 +891,7 @@ function copyBoxAt(mapId, targetId, x1, y1, x2, y2, copyRoomId, pasteXPos, paste
 	pasteXPos = parseInt(pasteXPos, 10);
 
 
-	if (pasteYPos == undefined) {
-		pasteYPos = bitsy.player().y;
-	} else {
-		pasteYPos = pasteYPos.toString().trim();
-		if (pasteYPos == '') {
-			pasteYPos = bitsy.player().y;
-		} else if (pasteYPos.includes('+')) {
-			pasteYPos = bitsy.player().y + parseInt(pasteYPos.substring(1), 10);
-		} else if (pasteYPos.includes('-')) {
-			pasteYPos = bitsy.player().y - parseInt(pasteYPos.substring(1), 10);
-		}
-	}
+	pasteYPos = getRelativeNumber(pasteYPos, bitsy.player().y);
 	if (pasteYPos < 0 || pasteYPos > 15) {
 		console.log("CAN'T PASTE. Y POSITION (" + pasteYPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
 		return;
