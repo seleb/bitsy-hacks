@@ -127,7 +127,7 @@ import {
 	addDualDialogTag,
 } from './helpers/kitsy-script-toolkit';
 import './paragraph-break';
-import { getRelativeNumber } from './helpers/utils';
+import { getRelativeNumber, clamp } from './helpers/utils';
 
 export var hackOptions = {
 	// Determines where the textbox is positioned. "shift" moves the textbox based on the player's position.
@@ -552,36 +552,11 @@ var textboxStyler = window.textboxStyler = {
 		var curMinLines = textboxStyler.activeStyle.textboxMinLines;
 		var curMaxLines = textboxStyler.activeStyle.textboxMaxLines;
 
-		// X Position
-		x = getRelativeNumber(x, curX);
-		if (x < -128 || x > 128) {
-			console.log('CLAMPING X POSITION. XPOS (' + x + ') OUT OF BOUNDS. 0-128 EXPECTED.');
-			x = Math.max(0, Math.min(x, 128));
-		}
-		// Y Position
-		y = getRelativeNumber(y, curY);
-		if (y < -128 || y > 128) {
-			console.log('CLAMPING Y POSITION. YPOS (' + y + ') OUT OF BOUNDS. 0-128 EXPECTED.');
-			y = Math.max(0, Math.min(y, 128));
-		}
-		// Width
-		boxWidth = getRelativeNumber(boxWidth, curWidth);
-		if (boxWidth < 0 || boxWidth > 128) {
-			console.log('CLAMPING WIDTH (' + (boxWidth) + '). 0-128 EXPECTED.');
-			boxWidth = Math.max(0, Math.min(boxWidth, 128));
-		}
-		// Minimum Lines
-		boxMinLines = getRelativeNumber(boxMinLines, curMinLines);
-		if (boxMinLines < 0 || boxMinLines > 128) {
-			console.log('CLAMPING TEXT MIN LINES (' + (boxMinLines) + '). 0-128 EXPECTED.');
-			boxMinLines = Math.max(0, Math.min(boxMinLines, 128));
-		}
-		// Maximum Lines
-		boxMaxLines = getRelativeNumber(boxMaxLines, curMaxLines);
-		if (boxMaxLines < 0 || boxMaxLines > 128) {
-			console.log('CLAMPING TEXT MAX LINES (' + (boxMaxLines) + '). 0-128 EXPECTED.');
-			boxMaxLines = Math.max(0, Math.min(boxMaxLines, 128));
-		}
+		x = clamp(getRelativeNumber(x, curX), 0, bitsy.width - 1);
+		y = clamp(getRelativeNumber(y, curY), 0, bitsy.height - 1);
+		boxWidth = clamp(getRelativeNumber(boxWidth, curWidth), 0, bitsy.width - 1);
+		boxMinLines = clamp(getRelativeNumber(boxMinLines, curMinLines), 0, bitsy.height - 1);
+		boxMaxLines = clamp(getRelativeNumber(boxMaxLines, curMaxLines), 0, bitsy.height - 1);
 
 		textboxStyler.activeStyle.textboxWidth = boxWidth;
 		textboxStyler.activeStyle.textboxMinLines = boxMinLines;
@@ -602,29 +577,10 @@ var textboxStyler = window.textboxStyler = {
 		var curY1 = textboxStyler.activeStyle.textboxMarginY;
 		var curY2 = curY1 + (textboxStyler.activeStyle.textPaddingY + textboxStyler.activeStyle.borderHeight - 2 + (2 * textboxStyler.activeStyle.textMinLines));
 
-		x1 = getRelativeNumber(x1, curX1);
-		if (x1 < 0 || x1 > 128) {
-			console.log('CLAMPING X1 POSITION. XPOS (' + x1 + ') OUT OF BOUNDS. 0-128 EXPECTED.');
-			x1 = Math.max(0, Math.min(x1, 128));
-		}
-		// X2
-		x2 = getRelativeNumber(x2, curX2);
-		if (x2 < 0 || x2 > 128) {
-			console.log('CLAMPING X2 POSITION. xPos (' + x2 + ') OUT OF BOUNDS. 0-128 EXPECTED.');
-			x2 = Math.max(0, Math.min(x2, 128));
-		}
-		// Y1
-		y1 = getRelativeNumber(y1, curY1);
-		if (y1 < 0 || y1 > 128) {
-			console.log('CLAMPING Y1 POSITION. XPOS (' + y1 + ') OUT OF BOUNDS. 0-128 EXPECTED.');
-			y1 = Math.max(0, Math.min(y1, 128));
-		}
-		// Y2
-		y2 = getRelativeNumber(y2, curY2);
-		if (y2 < 0 || y2 > 128) {
-			console.log('CLAMPING Y2 POSITION. xPos (' + y2 + ') OUT OF BOUNDS. 0-128 EXPECTED.');
-			y2 = Math.max(0, Math.min(y2, 128));
-		}
+		x1 = clamp(getRelativeNumber(x1, curX1), 0, bitsy.width - 1);
+		x2 = clamp(getRelativeNumber(x2, curX2), 0, bitsy.width - 1);
+		y1 = clamp(getRelativeNumber(y1, curY1), 0, bitsy.height - 1);
+		y2 = clamp(getRelativeNumber(y2, curY2), 0, bitsy.height - 1);
 
 		console.log('SETTING TEXTBOX CORNERS TO (' + x1 + ',' + y1 + ') and (' + x2 + ',' + y2 + ')');
 		var topPos = Math.min(y1, y2);
