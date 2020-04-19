@@ -2,7 +2,8 @@ import {
 	expose,
 	getImage,
 	inject,
-	unique
+	unique,
+	getRelativeNumber
 } from './utils';
 
 function constructor() {
@@ -96,5 +97,24 @@ describe('unique', () => {
 		expect(unique(['a', 'b', 'c', 'a', 'b', 'c', 'A', 'A'])).toMatchSnapshot();
 		expect(unique([obj, obj, obj])).toMatchSnapshot();
 		expect(unique([1, '1', obj, obj, '1', 1])).toMatchSnapshot();
+	});
+});
+
+describe('getRelativeNumber', () => {
+	it('returns the sum of the value and the relativeTo if the value is a string starting with a + or -', () => {
+		expect(getRelativeNumber('+1', 5)).toBe(6);
+		expect(getRelativeNumber('-1', 5)).toBe(4);
+	});
+	it('returns the relativeTo if value is not a number or a number in a string', () => {
+		expect(getRelativeNumber('', 5)).toBe(5);
+		expect(getRelativeNumber(false, 5)).toBe(5);
+		expect(getRelativeNumber(null, 5)).toBe(5);
+		expect(getRelativeNumber(undefined, 5)).toBe(5);
+	});
+	it('returns the value as a number otherwise', () => {
+		expect(getRelativeNumber('1', 5)).toBe(1);
+		expect(getRelativeNumber(1, 5)).toBe(1);
+		expect(getRelativeNumber(0, 5)).toBe(0);
+		expect(getRelativeNumber(-1, 5)).toBe(-1);
 	});
 });

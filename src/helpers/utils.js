@@ -104,3 +104,22 @@ export function printDialog(environment, text, onReturn) {
 		onReturn(null);
 	});
 }
+
+/**
+ * Helper for parsing parameters that may be relative to another value
+ * e.g.
+ * - getRelativeNumber('1', 5) -> 1
+ * - getRelativeNumber('+1', 5) -> 6
+ * - getRelativeNumber('-1', 5) -> 4
+ * - getRelativeNumber('', 5) -> 5
+ * @param {string} value absolute or relative string to parse
+ * @param {number} relativeTo value to use as fallback if none is provided, and as base for relative value
+ * @return {number} resulting absolute or relative number
+ */
+export function getRelativeNumber(value, relativeTo) {
+	var v = (value || value === 0 ? value : relativeTo);
+	if (typeof v === 'string' && (v.startsWith('+') || v.startsWith('-'))) {
+		return relativeTo + Number(v);
+	}
+	return Number(v);
+}
