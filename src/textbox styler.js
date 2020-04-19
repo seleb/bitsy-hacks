@@ -128,50 +128,6 @@ import {
 } from './helpers/kitsy-script-toolkit';
 import './paragraph-break';
 
-// Applies only a Style's defined attributes to the current textbox style.
-// {style "StyleName"}
-// {textStyleNow "StyleName"}
-addDualDialogTag('textStyleNow', function (environment, parameters, onReturn) {
-	textboxStyler.style(parameters[0]);
-});
-
-// Sets the current Style of the textbox (undefined attributes use Defaults instead)
-// {setTextStyle "StyleName"}
-// {setTextStyleNow "StyleName"}
-addDualDialogTag('setTextStyle', function (environment, parameters) {
-	textboxStyler.setStyle(parameters[0]);
-});
-
-// Applies the current Style of the textbox (undefined attributes use Defaults instead)
-// {textProperty "StyleProperty, StyleValue"}
-// {textPropertyNow "StyleProperty, StyleValue"}
-addDualDialogTag('textProperty', function (environment, parameters) {
-	var params = parameters[0].split(',');
-	textboxStyler.setProperty(params[0], params[1]);
-});
-
-// Resets the Style of the textbox to the Default style.
-// {resetTextStyle}
-// {resetTextStyleNow}
-addDualDialogTag('resetTextStyle', function (environment, parameters) {
-	textboxStyler.resetStyle();
-});
-
-// Resets a Style Property of the textbox to it's Default value.
-// {resetTextProperty "StyleProperty"}
-// {resetTextPropertyNow "StyleProperty"}
-addDualDialogTag('resetTextProperty', function (environment, parameters) {
-	textboxStyler.resetProperty(parameters[0]);
-});
-
-// Repositions and resizes textbox at an absolute position, based on coordinates.
-// {textPosition "x, y, width, minLines, maxLines"}
-// {textPositionNow "x, y, width, minLines, maxLines"}
-addDualDialogTag('textPosition', function (environment, parameters) {
-	var params = parameters[0].split(',');
-	textboxStyler.textboxPosition(params[0], params[1], params[2], params[3], params[4]);
-});
-
 export var hackOptions = {
 	// Determines where the textbox is positioned. "shift" moves the textbox based on the player's position.
 	verticalPosition: 'shift', // options are "top", "center", "bottom", or "shift" (moves based on player position)
@@ -446,203 +402,6 @@ export var hackOptions = {
 		},
 	},
 };
-
-// =============================================================
-// | HACK SCRIPT INJECTS |/////////////////////////////////////|
-// =============================================================
-// Replaces initial textbox parameters, based on currently active style (or defaults).
-// Makes textboxInfo available at the window level
-// Recalculates textbox parameters, even values no longer used with hack, for compatibility.
-var textboxInfoReplace = `var textboxInfo = {
-	img : null,
-	width : textboxStyler.activeStyle.textboxWidth,
-	height : textboxStyler.activeStyle.textPaddingY + textboxStyler.activeStyle.borderHeight - 2 + (2 * textboxStyler.activeStyle.textMinLines),
-	top : textboxStyler.activeStyle.textboxMarginY,
-	left : textboxStyler.activeStyle.textboxMarginX,
-	bottom : textboxStyler.activeStyle.textboxMarginY,
-	font_scale : textboxStyler.activeStyle.textScale/4,
-	padding_vert : textboxStyler.activeStyle.textPaddingY,
-	padding_horz : textboxStyler.activeStyle.textPaddingX,
-	arrow_height : textboxStyler.activeStyle.textPaddingY + textboxStyler.activeStyle.borderHeight - 4,
-};
-window.textboxInfo = textboxInfo;`;
-inject(/var textboxInfo = [^]*?};/, textboxInfoReplace);
-
-// Replaces ClearTextbox function to include border-drawing scripts
-var clearTextboxReplace = `this.ClearTextbox = function() {
-	if(context == null) return;
-
-	//create new image none exists
-	if(textboxInfo.img == null)
-		textboxInfo.img = context.createImageData(textboxInfo.width*scale, textboxInfo.height*scale);
-
-	// Draw Textbox Background based on BGColor (indices are R,G,B, and A)
-	for (var i=0;i<textboxInfo.img.data.length;i+=4)
-	{
-		textboxInfo.img.data[i+0]=textboxStyler.activeStyle.textboxColor[0];
-		textboxInfo.img.data[i+1]=textboxStyler.activeStyle.textboxColor[1];
-		textboxInfo.img.data[i+2]=textboxStyler.activeStyle.textboxColor[2];
-		textboxInfo.img.data[i+3]=textboxStyler.activeStyle.textboxColor[3];
-	}
-
-	textboxStyler.drawBorder();
-};`;
-inject(/this.ClearTextbox = [^]*?};/, clearTextboxReplace);
-
-// Replaces Draw Textbox function, with function that supports vertical and horizontal shifting
-var drawTextboxReplace = `this.DrawTextbox = function() {
-	if(context == null) return;
-
-	// Textbox defaults to center-aligned
-	var textboxXPosition = ((width/2)-(textboxInfo.width/2))*scale;
-	var textboxYPosition = ((height/2)-(textboxInfo.height/2))*scale;
-
-	if (isCentered) {
-		context.putImageData(textboxInfo.img, textboxXPosition, textboxYPosition);
-	}
-	else {
-		if (textboxStyler.activeStyle.verticalPosition.toLowerCase() == "shift") {
-			if (player().y < mapsize/2) {
-				//player on bottom half, so draw on top
-				textboxYPosition = ((height-textboxInfo.top-textboxInfo.height)*scale);
-			}
-			else {
-				textboxYPosition = textboxInfo.top*scale;
-			}
-		}
-		else if (textboxStyler.activeStyle.verticalPosition.toLowerCase() == "top") {
-			textboxYPosition = textboxInfo.top*scale;
-		}
-		else if (textboxStyler.activeStyle.verticalPosition.toLowerCase() == "bottom") {
-			textboxYPosition = ((height-textboxInfo.top-textboxInfo.height)*scale);
-		}
-
-		if (textboxStyler.activeStyle.horizontalPosition.toLowerCase() == "shift") {
-			if (player().x < mapsize/2) {
-				// player on left half, so draw on right
-				textboxXPosition = ((width-textboxInfo.left-textboxInfo.width)*scale);
-			}
-			else {
-				textboxXPosition = textboxInfo.left*scale;
-			}
-		}
-		else if (textboxStyler.activeStyle.horizontalPosition.toLowerCase() == "right") {
-			textboxXPosition = ((width-textboxInfo.left-textboxInfo.width)*scale);
-		}
-		else if (textboxStyler.activeStyle.horizontalPosition.toLowerCase() == "left") {
-			textboxXPosition = textboxInfo.left*scale;
-		}
-
-		// Draw the Textbox
-		context.putImageData(textboxInfo.img, textboxXPosition, textboxYPosition);
-	}
-};`;
-inject(/this.DrawTextbox = [^]*?};/, drawTextboxReplace);
-
-// Replace DrawNextArrow function, to support custom sprites, colors, and arrow repositioning
-var drawNextArrowReplace = `this.DrawNextArrow = function() {
-	// Arrow sprite is center-bottom by default
-	var top = ((4/textboxStyler.activeStyle.arrowScale)*textboxInfo.height - textboxStyler.activeStyle.arrowHeight - textboxStyler.activeStyle.arrowInsetY) *  textboxStyler.activeStyle.arrowScale;
-	var left = ((4/textboxStyler.activeStyle.textboxArrowScale)*textboxInfo.width - textboxStyler.activeStyle.arrowXSize) * textboxStyler.activeStyle.textboxArrowScale*0.5;
-
-	// Reposition arrow based on arrowAlign and RTL settings (flipped for RTL Languages)
-	if (textboxStyler.activeStyle.arrowAlign.toLowerCase() == "left") {
-		if (textDirection === TextDirection.RightToLeft) {
-			left = ((4/textboxStyler.activeStyle.arrowScale)*textboxInfo.width - textboxStyler.activeStyle.arrowWidth - textboxStyler.activeStyle.arrowInsetX) *  textboxStyler.activeStyle.arrowScale;
-		}
-		else {
-			left = (textboxStyler.activeStyle.arrowXPadding) * textboxStyler.activeStyle.textboxArrowScale;
-		}
-	}
-	else if (textboxStyler.activeStyle.arrowAlign.toLowerCase() == "right") {
-		if (textDirection === TextDirection.RightToLeft) {
-			left = (arrowXPadding) * textboxArrowScale;
-		}
-		else {
-			left = ((4/textboxStyler.activeStyle.arrowScale)*textboxInfo.width - textboxStyler.activeStyle.arrowWidth - textboxStyler.activeStyle.arrowInsetX) *  textboxStyler.activeStyle.arrowScale;
-		}
-	}
-	
-	// Draw arrow sprite pixels on textbox
-	for (var y = 0; y < textboxStyler.activeStyle.arrowHeight; y++) {
-		for (var x = 0; x < textboxStyler.activeStyle.arrowWidth; x++) {
-			var i = (y * textboxStyler.activeStyle.arrowWidth) + x;
-
-			//scaling hooplah
-			for (var sy = 0; sy < textboxStyler.activeStyle.arrowScale; sy++) {
-				for (var sx = 0; sx < textboxStyler.activeStyle.arrowScale; sx++) {
-					var pxl = 4 * ( ((top+(y*textboxStyler.activeStyle.arrowScale)+sy) * (textboxInfo.width*4)) + (left+(x*textboxStyler.activeStyle.arrowScale)+sx) );
-					// Draws arrow's pixels in Arrow Color
-					if (textboxStyler.activeStyle.arrowSprite[i] == 1) {
-						textboxInfo.img.data[pxl+0] = textboxStyler.activeStyle.arrowColor[0];
-						textboxInfo.img.data[pxl+1] = textboxStyler.activeStyle.arrowColor[1];
-						textboxInfo.img.data[pxl+2] = textboxStyler.activeStyle.arrowColor[2];
-						textboxInfo.img.data[pxl+3] = textboxStyler.activeStyle.arrowColor[3];
-					}
-					// Draws arrow's bg pixels using Arrow BG Color
-					else {
-						textboxInfo.img.data[pxl+0] = textboxStyler.activeStyle.arrowBGColor[0];
-						textboxInfo.img.data[pxl+1] = textboxStyler.activeStyle.arrowBGColor[1];
-						textboxInfo.img.data[pxl+2] = textboxStyler.activeStyle.arrowBGColor[2];
-						textboxInfo.img.data[pxl+3] = textboxStyler.activeStyle.arrowBGColor[3];
-					}
-				}
-			}
-		}
-	}
-};`;
-inject(/this.DrawNextArrow = [^]*?};/, drawNextArrowReplace);
-
-// Inject to support custom text scaling
-inject(/var text_scale = .+?;/, 'var text_scale = textboxStyler.activeStyle.textScale;');
-
-// Injects to support text padding within the textbox
-var topTextPaddingReplace = 'var top = (2 * textboxStyler.activeStyle.textPaddingY) + (textboxStyler.activeStyle.borderHeight * 2) + (row * 2 * scale) + (row * font.getHeight() * textboxStyler.activeStyle.textScale) + Math.floor( char.offset.y );';
-var leftTextPaddingReplace = 'var left = (2* textboxStyler.activeStyle.textPaddingX) + (textboxStyler.activeStyle.borderWidth * 2) + (leftPos * textboxStyler.activeStyle.textScale) + Math.floor( char.offset.x );';
-inject(/var top = \(4 \* scale\) \+ \(row \* 2 \* scale\) .+?\);/, topTextPaddingReplace);
-inject(/var left = \(4 \* scale\) \+ \(leftPos \* text_scale\) .+?\);/, leftTextPaddingReplace);
-
-// Inject to support custom text speeds
-inject(/var nextCharMaxTime = .+?;/, 'var nextCharMaxTime = textboxStyler.activeStyle.textSpeed;');
-
-// Inject to support custom default text color
-inject(/this.color = .+?};/, 'this.color = { r:textboxStyler.activeStyle.textColor[0], g:textboxStyler.activeStyle.textColor[1], b:textboxStyler.activeStyle.textColor[2], a:textboxStyler.activeStyle.textColor[3] };');
-
-// Inject to support dynamic textbox resizing. Attach to window to make it accessible from hack.
-inject(/var pixelsPerRow = .+?;/, 'window.pixelsPerRow = (textboxStyler.activeStyle.textboxWidth*(4/textboxStyler.activeStyle.textScale)) - (textboxStyler.activeStyle.borderWidth*(4/textboxStyler.activeStyle.textScale)) - (textboxStyler.activeStyle.textPaddingX*(4/textboxStyler.activeStyle.textScale));');
-// var pixelsPerRow = (textboxWidth*2) - (borderWidth*2) - (textPaddingX*2); // hard-coded fun times!!! 192
-
-// Store font height at parent level when calculated.
-var fontSizeInject = `else if (args[0] == "SIZE") {
-	width = parseInt(args[1]);
-	height = parseInt(args[2]);
-	window.fontHeight = height;
-	console.log(fontHeight);
-}`;
-inject(/else if \(args\[0\] == "SIZE"\) {[^]*?}/, fontSizeInject);
-console.log(fontSizeInject);
-// =============================================================
-// | RE-IMPLEMENTED LONG DIALOG HACK INJECTS |/////////////////|
-// =============================================================
-// Modified from Sean leBlanc's Long Dialog hack, to include textbox borders and padding
-// Needed to recalculate textbox height, based on current style parameters.
-// Added textMinLines and textMaxLines to hackOptions parameters, to include in style swapping
-
-// override textbox height (and recalculate textboxWidth)
-inject(/textboxInfo\.height = .+;/, `Object.defineProperty(textboxInfo, 'height', {
-	get() { return textboxStyler.activeStyle.textPaddingY + textboxStyler.activeStyle.borderHeight - 2 + ((2 + relativeFontHeight()) * Math.max(textboxStyler.activeStyle.textMinLines, dialogBuffer.CurPage().indexOf(dialogBuffer.CurRow())+Math.sign(dialogBuffer.CurCharCount()))); }
-})`);
-
-// prevent textbox from caching
-inject(/(if\(textboxInfo\.img == null\))/, '// $1');
-
-// rewrite hard-coded row limit
-inject(/(else if \(curRowIndex )== 0/g, '$1 < textboxStyler.activeStyle.textMaxLines - 1');
-inject(/(if\( lastPage\.length) <= 1( \) {)/, '$1 < textboxStyler.activeStyle.textMaxLines $2');
-
-// =============================================================
-// | HACK FUNCTIONS |//////////////////////////////////////////|
-// =============================================================
 
 // Make them accessible at a higher scope, so Dialog functions can see them.
 var textboxStyler = window.textboxStyler = {
@@ -1042,42 +801,35 @@ var textboxStyler = window.textboxStyler = {
 
 				// Retrieve pixel data from appropriate sprite. Special handling for bottom/right borders!
 				if (borderBottom) {
-					// Bottom Left Corner
 					if (borderLeft) {
+						// Bottom Left Corner
 						borderDraw = textboxStyler.activeStyle.borderDL[bottomPxl];
-					}
-					// Bottom Right Corner
-					else if (borderRight) {
+					} else if (borderRight) {
+						// Bottom Right Corner
 						borderDraw = textboxStyler.activeStyle.borderDR[bottomRightPxl];
-					}
-					// Bottom Middle Edge
-					else {
+					} else {
+						// Bottom Middle Edge
 						borderDraw = textboxStyler.activeStyle.borderD[bottomPxl];
 					}
 				} else if (borderTop) {
-					// Top Left Corner
 					if (borderLeft) {
+						// Top Left Corner
 						borderDraw = textboxStyler.activeStyle.borderUL[borderPxl];
-					}
-					// Top Right Corner
-					else if (borderRight) {
+					} else if (borderRight) {
+						// Top Right Corner
 						borderDraw = textboxStyler.activeStyle.borderUR[rightPxl];
-					}
-					// Top Middle Edge
-					else {
+					} else {
+						// Top Middle Edge
 						borderDraw = textboxStyler.activeStyle.borderU[borderPxl];
 					}
-				}
-				// Left Edge
-				else if (borderLeft) {
+				} else if (borderLeft) {
+					// Left Edge
 					borderDraw = textboxStyler.activeStyle.borderL[borderPxl];
-				}
-				// Right Edge
-				else if (borderRight) {
+				} else if (borderRight) {
+					// Right Edge
 					borderDraw = textboxStyler.activeStyle.borderR[rightPxl];
-				}
-				// Middle
-				else {
+				} else {
+					// Middle
 					borderDraw = textboxStyler.activeStyle.borderM[borderPxl];
 				}
 
@@ -1099,9 +851,8 @@ var textboxStyler = window.textboxStyler = {
 								window.textboxInfo.img.data[pxl + 2] = textboxStyler.activeStyle.borderMidColor[2];
 								window.textboxInfo.img.data[pxl + 3] = textboxStyler.activeStyle.borderMidColor[3];
 							}
-						}
-						// If it's a border BG pixel, gets RGBA colors based on if it's on an edge or in middle.
-						else if (borderTop || borderBottom || borderLeft || borderRight) {
+						} else if (borderTop || borderBottom || borderLeft || borderRight) {
+							// If it's a border BG pixel, gets RGBA colors based on if it's on an edge or in middle.
 							window.textboxInfo.img.data[pxl + 0] = textboxStyler.activeStyle.borderBGColor[0];
 							window.textboxInfo.img.data[pxl + 1] = textboxStyler.activeStyle.borderBGColor[1];
 							window.textboxInfo.img.data[pxl + 2] = textboxStyler.activeStyle.borderBGColor[2];
@@ -1118,3 +869,239 @@ var textboxStyler = window.textboxStyler = {
 		}
 	},
 };
+
+// Applies only a Style's defined attributes to the current textbox style.
+// {style "StyleName"}
+// {textStyleNow "StyleName"}
+addDualDialogTag('textStyleNow', function (environment, parameters, onReturn) {
+	textboxStyler.style(parameters[0]);
+});
+
+// Sets the current Style of the textbox (undefined attributes use Defaults instead)
+// {setTextStyle "StyleName"}
+// {setTextStyleNow "StyleName"}
+addDualDialogTag('setTextStyle', function (environment, parameters) {
+	textboxStyler.setStyle(parameters[0]);
+});
+
+// Applies the current Style of the textbox (undefined attributes use Defaults instead)
+// {textProperty "StyleProperty, StyleValue"}
+// {textPropertyNow "StyleProperty, StyleValue"}
+addDualDialogTag('textProperty', function (environment, parameters) {
+	var params = parameters[0].split(',');
+	textboxStyler.setProperty(params[0], params[1]);
+});
+
+// Resets the Style of the textbox to the Default style.
+// {resetTextStyle}
+// {resetTextStyleNow}
+addDualDialogTag('resetTextStyle', function (environment, parameters) {
+	textboxStyler.resetStyle();
+});
+
+// Resets a Style Property of the textbox to it's Default value.
+// {resetTextProperty "StyleProperty"}
+// {resetTextPropertyNow "StyleProperty"}
+addDualDialogTag('resetTextProperty', function (environment, parameters) {
+	textboxStyler.resetProperty(parameters[0]);
+});
+
+// Repositions and resizes textbox at an absolute position, based on coordinates.
+// {textPosition "x, y, width, minLines, maxLines"}
+// {textPositionNow "x, y, width, minLines, maxLines"}
+addDualDialogTag('textPosition', function (environment, parameters) {
+	var params = parameters[0].split(',');
+	textboxStyler.textboxPosition(params[0], params[1], params[2], params[3], params[4]);
+});
+
+// =============================================================
+// | HACK SCRIPT INJECTS |/////////////////////////////////////|
+// =============================================================
+// Replaces initial textbox parameters, based on currently active style (or defaults).
+// Makes textboxInfo available at the window level
+// Recalculates textbox parameters, even values no longer used with hack, for compatibility.
+var textboxInfoReplace = `var textboxInfo = {
+	img : null,
+	width : textboxStyler.activeStyle.textboxWidth,
+	height : textboxStyler.activeStyle.textPaddingY + textboxStyler.activeStyle.borderHeight - 2 + (2 * textboxStyler.activeStyle.textMinLines),
+	top : textboxStyler.activeStyle.textboxMarginY,
+	left : textboxStyler.activeStyle.textboxMarginX,
+	bottom : textboxStyler.activeStyle.textboxMarginY,
+	font_scale : textboxStyler.activeStyle.textScale/4,
+	padding_vert : textboxStyler.activeStyle.textPaddingY,
+	padding_horz : textboxStyler.activeStyle.textPaddingX,
+	arrow_height : textboxStyler.activeStyle.textPaddingY + textboxStyler.activeStyle.borderHeight - 4,
+};
+window.textboxInfo = textboxInfo;`;
+inject(/var textboxInfo = [^]*?};/, textboxInfoReplace);
+
+// Replaces ClearTextbox function to include border-drawing scripts
+var clearTextboxReplace = `this.ClearTextbox = function() {
+	if(context == null) return;
+
+	//create new image none exists
+	if(textboxInfo.img == null)
+		textboxInfo.img = context.createImageData(textboxInfo.width*scale, textboxInfo.height*scale);
+
+	// Draw Textbox Background based on BGColor (indices are R,G,B, and A)
+	for (var i=0;i<textboxInfo.img.data.length;i+=4)
+	{
+		textboxInfo.img.data[i+0]=textboxStyler.activeStyle.textboxColor[0];
+		textboxInfo.img.data[i+1]=textboxStyler.activeStyle.textboxColor[1];
+		textboxInfo.img.data[i+2]=textboxStyler.activeStyle.textboxColor[2];
+		textboxInfo.img.data[i+3]=textboxStyler.activeStyle.textboxColor[3];
+	}
+
+	textboxStyler.drawBorder();
+};`;
+inject(/this.ClearTextbox = [^]*?};/, clearTextboxReplace);
+
+// Replaces Draw Textbox function, with function that supports vertical and horizontal shifting
+var drawTextboxReplace = `this.DrawTextbox = function() {
+	if(context == null) return;
+
+	// Textbox defaults to center-aligned
+	var textboxXPosition = ((width/2)-(textboxInfo.width/2))*scale;
+	var textboxYPosition = ((height/2)-(textboxInfo.height/2))*scale;
+
+	if (isCentered) {
+		context.putImageData(textboxInfo.img, textboxXPosition, textboxYPosition);
+	}
+	else {
+		if (textboxStyler.activeStyle.verticalPosition.toLowerCase() == "shift") {
+			if (player().y < mapsize/2) {
+				//player on bottom half, so draw on top
+				textboxYPosition = ((height-textboxInfo.top-textboxInfo.height)*scale);
+			}
+			else {
+				textboxYPosition = textboxInfo.top*scale;
+			}
+		}
+		else if (textboxStyler.activeStyle.verticalPosition.toLowerCase() == "top") {
+			textboxYPosition = textboxInfo.top*scale;
+		}
+		else if (textboxStyler.activeStyle.verticalPosition.toLowerCase() == "bottom") {
+			textboxYPosition = ((height-textboxInfo.top-textboxInfo.height)*scale);
+		}
+
+		if (textboxStyler.activeStyle.horizontalPosition.toLowerCase() == "shift") {
+			if (player().x < mapsize/2) {
+				// player on left half, so draw on right
+				textboxXPosition = ((width-textboxInfo.left-textboxInfo.width)*scale);
+			}
+			else {
+				textboxXPosition = textboxInfo.left*scale;
+			}
+		}
+		else if (textboxStyler.activeStyle.horizontalPosition.toLowerCase() == "right") {
+			textboxXPosition = ((width-textboxInfo.left-textboxInfo.width)*scale);
+		}
+		else if (textboxStyler.activeStyle.horizontalPosition.toLowerCase() == "left") {
+			textboxXPosition = textboxInfo.left*scale;
+		}
+
+		// Draw the Textbox
+		context.putImageData(textboxInfo.img, textboxXPosition, textboxYPosition);
+	}
+};`;
+inject(/this.DrawTextbox = [^]*?};/, drawTextboxReplace);
+
+// Replace DrawNextArrow function, to support custom sprites, colors, and arrow repositioning
+var drawNextArrowReplace = `this.DrawNextArrow = function() {
+	// Arrow sprite is center-bottom by default
+	var top = ((4/textboxStyler.activeStyle.arrowScale)*textboxInfo.height - textboxStyler.activeStyle.arrowHeight - textboxStyler.activeStyle.arrowInsetY) *  textboxStyler.activeStyle.arrowScale;
+	var left = ((4/textboxStyler.activeStyle.textboxArrowScale)*textboxInfo.width - textboxStyler.activeStyle.arrowXSize) * textboxStyler.activeStyle.textboxArrowScale*0.5;
+
+	// Reposition arrow based on arrowAlign and RTL settings (flipped for RTL Languages)
+	if (textboxStyler.activeStyle.arrowAlign.toLowerCase() == "left") {
+		if (textDirection === TextDirection.RightToLeft) {
+			left = ((4/textboxStyler.activeStyle.arrowScale)*textboxInfo.width - textboxStyler.activeStyle.arrowWidth - textboxStyler.activeStyle.arrowInsetX) *  textboxStyler.activeStyle.arrowScale;
+		}
+		else {
+			left = (textboxStyler.activeStyle.arrowXPadding) * textboxStyler.activeStyle.textboxArrowScale;
+		}
+	}
+	else if (textboxStyler.activeStyle.arrowAlign.toLowerCase() == "right") {
+		if (textDirection === TextDirection.RightToLeft) {
+			left = (arrowXPadding) * textboxArrowScale;
+		}
+		else {
+			left = ((4/textboxStyler.activeStyle.arrowScale)*textboxInfo.width - textboxStyler.activeStyle.arrowWidth - textboxStyler.activeStyle.arrowInsetX) *  textboxStyler.activeStyle.arrowScale;
+		}
+	}
+	
+	// Draw arrow sprite pixels on textbox
+	for (var y = 0; y < textboxStyler.activeStyle.arrowHeight; y++) {
+		for (var x = 0; x < textboxStyler.activeStyle.arrowWidth; x++) {
+			var i = (y * textboxStyler.activeStyle.arrowWidth) + x;
+
+			//scaling hooplah
+			for (var sy = 0; sy < textboxStyler.activeStyle.arrowScale; sy++) {
+				for (var sx = 0; sx < textboxStyler.activeStyle.arrowScale; sx++) {
+					var pxl = 4 * ( ((top+(y*textboxStyler.activeStyle.arrowScale)+sy) * (textboxInfo.width*4)) + (left+(x*textboxStyler.activeStyle.arrowScale)+sx) );
+					// Draws arrow's pixels in Arrow Color
+					if (textboxStyler.activeStyle.arrowSprite[i] == 1) {
+						textboxInfo.img.data[pxl+0] = textboxStyler.activeStyle.arrowColor[0];
+						textboxInfo.img.data[pxl+1] = textboxStyler.activeStyle.arrowColor[1];
+						textboxInfo.img.data[pxl+2] = textboxStyler.activeStyle.arrowColor[2];
+						textboxInfo.img.data[pxl+3] = textboxStyler.activeStyle.arrowColor[3];
+					}
+					// Draws arrow's bg pixels using Arrow BG Color
+					else {
+						textboxInfo.img.data[pxl+0] = textboxStyler.activeStyle.arrowBGColor[0];
+						textboxInfo.img.data[pxl+1] = textboxStyler.activeStyle.arrowBGColor[1];
+						textboxInfo.img.data[pxl+2] = textboxStyler.activeStyle.arrowBGColor[2];
+						textboxInfo.img.data[pxl+3] = textboxStyler.activeStyle.arrowBGColor[3];
+					}
+				}
+			}
+		}
+	}
+};`;
+inject(/this.DrawNextArrow = [^]*?};/, drawNextArrowReplace);
+
+// Inject to support custom text scaling
+inject(/var text_scale = .+?;/, 'var text_scale = textboxStyler.activeStyle.textScale;');
+
+// Injects to support text padding within the textbox
+var topTextPaddingReplace = 'var top = (2 * textboxStyler.activeStyle.textPaddingY) + (textboxStyler.activeStyle.borderHeight * 2) + (row * 2 * scale) + (row * font.getHeight() * textboxStyler.activeStyle.textScale) + Math.floor( char.offset.y );';
+var leftTextPaddingReplace = 'var left = (2* textboxStyler.activeStyle.textPaddingX) + (textboxStyler.activeStyle.borderWidth * 2) + (leftPos * textboxStyler.activeStyle.textScale) + Math.floor( char.offset.x );';
+inject(/var top = \(4 \* scale\) \+ \(row \* 2 \* scale\) .+?\);/, topTextPaddingReplace);
+inject(/var left = \(4 \* scale\) \+ \(leftPos \* text_scale\) .+?\);/, leftTextPaddingReplace);
+
+// Inject to support custom text speeds
+inject(/var nextCharMaxTime = .+?;/, 'var nextCharMaxTime = textboxStyler.activeStyle.textSpeed;');
+
+// Inject to support custom default text color
+inject(/this.color = .+?};/, 'this.color = { r:textboxStyler.activeStyle.textColor[0], g:textboxStyler.activeStyle.textColor[1], b:textboxStyler.activeStyle.textColor[2], a:textboxStyler.activeStyle.textColor[3] };');
+
+// Inject to support dynamic textbox resizing. Attach to window to make it accessible from hack.
+inject(/var pixelsPerRow = .+?;/, 'window.pixelsPerRow = (textboxStyler.activeStyle.textboxWidth*(4/textboxStyler.activeStyle.textScale)) - (textboxStyler.activeStyle.borderWidth*(4/textboxStyler.activeStyle.textScale)) - (textboxStyler.activeStyle.textPaddingX*(4/textboxStyler.activeStyle.textScale));');
+// var pixelsPerRow = (textboxWidth*2) - (borderWidth*2) - (textPaddingX*2); // hard-coded fun times!!! 192
+
+// Store font height at parent level when calculated.
+var fontSizeInject = `else if (args[0] == "SIZE") {
+	width = parseInt(args[1]);
+	height = parseInt(args[2]);
+	window.fontHeight = height;
+	console.log(fontHeight);
+}`;
+inject(/else if \(args\[0\] == "SIZE"\) {[^]*?}/, fontSizeInject);
+// =============================================================
+// | RE-IMPLEMENTED LONG DIALOG HACK INJECTS |/////////////////|
+// =============================================================
+// Modified from Sean leBlanc's Long Dialog hack, to include textbox borders and padding
+// Needed to recalculate textbox height, based on current style parameters.
+// Added textMinLines and textMaxLines to hackOptions parameters, to include in style swapping
+
+// override textbox height (and recalculate textboxWidth)
+inject(/textboxInfo\.height = .+;/, `Object.defineProperty(textboxInfo, 'height', {
+	get() { return textboxStyler.activeStyle.textPaddingY + textboxStyler.activeStyle.borderHeight - 2 + ((2 + relativeFontHeight()) * Math.max(textboxStyler.activeStyle.textMinLines, dialogBuffer.CurPage().indexOf(dialogBuffer.CurRow())+Math.sign(dialogBuffer.CurCharCount()))); }
+})`);
+
+// prevent textbox from caching
+inject(/(if\(textboxInfo\.img == null\))/, '// $1');
+
+// rewrite hard-coded row limit
+inject(/(else if \(curRowIndex )== 0/g, '$1 < textboxStyler.activeStyle.textMaxLines - 1');
+inject(/(if\( lastPage\.length) <= 1( \) {)/, '$1 < textboxStyler.activeStyle.textMaxLines $2');
