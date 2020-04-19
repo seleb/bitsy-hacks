@@ -636,7 +636,7 @@ var textboxStyler = window.textboxStyler = {
 
 				// NOTE: There's a weird bug with odd vs even textbox heights. Here's a hacky fix for now.
 				// TODO: Handle decimal heights? Still bugs with those (may come up with bitsy's text scaling)
-				if (window.textboxInfo.height % textboxStyler.activeStyle.borderScale != 0) {
+				if (window.textboxInfo.height % textboxStyler.activeStyle.borderScale !== 0) {
 					borderDId = ((y - 4 + ((4 / textboxStyler.activeStyle.borderScale) * window.textboxInfo.height)) % textboxStyler.activeStyle.borderHeight);
 				}
 
