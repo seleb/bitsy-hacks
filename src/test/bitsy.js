@@ -38,8 +38,8 @@ async function getHackTemplate() {
 	});
 }
 
-let browser;
-let page;
+export let browser;
+export let page;
 let recording = false;
 
 // simple delay helper
