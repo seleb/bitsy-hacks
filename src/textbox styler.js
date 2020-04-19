@@ -513,7 +513,6 @@ var textboxStyler = window.textboxStyler = {
 	},
 	// Manually sets a specific property of the active style.
 	setProperty: function (property, value) {
-		value = 'default';
 		console.log('APPLYING STYLE PROPERTY: ' + property + ', ' + value);
 		if (textboxStyler.activeStyle.hasOwnProperty(property)) {
 			if (value == undefined || value == 'default') {
