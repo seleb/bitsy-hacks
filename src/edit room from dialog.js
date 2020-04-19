@@ -158,9 +158,7 @@ import { getRelativeNumber } from './helpers/utils';
 // {draw "mapId, sourceId, xPos, yPos, roomID"}
 // {drawNow "mapId, sourceId, xPos, yPos, roomID"}
 addDualDialogTag('draw', function (environment, parameters) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
-		undefined,
-	};
+	var params = parameters[0].split(',');
 	drawAt(params[0], params[1], params[2], params[3], params[4]);
 });
 
@@ -168,9 +166,7 @@ addDualDialogTag('draw', function (environment, parameters) {
 // {drawBox "mapId, sourceId, x1, y1, x2, y2, roomID"}
 // {drawBoxNow "mapId, sourceId, x1, y1, x2, y2, roomID"}
 addDualDialogTag('drawBox', function (environment, parameters) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
-		undefined,
-	};
+	var params = parameters[0].split(',');
 	drawBoxAt(params[0], params[1], params[2], params[3], params[4], params[5], params[6]);
 });
 
@@ -178,9 +174,7 @@ addDualDialogTag('drawBox', function (environment, parameters) {
 // {drawAll "mapId, sourceId, roomID"}
 // {drawAllNow "mapId, sourceId, roomID"}
 addDualDialogTag('drawAll', function (environment, parameters) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
-		undefined,
-	};
+	var params = parameters[0].split(',');
 	drawBoxAt(params[0], params[1], 0, 0, 15, 15, params[2]);
 });
 
@@ -188,9 +182,7 @@ addDualDialogTag('drawAll', function (environment, parameters) {
 // {erase "mapId, targetId, xPos, yPos, roomID"}
 // {eraseNow "mapId, targetId, xPos, yPos, roomID"}
 addDualDialogTag('erase', function (environment, parameters) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
-		undefined,
-	};
+	var params = parameters[0].split(',');
 	eraseAt(params[0], params[1], params[2], params[3], params[4]);
 });
 
@@ -198,9 +190,7 @@ addDualDialogTag('erase', function (environment, parameters) {
 // {eraseBox "mapId, targetId, x1, y1, x2, y2, roomID"}
 // {eraseBoxNow "mapId, targetId, x1, y1, x2, y2, roomID"}
 addDualDialogTag('eraseBox', function (environment, parameters) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
-		undefined,
-	};
+	var params = parameters[0].split(',');
 	eraseBoxAt(params[0], params[1], params[2], params[3], params[4], params[5], params[6]);
 });
 
@@ -208,9 +198,7 @@ addDualDialogTag('eraseBox', function (environment, parameters) {
 // {eraseAll "mapId, targetId, roomID"}
 // {eraseAllNow "mapId, targetId, roomID"}
 addDualDialogTag('eraseAll', function (environment, parameters) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
-		undefined,
-	};
+	var params = parameters[0].split(',');
 	eraseBoxAt(params[0], params[1], 0, 0, 15, 15, params[2]);
 });
 
@@ -218,9 +206,7 @@ addDualDialogTag('eraseAll', function (environment, parameters) {
 // {replace "targetMapId, targetId, newMapId, newId, xPos, yPos, roomID"}
 // {replaceNow "targetMapId, targetId, newMapId, newId, xPos, yPos, roomID"}
 addDualDialogTag('replace', function (environment, parameters) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
-		undefined,
-	};
+	var params = parameters[0].split(',');
 	replaceAt(params[0], params[1], params[2], params[3], params[4], params[5], params[6]);
 });
 
@@ -228,9 +214,7 @@ addDualDialogTag('replace', function (environment, parameters) {
 // {replaceBox "targetMapId, targetId, newMapId, newId, x1, y1, x2, y2, roomID"}
 // {replaceBoxNow "targetMapId, targetId, newMapId, newId, x1, y1, x2, y2, roomID"}
 addDualDialogTag('replaceBox', function (environment, parameters) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
-		undefined,
-	};
+	var params = parameters[0].split(',');
 	replaceBoxAt(params[0], params[1], params[2], params[3], params[4], params[5], params[6], params[7], params[8]);
 });
 
@@ -238,9 +222,7 @@ addDualDialogTag('replaceBox', function (environment, parameters) {
 // {replaceAll "targetMapId, targetId, newMapId, roomID"}
 // {replaceAllNow "targetMapId, targetId, newMapId, newId, roomID"}
 addDualDialogTag('replaceAll', function (environment, parameters) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
-		undefined,
-	};
+	var params = parameters[0].split(',');
 	replaceBoxAt(params[0], params[1], params[2], params[3], 0, 0, 15, 15, params[4]);
 });
 
@@ -248,9 +230,7 @@ addDualDialogTag('replaceAll', function (environment, parameters) {
 // {copy "mapId, targetId, copyX, copyY, copyRoom, pasteX, pasteY, pasteRoom"}
 // {copyNow "mapId, targetId, copyX, copyY, copyRoom, pasteX, pasteY, pasteRoom"}
 addDualDialogTag('copy', function (environment, parameters) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
-		undefined,
-	};
+	var params = parameters[0].split(',');
 	copyAt(params[0], params[1], params[2], params[3], params[4], params[5], params[6], params[7]);
 });
 
@@ -259,9 +239,7 @@ addDualDialogTag('copy', function (environment, parameters) {
 // {copyBox "mapId, targetId, copyX1, copyY1, copyX2, copyY2, copyRoom, pasteX, pasteY, pasteRoom"}
 // {copyBoxNow "mapId, targetId, copyX1, copyY1, copyX2, copyY2, copyRoom, pasteX, pasteY, pasteRoom"}
 addDualDialogTag('copyBox', function (environment, parameters) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
-		undefined,
-	};
+	var params = parameters[0].split(',');
 	copyBoxAt(params[0], params[1], params[2], params[3], params[4], params[5], params[6], params[7], params[8], params[9]);
 });
 
@@ -269,9 +247,7 @@ addDualDialogTag('copyBox', function (environment, parameters) {
 // {copyAll "mapId, targetId, copyRoom, pasteRoom"}
 // {copyAllNow "mapId, targetId, copyRoom, pasteRoom"}
 addDualDialogTag('copyAll', function (environment, parameters) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
-		undefined,
-	};
+	var params = parameters[0].split(',');
 	copyBoxAt(params[0], params[1], 0, 0, 15, 15, params[3], 0, 0, params[4]);
 });
 
