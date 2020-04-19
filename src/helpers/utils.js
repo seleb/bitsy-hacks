@@ -41,17 +41,6 @@ export function inject(searchRegex, replaceString) {
 	scriptTag.remove();
 }
 
-/* helper for exposing getter/setter for private vars */
-// eslint-disable-next-line no-eval
-var indirectEval = eval;
-export function expose(target) {
-	var code = target.toString();
-	code = code.substring(0, code.lastIndexOf('}'));
-	code += 'this.get = function(name) {return eval(name);};';
-	code += "this.set = function(name, value) {eval(name+'=value');};";
-	return indirectEval('[' + code + '}]')[0];
-}
-
 /*
 Helper for getting image by name or id
 

@@ -16,31 +16,6 @@ function constructor() {
 	};
 }
 
-describe('expose', () => {
-	it('requires a constructor', () => {
-		expect(() => expose()).toThrow();
-		expect(() => expose(constructor)).not.toThrow();
-	});
-
-	it('returns a new constructor', () => {
-		expect(() => new(expose(constructor))).not.toThrow();
-	});
-
-	it('provides `get(name)` with access to constructor\'s scope', () => {
-		const obj = new(expose(constructor));
-		expect(obj.get('privateVar')).toBe(obj.getPrivateVar());
-	});
-
-	it('provides `set(name, value)` with access to constructor\'s scope', () => {
-		const obj = new(expose(constructor));
-		const newVal = {
-			new: 'value',
-		};
-		obj.set('privateVar', newVal);
-		expect(obj.get('privateVar')).toBe(newVal);
-	});
-});
-
 describe('getImage', () => {
 	it('requires a name/id and a map', () => {
 		expect(() => getImage()).toThrow();
