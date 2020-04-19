@@ -14,7 +14,7 @@ that allow custom functions to be run on key press, key down, and key up events.
 Some simple example functions:
 	bitsy.scriptInterpreter.SetVariable('myvar', 10); // sets a variable that can be accessed in bitsy scripts
 	bitsy.startDialog('a dialog string'); // starts a bitsy dialog script
-	bitsy.startDialog(undefined, 'script-id'); // starts a bitsy dialog script by id
+	bitsy.startDialog(bitsy.dialog['script-id'], 'script-id'); // starts a bitsy dialog script by id
 	bitsy.room[bitsy.curRoom].items.push({ id: 0, x: bitsy.player().x, y: bitsy.player().y }); // adds an item at the player's current position
 
 HOW TO USE:
