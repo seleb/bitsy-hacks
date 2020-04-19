@@ -124,42 +124,28 @@ TODO: For future versions
 import bitsy from 'bitsy';
 import {
 	inject,
-	addDialogTag,
-	addDeferredDialogTag,
+	addDualDialogTag,
 } from './helpers/kitsy-script-toolkit';
 import './paragraph-break';
 
 // Applies only a Style's defined attributes to the current textbox style.
 // {style "StyleName"}
 // {textStyleNow "StyleName"}
-addDialogTag('textStyleNow', function (environment, parameters, onReturn) {
-	textboxStyler.style(parameters[0]);
-	onReturn(null);
-});
-addDeferredDialogTag('textStyle', function (environment, parameters) {
+addDualDialogTag('textStyleNow', function (environment, parameters, onReturn) {
 	textboxStyler.style(parameters[0]);
 });
 
 // Sets the current Style of the textbox (undefined attributes use Defaults instead)
 // {setTextStyle "StyleName"}
 // {setTextStyleNow "StyleName"}
-addDialogTag('setTextStyleNow', function (environment, parameters, onReturn) {
-	textboxStyler.setStyle(parameters[0]);
-	onReturn(null);
-});
-addDeferredDialogTag('setTextStyle', function (environment, parameters) {
+addDualDialogTag('setTextStyle', function (environment, parameters) {
 	textboxStyler.setStyle(parameters[0]);
 });
 
 // Applies the current Style of the textbox (undefined attributes use Defaults instead)
 // {textProperty "StyleProperty, StyleValue"}
 // {textPropertyNow "StyleProperty, StyleValue"}
-addDialogTag('textPropertyNow', function (environment, parameters, onReturn) {
-	var params = parameters[0].split(',');
-	textboxStyler.setProperty(params[0], params[1]);
-	onReturn(null);
-});
-addDeferredDialogTag('textProperty', function (environment, parameters) {
+addDualDialogTag('textProperty', function (environment, parameters) {
 	var params = parameters[0].split(',');
 	textboxStyler.setProperty(params[0], params[1]);
 });
@@ -167,34 +153,21 @@ addDeferredDialogTag('textProperty', function (environment, parameters) {
 // Resets the Style of the textbox to the Default style.
 // {resetTextStyle}
 // {resetTextStyleNow}
-addDialogTag('resetTextStyleNow', function (environment, parameters, onReturn) {
-	textboxStyler.resetStyle();
-	onReturn(null);
-});
-addDeferredDialogTag('resetTextStyle', function (environment, parameters) {
+addDualDialogTag('resetTextStyle', function (environment, parameters) {
 	textboxStyler.resetStyle();
 });
 
 // Resets a Style Property of the textbox to it's Default value.
 // {resetTextProperty "StyleProperty"}
 // {resetTextPropertyNow "StyleProperty"}
-addDialogTag('resetTextPropertyNow', function (environment, parameters, onReturn) {
-	textboxStyler.resetProperty(parameters[0]);
-	onReturn(null);
-});
-addDeferredDialogTag('resetTextProperty', function (environment, parameters) {
+addDualDialogTag('resetTextProperty', function (environment, parameters) {
 	textboxStyler.resetProperty(parameters[0]);
 });
 
 // Repositions and resizes textbox at an absolute position, based on coordinates.
 // {textPosition "x, y, width, minLines, maxLines"}
 // {textPositionNow "x, y, width, minLines, maxLines"}
-addDialogTag('textPositionNow', function (environment, parameters, onReturn) {
-	var params = parameters[0].split(',');
-	textboxStyler.textboxPosition(params[0], params[1], params[2], params[3], params[4]);
-	onReturn(null);
-});
-addDeferredDialogTag('textPosition', function (environment, parameters) {
+addDualDialogTag('textPosition', function (environment, parameters) {
 	var params = parameters[0].split(',');
 	textboxStyler.textboxPosition(params[0], params[1], params[2], params[3], params[4]);
 });

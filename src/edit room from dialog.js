@@ -150,21 +150,13 @@ Parameters:
 
 import bitsy from 'bitsy';
 import {
-	addDialogTag,
-	addDeferredDialogTag,
+	addDualDialogTag,
 } from './helpers/kitsy-script-toolkit';
 
 // Draws an Item, Sprite, or Tile at a location in a room
 // {draw "mapId, sourceId, xPos, yPos, roomID"}
 // {drawNow "mapId, sourceId, xPos, yPos, roomID"}
-addDialogTag('drawNow', function (environment, parameters, onReturn) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
-		undefined,
-	};
-	drawAt(params[0], params[1], params[2], params[3], params[4]);
-	onReturn(null);
-});
-addDeferredDialogTag('draw', function (environment, parameters) {
+addDualDialogTag('draw', function (environment, parameters) {
 	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
 		undefined,
 	};
@@ -174,14 +166,7 @@ addDeferredDialogTag('draw', function (environment, parameters) {
 // As above, but affects a box area, between two corners.
 // {drawBox "mapId, sourceId, x1, y1, x2, y2, roomID"}
 // {drawBoxNow "mapId, sourceId, x1, y1, x2, y2, roomID"}
-addDialogTag('drawBoxNow', function (environment, parameters, onReturn) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
-		undefined,
-	};
-	drawBoxAt(params[0], params[1], params[2], params[3], params[4], params[5], params[6]);
-	onReturn(null);
-});
-addDeferredDialogTag('drawBox', function (environment, parameters) {
+addDualDialogTag('drawBox', function (environment, parameters) {
 	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
 		undefined,
 	};
@@ -191,14 +176,7 @@ addDeferredDialogTag('drawBox', function (environment, parameters) {
 // As above, but affects an entire room.
 // {drawAll "mapId, sourceId, roomID"}
 // {drawAllNow "mapId, sourceId, roomID"}
-addDialogTag('drawAllNow', function (environment, parameters, onReturn) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
-		undefined,
-	};
-	drawBoxAt(params[0], params[1], 0, 0, 15, 15, params[2]);
-	onReturn(null);
-});
-addDeferredDialogTag('drawAll', function (environment, parameters) {
+addDualDialogTag('drawAll', function (environment, parameters) {
 	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
 		undefined,
 	};
@@ -208,13 +186,7 @@ addDeferredDialogTag('drawAll', function (environment, parameters) {
 // Removes Items, Sprites, and/or Tiles at a location in a room
 // {erase "mapId, targetId, xPos, yPos, roomID"}
 // {eraseNow "mapId, targetId, xPos, yPos, roomID"}
-addDialogTag('eraseNow', function (environment, parameters, onReturn) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
-		undefined,
-	};
-	eraseAt(params[0], params[1], params[2], params[3], params[4]);
-});
-addDeferredDialogTag('erase', function (environment, parameters) {
+addDualDialogTag('erase', function (environment, parameters) {
 	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
 		undefined,
 	};
@@ -224,14 +196,7 @@ addDeferredDialogTag('erase', function (environment, parameters) {
 // As above, but affects a box area, between two corners.
 // {eraseBox "mapId, targetId, x1, y1, x2, y2, roomID"}
 // {eraseBoxNow "mapId, targetId, x1, y1, x2, y2, roomID"}
-addDialogTag('eraseBoxNow', function (environment, parameters, onReturn) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
-		undefined,
-	};
-	eraseBoxAt(params[0], params[1], params[2], params[3], params[4], params[5], params[6]);
-	onReturn(null);
-});
-addDeferredDialogTag('eraseBox', function (environment, parameters) {
+addDualDialogTag('eraseBox', function (environment, parameters) {
 	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
 		undefined,
 	};
@@ -241,14 +206,7 @@ addDeferredDialogTag('eraseBox', function (environment, parameters) {
 // As above, but affects an entire room.
 // {eraseAll "mapId, targetId, roomID"}
 // {eraseAllNow "mapId, targetId, roomID"}
-addDialogTag('eraseAllNow', function (environment, parameters, onReturn) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
-		undefined,
-	};
-	eraseBoxAt(params[0], params[1], 0, 0, 15, 15, params[2]);
-	onReturn(null);
-});
-addDeferredDialogTag('eraseAll', function (environment, parameters) {
+addDualDialogTag('eraseAll', function (environment, parameters) {
 	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
 		undefined,
 	};
@@ -258,13 +216,7 @@ addDeferredDialogTag('eraseAll', function (environment, parameters) {
 // Converts instances of target Item, Sprite, or Tile at a location in a room into something new
 // {replace "targetMapId, targetId, newMapId, newId, xPos, yPos, roomID"}
 // {replaceNow "targetMapId, targetId, newMapId, newId, xPos, yPos, roomID"}
-addDialogTag('replaceNow', function (environment, parameters, onReturn) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
-		undefined,
-	};
-	replaceAt(params[0], params[1], params[2], params[3], params[4], params[5], params[6]);
-});
-addDeferredDialogTag('replace', function (environment, parameters) {
+addDualDialogTag('replace', function (environment, parameters) {
 	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
 		undefined,
 	};
@@ -274,13 +226,7 @@ addDeferredDialogTag('replace', function (environment, parameters) {
 // As above, but affects a box area between two corners.
 // {replaceBox "targetMapId, targetId, newMapId, newId, x1, y1, x2, y2, roomID"}
 // {replaceBoxNow "targetMapId, targetId, newMapId, newId, x1, y1, x2, y2, roomID"}
-addDialogTag('replaceBoxNow', function (environment, parameters, onReturn) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
-		undefined,
-	};
-	replaceBoxAt(params[0], params[1], params[2], params[3], params[4], params[5], params[6], params[7], params[8]);
-});
-addDeferredDialogTag('replaceBox', function (environment, parameters) {
+addDualDialogTag('replaceBox', function (environment, parameters) {
 	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
 		undefined,
 	};
@@ -290,13 +236,7 @@ addDeferredDialogTag('replaceBox', function (environment, parameters) {
 // As above, but affects an entire room.
 // {replaceAll "targetMapId, targetId, newMapId, roomID"}
 // {replaceAllNow "targetMapId, targetId, newMapId, newId, roomID"}
-addDialogTag('replaceAllNow', function (environment, parameters, onReturn) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
-		undefined,
-	};
-	replaceBoxAt(params[0], params[1], params[2], params[3], 0, 0, 15, 15, params[4]);
-});
-addDeferredDialogTag('replaceAll', function (environment, parameters) {
+addDualDialogTag('replaceAll', function (environment, parameters) {
 	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
 		undefined,
 	};
@@ -306,14 +246,7 @@ addDeferredDialogTag('replaceAll', function (environment, parameters) {
 // Duplicates Items, Sprites, and/or Tiles from one location in a room to another
 // {copy "mapId, targetId, copyX, copyY, copyRoom, pasteX, pasteY, pasteRoom"}
 // {copyNow "mapId, targetId, copyX, copyY, copyRoom, pasteX, pasteY, pasteRoom"}
-addDialogTag('copyNow', function (environment, parameters, onReturn) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
-		undefined,
-	};
-	copyAt(params[0], params[1], params[2], params[3], params[4], params[5], params[6], params[7]);
-	onReturn(null);
-});
-addDeferredDialogTag('copy', function (environment, parameters) {
+addDualDialogTag('copy', function (environment, parameters) {
 	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
 		undefined,
 	};
@@ -324,14 +257,7 @@ addDeferredDialogTag('copy', function (environment, parameters) {
 // NOTE: positioning the paste coordinates out of bounds will only draw the section overlapping with the room.
 // {copyBox "mapId, targetId, copyX1, copyY1, copyX2, copyY2, copyRoom, pasteX, pasteY, pasteRoom"}
 // {copyBoxNow "mapId, targetId, copyX1, copyY1, copyX2, copyY2, copyRoom, pasteX, pasteY, pasteRoom"}
-addDialogTag('copyBoxNow', function (environment, parameters, onReturn) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
-		undefined,
-	};
-	copyBoxAt(params[0], params[1], params[2], params[3], params[4], params[5], params[6], params[7], params[8], params[9]);
-	onReturn(null);
-});
-addDeferredDialogTag('copyBox', function (environment, parameters) {
+addDualDialogTag('copyBox', function (environment, parameters) {
 	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
 		undefined,
 	};
@@ -341,14 +267,7 @@ addDeferredDialogTag('copyBox', function (environment, parameters) {
 // As above, but affects an entire room.
 // {copyAll "mapId, targetId, copyRoom, pasteRoom"}
 // {copyAllNow "mapId, targetId, copyRoom, pasteRoom"}
-addDialogTag('copyAllNow', function (environment, parameters, onReturn) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
-		undefined,
-	};
-	copyBoxAt(params[0], params[1], 0, 0, 15, 15, params[3], 0, 0, params[4]);
-	onReturn(null);
-});
-addDeferredDialogTag('copyAll', function (environment, parameters) {
+addDualDialogTag('copyAll', function (environment, parameters) {
 	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
 		undefined,
 	};
