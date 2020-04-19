@@ -514,7 +514,7 @@ var textboxStyler = window.textboxStyler = {
 	// Manually sets a specific property of the active style.
 	setProperty: function (property, value) {
 		console.log('APPLYING STYLE PROPERTY: ' + property + ', ' + value);
-		if (textboxStyler.activeStyle.hasOwnProperty(property)) {
+		if (Object.prototype.hasOwnProperty.call(textboxStyler.activeStyle, property)) {
 			if (!value || value === 'default') {
 				console.log('UNDEFINED PROPERTY. SETTING TO DEFAULT.');
 				textboxStyler.activeStyle[property] = Object.assign({}, textboxStyler.defaultStyle)[property];
@@ -535,7 +535,7 @@ var textboxStyler = window.textboxStyler = {
 	// Resets a Textbox Style Property to it's Default value
 	resetProperty: function (property) {
 		console.log('RESETTING STYLE PROPERTY TO DEFAULT: ' + property);
-		if (textboxStyler.activeStyle.hasOwnProperty(property)) {
+		if (Object.prototype.hasOwnProperty.call(textboxStyler.activeStyle, property)) {
 			textboxStyler.activeStyle[property] = Object.assign({}, textboxStyler.defaultStyle)[property];
 		} else {
 			console.log('UNDEFINED PROPERTY.');
