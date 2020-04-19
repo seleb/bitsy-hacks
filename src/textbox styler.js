@@ -492,7 +492,7 @@ var textboxStyler = window.textboxStyler = {
 	style: function (newStyle) {
 		console.log('SETTING TEXTBOX STYLE TO: ' + newStyle);
 		// If newStyle doesn't exist, resets to default
-		if (newStyle == undefined || textboxStyler.styles[newStyle] == undefined) {
+		if (!textboxStyler.styles[newStyle]) {
 			textboxStyler.resetStyle();
 			console.log('UNDEFINED STYLE. RESETTING TO DEFAULT.');
 			return;
@@ -504,7 +504,7 @@ var textboxStyler = window.textboxStyler = {
 	setStyle: function (newStyle) {
 		console.log('APPLYING STYLE ' + newStyle + ' TO EXISTING TEXTBOX STYLE');
 		// If newStyle doesn't exist, does nothing.
-		if (textboxStyler.styles[newStyle] == undefined) {
+		if (!textboxStyler.styles[newStyle]) {
 			console.log('UNDEFINED STYLE.');
 			return;
 		}
@@ -515,7 +515,7 @@ var textboxStyler = window.textboxStyler = {
 	setProperty: function (property, value) {
 		console.log('APPLYING STYLE PROPERTY: ' + property + ', ' + value);
 		if (textboxStyler.activeStyle.hasOwnProperty(property)) {
-			if (value == undefined || value == 'default') {
+			if (!value || value === 'default') {
 				console.log('UNDEFINED PROPERTY. SETTING TO DEFAULT.');
 				textboxStyler.activeStyle[property] = Object.assign({}, textboxStyler.defaultStyle)[property];
 			} else {
