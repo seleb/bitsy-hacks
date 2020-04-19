@@ -824,8 +824,6 @@ function copyBoxAt(mapId, targetId, x1, y1, x2, y2, copyRoomId, pasteXPos, paste
 	var leftPos = Math.min(x1, x2);
 	var bottomPos = Math.max(y1, y2);
 	var rightPos = Math.max(x1, x2);
-	var maxXPos = pasteXPos + (rightPos - leftPos);
-	var maxYPos = pasteYPos + (bottomPos - topPos);
 	var copyIds = [];
 	var copyMaps = [];
 	var copyXs = [];

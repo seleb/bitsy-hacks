@@ -54,7 +54,6 @@ import {
 	addDualDialogTag,
 	addDialogTag,
 	before,
-	inject,
 } from './helpers/kitsy-script-toolkit';
 
 export var hackOptions = {

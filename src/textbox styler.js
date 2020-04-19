@@ -730,21 +730,21 @@ var textboxStyler = window.textboxStyler = {
 // Applies only a Style's defined attributes to the current textbox style.
 // {style "StyleName"}
 // {textStyleNow "StyleName"}
-addDualDialogTag('textStyleNow', function (environment, parameters, onReturn) {
+addDualDialogTag('textStyleNow', function (_environment, parameters) {
 	textboxStyler.style(parameters[0]);
 });
 
 // Sets the current Style of the textbox (undefined attributes use Defaults instead)
 // {setTextStyle "StyleName"}
 // {setTextStyleNow "StyleName"}
-addDualDialogTag('setTextStyle', function (environment, parameters) {
+addDualDialogTag('setTextStyle', function (_environment, parameters) {
 	textboxStyler.setStyle(parameters[0]);
 });
 
 // Applies the current Style of the textbox (undefined attributes use Defaults instead)
 // {textProperty "StyleProperty, StyleValue"}
 // {textPropertyNow "StyleProperty, StyleValue"}
-addDualDialogTag('textProperty', function (environment, parameters) {
+addDualDialogTag('textProperty', function (_environment, parameters) {
 	var params = parameters[0].split(',');
 	textboxStyler.setProperty(params[0], params[1]);
 });
@@ -752,21 +752,21 @@ addDualDialogTag('textProperty', function (environment, parameters) {
 // Resets the Style of the textbox to the Default style.
 // {resetTextStyle}
 // {resetTextStyleNow}
-addDualDialogTag('resetTextStyle', function (environment, parameters) {
+addDualDialogTag('resetTextStyle', function () {
 	textboxStyler.resetStyle();
 });
 
 // Resets a Style Property of the textbox to it's Default value.
 // {resetTextProperty "StyleProperty"}
 // {resetTextPropertyNow "StyleProperty"}
-addDualDialogTag('resetTextProperty', function (environment, parameters) {
+addDualDialogTag('resetTextProperty', function (_environment, parameters) {
 	textboxStyler.resetProperty(parameters[0]);
 });
 
 // Repositions and resizes textbox at an absolute position, based on coordinates.
 // {textPosition "x, y, width, minLines, maxLines"}
 // {textPositionNow "x, y, width, minLines, maxLines"}
-addDualDialogTag('textPosition', function (environment, parameters) {
+addDualDialogTag('textPosition', function (_environment, parameters) {
 	var params = parameters[0].split(',');
 	textboxStyler.textboxPosition(params[0], params[1], params[2], params[3], params[4]);
 });

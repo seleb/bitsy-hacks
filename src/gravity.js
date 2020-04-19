@@ -314,10 +314,6 @@ function mapDir(dir) {
 	return gravityMap[gravityDir][dir];
 }
 
-function setGravity(newDown) {
-
-}
-
 function isValidDir(dir) {
 	return dirs.indexOf(dir) !== -1;
 }

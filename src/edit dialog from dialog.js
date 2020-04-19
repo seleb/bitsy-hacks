@@ -33,7 +33,6 @@ import {
 } from './helpers/kitsy-script-toolkit';
 import {
 	getImage,
-	inject,
 } from './helpers/utils';
 
 // map of maps

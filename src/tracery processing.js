@@ -40,7 +40,6 @@ can create
 
 See http://www.crystalcodepalace.com/traceryTut.html for more on how to use tracery
 */
-import bitsy from 'bitsy';
 import tracery from 'tracery-grammar';
 import {
 	before,
