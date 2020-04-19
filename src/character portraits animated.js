@@ -117,7 +117,11 @@ after('startExportedGame', function () {
 					duration,
 					frames,
 				};
-			}.bind(portrait));
+			}.bind(portrait))
+			.catch(function (err) {
+				console.error('Could not fetch portrait "' + src + '"');
+				throw err;
+			});
 	});
 });
 
