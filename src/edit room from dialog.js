@@ -256,26 +256,15 @@ addDualDialogTag('copyAll', function (environment, parameters) {
 
 function drawAt(mapId, sourceId, xPos, yPos, roomId) {
 	// Trim and sanitize Map ID / Type parameter, and return if not provided.
-	if (mapId == undefined) {
-		console.log("CAN'T DRAW. DRAW TYPE IS UNDEFINED. TIL, ITM, OR SPR EXPECTED.");
-		return;
-	}
-
-	mapId = mapId.toString().trim();
-	if (mapId == '' || !(mapId.toUpperCase() == 'TIL' || mapId.toUpperCase() == 'ITM' || mapId.toUpperCase() == 'SPR')) {
+	mapId = (mapId || '').toString().trim().toUpperCase();
+	if (!['TIL', 'ITM', 'SPR'].includes(mapId)) {
 		console.log("CAN'T DRAW. UNEXPECTED DRAW TYPE (" + mapId + '). TIL, ITM, OR SPR EXPECTED.');
 		return;
 	}
 
-
 	// Trim and sanitize Source ID parameter, and return if not provided
-	if (sourceId == undefined) {
-		console.log("CAN'T DRAW. SOURCE ID IS UNDEFINED. TILE, ITEM, OR SPRITE ID EXPECTED.");
-		return;
-	}
-
-	sourceId = sourceId.toString().trim();
-	if (sourceId == '') {
+	sourceId = (sourceId || '').toString().trim();
+	if (!sourceId) {
 		console.log("CAN'T DRAW. NO SOURCE ID GIVEN. TILE, ITEM, OR SPRITE ID EXPECTED.");
 		return;
 	}
