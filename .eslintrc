@@ -20,14 +20,17 @@
 		// var declarations co-located with relevant functions,
 		// etc.
 		"no-console": "off",
-		"no-unused-vars": "off",
+		"no-unused-vars": ["error", {
+			"vars": "all",
+			"args": "none"
+		}],
 		"vars-on-top": "off",
 		"no-use-before-define": "off",
 
 		// tabs instead of spaces
-		"no-tabs":"off",
+		"no-tabs": "off",
 		"indent": ["error", "tab"],
-		
+
 		// don't prefer fancy stuff to account for lack of babel
 		"import/prefer-default-export": "off",
 		"import/no-default-export": "error",
@@ -46,5 +49,16 @@
 		"no-multi-assign": "off",
 		"no-plusplus": "off",
 		"no-continue": "off",
-	}
+	},
+	"overrides": [{
+		"files": ["*.test.js", "test/*.js"],
+		"env": {
+			"jest": true,
+			"es6": true
+		},
+		"parserOptions": {
+		  "ecmaVersion": 9,
+		  "sourceType": "module"
+		}
+	}]
 }

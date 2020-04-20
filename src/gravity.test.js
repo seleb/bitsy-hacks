@@ -1,7 +1,6 @@
 import {
 	start,
 	press,
-	walkToCat,
 	end,
 	snapshot,
 } from './test/bitsy';
@@ -98,7 +97,7 @@ test('gravity: jump', async () => {
 	await start({
 		hacks: ['gravity'],
 		gamedata: gamedata,
-		catDialog: 'meow (setJumpPower 1)'
+		catDialog: 'meow (setJumpPower 1)',
 	});
 	await press('Enter'); // complete title dialog
 	await press('Enter'); // end dialog
@@ -116,7 +115,7 @@ test('gravity: jetpack', async () => {
 	await start({
 		hacks: ['gravity'],
 		gamedata: gamedata,
-		catDialog: 'meow (toggleJetpack) (setJumpPower "2")'
+		catDialog: 'meow (toggleJetpack) (setJumpPower "2")',
 	});
 	await press('Enter'); // complete title dialog
 	await press('Enter'); // end dialog
@@ -136,7 +135,7 @@ test('gravity: force', async () => {
 	await start({
 		hacks: ['gravity'],
 		gamedata: gamedata,
-		catDialog: 'meow (forceGravity "up")'
+		catDialog: 'meow (forceGravity "up")',
 	});
 	await press('Enter'); // complete title dialog
 	await press('Enter'); // end dialog
@@ -163,7 +162,7 @@ test('gravity: invert', async () => {
 	await start({
 		hacks: ['gravity'],
 		gamedata: gamedata,
-		catDialog: 'meow (setGravityDirection "left")'
+		catDialog: 'meow (setGravityDirection "left")',
 	});
 	await press('Enter'); // complete title dialog
 	await press('Enter'); // end dialog

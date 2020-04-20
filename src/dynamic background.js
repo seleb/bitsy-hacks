@@ -3,7 +3,7 @@
 @file dynamic background
 @summary HTML background matching bitsy background
 @license MIT
-@version 2.1.5
+@version 2.1.6
 @author Sean S. LeBlanc
 
 @description

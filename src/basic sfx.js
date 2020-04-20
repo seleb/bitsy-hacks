@@ -3,7 +3,7 @@
 @file basic sfx
 @summary "walk" and "talk" sound effect support
 @license MIT
-@version 2.0.5
+@version 2.0.6
 @author Sean S. LeBlanc
 
 @description
@@ -28,6 +28,7 @@ import {
 	before,
 	after,
 } from './helpers/kitsy-script-toolkit';
+import { clamp } from './helpers/utils';
 
 export var hackOptions = {
 	beNiceToEars: true, // if `true`, reduces volume of recently played sound effects
@@ -38,7 +39,7 @@ before('startExportedGame', function () {
 	function playSound(sound) {
 		if (hackOptions.beNiceToEars) {
 			// reduce volume if played recently
-			sound.volume = Math.min(1.0, Math.max(0.25, ((bitsy.prevTime - sound.lastPlayed) * 0.002 ** 0.5)));
+			sound.volume = clamp((bitsy.prevTime - sound.lastPlayed) * 0.002 ** 0.5, 0.25, 1.0);
 			sound.lastPlayed = bitsy.prevTime;
 		}
 

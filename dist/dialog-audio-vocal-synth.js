@@ -3,7 +3,7 @@
 @file dialog audio vocal synth
 @summary animal crossing-style audio powered by the pink trombone vocal synth
 @license MIT
-@version 1.1.2
+@version 1.1.3
 @author Sean S. LeBlanc
 
 @description
@@ -773,7 +773,7 @@ function inject(searchRegex, replaceString) {
 
 	// error-handling
 	if (!code) {
-		throw 'Couldn\'t find "' + searchRegex + '" in script tags';
+		throw new Error('Couldn\'t find "' + searchRegex + '" in script tags');
 	}
 
 	// modify the content
@@ -787,7 +787,7 @@ function inject(searchRegex, replaceString) {
 }
 
 /**
- * Helper for getting an array with unique elements 
+ * Helper for getting an array with unique elements
  * @param  {Array} array Original array
  * @return {Array}       Copy of array, excluding duplicates
  */
@@ -795,6 +795,16 @@ function unique(array) {
 	return array.filter(function (item, idx) {
 		return array.indexOf(item) === idx;
 	});
+}
+
+/**
+ * @param {number} value number to clamp
+ * @param {number} min minimum
+ * @param {number} max maximum
+ * @return min if value < min, max if value > max, value otherwise
+ */
+function clamp$1(value, min, max) {
+	return Math.max(min, Math.min(max, value));
 }
 
 /**
@@ -1011,7 +1021,7 @@ function addDialogTag(tag, fn) {
 @file dialog audio
 @summary animal crossing-style audio
 @license MIT
-@version 1.0.2
+@version 1.0.3
 @author Sean S. LeBlanc
 
 @description
@@ -1321,7 +1331,7 @@ hackOptions.onLetter = function (character) {
 	Tract.targetDiameter = Tract.targetDiameter.map((v, i) => {
 		var pointInTract = i / l;
 		var distanceFromAdjust = Math.abs(adjustPoint - pointInTract);
-		var adjustAmount = 1.0 - Math.min(1, Math.max(0, distanceFromAdjust / adjustSize));
+		var adjustAmount = 1.0 - clamp$1(distanceFromAdjust / adjustSize, 0, 1);
 		return lerp(v, v * adjustAmp, adjustAmount);
 	});
 
@@ -1331,7 +1341,7 @@ hackOptions.onLetter = function (character) {
 	Tract.targetDiameter = Tract.targetDiameter.map((v, i) => {
 		var pointInTract = i / l;
 		var distanceFromAdjust = Math.abs(adjustPoint - pointInTract);
-		var adjustAmount = 1.0 - Math.min(1, Math.max(0, distanceFromAdjust / adjustSize));
+		var adjustAmount = 1.0 - clamp$1(distanceFromAdjust / adjustSize, 0, 1);
 		return lerp(v, v * adjustAmp, adjustAmount);
 	});
 

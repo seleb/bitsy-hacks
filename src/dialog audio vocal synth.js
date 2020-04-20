@@ -3,7 +3,7 @@
 @file dialog audio vocal synth
 @summary animal crossing-style audio powered by the pink trombone vocal synth
 @license MIT
-@version 1.1.2
+@version 1.1.3
 @author Sean S. LeBlanc
 
 @description
@@ -48,6 +48,7 @@ import {
 	before,
 	addDialogTag,
 } from './helpers/kitsy-script-toolkit';
+import { clamp } from './helpers/utils';
 
 export var hackOptions = {
 	autoReset: true, // if true, automatically resets the voice to default when dialog is exited
@@ -338,7 +339,7 @@ dialogAudioOptions.onLetter = function (character) {
 	Tract.targetDiameter = Tract.targetDiameter.map((v, i) => {
 		var pointInTract = i / l;
 		var distanceFromAdjust = Math.abs(adjustPoint - pointInTract);
-		var adjustAmount = 1.0 - Math.min(1, Math.max(0, distanceFromAdjust / adjustSize));
+		var adjustAmount = 1.0 - clamp(distanceFromAdjust / adjustSize, 0, 1);
 		return lerp(v, v * adjustAmp, adjustAmount);
 	});
 
@@ -348,7 +349,7 @@ dialogAudioOptions.onLetter = function (character) {
 	Tract.targetDiameter = Tract.targetDiameter.map((v, i) => {
 		var pointInTract = i / l;
 		var distanceFromAdjust = Math.abs(adjustPoint - pointInTract);
-		var adjustAmount = 1.0 - Math.min(1, Math.max(0, distanceFromAdjust / adjustSize));
+		var adjustAmount = 1.0 - clamp(distanceFromAdjust / adjustSize, 0, 1);
 		return lerp(v, v * adjustAmp, adjustAmount);
 	});
 

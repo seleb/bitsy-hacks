@@ -4,7 +4,7 @@
 @author Sean S. LeBlanc
 */
 
-import bitsy from "bitsy";
+import bitsy from 'bitsy';
 
 /*
 Helper used to replace code in a script tag based on a search regex
@@ -28,7 +28,7 @@ export function inject(searchRegex, replaceString) {
 
 	// error-handling
 	if (!code) {
-		throw 'Couldn\'t find "' + searchRegex + '" in script tags';
+		throw new Error('Couldn\'t find "' + searchRegex + '" in script tags');
 	}
 
 	// modify the content
@@ -39,16 +39,6 @@ export function inject(searchRegex, replaceString) {
 	newScriptTag.textContent = code;
 	scriptTag.insertAdjacentElement('afterend', newScriptTag);
 	scriptTag.remove();
-}
-
-/*helper for exposing getter/setter for private vars*/
-var indirectEval = eval;
-export function expose(target) {
-	var code = target.toString();
-	code = code.substring(0, code.lastIndexOf("}"));
-	code += "this.get = function(name) {return eval(name);};";
-	code += "this.set = function(name, value) {eval(name+'=value');};";
-	return indirectEval("[" + code + "}]")[0];
 }
 
 /*
@@ -62,7 +52,7 @@ Returns: the image in the given map with the given name/id
  */
 export function getImage(name, map) {
 	var id = Object.prototype.hasOwnProperty.call(map, name) ? name : Object.keys(map).find(function (e) {
-		return map[e].name == name;
+		return map[e].name === name;
 	});
 	return map[id];
 }
@@ -78,7 +68,7 @@ export function getRoom(name) {
 }
 
 /**
- * Helper for getting an array with unique elements 
+ * Helper for getting an array with unique elements
  * @param  {Array} array Original array
  * @return {Array}       Copy of array, excluding duplicates
  */
@@ -103,4 +93,33 @@ export function printDialog(environment, text, onReturn) {
 	environment.GetDialogBuffer().AddText(text, function () {
 		onReturn(null);
 	});
+}
+
+/**
+ * Helper for parsing parameters that may be relative to another value
+ * e.g.
+ * - getRelativeNumber('1', 5) -> 1
+ * - getRelativeNumber('+1', 5) -> 6
+ * - getRelativeNumber('-1', 5) -> 4
+ * - getRelativeNumber('', 5) -> 5
+ * @param {string} value absolute or relative string to parse
+ * @param {number} relativeTo value to use as fallback if none is provided, and as base for relative value
+ * @return {number} resulting absolute or relative number
+ */
+export function getRelativeNumber(value, relativeTo) {
+	var v = (value || value === 0 ? value : relativeTo);
+	if (typeof v === 'string' && (v.startsWith('+') || v.startsWith('-'))) {
+		return relativeTo + Number(v);
+	}
+	return Number(v);
+}
+
+/**
+ * @param {number} value number to clamp
+ * @param {number} min minimum
+ * @param {number} max maximum
+ * @return min if value < min, max if value > max, value otherwise
+ */
+export function clamp(value, min, max) {
+	return Math.max(min, Math.min(max, value));
 }

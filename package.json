@@ -6,11 +6,11 @@
 		"hacks"
 	],
 	"main": "index.mjs",
-	"version": "11.0.1",
+	"version": "11.1.3",
 	"scripts": {
 		"build": "rollup -c",
 		"test": "jest --runInBand",
-		"lint": "eslint ./src/*.js --ignore-pattern **/*.test.js",
+		"lint": "eslint ./src/*.js",
 		"prepare": "npm run build"
 	},
 	"author": "Sean S. LeBlanc <sean.s.leblanc@gmail.com>",
