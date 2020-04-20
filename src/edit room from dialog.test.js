@@ -4,7 +4,6 @@ import {
 	press,
 	end,
 	snapshot,
-	page,
 } from './test/bitsy';
 
 async function testDialog(dlg) {

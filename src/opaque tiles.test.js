@@ -29,4 +29,4 @@ test('compatible with transparency', async () => {
 	await press('ArrowLeft'); // walk on top of tile border
 	await snapshot();
 	await end();
-})
+});

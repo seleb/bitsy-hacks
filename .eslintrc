@@ -49,5 +49,16 @@
 		"no-multi-assign": "off",
 		"no-plusplus": "off",
 		"no-continue": "off",
-	}
+	},
+	"overrides": [{
+		"files": ["*.test.js", "test/*.js"],
+		"env": {
+			"jest": true,
+			"es6": true
+		},
+		"parserOptions": {
+		  "ecmaVersion": 9,
+		  "sourceType": "module"
+		}
+	}]
 }
