@@ -3,7 +3,7 @@
 @file tracery processing
 @summary process all dialog text with a tracery grammar
 @license MIT
-@version 4.0.0
+@version 4.0.1
 @requires 7.0
 @author Sean S. LeBlanc
 
@@ -40,7 +40,6 @@ can create
 
 See http://www.crystalcodepalace.com/traceryTut.html for more on how to use tracery
 */
-import bitsy from 'bitsy';
 import tracery from 'tracery-grammar';
 import {
 	before,

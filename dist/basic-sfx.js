@@ -3,7 +3,7 @@
 @file basic sfx
 @summary "walk" and "talk" sound effect support
 @license MIT
-@version 2.0.5
+@version 2.0.6
 @author Sean S. LeBlanc
 
 @description
@@ -60,7 +60,7 @@ function inject(searchRegex, replaceString) {
 
 	// error-handling
 	if (!code) {
-		throw 'Couldn\'t find "' + searchRegex + '" in script tags';
+		throw new Error('Couldn\'t find "' + searchRegex + '" in script tags');
 	}
 
 	// modify the content
@@ -74,7 +74,7 @@ function inject(searchRegex, replaceString) {
 }
 
 /**
- * Helper for getting an array with unique elements 
+ * Helper for getting an array with unique elements
  * @param  {Array} array Original array
  * @return {Array}       Copy of array, excluding duplicates
  */
@@ -82,6 +82,16 @@ function unique(array) {
 	return array.filter(function (item, idx) {
 		return array.indexOf(item) === idx;
 	});
+}
+
+/**
+ * @param {number} value number to clamp
+ * @param {number} min minimum
+ * @param {number} max maximum
+ * @return min if value < min, max if value > max, value otherwise
+ */
+function clamp(value, min, max) {
+	return Math.max(min, Math.min(max, value));
 }
 
 /**
@@ -239,7 +249,7 @@ before('startExportedGame', function () {
 	function playSound(sound) {
 		if (hackOptions.beNiceToEars) {
 			// reduce volume if played recently
-			sound.volume = Math.min(1.0, Math.max(0.25, ((bitsy.prevTime - sound.lastPlayed) * 0.002 ** 0.5)));
+			sound.volume = clamp((bitsy.prevTime - sound.lastPlayed) * 0.002 ** 0.5, 0.25, 1.0);
 			sound.lastPlayed = bitsy.prevTime;
 		}
 

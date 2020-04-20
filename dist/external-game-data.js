@@ -3,7 +3,7 @@
 @file external-game-data
 @summary separate Bitsy game data from your (modded) HTML for easier development
 @license WTFPL (do WTF you want)
-@version 2.1.4
+@version 2.1.5
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
@@ -72,7 +72,7 @@ function inject(searchRegex, replaceString) {
 
 	// error-handling
 	if (!code) {
-		throw 'Couldn\'t find "' + searchRegex + '" in script tags';
+		throw new Error('Couldn\'t find "' + searchRegex + '" in script tags');
 	}
 
 	// modify the content
@@ -86,7 +86,7 @@ function inject(searchRegex, replaceString) {
 }
 
 /**
- * Helper for getting an array with unique elements 
+ * Helper for getting an array with unique elements
  * @param  {Array} array Original array
  * @return {Array}       Copy of array, excluding duplicates
  */

@@ -3,7 +3,7 @@
 @file edit room from dialog
 @summary modify the content of a room from dialog
 @license MIT
-@version 1.0.2
+@version 1.0.3
 @requires Bitsy Version: 6.1
 @author Dana Holdampf
 
@@ -180,7 +180,7 @@ function inject(searchRegex, replaceString) {
 
 	// error-handling
 	if (!code) {
-		throw 'Couldn\'t find "' + searchRegex + '" in script tags';
+		throw new Error('Couldn\'t find "' + searchRegex + '" in script tags');
 	}
 
 	// modify the content
@@ -194,7 +194,7 @@ function inject(searchRegex, replaceString) {
 }
 
 /**
- * Helper for getting an array with unique elements 
+ * Helper for getting an array with unique elements
  * @param  {Array} array Original array
  * @return {Array}       Copy of array, excluding duplicates
  */
@@ -202,6 +202,35 @@ function unique(array) {
 	return array.filter(function (item, idx) {
 		return array.indexOf(item) === idx;
 	});
+}
+
+/**
+ * Helper for parsing parameters that may be relative to another value
+ * e.g.
+ * - getRelativeNumber('1', 5) -> 1
+ * - getRelativeNumber('+1', 5) -> 6
+ * - getRelativeNumber('-1', 5) -> 4
+ * - getRelativeNumber('', 5) -> 5
+ * @param {string} value absolute or relative string to parse
+ * @param {number} relativeTo value to use as fallback if none is provided, and as base for relative value
+ * @return {number} resulting absolute or relative number
+ */
+function getRelativeNumber(value, relativeTo) {
+	var v = (value || value === 0 ? value : relativeTo);
+	if (typeof v === 'string' && (v.startsWith('+') || v.startsWith('-'))) {
+		return relativeTo + Number(v);
+	}
+	return Number(v);
+}
+
+/**
+ * @param {number} value number to clamp
+ * @param {number} min minimum
+ * @param {number} max maximum
+ * @return min if value < min, max if value > max, value otherwise
+ */
+function clamp(value, min, max) {
+	return Math.max(min, Math.min(max, value));
 }
 
 /**
@@ -443,171 +472,105 @@ function addDeferredDialogTag(tag, fn) {
 	});
 }
 
+/**
+ * Adds two custom dialog tags which execute the provided function,
+ * one with the provided tagname executed after the dialog box,
+ * and one suffixed with 'Now' executed immediately when the tag is reached.
+ *
+ * i.e. helper for the (exit)/(exitNow) pattern.
+ *
+ * @param {string}   tag Name of tag
+ * @param {Function} fn  Function to execute, with signature `function(environment, parameters){}`
+ *                       environment: provides access to SetVariable/GetVariable (among other things, see Environment in the bitsy source for more info)
+ *                       parameters: array containing parameters as string in first element (i.e. `parameters[0]`)
+ */
+function addDualDialogTag(tag, fn) {
+	addDialogTag(tag + 'Now', function (environment, parameters, onReturn) {
+		fn(environment, parameters);
+		onReturn(null);
+	});
+	addDeferredDialogTag(tag, fn);
+}
+
 
 
 // Draws an Item, Sprite, or Tile at a location in a room
 // {draw "mapId, sourceId, xPos, yPos, roomID"}
 // {drawNow "mapId, sourceId, xPos, yPos, roomID"}
-addDialogTag('drawNow', function (environment, parameters, onReturn) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
-		undefined,
-	};
-	drawAt(params[0], params[1], params[2], params[3], params[4]);
-	onReturn(null);
-});
-addDeferredDialogTag('draw', function (environment, parameters) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
-		undefined,
-	};
+addDualDialogTag('draw', function (environment, parameters) {
+	var params = parameters[0].split(',');
 	drawAt(params[0], params[1], params[2], params[3], params[4]);
 });
 
 // As above, but affects a box area, between two corners.
 // {drawBox "mapId, sourceId, x1, y1, x2, y2, roomID"}
 // {drawBoxNow "mapId, sourceId, x1, y1, x2, y2, roomID"}
-addDialogTag('drawBoxNow', function (environment, parameters, onReturn) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
-		undefined,
-	};
-	drawBoxAt(params[0], params[1], params[2], params[3], params[4], params[5], params[6]);
-	onReturn(null);
-});
-addDeferredDialogTag('drawBox', function (environment, parameters) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
-		undefined,
-	};
+addDualDialogTag('drawBox', function (environment, parameters) {
+	var params = parameters[0].split(',');
 	drawBoxAt(params[0], params[1], params[2], params[3], params[4], params[5], params[6]);
 });
 
 // As above, but affects an entire room.
 // {drawAll "mapId, sourceId, roomID"}
 // {drawAllNow "mapId, sourceId, roomID"}
-addDialogTag('drawAllNow', function (environment, parameters, onReturn) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
-		undefined,
-	};
-	drawBoxAt(params[0], params[1], 0, 0, 15, 15, params[2]);
-	onReturn(null);
-});
-addDeferredDialogTag('drawAll', function (environment, parameters) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
-		undefined,
-	};
-	drawBoxAt(params[0], params[1], 0, 0, 15, 15, params[2]);
+addDualDialogTag('drawAll', function (environment, parameters) {
+	var params = parameters[0].split(',');
+	drawBoxAt(params[0], params[1], 0, 0, bitsy.mapsize - 1, bitsy.mapsize - 1, params[2]);
 });
 
 // Removes Items, Sprites, and/or Tiles at a location in a room
 // {erase "mapId, targetId, xPos, yPos, roomID"}
 // {eraseNow "mapId, targetId, xPos, yPos, roomID"}
-addDialogTag('eraseNow', function (environment, parameters, onReturn) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
-		undefined,
-	};
-	eraseAt(params[0], params[1], params[2], params[3], params[4]);
-});
-addDeferredDialogTag('erase', function (environment, parameters) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
-		undefined,
-	};
+addDualDialogTag('erase', function (environment, parameters) {
+	var params = parameters[0].split(',');
 	eraseAt(params[0], params[1], params[2], params[3], params[4]);
 });
 
 // As above, but affects a box area, between two corners.
 // {eraseBox "mapId, targetId, x1, y1, x2, y2, roomID"}
 // {eraseBoxNow "mapId, targetId, x1, y1, x2, y2, roomID"}
-addDialogTag('eraseBoxNow', function (environment, parameters, onReturn) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
-		undefined,
-	};
-	eraseBoxAt(params[0], params[1], params[2], params[3], params[4], params[5], params[6]);
-	onReturn(null);
-});
-addDeferredDialogTag('eraseBox', function (environment, parameters) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
-		undefined,
-	};
+addDualDialogTag('eraseBox', function (environment, parameters) {
+	var params = parameters[0].split(',');
 	eraseBoxAt(params[0], params[1], params[2], params[3], params[4], params[5], params[6]);
 });
 
 // As above, but affects an entire room.
 // {eraseAll "mapId, targetId, roomID"}
 // {eraseAllNow "mapId, targetId, roomID"}
-addDialogTag('eraseAllNow', function (environment, parameters, onReturn) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
-		undefined,
-	};
-	eraseBoxAt(params[0], params[1], 0, 0, 15, 15, params[2]);
-	onReturn(null);
-});
-addDeferredDialogTag('eraseAll', function (environment, parameters) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
-		undefined,
-	};
-	eraseBoxAt(params[0], params[1], 0, 0, 15, 15, params[2]);
+addDualDialogTag('eraseAll', function (environment, parameters) {
+	var params = parameters[0].split(',');
+	eraseBoxAt(params[0], params[1], 0, 0, bitsy.mapsize - 1, bitsy.mapsize - 1, params[2]);
 });
 
 // Converts instances of target Item, Sprite, or Tile at a location in a room into something new
 // {replace "targetMapId, targetId, newMapId, newId, xPos, yPos, roomID"}
 // {replaceNow "targetMapId, targetId, newMapId, newId, xPos, yPos, roomID"}
-addDialogTag('replaceNow', function (environment, parameters, onReturn) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
-		undefined,
-	};
-	replaceAt(params[0], params[1], params[2], params[3], params[4], params[5], params[6]);
-});
-addDeferredDialogTag('replace', function (environment, parameters) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
-		undefined,
-	};
+addDualDialogTag('replace', function (environment, parameters) {
+	var params = parameters[0].split(',');
 	replaceAt(params[0], params[1], params[2], params[3], params[4], params[5], params[6]);
 });
 
 // As above, but affects a box area between two corners.
 // {replaceBox "targetMapId, targetId, newMapId, newId, x1, y1, x2, y2, roomID"}
 // {replaceBoxNow "targetMapId, targetId, newMapId, newId, x1, y1, x2, y2, roomID"}
-addDialogTag('replaceBoxNow', function (environment, parameters, onReturn) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
-		undefined,
-	};
-	replaceBoxAt(params[0], params[1], params[2], params[3], params[4], params[5], params[6], params[7], params[8]);
-});
-addDeferredDialogTag('replaceBox', function (environment, parameters) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
-		undefined,
-	};
+addDualDialogTag('replaceBox', function (environment, parameters) {
+	var params = parameters[0].split(',');
 	replaceBoxAt(params[0], params[1], params[2], params[3], params[4], params[5], params[6], params[7], params[8]);
 });
 
 // As above, but affects an entire room.
 // {replaceAll "targetMapId, targetId, newMapId, roomID"}
 // {replaceAllNow "targetMapId, targetId, newMapId, newId, roomID"}
-addDialogTag('replaceAllNow', function (environment, parameters, onReturn) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
-		undefined,
-	};
-	replaceBoxAt(params[0], params[1], params[2], params[3], 0, 0, 15, 15, params[4]);
-});
-addDeferredDialogTag('replaceAll', function (environment, parameters) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
-		undefined,
-	};
-	replaceBoxAt(params[0], params[1], params[2], params[3], 0, 0, 15, 15, params[4]);
+addDualDialogTag('replaceAll', function (environment, parameters) {
+	var params = parameters[0].split(',');
+	replaceBoxAt(params[0], params[1], params[2], params[3], 0, 0, bitsy.mapsize - 1, bitsy.mapsize - 1, params[4]);
 });
 
 // Duplicates Items, Sprites, and/or Tiles from one location in a room to another
 // {copy "mapId, targetId, copyX, copyY, copyRoom, pasteX, pasteY, pasteRoom"}
 // {copyNow "mapId, targetId, copyX, copyY, copyRoom, pasteX, pasteY, pasteRoom"}
-addDialogTag('copyNow', function (environment, parameters, onReturn) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
-		undefined,
-	};
-	copyAt(params[0], params[1], params[2], params[3], params[4], params[5], params[6], params[7]);
-	onReturn(null);
-});
-addDeferredDialogTag('copy', function (environment, parameters) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
-		undefined,
-	};
+addDualDialogTag('copy', function (environment, parameters) {
+	var params = parameters[0].split(',');
 	copyAt(params[0], params[1], params[2], params[3], params[4], params[5], params[6], params[7]);
 });
 
@@ -615,121 +578,64 @@ addDeferredDialogTag('copy', function (environment, parameters) {
 // NOTE: positioning the paste coordinates out of bounds will only draw the section overlapping with the room.
 // {copyBox "mapId, targetId, copyX1, copyY1, copyX2, copyY2, copyRoom, pasteX, pasteY, pasteRoom"}
 // {copyBoxNow "mapId, targetId, copyX1, copyY1, copyX2, copyY2, copyRoom, pasteX, pasteY, pasteRoom"}
-addDialogTag('copyBoxNow', function (environment, parameters, onReturn) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
-		undefined,
-	};
-	copyBoxAt(params[0], params[1], params[2], params[3], params[4], params[5], params[6], params[7], params[8], params[9]);
-	onReturn(null);
-});
-addDeferredDialogTag('copyBox', function (environment, parameters) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
-		undefined,
-	};
+addDualDialogTag('copyBox', function (environment, parameters) {
+	var params = parameters[0].split(',');
 	copyBoxAt(params[0], params[1], params[2], params[3], params[4], params[5], params[6], params[7], params[8], params[9]);
 });
 
 // As above, but affects an entire room.
 // {copyAll "mapId, targetId, copyRoom, pasteRoom"}
 // {copyAllNow "mapId, targetId, copyRoom, pasteRoom"}
-addDialogTag('copyAllNow', function (environment, parameters, onReturn) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
-		undefined,
-	};
-	copyBoxAt(params[0], params[1], 0, 0, 15, 15, params[3], 0, 0, params[4]);
-	onReturn(null);
-});
-addDeferredDialogTag('copyAll', function (environment, parameters) {
-	var params = (parameters[0] != undefined) ? parameters[0].split(',') : {
-		undefined,
-	};
-	copyBoxAt(params[0], params[1], 0, 0, 15, 15, params[3], 0, 0, params[4]);
+addDualDialogTag('copyAll', function (environment, parameters) {
+	var params = parameters[0].split(',');
+	copyBoxAt(params[0], params[1], 0, 0, bitsy.mapsize - 1, bitsy.mapsize - 1, params[3], 0, 0, params[4]);
 });
 
 function drawAt(mapId, sourceId, xPos, yPos, roomId) {
 	// Trim and sanitize Map ID / Type parameter, and return if not provided.
-	if (mapId == undefined) {
-		console.log("CAN'T DRAW. DRAW TYPE IS UNDEFINED. TIL, ITM, OR SPR EXPECTED.");
-		return;
-	}
-
-	mapId = mapId.toString().trim();
-	if (mapId == '' || !(mapId.toUpperCase() == 'TIL' || mapId.toUpperCase() == 'ITM' || mapId.toUpperCase() == 'SPR')) {
+	mapId = (mapId || '').toString().trim().toUpperCase();
+	if (!['TIL', 'ITM', 'SPR'].includes(mapId)) {
 		console.log("CAN'T DRAW. UNEXPECTED DRAW TYPE (" + mapId + '). TIL, ITM, OR SPR EXPECTED.');
 		return;
 	}
 
-
 	// Trim and sanitize Source ID parameter, and return if not provided
-	if (sourceId == undefined) {
-		console.log("CAN'T DRAW. SOURCE ID IS UNDEFINED. TILE, ITEM, OR SPRITE ID EXPECTED.");
-		return;
-	}
-
-	sourceId = sourceId.toString().trim();
-	if (sourceId == '') {
+	sourceId = (sourceId || '').toString().trim();
+	if (!sourceId) {
 		console.log("CAN'T DRAW. NO SOURCE ID GIVEN. TILE, ITEM, OR SPRITE ID EXPECTED.");
 		return;
 	}
 
 
 	// Trim and sanitize X Position parameter, and set relative positions, even if omitted.
-	if (xPos == undefined) {
-		xPos = bitsy.player().x;
-	} else {
-		xPos = xPos.toString().trim();
-		if (xPos == '') {
-			xPos = bitsy.player().x;
-		} else if (xPos.includes('+')) {
-			xPos = bitsy.player().x + parseInt(xPos.substring(1), 10);
-		} else if (xPos.includes('-')) {
-			xPos = bitsy.player().x - parseInt(xPos.substring(1), 10);
-		}
-	}
-	if (xPos < 0 || xPos > 15) {
-		console.log("CAN'T DRAW. X POSITION (" + xPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
+	xPos = getRelativeNumber(xPos, bitsy.player().x);
+	if (xPos < 0 || xPos > bitsy.mapsize - 1) {
+		console.log("CAN'T DRAW. X POSITION (" + xPos + ') OUT OF BOUNDS. 0-' + bitsy.mapsize - 1 + ' EXPECTED.');
 		return;
 	}
 
 	// Trim and sanitize Y Position parameter, and set relative positions, even if omitted
-	if (yPos == undefined) {
-		yPos = bitsy.player().y;
-	} else {
-		yPos = yPos.toString().trim();
-		if (yPos == '') {
-			yPos = bitsy.player().y;
-		} else if (yPos.includes('+')) {
-			yPos = bitsy.player().y + parseInt(yPos.substring(1), 10);
-		} else if (yPos.includes('-')) {
-			yPos = bitsy.player().y - parseInt(yPos.substring(1), 10);
-		}
-	}
-	if (yPos < 0 || yPos > 15) {
-		console.log("CAN'T DRAW. Y POSITION (" + yPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
+	yPos = getRelativeNumber(yPos, bitsy.player().y);
+	if (yPos < 0 || yPos > bitsy.mapsize - 1) {
+		console.log("CAN'T DRAW. Y POSITION (" + yPos + ') OUT OF BOUNDS. 0-' + bitsy.mapsize - 1 + ' EXPECTED.');
 		return;
 	}
 
 	// Trim and sanitize Room ID parameter, and set to current room if omitted
-	if (roomId == undefined) {
-		roomId = bitsy.curRoom;
-	} else {
-		roomId = roomId.toString().trim();
-		if (roomId == '') {
-			roomId = bitsy.curRoom;
-		} else if (bitsy.room[roomId] == undefined) {
-			console.log("CAN'T DRAW. ROOM ID (" + roomId + ') NOT FOUND.');
-			return;
-		}
+	roomId = (roomId || bitsy.curRoom).toString().trim();
+	if (!bitsy.room[roomId]) {
+		console.log("CAN'T DRAW. ROOM ID (" + roomId + ') NOT FOUND.');
+		return;
 	}
 
-	// console.log ("DRAWING "+mapId+" "+sourceId+" at "+xPos+","+yPos+"(Room "+roomId+")");
-
-	if (mapId.toUpperCase() == 'TIL') {
-		if (bitsy.tile[sourceId] != undefined) {
+	switch (mapId) {
+	case 'TIL':
+		if (bitsy.tile[sourceId]) {
 			bitsy.room[roomId].tilemap[yPos][xPos] = sourceId;
 		}
-	} else if (mapId.toUpperCase() == 'ITM') {
-		if (bitsy.item[sourceId] != undefined) {
+		break;
+	case 'ITM':
+		if (bitsy.item[sourceId]) {
 			var newItem = {
 				id: sourceId,
 				x: xPos,
@@ -737,88 +643,27 @@ function drawAt(mapId, sourceId, xPos, yPos, roomId) {
 			};
 			bitsy.room[roomId].items.push(newItem);
 		}
-	} else if (mapId.toUpperCase() == 'SPR') {
-		if (bitsy.sprite[sourceId] != undefined) {
-			if (bitsy.sprite[sourceId].id == 'A') {
+		break;
+	case 'SPR':
+		if (bitsy.sprite[sourceId]) {
+			if (bitsy.sprite[sourceId].id === bitsy.playerId) {
 				console.log("CAN'T TARGET AVATAR. SKIPPING.");
-			} else if (bitsy.room[roomId] != undefined) {
+			} else if (bitsy.room[roomId]) {
 				bitsy.sprite[sourceId].room = roomId;
 				bitsy.sprite[sourceId].x = xPos;
 				bitsy.sprite[sourceId].y = yPos;
 			}
 		}
+		break;
 	}
 }
 
 function drawBoxAt(mapId, sourceId, x1, y1, x2, y2, roomId) {
 	// Trim and sanitize X and Y Positions, and set relative positions if omitted.
-	if (x1 == undefined) {
-		x1 = bitsy.player().x;
-	} else {
-		x1 = x1.toString().trim();
-		if (x1 == '') {
-			x1 = bitsy.player().x;
-		} else if (x1.includes('+')) {
-			x1 = bitsy.player().x + parseInt(x1.substring(1), 10);
-		} else if (x1.includes('-')) {
-			x1 = bitsy.player().x - parseInt(x1.substring(1), 10);
-		}
-	}
-	if (x1 < 0 || x1 > 15) {
-		console.log('CLAMPING X1 POSITION. XPOS (' + x1 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
-		x1 = Math.max(0, Math.min(x1, 15));
-	}
-	// X2
-	if (x2 == undefined) {
-		x2 = bitsy.player().x;
-	} else {
-		x2 = x2.toString().trim();
-		if (x2 == '') {
-			x2 = bitsy.player().x;
-		} else if (x2.includes('+')) {
-			x2 = bitsy.player().x + parseInt(x2.substring(1), 10);
-		} else if (x2.includes('-')) {
-			x2 = bitsy.player().x - parseInt(x2.substring(1), 10);
-		}
-	}
-	if (x2 < 0 || x2 > 15) {
-		console.log('CLAMPING X2 POSITION. xPos (' + x2 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
-		x2 = Math.max(0, Math.min(x2, 15));
-	}
-	// Y1
-	if (y1 == undefined) {
-		y1 = bitsy.player().y;
-	} else {
-		y1 = y1.toString().trim();
-		if (y1 == '') {
-			y1 = bitsy.player().y;
-		} else if (y1.includes('+')) {
-			y1 = bitsy.player().y + parseInt(y1.substring(1), 10);
-		} else if (y1.includes('-')) {
-			y1 = bitsy.player().y - parseInt(y1.substring(1), 10);
-		}
-	}
-	if (y1 < 0 || y1 > 15) {
-		console.log('CLAMPING Y1 POSITION. XPOS (' + y1 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
-		y1 = Math.max(0, Math.min(y1, 15));
-	}
-	// Y2
-	if (y2 == undefined) {
-		y2 = bitsy.player().y;
-	} else {
-		y2 = y2.toString().trim();
-		if (y2 == '') {
-			y2 = bitsy.player().y;
-		} else if (y2.includes('+')) {
-			y2 = bitsy.player().y + parseInt(y2.substring(1), 10);
-		} else if (y2.includes('-')) {
-			y2 = bitsy.player().y - parseInt(y2.substring(1), 10);
-		}
-	}
-	if (y2 < 0 || y2 > 15) {
-		console.log('CLAMPING Y2 POSITION. xPos (' + y2 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
-		y2 = Math.max(0, Math.min(y2, 15));
-	}
+	x1 = clamp(getRelativeNumber(x1, bitsy.player().x), 0, bitsy.mapsize - 1);
+	x2 = clamp(getRelativeNumber(x2, bitsy.player().x), 0, bitsy.mapsize - 1);
+	y1 = clamp(getRelativeNumber(y1, bitsy.player().y), 0, bitsy.mapsize - 1);
+	y2 = clamp(getRelativeNumber(y2, bitsy.player().y), 0, bitsy.mapsize - 1);
 
 	// Calculate which coordinates are the actual top left and bottom right.
 	var topPos = Math.min(y1, y2);
@@ -834,118 +679,62 @@ function drawBoxAt(mapId, sourceId, x1, y1, x2, y2, roomId) {
 }
 
 function eraseAt(mapId, targetId, xPos, yPos, roomId) {
-	// Trim and sanitize Map ID / Type parameter, and use any if not provided.
-	if (mapId == undefined) {
-		// console.log("ERASE TYPE IS UNDEFINED. DEFAULTING TO ANY (TIL, ITM, OR SPR).");
-		mapId = 'ANY';
-	} else {
-		mapId = mapId.toString().trim();
-		if (mapId == '' || !(mapId.toUpperCase() == 'ANY' || mapId.toUpperCase() == 'TIL' || mapId.toUpperCase() == 'ITM' || mapId.toUpperCase() == 'SPR')) {
-			// console.log("UNEXPECTED ERASE TYPE ("+mapId+"). DEFAULTING TO ANY (TIL, ITM, OR SPR).");
-			mapId = 'ANY';
-		}
-	}
-
-	// Trim and sanitize Target ID parameter, and use any if not provided
-	if (targetId == undefined) {
-		// console.log("TARGET ID UNDEFINED. DEFAULTING TO ANY (ANYTHING OF VALID TYPE).");
-		targetId = 'ANY';
-	} else {
-		targetId = targetId.toString().trim();
-		if (targetId == '') {
-			// console.log("NO TARGET ID GIVEN. DEFAULTING TO ANY (ANYTHING OF VALID TYPE).");
-			targetId = 'ANY';
-		}
-		// mapId = (mapId != "" || mapId.toUpperCase() != "ANY") ? mapId : "ANY";
-	}
+	mapId = (mapId || 'ANY').toString().trim().toUpperCase();
+	targetId = (targetId || 'ANY').toString().trim();
 
 	// Trim and sanitize X Position parameter, and set relative positions, even if omitted.
-	if (xPos == undefined) {
-		xPos = bitsy.player().x;
-	} else {
-		xPos = xPos.toString().trim();
-		if (xPos == '') {
-			xPos = bitsy.player().x;
-		} else if (xPos.includes('+')) {
-			xPos = bitsy.player().x + parseInt(xPos.substring(1), 10);
-		} else if (xPos.includes('-')) {
-			xPos = bitsy.player().x - parseInt(xPos.substring(1), 10);
-		}
-	}
-	if (xPos < 0 || xPos > 15) {
-		console.log("CAN'T DRAW. X POSITION (" + xPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
+	xPos = getRelativeNumber(xPos, bitsy.player().x);
+	if (xPos < 0 || xPos > bitsy.mapsize - 1) {
+		console.log("CAN'T DRAW. X POSITION (" + xPos + ') OUT OF BOUNDS. 0-' + bitsy.mapsize - 1 + ' EXPECTED.');
 		return;
 	}
 
 	// Trim and sanitize Y Position parameter, and set relative positions, even if omitted
-	if (yPos == undefined) {
-		yPos = bitsy.player().y;
-	} else {
-		yPos = yPos.toString().trim();
-		if (yPos == '') {
-			yPos = bitsy.player().y;
-		} else if (yPos.includes('+')) {
-			yPos = bitsy.player().y + parseInt(yPos.substring(1), 10);
-		} else if (yPos.includes('-')) {
-			yPos = bitsy.player().y - parseInt(yPos.substring(1), 10);
-		}
-	}
-	if (yPos < 0 || yPos > 15) {
-		console.log("CAN'T DRAW. Y POSITION (" + yPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
+	yPos = getRelativeNumber(yPos, bitsy.player().y);
+	if (yPos < 0 || yPos > bitsy.mapsize - 1) {
+		console.log("CAN'T DRAW. Y POSITION (" + yPos + ') OUT OF BOUNDS. 0-' + bitsy.mapsize - 1 + ' EXPECTED.');
 		return;
 	}
 
 	// Trim and sanitize Room ID parameter, and set to current room if omitted
-	if (roomId == undefined) {
-		roomId = bitsy.curRoom;
-	} else {
-		roomId = roomId.toString().trim();
-		if (roomId == '') {
-			roomId = bitsy.curRoom;
-		} else if (bitsy.room[roomId] == undefined) {
-			console.log("CAN'T DRAW. ROOM ID (" + roomId + ') NOT FOUND.');
-			return;
-		}
+	roomId = (roomId || bitsy.curRoom).toString().trim();
+	if (!bitsy.room[roomId]) {
+		console.log("CAN'T DRAW. ROOM ID (" + roomId + ') NOT FOUND.');
+		return;
 	}
 
-	// console.log ("REMOVING "+mapId+" "+targetId+" at "+xPos+","+yPos+"(Room "+roomId+")");
-
-	// If TIL or undefined.
-	if (mapId.toUpperCase() != 'ITM' && mapId.toUpperCase() != 'SPR') {
-		if (targetId == 'ANY' || bitsy.room[roomId].tilemap[yPos][xPos] == targetId) {
-			bitsy.room[roomId].tilemap[yPos][xPos] = '0';
-		}
+	// tiles
+	if (
+		(mapId === 'TIL' || mapId === 'ANY')
+		&& (targetId.toUpperCase() === 'ANY' || bitsy.room[roomId].tilemap[yPos][xPos] === targetId)
+	) {
+		bitsy.room[roomId].tilemap[yPos][xPos] = '0';
 	}
 
-	// If ITM or undefined.
-	if (mapId.toUpperCase() != 'TIL' && mapId.toUpperCase() != 'SPR') {
+	// items
+	if (mapId === 'ITM' || mapId === 'ANY') {
 		// Iterate backwards through items, to prevent issues with removed indexes
-		for (var i = bitsy.room[roomId].items.length - 1; i >= 0; i--) {
-			var targetItem = bitsy.room[roomId].items[i];
-			if (targetId == 'ANY' || targetId == targetItem.id) {
-				if (targetItem.x == xPos && targetItem.y == yPos) {
-					bitsy.room[roomId].items.splice(i, 1);
-				}
-			}
-		}
+		bitsy.room[roomId].items = bitsy.room[roomId].items.filter(function (item) {
+			return !((targetId.toUpperCase() === 'ANY' || item.id === targetId) && item.x === xPos && item.y === yPos);
+		});
 	}
 
-	// If SPR or undefined.
-	if (mapId.toUpperCase() != 'TIL' && mapId.toUpperCase() != 'ITM') {
-		if (targetId == 'ANY') {
-			for (i in bitsy.sprite) {
-				if (bitsy.sprite[i].id == 'A') {
+	// sprites
+	if (mapId === 'SPR' || mapId === 'ANY') {
+		if (targetId.toUpperCase() === 'ANY') {
+			Object.values(bitsy.sprite).forEach(function (spr) {
+				if (spr.id === bitsy.playerId) {
 					console.log("CAN'T TARGET AVATAR. SKIPPING.");
-				} else if (bitsy.sprite[i].room == roomId && bitsy.sprite[i].x == xPos && bitsy.sprite[i].y == yPos) {
-					bitsy.sprite[i].x = 0;
-					bitsy.sprite[i].y = 0;
-					bitsy.sprite[i].room = 'default';
+				} else if (spr.room === roomId && spr.x === xPos && spr.y === yPos) {
+					spr.x = 0;
+					spr.y = 0;
+					spr.room = 'default';
 				}
-			}
-		} else if (bitsy.sprite[targetId] != undefined) {
-			if (bitsy.sprite[targetId].id == 'A') {
+			});
+		} else if (bitsy.sprite[targetId]) {
+			if (bitsy.sprite[targetId].id === bitsy.playerId) {
 				console.log("CAN'T TARGET AVATAR. SKIPPING.");
-			} else if (bitsy.sprite[targetId].room == roomId && bitsy.sprite[targetId].x == xPos && bitsy.sprite[targetId].y == yPos) {
+			} else if (bitsy.sprite[targetId].room === roomId && bitsy.sprite[targetId].x === xPos && bitsy.sprite[targetId].y === yPos) {
 				bitsy.sprite[targetId].x = 0;
 				bitsy.sprite[targetId].y = 0;
 				bitsy.sprite[targetId].room = 'default';
@@ -956,73 +745,10 @@ function eraseAt(mapId, targetId, xPos, yPos, roomId) {
 
 function eraseBoxAt(mapId, targetId, x1, y1, x2, y2, roomId) {
 	// Trim and sanitize X and Y Positions, and set relative positions if omitted.
-	if (x1 == undefined) {
-		x1 = bitsy.player().x;
-	} else {
-		x1 = x1.toString().trim();
-		if (x1 == '') {
-			x1 = bitsy.player().x;
-		} else if (x1.includes('+')) {
-			x1 = bitsy.player().x + parseInt(x1.substring(1), 10);
-		} else if (x1.includes('-')) {
-			x1 = bitsy.player().x - parseInt(x1.substring(1), 10);
-		}
-	}
-	if (x1 < 0 || x1 > 15) {
-		console.log('CLAMPING X1 POSITION. XPOS (' + x1 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
-		x1 = Math.max(0, Math.min(x1, 15));
-	}
-	// X2
-	if (x2 == undefined) {
-		x2 = bitsy.player().x;
-	} else {
-		x2 = x2.toString().trim();
-		if (x2 == '') {
-			x2 = bitsy.player().x;
-		} else if (x2.includes('+')) {
-			x2 = bitsy.player().x + parseInt(x2.substring(1), 10);
-		} else if (x2.includes('-')) {
-			x2 = bitsy.player().x - parseInt(x2.substring(1), 10);
-		}
-	}
-	if (x2 < 0 || x2 > 15) {
-		console.log('CLAMPING X2 POSITION. xPos (' + x2 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
-		x2 = Math.max(0, Math.min(x2, 15));
-	}
-	// Y1
-	if (y1 == undefined) {
-		y1 = bitsy.player().y;
-	} else {
-		y1 = y1.trim();
-		if (y1 == '') {
-			y1 = bitsy.player().y;
-		} else if (y1.includes('+')) {
-			y1 = bitsy.player().y + parseInt(y1.substring(1), 10);
-		} else if (y1.includes('-')) {
-			y1 = bitsy.player().y - parseInt(y1.substring(1), 10);
-		}
-	}
-	if (y1 < 0 || y1 > 15) {
-		console.log('CLAMPING Y1 POSITION. XPOS (' + y1 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
-		y1 = Math.max(0, Math.min(y1, 15));
-	}
-	// Y2
-	if (y2 == undefined) {
-		y2 = bitsy.player().y;
-	} else {
-		y2 = y2.toString().trim();
-		if (y2 == '') {
-			y2 = bitsy.player().y;
-		} else if (y2.includes('+')) {
-			y2 = bitsy.player().y + parseInt(y2.substring(1), 10);
-		} else if (y2.includes('-')) {
-			y2 = bitsy.player().y - parseInt(y2.substring(1), 10);
-		}
-	}
-	if (y2 < 0 || y2 > 15) {
-		console.log('CLAMPING Y2 POSITION. xPos (' + y2 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
-		y2 = Math.max(0, Math.min(y2, 15));
-	}
+	x1 = clamp(getRelativeNumber(x1, bitsy.player().x), 0, bitsy.mapsize - 1);
+	x2 = clamp(getRelativeNumber(x2, bitsy.player().x), 0, bitsy.mapsize - 1);
+	y1 = clamp(getRelativeNumber(y1, bitsy.player().y), 0, bitsy.mapsize - 1);
+	y2 = clamp(getRelativeNumber(y2, bitsy.player().y), 0, bitsy.mapsize - 1);
 
 	// Calculate which coordinates are the actual top left and bottom right.
 	var topPos = Math.min(y1, y2);
@@ -1039,122 +765,60 @@ function eraseBoxAt(mapId, targetId, x1, y1, x2, y2, roomId) {
 
 function replaceAt(targetMapId, targetId, newMapId, newId, xPos, yPos, roomId) {
 	// Trim and sanitize Target Map ID / Type parameter, and use any if not provided.
-	if (targetMapId == undefined) {
-		// console.log("TARGET TYPE IS UNDEFINED. DEFAULTING TO ANY (TIL, ITM, OR SPR).");
-		targetMapId = 'ANY';
-	} else {
-		targetMapId = targetMapId.toString().trim();
-		if (targetMapId == '' || !(targetMapId.toUpperCase() == 'ANY' || targetMapId.toUpperCase() == 'TIL' || targetMapId.toUpperCase() == 'ITM' || targetMapId.toUpperCase() == 'SPR')) {
-			// console.log("UNEXPECTED TARGET TYPE ("+targetMapId+"). DEFAULTING TO ANY (TIL, ITM, OR SPR).");
-			targetMapId = 'ANY';
-		}
-	}
-
+	targetMapId = (targetMapId || 'ANY').toString().trim().toUpperCase();
 	// Trim and sanitize Target ID parameter, and use any if not provided
-	if (targetId == undefined) {
-		// console.log("TARGET ID UNDEFINED. DEFAULTING TO ANY (ANYTHING OF VALID TYPE).");
-		targetId = 'ANY';
-	} else {
-		targetId = targetId.toString().trim();
-		if (targetId == '') {
-			// console.log("NO TARGET ID GIVEN. DEFAULTING TO ANY (ANYTHING OF VALID TYPE).");
-			targetId = 'ANY';
-		}
-	}
+	targetId = (targetId || 'ANY').toString().trim();
 
 	// Trim and sanitize New Map ID / Type parameter, and return if not provided.
-	if (newMapId == undefined) {
-		console.log('CANNOT REPLACE. REPLACING TYPE IS UNDEFINED. TIL, ITM, OR SPR EXPECTED.');
-		return;
-	}
-
-	newMapId = newMapId.toString().trim();
-	if (newMapId == '' || !(newMapId.toUpperCase() == 'TIL' || newMapId.toUpperCase() == 'ITM' || newMapId.toUpperCase() == 'SPR')) {
+	newMapId = (newMapId || '').toString().trim().toUpperCase();
+	if (!['TIL', 'ITM', 'SPR'].includes(newMapId)) {
 		console.log('CANNOT REPLACE. UNEXPECTED REPLACING TYPE (' + newMapId + '). TIL, ITM, OR SPR EXPECTED.');
 		return;
 	}
 
-
 	// Trim and sanitize New Target ID parameter, and return if not provided
-	if (newId == undefined) {
+	newId = (newId || '').toString().trim();
+	if (!newId) {
 		console.log('CANNOT REPLACE. NEW TARGET ID UNDEFINED. VALID ID EXPECTED).');
 		return;
 	}
 
-	newId = newId.toString().trim();
-	if (newId == '') {
-		console.log('CANNOT REPLACE. NO NEW TARGET ID GIVEN. VALID ID EXPECTED');
-		return;
-	}
-
-
 	// Trim and sanitize X Position parameter, and set relative positions, even if omitted.
-	if (xPos == undefined) {
-		xPos = bitsy.player().x;
-	} else {
-		xPos = xPos.toString().trim();
-		if (xPos == '') {
-			xPos = bitsy.player().x;
-		} else if (xPos.includes('+')) {
-			xPos = bitsy.player().x + parseInt(xPos.substring(1), 10);
-		} else if (xPos.includes('-')) {
-			xPos = bitsy.player().x - parseInt(xPos.substring(1), 10);
-		}
-	}
-	if (xPos < 0 || xPos > 15) {
-		console.log("CAN'T REPLACE. X POSITION (" + xPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
+	xPos = getRelativeNumber(xPos, bitsy.player().x);
+	if (xPos < 0 || xPos > bitsy.mapsize - 1) {
+		console.log("CAN'T REPLACE. X POSITION (" + xPos + ') OUT OF BOUNDS. 0-' + bitsy.mapsize - 1 + ' EXPECTED.');
 		return;
 	}
 
 	// Trim and sanitize Y Position parameter, and set relative positions, even if omitted
-	if (yPos == undefined) {
-		yPos = bitsy.player().y;
-	} else {
-		yPos = yPos.toString().trim();
-		if (yPos == '') {
-			yPos = bitsy.player().y;
-		} else if (yPos.includes('+')) {
-			yPos = bitsy.player().y + parseInt(yPos.substring(1), 10);
-		} else if (yPos.includes('-')) {
-			yPos = bitsy.player().y - parseInt(yPos.substring(1), 10);
-		}
-	}
-	if (yPos < 0 || yPos > 15) {
-		console.log("CAN'T REPLACE. Y POSITION (" + yPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
+	yPos = getRelativeNumber(yPos, bitsy.player().y);
+	if (yPos < 0 || yPos > bitsy.mapsize - 1) {
+		console.log("CAN'T REPLACE. Y POSITION (" + yPos + ') OUT OF BOUNDS. 0-' + bitsy.mapsize - 1 + ' EXPECTED.');
 		return;
 	}
 
 	// Trim and sanitize Room ID parameter, and set to current room if omitted
-	if (roomId == undefined) {
-		roomId = bitsy.curRoom;
-	} else {
-		roomId = roomId.toString().trim();
-		if (roomId == '') {
-			roomId = bitsy.curRoom;
-		} else if (bitsy.room[roomId] == undefined) {
-			console.log("CAN'T REPLACE. ROOM ID (" + roomId + ') NOT FOUND.');
-			return;
-		}
+	roomId = (roomId || bitsy.curRoom).toString().trim();
+	if (!bitsy.room[roomId]) {
+		console.log("CAN'T REPLACE. ROOM ID (" + roomId + ') NOT FOUND.');
+		return;
 	}
 
-	// console.log ("REPLACING "+targetMapId+" "+targetId+" at "+xPos+","+yPos+"(Room "+roomId+")");
-	// console.log ("REPLACING WITH "+newMapId+" "+newId);
-
-	// If TIL or undefined.
-	if (targetMapId.toUpperCase() != 'ITM' && targetMapId.toUpperCase() != 'SPR') {
-		if (targetId == 'ANY' || bitsy.room[roomId].tilemap[yPos][xPos] == targetId) {
+	// tiles
+	if (targetMapId === 'TIL' || targetMapId === 'ANY') {
+		if (targetId === 'ANY' || bitsy.room[roomId].tilemap[yPos][xPos] === targetId) {
 			bitsy.room[roomId].tilemap[yPos][xPos] = '0';
 			drawAt(newMapId, newId, xPos, yPos, roomId);
 		}
 	}
 
-	// If ITM or undefined.
-	if (targetMapId.toUpperCase() != 'TIL' && targetMapId.toUpperCase() != 'SPR') {
+	// items
+	if (targetMapId === 'ITM' || targetMapId === 'ANY') {
 		// Iterate backwards through items, to prevent issues with removed indexes
 		for (var i = bitsy.room[roomId].items.length - 1; i >= 0; i--) {
-			var targetItem = bitsy.room[roomId].items[i];
-			if (targetId == 'ANY' || targetId == targetItem.id) {
-				if (targetItem.x == xPos && targetItem.y == yPos) {
+			var item = bitsy.room[roomId].items[i];
+			if (targetId === 'ANY' || targetId === item.id) {
+				if (item.x === xPos && item.y === yPos) {
 					bitsy.room[roomId].items.splice(i, 1);
 					drawAt(newMapId, newId, xPos, yPos, roomId);
 				}
@@ -1162,21 +826,21 @@ function replaceAt(targetMapId, targetId, newMapId, newId, xPos, yPos, roomId) {
 		}
 	}
 
-	// If SPR or undefined.
-	if (targetMapId.toUpperCase() != 'TIL' && targetMapId.toUpperCase() != 'ITM') {
-		if (targetId == 'ANY') {
-			for (i in bitsy.sprite) {
-				if (bitsy.sprite[i].id == 'A') {
+	// sprites
+	if (targetMapId === 'SPR' || targetMapId === 'ANY') {
+		if (targetId === 'ANY') {
+			Object.values(bitsy.sprite).forEach(function (spr) {
+				if (spr.id === bitsy.playerId) {
 					console.log("CAN'T TARGET AVATAR. SKIPPING.");
-				} else if (bitsy.sprite[i].room == roomId && bitsy.sprite[i].x == xPos && bitsy.sprite[i].y == yPos) {
-					bitsy.sprite[i].x = 0;
-					bitsy.sprite[i].y = 0;
-					bitsy.sprite[i].room = 'default';
+				} else if (spr.room === roomId && spr.x === xPos && spr.y === yPos) {
+					spr.x = 0;
+					spr.y = 0;
+					spr.room = 'default';
 					drawAt(newMapId, newId, xPos, yPos, roomId);
 				}
-			}
-		} else if (bitsy.sprite[targetId] != undefined) {
-			if (bitsy.sprite[targetId] != 'A' && bitsy.sprite[targetId].room == roomId && bitsy.sprite[targetId].x == xPos && bitsy.sprite[targetId].y == yPos) {
+			});
+		} else if (bitsy.sprite[targetId]) {
+			if (bitsy.sprite[targetId] !== bitsy.playerId && bitsy.sprite[targetId].room === roomId && bitsy.sprite[targetId].x === xPos && bitsy.sprite[targetId].y === yPos) {
 				bitsy.sprite[targetId].x = 0;
 				bitsy.sprite[targetId].y = 0;
 				bitsy.sprite[targetId].room = 'default';
@@ -1188,73 +852,10 @@ function replaceAt(targetMapId, targetId, newMapId, newId, xPos, yPos, roomId) {
 
 function replaceBoxAt(targetMapId, targetId, newMapId, newId, x1, y1, x2, y2, roomId) {
 	// Trim and sanitize X and Y Positions, and set relative positions if omitted.
-	if (x1 == undefined) {
-		x1 = bitsy.player().x;
-	} else {
-		x1 = x1.toString().trim();
-		if (x1 == '') {
-			x1 = bitsy.player().x;
-		} else if (x1.includes('+')) {
-			x1 = bitsy.player().x + parseInt(x1.substring(1), 10);
-		} else if (x1.includes('-')) {
-			x1 = bitsy.player().x - parseInt(x1.substring(1), 10);
-		}
-	}
-	if (x1 < 0 || x1 > 15) {
-		console.log('CLAMPING X1 POSITION. XPOS (' + x1 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
-		x1 = Math.max(0, Math.min(x1, 15));
-	}
-	// X2
-	if (x2 == undefined) {
-		x2 = bitsy.player().x;
-	} else {
-		x2 = x2.toString().trim();
-		if (x2 == '') {
-			x2 = bitsy.player().x;
-		} else if (x2.includes('+')) {
-			x2 = bitsy.player().x + parseInt(x2.substring(1), 10);
-		} else if (x2.includes('-')) {
-			x2 = bitsy.player().x - parseInt(x2.substring(1), 10);
-		}
-	}
-	if (x2 < 0 || x2 > 15) {
-		console.log('CLAMPING X2 POSITION. xPos (' + x2 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
-		x2 = Math.max(0, Math.min(x2, 15));
-	}
-	// Y1
-	if (y1 == undefined) {
-		y1 = bitsy.player().y;
-	} else {
-		y1 = y1.toString().trim();
-		if (y1 == '') {
-			y1 = bitsy.player().y;
-		} else if (y1.includes('+')) {
-			y1 = bitsy.player().y + parseInt(y1.substring(1), 10);
-		} else if (y1.includes('-')) {
-			y1 = bitsy.player().y - parseInt(y1.substring(1), 10);
-		}
-	}
-	if (y1 < 0 || y1 > 15) {
-		console.log('CLAMPING Y1 POSITION. XPOS (' + y1 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
-		y1 = Math.max(0, Math.min(y1, 15));
-	}
-	// Y2
-	if (y2 == undefined) {
-		y2 = bitsy.player().y;
-	} else {
-		y2 = y2.toString().trim();
-		if (y2 == '') {
-			y2 = bitsy.player().y;
-		} else if (y2.includes('+')) {
-			y2 = bitsy.player().y + parseInt(y2.substring(1), 10);
-		} else if (y2.includes('-')) {
-			y2 = bitsy.player().y - parseInt(y2.substring(1), 10);
-		}
-	}
-	if (y2 < 0 || y2 > 15) {
-		console.log('CLAMPING Y2 POSITION. xPos (' + y2 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
-		y2 = Math.max(0, Math.min(y2, 15));
-	}
+	x1 = clamp(getRelativeNumber(x1, bitsy.player().x), 0, bitsy.mapsize - 1);
+	x2 = clamp(getRelativeNumber(x2, bitsy.player().x), 0, bitsy.mapsize - 1);
+	y1 = clamp(getRelativeNumber(y1, bitsy.player().y), 0, bitsy.mapsize - 1);
+	y2 = clamp(getRelativeNumber(y2, bitsy.player().y), 0, bitsy.mapsize - 1);
 
 	// Calculate which coordinates are the actual top left and bottom right.
 	var topPos = Math.min(y1, y2);
@@ -1271,162 +872,83 @@ function replaceBoxAt(targetMapId, targetId, newMapId, newId, x1, y1, x2, y2, ro
 
 function copyAt(mapId, targetId, copyXPos, copyYPos, copyRoomId, pasteXPos, pasteYPos, pasteRoomId) {
 	// Trim and sanitize Target Map ID / Type parameter, and use any if not provided.
-	if (mapId == undefined) {
-		// console.log("TARGET TYPE IS UNDEFINED. DEFAULTING TO ANY (TIL, ITM, OR SPR).");
-		mapId = 'ANY';
-	} else {
-		mapId = mapId.toString().trim();
-		if (mapId == '' || !(mapId.toUpperCase() == 'ANY' || mapId.toUpperCase() == 'TIL' || mapId.toUpperCase() == 'ITM' || mapId.toUpperCase() == 'SPR')) {
-			// console.log("UNEXPECTED TARGET TYPE ("+mapId+"). DEFAULTING TO ANY (TIL, ITM, OR SPR).");
-			mapId = 'ANY';
-		}
+	mapId = (mapId || 'ANY').toString().trim().toUpperCase();
+	// Trim and sanitize Target ID parameter, and use any if not provided
+	targetId = (targetId || 'ANY').toString().trim();
+
+	// Trim and sanitize Copy Position parameters, and set relative positions, even if omitted.
+	copyXPos = getRelativeNumber(copyXPos, bitsy.player().x);
+	if (copyXPos < 0 || copyXPos > bitsy.mapsize - 1) {
+		console.log("CAN'T COPY. X POSITION (" + copyXPos + ') OUT OF BOUNDS. 0-' + bitsy.mapsize - 1 + ' EXPECTED.');
+		return;
+	}
+
+	copyYPos = getRelativeNumber(copyYPos, bitsy.player().y);
+	if (copyYPos < 0 || copyYPos > bitsy.mapsize - 1) {
+		console.log("CAN'T COPY. Y POSITION (" + copyYPos + ') OUT OF BOUNDS. 0-' + bitsy.mapsize - 1 + ' EXPECTED.');
+		return;
 	}
 
 	// Trim and sanitize Target ID parameter, and use any if not provided
-	if (targetId == undefined) {
-		// console.log("TARGET ID UNDEFINED. DEFAULTING TO ANY (ANYTHING OF VALID TYPE).");
-		targetId = 'ANY';
-	} else {
-		targetId = targetId.toString().trim();
-		if (targetId == '') {
-			// console.log("NO TARGET ID GIVEN. DEFAULTING TO ANY (ANYTHING OF VALID TYPE).");
-			targetId = 'ANY';
-		}
-	}
-
-	// Trim and sanitize Copy Position parameters, and set relative positions, even if omitted.
-	if (copyXPos == undefined) {
-		copyXPos = bitsy.player().x;
-	} else {
-		copyXPos = copyXPos.toString().trim();
-		if (copyXPos == '') {
-			copyXPos = bitsy.player().x;
-		} else if (copyXPos.includes('+')) {
-			copyXPos = bitsy.player().x + parseInt(copyXPos.substring(1), 10);
-		} else if (copyXPos.includes('-')) {
-			copyXPos = bitsy.player().x - parseInt(copyXPos.substring(1), 10);
-		}
-	}
-	if (copyXPos < 0 || copyXPos > 15) {
-		console.log("CAN'T COPY. X POSITION (" + copyXPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
+	copyRoomId = (copyRoomId || bitsy.curRoom).toString().trim();
+	if (!bitsy.room[copyRoomId]) {
+		console.log("CAN'T COPY. ROOM ID (" + copyRoomId + ') NOT FOUND.');
 		return;
-	}
-
-	if (copyYPos == undefined) {
-		copyYPos = bitsy.player().y;
-	} else {
-		copyYPos = copyYPos.toString().trim();
-		if (copyYPos == '') {
-			copyYPos = bitsy.player().y;
-		} else if (copyYPos.includes('+')) {
-			copyYPos = bitsy.player().y + parseInt(copyYPos.substring(1), 10);
-		} else if (copyYPos.includes('-')) {
-			copyYPos = bitsy.player().y - parseInt(copyYPos.substring(1), 10);
-		}
-	}
-	if (copyYPos < 0 || copyYPos > 15) {
-		console.log("CAN'T COPY. Y POSITION (" + copyYPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
-		return;
-	}
-
-	if (copyRoomId == undefined) {
-		copyRoomId = bitsy.curRoom;
-	} else {
-		copyRoomId = copyRoomId.trim();
-		if (copyRoomId == '') {
-			copyRoomId = bitsy.curRoom;
-		} else if (bitsy.room[copyRoomId] == undefined) {
-			console.log("CAN'T COPY. ROOM ID (" + copyRoomId + ') NOT FOUND.');
-			return;
-		}
 	}
 
 	// Trim and sanitize Paste Position parameters, and set relative positions, even if omitted.
-	if (pasteXPos == undefined) {
-		pasteXPos = bitsy.player().x;
-	} else {
-		pasteXPos = pasteXPos.toString().trim();
-		if (pasteXPos == '') {
-			pasteXPos = bitsy.player().x;
-		} else if (pasteXPos.includes('+')) {
-			pasteXPos = bitsy.player().x + parseInt(pasteXPos.substring(1), 10);
-		} else if (pasteXPos.includes('-')) {
-			pasteXPos = bitsy.player().x - parseInt(pasteXPos.substring(1), 10);
-		}
-	}
-	if (pasteXPos < 0 || pasteXPos > 15) {
-		console.log("CAN'T PASTE. X POSITION (" + pasteXPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
+	pasteXPos = getRelativeNumber(pasteXPos, bitsy.player().x);
+	if (pasteXPos < 0 || pasteXPos > bitsy.mapsize - 1) {
+		console.log("CAN'T PASTE. X POSITION (" + pasteXPos + ') OUT OF BOUNDS. 0-' + bitsy.mapsize - 1 + ' EXPECTED.');
 		return;
 	}
 
-	if (pasteYPos == undefined) {
-		pasteYPos = bitsy.player().y;
-	} else {
-		pasteYPos = pasteYPos.toString().trim();
-		if (pasteYPos == '') {
-			pasteYPos = bitsy.player().y;
-		} else if (pasteYPos.includes('+')) {
-			pasteYPos = bitsy.player().y + parseInt(pasteYPos.substring(1), 10);
-		} else if (pasteYPos.includes('-')) {
-			pasteYPos = bitsy.player().y - parseInt(pasteYPos.substring(1), 10);
-		}
-	}
-	if (pasteYPos < 0 || pasteYPos > 15) {
-		console.log("CAN'T PASTE. Y POSITION (" + pasteYPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
+	pasteYPos = getRelativeNumber(pasteYPos, bitsy.player().y);
+	if (pasteYPos < 0 || pasteYPos > bitsy.mapsize - 1) {
+		console.log("CAN'T PASTE. Y POSITION (" + pasteYPos + ') OUT OF BOUNDS. 0-' + bitsy.mapsize - 1 + ' EXPECTED.');
 		return;
 	}
 
-	if (pasteRoomId == undefined) {
-		pasteRoomId = bitsy.curRoom;
-	} else {
-		pasteRoomId = pasteRoomId.toString().trim();
-		if (pasteRoomId == '') {
-			pasteRoomId = bitsy.curRoom;
-		} else if (bitsy.room[pasteRoomId] == undefined) {
-			console.log("CAN'T PASTE. ROOM ID (" + pasteRoomId + ') NOT FOUND.');
-			return;
+	pasteRoomId = (pasteRoomId || bitsy.curRoom).toString().trim();
+	if (!bitsy.room[pasteRoomId]) {
+		console.log("CAN'T PASTE. ROOM ID (" + pasteRoomId + ') NOT FOUND.');
+		return;
+	}
+
+	// tiles
+	if (mapId === 'TIL' || mapId === 'ANY') {
+		if (targetId === 'ANY' || bitsy.room[copyRoomId].tilemap[copyYPos][copyXPos] === targetId) {
+			drawAt('TIL', bitsy.room[copyRoomId].tilemap[copyYPos][copyXPos], pasteXPos, pasteYPos, pasteRoomId);
 		}
 	}
 
-	// console.log ("COPYING "+mapId+" "+targetId+" at "+copyXPos+","+copyYPos+"(Room "+copyRoomId+")");
-	// console.log ("PASTING AT "+pasteXPos+","+pasteYPos+"(Room "+pasteRoomId+")");
-
-	// If TIL or undefined.
-	if (mapId.toUpperCase() != 'ITM' && mapId.toUpperCase() != 'SPR') {
-		if (targetId == 'ANY' || bitsy.room[copyRoomId].tilemap[copyYPos][copyXPos] == targetId) {
-			var copyId = bitsy.room[copyRoomId].tilemap[copyYPos][copyXPos];
-			drawAt('TIL', copyId, pasteXPos, pasteYPos, pasteRoomId);
-		}
-	}
-
-	// If ITM or undefined.
-	if (mapId.toUpperCase() != 'TIL' && mapId.toUpperCase() != 'SPR') {
+	// items
+	if (mapId === 'ITM' || mapId === 'ANY') {
 		// Iterate backwards through items, to prevent issues with removed indexes
 		for (var i = bitsy.room[copyRoomId].items.length - 1; i >= 0; i--) {
 			var targetItem = bitsy.room[copyRoomId].items[i];
-			if (targetId == 'ANY' || targetId == targetItem.id) {
-				if (targetItem.x == copyXPos && targetItem.y == copyYPos) {
+			if (targetId === 'ANY' || targetId === targetItem.id) {
+				if (targetItem.x === copyXPos && targetItem.y === copyYPos) {
 					drawAt('ITM', targetItem.id, pasteXPos, pasteYPos, pasteRoomId);
 				}
 			}
 		}
 	}
 
-	// If SPR or undefined.
-	if (mapId.toUpperCase() != 'TIL' && mapId.toUpperCase() != 'ITM') {
-		if (targetId == 'ANY') {
-			for (i in bitsy.sprite) {
-				if (bitsy.sprite[i].id == 'A') {
+	// sprites
+	if (mapId === 'SPR' || mapId === 'ANY') {
+		if (targetId === 'ANY') {
+			Object.values(bitsy.sprite).forEach(function (spr) {
+				if (spr.id === bitsy.playerId) {
 					console.log("CAN'T TARGET AVATAR. SKIPPING.");
-				} else if (bitsy.sprite[i].room == copyRoomId && bitsy.sprite[i].x == copyXPos && bitsy.sprite[i].y == copyYPos) {
-					var copyId = bitsy.sprite[i].id;
+				} else if (spr.room === copyRoomId && spr.x === copyXPos && spr.y === copyYPos) {
+					var copyId = spr.id;
 					drawAt('SPR', copyId, pasteXPos, pasteYPos, pasteRoomId);
 				}
-			}
-		} else if (bitsy.sprite[targetId] != undefined) {
-			if (bitsy.sprite[targetId] != 'A' && bitsy.sprite[targetId].room == copyRoomId && bitsy.sprite[targetId].x == copyXPos && bitsy.sprite[targetId].y == copyYPos) {
-				var copyId = bitsy.sprite[targetId].id;
-				drawAt('SPR', copyId, pasteXPos, pasteYPos, pasteRoomId);
+			});
+		} else if (bitsy.sprite[targetId]) {
+			if (bitsy.sprite[targetId] !== bitsy.playerId && bitsy.sprite[targetId].room === copyRoomId && bitsy.sprite[targetId].x === copyXPos && bitsy.sprite[targetId].y === copyYPos) {
+				drawAt('SPR', bitsy.sprite[targetId].id, pasteXPos, pasteYPos, pasteRoomId);
 			}
 		}
 	}
@@ -1434,161 +956,41 @@ function copyAt(mapId, targetId, copyXPos, copyYPos, copyRoomId, pasteXPos, past
 
 function copyBoxAt(mapId, targetId, x1, y1, x2, y2, copyRoomId, pasteXPos, pasteYPos, pasteRoomId) {
 	// Trim and sanitize X and Y Positions, and set relative positions if omitted.
-	if (x1 == undefined) {
-		x1 = bitsy.player().x;
-	} else {
-		x1 = x1.toString().trim();
-		if (x1 == '') {
-			x1 = bitsy.player().x;
-		} else if (x1.includes('+')) {
-			x1 = bitsy.player().x + parseInt(x1.substring(1), 10);
-		} else if (x1.includes('-')) {
-			x1 = bitsy.player().x - parseInt(x1.substring(1), 10);
-		}
-	}
-	if (x1 < 0 || x1 > 15) {
-		console.log('CLAMPING X1 POSITION. XPOS (' + x1 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
-		x1 = Math.max(0, Math.min(x1, 15));
-	}
-	// X2
-	if (x2 == undefined) {
-		x2 = bitsy.player().x;
-	} else {
-		x2 = x2.toString().trim();
-		if (x2 == '') {
-			x2 = bitsy.player().x;
-		} else if (x2.includes('+')) {
-			x2 = bitsy.player().x + parseInt(x2.substring(1), 10);
-		} else if (x2.includes('-')) {
-			x2 = bitsy.player().x - parseInt(x2.substring(1), 10);
-		}
-	}
-	if (x2 < 0 || x2 > 15) {
-		console.log('CLAMPING X2 POSITION. xPos (' + x2 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
-		x2 = Math.max(0, Math.min(x2, 15));
-	}
-	// Y1
-	if (y1 == undefined) {
-		y1 = bitsy.player().y;
-	} else {
-		y1 = y1.toString().trim();
-		if (y1 == '') {
-			y1 = bitsy.player().y;
-		} else if (y1.includes('+')) {
-			y1 = bitsy.player().y + parseInt(y1.substring(1), 10);
-		} else if (y1.includes('-')) {
-			y1 = bitsy.player().y - parseInt(y1.substring(1), 10);
-		}
-	}
-	if (y1 < 0 || y1 > 15) {
-		console.log('CLAMPING Y1 POSITION. XPOS (' + y1 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
-		y1 = Math.max(0, Math.min(y1, 15));
-	}
-	// Y2
-	if (y2 == undefined) {
-		y2 = bitsy.player().y;
-	} else {
-		y2 = y2.toString().trim();
-		if (y2 == '') {
-			y2 = bitsy.player().y;
-		} else if (y2.includes('+')) {
-			y2 = bitsy.player().y + parseInt(y2.substring(1), 10);
-		} else if (y2.includes('-')) {
-			y2 = bitsy.player().y - parseInt(y2.substring(1), 10);
-		}
-	}
-	if (y2 < 0 || y2 > 15) {
-		console.log('CLAMPING Y2 POSITION. xPos (' + y2 + ') OUT OF BOUNDS. 0-15 EXPECTED.');
-		y2 = Math.max(0, Math.min(y2, 15));
-	}
+	x1 = clamp(getRelativeNumber(x1, bitsy.player().x), 0, bitsy.mapsize - 1);
+	x2 = clamp(getRelativeNumber(x2, bitsy.player().x), 0, bitsy.mapsize - 1);
+	y1 = clamp(getRelativeNumber(y1, bitsy.player().y), 0, bitsy.mapsize - 1);
+	y2 = clamp(getRelativeNumber(y2, bitsy.player().y), 0, bitsy.mapsize - 1);
 
 	// Trim and sanitize Target Map ID / Type parameter, and use any if not provided.
-	if (mapId == undefined) {
-		// console.log("TARGET TYPE IS UNDEFINED. DEFAULTING TO ANY (TIL, ITM, OR SPR).");
-		mapId = 'ANY';
-	} else {
-		mapId = mapId.toString().trim();
-		if (mapId == '' || !(mapId.toUpperCase() == 'ANY' || mapId.toUpperCase() == 'TIL' || mapId.toUpperCase() == 'ITM' || mapId.toUpperCase() == 'SPR')) {
-			// console.log("UNEXPECTED TARGET TYPE ("+mapId+"). DEFAULTING TO ANY (TIL, ITM, OR SPR).");
-			mapId = 'ANY';
-		}
-	}
+	mapId = (mapId || 'ANY').toString().trim().toUpperCase();
 
 	// Trim and sanitize Target ID parameter, and use any if not provided
-	if (targetId == undefined) {
-		// console.log("TARGET ID UNDEFINED. DEFAULTING TO ANY (ANYTHING OF VALID TYPE).");
-		targetId = 'ANY';
-	} else {
-		targetId = targetId.toString().trim();
-		if (targetId == '') {
-			// console.log("NO TARGET ID GIVEN. DEFAULTING TO ANY (ANYTHING OF VALID TYPE).");
-			targetId = 'ANY';
-		}
-	}
+	targetId = (targetId || 'ANY').toString().trim();
 
-	if (copyRoomId == undefined) {
-		copyRoomId = bitsy.curRoom;
-	} else {
-		copyRoomId = copyRoomId.toString().trim();
-		if (copyRoomId == '') {
-			copyRoomId = bitsy.curRoom;
-		} else if (bitsy.room[copyRoomId] == undefined) {
-			console.log("CAN'T COPY. ROOM ID (" + copyRoomId + ') NOT FOUND.');
-			return;
-		}
+	copyRoomId = (copyRoomId || bitsy.curRoom).toString().trim();
+	if (bitsy.room[copyRoomId] == undefined) {
+		console.log("CAN'T COPY. ROOM ID (" + copyRoomId + ') NOT FOUND.');
+		return;
 	}
 
 	// Trim and sanitize Paste Position parameters, and set relative positions, even if omitted.
-	if (pasteXPos == undefined) {
-		pasteXPos = bitsy.player().x;
-	} else {
-		pasteXPos = pasteXPos.toString().trim();
-		if (pasteXPos == '') {
-			pasteXPos = bitsy.player().x;
-		} else if (pasteXPos.includes('+')) {
-			pasteXPos = bitsy.player().x + parseInt(pasteXPos.substring(1), 10);
-		} else if (pasteXPos.includes('-')) {
-			pasteXPos = bitsy.player().x - parseInt(pasteXPos.substring(1), 10);
-		}
-	}
-	if (pasteXPos < 0 || pasteXPos > 15) {
-		console.log("CAN'T PASTE. X POSITION (" + pasteXPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
+	pasteXPos = getRelativeNumber(pasteXPos, bitsy.player().x);
+	if (pasteXPos < 0 || pasteXPos > bitsy.mapsize - 1) {
+		console.log("CAN'T PASTE. X POSITION (" + pasteXPos + ') OUT OF BOUNDS. 0-' + bitsy.mapsize - 1 + ' EXPECTED.');
 		return;
 	}
 
-	pasteXPos = parseInt(pasteXPos, 10);
-
-
-	if (pasteYPos == undefined) {
-		pasteYPos = bitsy.player().y;
-	} else {
-		pasteYPos = pasteYPos.toString().trim();
-		if (pasteYPos == '') {
-			pasteYPos = bitsy.player().y;
-		} else if (pasteYPos.includes('+')) {
-			pasteYPos = bitsy.player().y + parseInt(pasteYPos.substring(1), 10);
-		} else if (pasteYPos.includes('-')) {
-			pasteYPos = bitsy.player().y - parseInt(pasteYPos.substring(1), 10);
-		}
-	}
-	if (pasteYPos < 0 || pasteYPos > 15) {
-		console.log("CAN'T PASTE. Y POSITION (" + pasteYPos + ') OUT OF BOUNDS. 0-15 EXPECTED.');
+	pasteYPos = getRelativeNumber(pasteYPos, bitsy.player().y);
+	if (pasteYPos < 0 || pasteYPos > bitsy.mapsize - 1) {
+		console.log("CAN'T PASTE. Y POSITION (" + pasteYPos + ') OUT OF BOUNDS. 0-' + bitsy.mapsize - 1 + ' EXPECTED.');
 		return;
 	}
 
-	pasteYPos = parseInt(pasteYPos, 10);
 
-
-	if (pasteRoomId == undefined) {
-		pasteRoomId = bitsy.curRoom;
-	} else {
-		pasteRoomId = pasteRoomId.toString().trim();
-		if (pasteRoomId == '') {
-			pasteRoomId = bitsy.curRoom;
-		} else if (bitsy.room[pasteRoomId] == undefined) {
-			console.log("CAN'T PASTE. ROOM ID (" + pasteRoomId + ') NOT FOUND.');
-			return;
-		}
+	pasteRoomId = (pasteRoomId || bitsy.curRoom).toString().trim();
+	if (!bitsy.room[pasteRoomId]) {
+		console.log("CAN'T PASTE. ROOM ID (" + pasteRoomId + ') NOT FOUND.');
+		return;
 	}
 
 	// Calculate which coordinates are the actual top left and bottom right.
@@ -1610,9 +1012,9 @@ function copyBoxAt(mapId, targetId, x1, y1, x2, y2, copyRoomId, pasteXPos, paste
 		rowId++;
 		for (var yPos = topPos; yPos <= bottomPos; yPos++) {
 			colId++;
-			// If TIL or undefined.
-			if (mapId.toUpperCase() != 'ITM' && mapId.toUpperCase() != 'SPR') {
-				if (targetId == 'ANY' || bitsy.room[copyRoomId].tilemap[yPos][xPos] == targetId) {
+			// tiles
+			if (mapId === 'TIL' || mapId === 'ANY') {
+				if (targetId === 'ANY' || bitsy.room[copyRoomId].tilemap[yPos][xPos] === targetId) {
 					copyIds.push(bitsy.room[copyRoomId].tilemap[yPos][xPos]);
 					copyMaps.push('TIL');
 					copyXs.push(pasteXPos + rowId);
@@ -1620,13 +1022,13 @@ function copyBoxAt(mapId, targetId, x1, y1, x2, y2, copyRoomId, pasteXPos, paste
 				}
 			}
 
-			// If ITM or undefined.
-			if (mapId.toUpperCase() != 'TIL' && mapId.toUpperCase() != 'SPR') {
+			// items
+			if (mapId === 'ITM' || mapId === 'ANY') {
 				// Iterate backwards through items, to prevent issues with removed indexes
 				for (var i = bitsy.room[copyRoomId].items.length - 1; i >= 0; i--) {
 					var targetItem = bitsy.room[copyRoomId].items[i];
-					if (targetId == 'ANY' || targetId == targetItem.id) {
-						if (targetItem.x == xPos && targetItem.y == yPos) {
+					if (targetId === 'ANY' || targetId === targetItem.id) {
+						if (targetItem.x === xPos && targetItem.y === yPos) {
 							copyIds.push(targetItem.id);
 							copyMaps.push('ITM');
 							copyXs.push(pasteXPos + xPos - 1);
@@ -1636,21 +1038,21 @@ function copyBoxAt(mapId, targetId, x1, y1, x2, y2, copyRoomId, pasteXPos, paste
 				}
 			}
 
-			// If SPR or undefined.
-			if (mapId.toUpperCase() != 'TIL' && mapId.toUpperCase() != 'ITM') {
-				if (targetId == 'ANY') {
-					for (i in bitsy.sprite) {
-						if (bitsy.sprite[i].id == 'A') {
+			// sprites
+			if (mapId === 'SPR' || mapId === 'ANY') {
+				if (targetId === 'ANY') {
+					Object.values(bitsy.sprite).forEach(function (spr) {
+						if (spr.id === bitsy.playerId) {
 							console.log("CAN'T TARGET AVATAR. SKIPPING.");
-						} else if (bitsy.sprite[i].room == copyRoomId && bitsy.sprite[i].x == xPos && bitsy.sprite[i].y == yPos) {
-							copyIds.push(bitsy.sprite[i].id);
+						} else if (spr.room === copyRoomId && spr.x === xPos && spr.y === yPos) {
+							copyIds.push(spr.id);
 							copyMaps.push('SPR');
 							copyXs.push(pasteXPos + xPos - 1);
 							copyYs.push(pasteYPos + yPos - 1);
 						}
-					}
-				} else if (bitsy.sprite[targetId] != undefined) {
-					if (bitsy.sprite[targetId] != 'A' && bitsy.sprite[targetId].room == copyRoomId && bitsy.sprite[targetId].x == xPos && bitsy.sprite[targetId].y == yPos) {
+					});
+				} else if (bitsy.sprite[targetId]) {
+					if (bitsy.sprite[targetId] !== bitsy.playerId && bitsy.sprite[targetId].room === copyRoomId && bitsy.sprite[targetId].x === xPos && bitsy.sprite[targetId].y === yPos) {
 						copyIds.push(bitsy.sprite[i].id);
 						copyMaps.push('SPR');
 						copyXs.push(pasteXPos + xPos - 1);

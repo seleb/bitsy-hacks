@@ -3,7 +3,7 @@
 @file character portraits animated
 @summary high quality anime gifs
 @license MIT
-@version 1.0.7
+@version 1.0.8
 @requires Bitsy Version: 5.3
 @author Sean S. LeBlanc
 
@@ -117,7 +117,11 @@ after('startExportedGame', function () {
 					duration,
 					frames,
 				};
-			}.bind(portrait));
+			}.bind(portrait))
+			.catch(function (err) {
+				console.error('Could not fetch portrait "' + src + '"');
+				throw err;
+			});
 	});
 });
 

@@ -2,7 +2,9 @@ import {
 	expose,
 	getImage,
 	inject,
-	unique
+	unique,
+	getRelativeNumber,
+	clamp
 } from './utils';
 
 function constructor() {
@@ -13,31 +15,6 @@ function constructor() {
 		return privateVar;
 	};
 }
-
-describe('expose', () => {
-	it('requires a constructor', () => {
-		expect(() => expose()).toThrow();
-		expect(() => expose(constructor)).not.toThrow();
-	});
-
-	it('returns a new constructor', () => {
-		expect(() => new(expose(constructor))).not.toThrow();
-	});
-
-	it('provides `get(name)` with access to constructor\'s scope', () => {
-		const obj = new(expose(constructor));
-		expect(obj.get('privateVar')).toBe(obj.getPrivateVar());
-	});
-
-	it('provides `set(name, value)` with access to constructor\'s scope', () => {
-		const obj = new(expose(constructor));
-		const newVal = {
-			new: 'value',
-		};
-		obj.set('privateVar', newVal);
-		expect(obj.get('privateVar')).toBe(newVal);
-	});
-});
 
 describe('getImage', () => {
 	it('requires a name/id and a map', () => {
@@ -96,5 +73,38 @@ describe('unique', () => {
 		expect(unique(['a', 'b', 'c', 'a', 'b', 'c', 'A', 'A'])).toMatchSnapshot();
 		expect(unique([obj, obj, obj])).toMatchSnapshot();
 		expect(unique([1, '1', obj, obj, '1', 1])).toMatchSnapshot();
+	});
+});
+
+describe('getRelativeNumber', () => {
+	it('returns the sum of the value and the relativeTo if the value is a string starting with a + or -', () => {
+		expect(getRelativeNumber('+1', 5)).toBe(6);
+		expect(getRelativeNumber('-1', 5)).toBe(4);
+	});
+	it('returns the relativeTo if value is not a number or a number in a string', () => {
+		expect(getRelativeNumber('', 5)).toBe(5);
+		expect(getRelativeNumber(false, 5)).toBe(5);
+		expect(getRelativeNumber(null, 5)).toBe(5);
+		expect(getRelativeNumber(undefined, 5)).toBe(5);
+	});
+	it('returns the value as a number otherwise', () => {
+		expect(getRelativeNumber('1', 5)).toBe(1);
+		expect(getRelativeNumber(1, 5)).toBe(1);
+		expect(getRelativeNumber(0, 5)).toBe(0);
+		expect(getRelativeNumber(-1, 5)).toBe(-1);
+	});
+});
+
+describe('clamp', () => {
+	it('returns the min if the value is less than the min', () => {
+		expect(clamp(0, 1, 3)).toBe(1);
+	});
+	it('returns the max if the value is greater than the max', () => {
+		expect(clamp(4, 1, 3)).toBe(3);
+	});
+	it('returns the value otherwise', () => {
+		expect(clamp(1, 1, 3)).toBe(1);
+		expect(clamp(2, 1, 3)).toBe(2);
+		expect(clamp(3, 1, 3)).toBe(3);
 	});
 });

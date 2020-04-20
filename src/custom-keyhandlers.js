@@ -3,13 +3,13 @@
 @file custom-keyhandlers
 @summary run custom code on key inputs
 @license MIT
-@version 1.0.0
+@version 1.0.1
 @requires Bitsy Version: 7.0
 @author Sean S. LeBlanc
 
 @description
 Adds an extra layer of key handlers to bitsy's input handling
-that allow custom functions to be run on key press, key down, and key up events.
+that allow custom functions to be run when a key is pressed, held, or released.
 
 Some simple example functions:
 	bitsy.scriptInterpreter.SetVariable('myvar', 10); // sets a variable that can be accessed in bitsy scripts

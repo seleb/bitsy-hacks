@@ -3,7 +3,7 @@
 @file bitsymuse
 @summary A variety of Bitsy sound and music handlers
 @license MIT
-@version 3.1.2
+@version 3.1.3
 @requires 4.8, 4.9
 @author David Mowatt
 
@@ -89,7 +89,7 @@ function inject(searchRegex, replaceString) {
 
 	// error-handling
 	if (!code) {
-		throw 'Couldn\'t find "' + searchRegex + '" in script tags';
+		throw new Error('Couldn\'t find "' + searchRegex + '" in script tags');
 	}
 
 	// modify the content
@@ -113,7 +113,7 @@ function getRoom(name) {
 }
 
 /**
- * Helper for getting an array with unique elements 
+ * Helper for getting an array with unique elements
  * @param  {Array} array Original array
  * @return {Array}       Copy of array, excluding duplicates
  */

@@ -3,7 +3,7 @@
 @file gravity
 @summary Pseudo-platforming/gravity/physics
 @license MIT
-@version 1.0.2
+@version 1.0.3
 @requires 6.3
 @author Cole Sea
 
@@ -312,10 +312,6 @@ inject(/(var ext = getExit\( player\(\)\.room, player\(\)\.x, player\(\)\.y \);)
 
 function mapDir(dir) {
 	return gravityMap[gravityDir][dir];
-}
-
-function setGravity(newDown) {
-
 }
 
 function isValidDir(dir) {

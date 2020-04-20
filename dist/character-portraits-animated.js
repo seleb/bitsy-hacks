@@ -3,7 +3,7 @@
 @file character portraits animated
 @summary high quality anime gifs
 @license MIT
-@version 1.0.7
+@version 1.0.8
 @requires Bitsy Version: 5.3
 @author Sean S. LeBlanc
 
@@ -860,7 +860,7 @@ function inject(searchRegex, replaceString) {
 
 	// error-handling
 	if (!code) {
-		throw 'Couldn\'t find "' + searchRegex + '" in script tags';
+		throw new Error('Couldn\'t find "' + searchRegex + '" in script tags');
 	}
 
 	// modify the content
@@ -874,7 +874,7 @@ function inject(searchRegex, replaceString) {
 }
 
 /**
- * Helper for getting an array with unique elements 
+ * Helper for getting an array with unique elements
  * @param  {Array} array Original array
  * @return {Array}       Copy of array, excluding duplicates
  */
@@ -1098,7 +1098,7 @@ function addDialogTag(tag, fn) {
 @file character portraits
 @summary high quality anime jpegs (or pngs i guess)
 @license MIT
-@version 2.0.6
+@version 2.0.7
 @requires Bitsy Version: 5.3
 @author Sean S. LeBlanc
 
@@ -1267,7 +1267,11 @@ after('startExportedGame', function () {
 					duration,
 					frames,
 				};
-			}.bind(portrait));
+			}.bind(portrait))
+			.catch(function (err) {
+				console.error('Could not fetch portrait "' + src + '"');
+				throw err;
+			});
 	});
 });
 
