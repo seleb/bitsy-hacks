@@ -3,7 +3,7 @@
 @file exit-from-dialog
 @summary exit to another room from dialog, including conditionals
 @license WTFPL (do WTF you want)
-@version 8.0.0
+@version 8.0.1
 @requires Bitsy Version: 7.0
 @author @mildmojo
 
@@ -84,7 +84,7 @@ function inject(searchRegex, replaceString) {
 
 	// error-handling
 	if (!code) {
-		throw 'Couldn\'t find "' + searchRegex + '" in script tags';
+		throw new Error('Couldn\'t find "' + searchRegex + '" in script tags');
 	}
 
 	// modify the content
@@ -108,7 +108,7 @@ function getRoom(name) {
 }
 
 /**
- * Helper for getting an array with unique elements 
+ * Helper for getting an array with unique elements
  * @param  {Array} array Original array
  * @return {Array}       Copy of array, excluding duplicates
  */
@@ -116,6 +116,25 @@ function unique(array) {
 	return array.filter(function (item, idx) {
 		return array.indexOf(item) === idx;
 	});
+}
+
+/**
+ * Helper for parsing parameters that may be relative to another value
+ * e.g.
+ * - getRelativeNumber('1', 5) -> 1
+ * - getRelativeNumber('+1', 5) -> 6
+ * - getRelativeNumber('-1', 5) -> 4
+ * - getRelativeNumber('', 5) -> 5
+ * @param {string} value absolute or relative string to parse
+ * @param {number} relativeTo value to use as fallback if none is provided, and as base for relative value
+ * @return {number} resulting absolute or relative number
+ */
+function getRelativeNumber(value, relativeTo) {
+	var v = (value || value === 0 ? value : relativeTo);
+	if (typeof v === 'string' && (v.startsWith('+') || v.startsWith('-'))) {
+		return relativeTo + Number(v);
+	}
+	return Number(v);
 }
 
 /**
@@ -401,21 +420,8 @@ function getExitParams(parameters) {
 		room = bitsy.room[p.room];
 	}
 
-	if (!x) {
-		x = p.x;
-	} else if (x.startsWith('+') || x.startsWith('-')) {
-		x = p.x + Number(x);
-	} else {
-		x = Number(x);
-	}
-
-	if (!y) {
-		y = p.y;
-	} else if (y.startsWith('+') || y.startsWith('-')) {
-		y = p.y + Number(y);
-	} else {
-		y = Number(y);
-	}
+	x = getRelativeNumber(x, p.x);
+	y = getRelativeNumber(y, p.y);
 
 	return {
 		dest: {

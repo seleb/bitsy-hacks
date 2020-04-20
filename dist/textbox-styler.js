@@ -3,7 +3,7 @@
 @file textbox styler
 @summary customize the style and properties of the textbox
 @license MIT
-@version 1.0.2
+@version 1.0.3
 @requires Bitsy Version: 6.1
 @author Dana Holdampf & Sean S. LeBlanc
 
@@ -429,7 +429,7 @@ function inject(searchRegex, replaceString) {
 
 	// error-handling
 	if (!code) {
-		throw 'Couldn\'t find "' + searchRegex + '" in script tags';
+		throw new Error('Couldn\'t find "' + searchRegex + '" in script tags');
 	}
 
 	// modify the content
@@ -443,7 +443,7 @@ function inject(searchRegex, replaceString) {
 }
 
 /**
- * Helper for getting an array with unique elements 
+ * Helper for getting an array with unique elements
  * @param  {Array} array Original array
  * @return {Array}       Copy of array, excluding duplicates
  */
@@ -451,6 +451,35 @@ function unique(array) {
 	return array.filter(function (item, idx) {
 		return array.indexOf(item) === idx;
 	});
+}
+
+/**
+ * Helper for parsing parameters that may be relative to another value
+ * e.g.
+ * - getRelativeNumber('1', 5) -> 1
+ * - getRelativeNumber('+1', 5) -> 6
+ * - getRelativeNumber('-1', 5) -> 4
+ * - getRelativeNumber('', 5) -> 5
+ * @param {string} value absolute or relative string to parse
+ * @param {number} relativeTo value to use as fallback if none is provided, and as base for relative value
+ * @return {number} resulting absolute or relative number
+ */
+function getRelativeNumber(value, relativeTo) {
+	var v = (value || value === 0 ? value : relativeTo);
+	if (typeof v === 'string' && (v.startsWith('+') || v.startsWith('-'))) {
+		return relativeTo + Number(v);
+	}
+	return Number(v);
+}
+
+/**
+ * @param {number} value number to clamp
+ * @param {number} min minimum
+ * @param {number} max maximum
+ * @return min if value < min, max if value > max, value otherwise
+ */
+function clamp(value, min, max) {
+	return Math.max(min, Math.min(max, value));
 }
 
 /**
@@ -693,6 +722,26 @@ function addDeferredDialogTag(tag, fn) {
 }
 
 /**
+ * Adds two custom dialog tags which execute the provided function,
+ * one with the provided tagname executed after the dialog box,
+ * and one suffixed with 'Now' executed immediately when the tag is reached.
+ *
+ * i.e. helper for the (exit)/(exitNow) pattern.
+ *
+ * @param {string}   tag Name of tag
+ * @param {Function} fn  Function to execute, with signature `function(environment, parameters){}`
+ *                       environment: provides access to SetVariable/GetVariable (among other things, see Environment in the bitsy source for more info)
+ *                       parameters: array containing parameters as string in first element (i.e. `parameters[0]`)
+ */
+function addDualDialogTag(tag, fn) {
+	addDialogTag(tag + 'Now', function (environment, parameters, onReturn) {
+		fn(environment, parameters);
+		onReturn(null);
+	});
+	addDeferredDialogTag(tag, fn);
+}
+
+/**
  * Helper for printing a paragraph break inside of a dialog function.
  * Adds the function `AddParagraphBreak` to `DialogBuffer`
  */
@@ -704,7 +753,7 @@ inject$1(/(this\.AddLinebreak = )/, 'this.AddParagraphBreak = function() { buffe
 @file paragraph-break
 @summary Adds paragraph breaks to the dialogue parser
 @license WTFPL (do WTF you want)
-@version 1.1.6
+@version 1.1.7
 @requires Bitsy Version: 5.0, 5.1
 @author Sean S. LeBlanc, David Mowatt
 
@@ -744,37 +793,349 @@ addDialogTag('p', function (environment, parameters, onReturn) {
 
 
 
+
+
+// Make them accessible at a higher scope, so Dialog functions can see them.
+var textboxStyler = window.textboxStyler = {
+	defaultStyle: {
+		verticalPosition: hackOptions.verticalPosition,
+		horizontalPosition: hackOptions.horizontalPosition,
+		textboxColor: hackOptions.textboxColor,
+		textboxWidth: hackOptions.textboxWidth,
+		textboxMarginX: hackOptions.textboxMarginX,
+		textboxMarginY: hackOptions.textboxMarginY,
+		textColor: hackOptions.textColor,
+		textMinLines: hackOptions.textMinLines,
+		textMaxLines: hackOptions.textMaxLines,
+		textScale: hackOptions.textScale,
+		textSpeed: hackOptions.textSpeed,
+		textPaddingX: hackOptions.textPaddingX,
+		textPaddingY: hackOptions.textPaddingY,
+		borderColor: hackOptions.borderColor,
+		borderBGColor: hackOptions.borderBGColor,
+		borderMidColor: hackOptions.borderMidColor,
+		borderWidth: hackOptions.borderWidth,
+		borderHeight: hackOptions.borderHeight,
+		borderScale: hackOptions.borderScale,
+		arrowColor: hackOptions.arrowColor,
+		arrowBGColor: hackOptions.arrowBGColor,
+		arrowScale: hackOptions.arrowScale,
+		arrowAlign: hackOptions.arrowAlign,
+		arrowInsetX: hackOptions.arrowInsetX,
+		arrowInsetY: hackOptions.arrowInsetY,
+		arrowWidth: hackOptions.arrowWidth,
+		arrowHeight: hackOptions.arrowHeight,
+		arrowSprite: hackOptions.arrowSprite,
+		borderUL: hackOptions.borderUL,
+		borderU: hackOptions.borderU,
+		borderUR: hackOptions.borderUR,
+		borderL: hackOptions.borderL,
+		borderR: hackOptions.borderR,
+		borderDL: hackOptions.borderDL,
+		borderD: hackOptions.borderD,
+		borderDR: hackOptions.borderDR,
+		borderM: hackOptions.borderM,
+	},
+
+	activeStyle: {
+		verticalPosition: hackOptions.verticalPosition,
+		horizontalPosition: hackOptions.horizontalPosition,
+		textboxColor: hackOptions.textboxColor,
+		textboxWidth: hackOptions.textboxWidth,
+		textboxMarginX: hackOptions.textboxMarginX,
+		textboxMarginY: hackOptions.textboxMarginY,
+		textColor: hackOptions.textColor,
+		textMinLines: hackOptions.textMinLines,
+		textMaxLines: hackOptions.textMaxLines,
+		textScale: hackOptions.textScale,
+		textSpeed: hackOptions.textSpeed,
+		textPaddingX: hackOptions.textPaddingX,
+		textPaddingY: hackOptions.textPaddingY,
+		borderColor: hackOptions.borderColor,
+		borderBGColor: hackOptions.borderBGColor,
+		borderMidColor: hackOptions.borderMidColor,
+		borderWidth: hackOptions.borderWidth,
+		borderHeight: hackOptions.borderHeight,
+		borderScale: hackOptions.borderScale,
+		arrowColor: hackOptions.arrowColor,
+		arrowBGColor: hackOptions.arrowBGColor,
+		arrowScale: hackOptions.arrowScale,
+		arrowAlign: hackOptions.arrowAlign,
+		arrowInsetX: hackOptions.arrowInsetX,
+		arrowInsetY: hackOptions.arrowInsetY,
+		arrowWidth: hackOptions.arrowWidth,
+		arrowHeight: hackOptions.arrowHeight,
+		arrowSprite: hackOptions.arrowSprite,
+		borderUL: hackOptions.borderUL,
+		borderU: hackOptions.borderU,
+		borderUR: hackOptions.borderUR,
+		borderL: hackOptions.borderL,
+		borderR: hackOptions.borderR,
+		borderDL: hackOptions.borderDL,
+		borderD: hackOptions.borderD,
+		borderDR: hackOptions.borderDR,
+		borderM: hackOptions.borderM,
+	},
+
+	styles: hackOptions.dialogStyles,
+
+	// Sets activeStyle elements to the new style if defined, or to defaultStyle's elements if not.
+	style: function (newStyle) {
+		console.log('SETTING TEXTBOX STYLE TO: ' + newStyle);
+		// If newStyle doesn't exist, resets to default
+		if (!textboxStyler.styles[newStyle]) {
+			textboxStyler.resetStyle();
+			console.log('UNDEFINED STYLE. RESETTING TO DEFAULT.');
+			return;
+		}
+		textboxStyler.activeStyle = Object.assign({}, textboxStyler.defaultStyle, textboxStyler.styles[newStyle]);
+		textboxStyler.updateTextbox(); // Updates values used for rendering text.
+	},
+	// Applies defined style parameters to the existing style, without changing anything else.
+	setStyle: function (newStyle) {
+		console.log('APPLYING STYLE ' + newStyle + ' TO EXISTING TEXTBOX STYLE');
+		// If newStyle doesn't exist, does nothing.
+		if (!textboxStyler.styles[newStyle]) {
+			console.log('UNDEFINED STYLE.');
+			return;
+		}
+		textboxStyler.activeStyle = Object.assign({}, textboxStyler.activeStyle, textboxStyler.styles[newStyle]);
+		textboxStyler.updateTextbox();
+	},
+	// Manually sets a specific property of the active style.
+	setProperty: function (property, value) {
+		console.log('APPLYING STYLE PROPERTY: ' + property + ', ' + value);
+		if (Object.prototype.hasOwnProperty.call(textboxStyler.activeStyle, property)) {
+			if (!value || value === 'default') {
+				console.log('UNDEFINED PROPERTY. SETTING TO DEFAULT.');
+				textboxStyler.activeStyle[property] = Object.assign({}, textboxStyler.defaultStyle)[property];
+			} else {
+				textboxStyler.activeStyle[property] = value;
+			}
+		}
+
+		textboxStyler.updateTextbox();
+	},
+	// Resets Active Textbox Style to Default Style
+	resetStyle: function () {
+		console.log('RESETTING TO DEFAULT TEXTBOX STYLE');
+		textboxStyler.activeStyle = Object.assign({}, textboxStyler.defaultStyle);
+
+		textboxStyler.updateTextbox();
+	},
+	// Resets a Textbox Style Property to it's Default value
+	resetProperty: function (property) {
+		console.log('RESETTING STYLE PROPERTY TO DEFAULT: ' + property);
+		if (Object.prototype.hasOwnProperty.call(textboxStyler.activeStyle, property)) {
+			textboxStyler.activeStyle[property] = Object.assign({}, textboxStyler.defaultStyle)[property];
+		} else {
+			console.log('UNDEFINED PROPERTY.');
+			return;
+		}
+
+		textboxStyler.updateTextbox();
+	},
+	// A command to set or adjust the absolute position, width, and lines of a textbox.
+	textboxPosition: function (x, y, boxWidth, boxMinLines, boxMaxLines) {
+		var curX = textboxStyler.activeStyle.textboxMarginX;
+		var curY = textboxStyler.activeStyle.textboxMarginY;
+		var curWidth = textboxStyler.activeStyle.textboxWidth;
+		var curMinLines = textboxStyler.activeStyle.textboxMinLines;
+		var curMaxLines = textboxStyler.activeStyle.textboxMaxLines;
+
+		x = clamp(getRelativeNumber(x, curX), 0, bitsy.width - 1);
+		y = clamp(getRelativeNumber(y, curY), 0, bitsy.height - 1);
+		boxWidth = clamp(getRelativeNumber(boxWidth, curWidth), 0, bitsy.width - 1);
+		boxMinLines = clamp(getRelativeNumber(boxMinLines, curMinLines), 0, bitsy.height - 1);
+		boxMaxLines = clamp(getRelativeNumber(boxMaxLines, curMaxLines), 0, bitsy.height - 1);
+
+		textboxStyler.activeStyle.textboxWidth = boxWidth;
+		textboxStyler.activeStyle.textboxMinLines = boxMinLines;
+		textboxStyler.activeStyle.textboxMaxLines = boxMaxLines;
+		textboxStyler.activeStyle.textboxMarginY = y;
+		textboxStyler.activeStyle.textboxMarginX = x;
+		textboxStyler.activeStyle.verticalPosition = 'top';
+		textboxStyler.activeStyle.horizontalPosition = 'left';
+
+		textboxStyler.updateTextbox();
+	},
+
+	// First draft of position. Kept here for future versions.
+	textboxCornersWIP: function (x1, y1, x2, y2) {
+		// Trim and sanitize X and Y Positions, and set to current position if omitted.
+		var curX1 = textboxStyler.activeStyle.textboxMarginX;
+		var curX2 = curX1 + textboxStyler.activeStyle.textboxWidth;
+		var curY1 = textboxStyler.activeStyle.textboxMarginY;
+		var curY2 = curY1 + (textboxStyler.activeStyle.textPaddingY + textboxStyler.activeStyle.borderHeight - 2 + (2 * textboxStyler.activeStyle.textMinLines));
+
+		x1 = clamp(getRelativeNumber(x1, curX1), 0, bitsy.width - 1);
+		x2 = clamp(getRelativeNumber(x2, curX2), 0, bitsy.width - 1);
+		y1 = clamp(getRelativeNumber(y1, curY1), 0, bitsy.height - 1);
+		y2 = clamp(getRelativeNumber(y2, curY2), 0, bitsy.height - 1);
+
+		console.log('SETTING TEXTBOX CORNERS TO (' + x1 + ',' + y1 + ') and (' + x2 + ',' + y2 + ')');
+		var topPos = Math.min(y1, y2);
+		var leftPos = Math.min(x1, x2);
+		var bottomPos = Math.max(y1, y2);
+		var rightPos = Math.max(x1, x2);
+		var width = rightPos - leftPos;
+		var height = bottomPos - topPos;
+		var lineCount = Math.floor(height / 8);
+
+		textboxStyler.activeStyle.textboxWidth = width;
+		textboxStyler.activeStyle.textMinLines = Math.max(1, lineCount);
+		textboxStyler.activeStyle.textMaxLines = Math.max(1, lineCount);
+		textboxStyler.activeStyle.textPaddingY = (height - (textboxStyler.activeStyle.textMinLines * 8)) / 2;
+		textboxStyler.activeStyle.textboxMarginY = topPos;
+		textboxStyler.activeStyle.textboxMarginX = leftPos;
+		textboxStyler.activeStyle.verticalPosition = 'top';
+		textboxStyler.activeStyle.horizontalPosition = 'left';
+
+		textboxStyler.updateTextbox();
+	},
+	// Updates parameters of the textbox based on style settings.
+	// TODO: see if you can re-render existing textbox content in new style?
+	updateTextbox: function () {
+		window.textboxInfo.width = textboxStyler.activeStyle.textboxWidth;
+		// window.textboxInfo.height = textboxStyler.activeStyle.textPaddingY + textboxStyler.activeStyle.borderHeight - 2 + (2 * textboxStyler.activeStyle.textMinLines);
+		window.textboxInfo.top = textboxStyler.activeStyle.textboxMarginY;
+		window.textboxInfo.left = textboxStyler.activeStyle.textboxMarginX;
+		window.textboxInfo.bottom = textboxStyler.activeStyle.textboxMarginY;
+		window.textboxInfo.font_scale = textboxStyler.activeStyle.textScale / 4;
+		window.textboxInfo.padding_vert = textboxStyler.activeStyle.textPaddingY;
+		window.textboxInfo.padding_horz = textboxStyler.activeStyle.textPaddingX;
+		window.textboxInfo.arrow_height = textboxStyler.activeStyle.textPaddingY + textboxStyler.activeStyle.borderHeight - 4;
+
+		window.textboxInfo.img = bitsy.ctx.createImageData(window.textboxInfo.width * bitsy.scale, window.textboxInfo.height * bitsy.scale);
+	},
+	// Draw border to the background of the textbox image, before rendering text or arrows.
+	drawBorder: function () {
+		// console.log ("DRAWING TEXTBOX BORDER");
+		// Iterates through each pixel of the textbox, and determines if a border pixel should be drawn.
+		// Compares 1D array of textbox pixels to 1D arrays for each border sprite, to determine whether to draw a pixel.
+		for (var y = 0; y < (4 / textboxStyler.activeStyle.borderScale) * window.textboxInfo.height; y++) {
+			for (var x = 0; x < (4 / textboxStyler.activeStyle.borderScale) * window.textboxInfo.width; x++) {
+				// NOTE: borderXId and borderYId translate message box coordinates to border tile coordinates.
+				// Use modulo to translate textbox space into tiles, for drawing borders pixel-by-pixel.
+				// For bottom/right borders, border sprites should be anchored to the bottom/right instead.
+				// borderYId and borderXId get pixel coordinates anchored to the top or left
+				// borderDId and borderRId get pixel coordinates anchored to down or right (for right/bottom edges)
+				var borderYId = (y % textboxStyler.activeStyle.borderHeight);
+				var borderXId = (x % textboxStyler.activeStyle.borderWidth);
+				var borderDId = ((y + ((4 / textboxStyler.activeStyle.borderScale) * window.textboxInfo.height)) % textboxStyler.activeStyle.borderHeight);
+				var borderRId = ((x + ((4 / textboxStyler.activeStyle.borderScale) * window.textboxInfo.width)) % textboxStyler.activeStyle.borderWidth);
+
+				// NOTE: There's a weird bug with odd vs even textbox heights. Here's a hacky fix for now.
+				// TODO: Handle decimal heights? Still bugs with those (may come up with bitsy's text scaling)
+				if (window.textboxInfo.height % textboxStyler.activeStyle.borderScale !== 0) {
+					borderDId = ((y - 4 + ((4 / textboxStyler.activeStyle.borderScale) * window.textboxInfo.height)) % textboxStyler.activeStyle.borderHeight);
+				}
+
+				// Calculates index in the 1D array of the border sprite.
+				var borderPxl = (borderYId * textboxStyler.activeStyle.borderWidth) + borderXId;
+				var bottomPxl = (borderDId * textboxStyler.activeStyle.borderWidth) + borderXId;
+				var rightPxl = (borderYId * textboxStyler.activeStyle.borderWidth) + borderRId;
+				var bottomRightPxl = (borderDId * textboxStyler.activeStyle.borderWidth) + borderRId;
+
+				// Determines if the current pixel is along one of the textbox's edges, or if it's in the center.
+				var borderTop = y < textboxStyler.activeStyle.borderHeight;
+				var borderBottom = y >= window.textboxInfo.height * (4 / textboxStyler.activeStyle.borderScale) - textboxStyler.activeStyle.borderHeight;
+				var borderLeft = x < textboxStyler.activeStyle.borderWidth;
+				var borderRight = x >= window.textboxInfo.width * (4 / textboxStyler.activeStyle.borderScale) - textboxStyler.activeStyle.borderWidth;
+
+				// Does this pixel is draw???
+				// 1= draw a border pixel, 0= No! Draw a border bg pixel instead
+				var borderDraw;
+
+				// Retrieve pixel data from appropriate sprite. Special handling for bottom/right borders!
+				if (borderBottom) {
+					if (borderLeft) {
+						// Bottom Left Corner
+						borderDraw = textboxStyler.activeStyle.borderDL[bottomPxl];
+					} else if (borderRight) {
+						// Bottom Right Corner
+						borderDraw = textboxStyler.activeStyle.borderDR[bottomRightPxl];
+					} else {
+						// Bottom Middle Edge
+						borderDraw = textboxStyler.activeStyle.borderD[bottomPxl];
+					}
+				} else if (borderTop) {
+					if (borderLeft) {
+						// Top Left Corner
+						borderDraw = textboxStyler.activeStyle.borderUL[borderPxl];
+					} else if (borderRight) {
+						// Top Right Corner
+						borderDraw = textboxStyler.activeStyle.borderUR[rightPxl];
+					} else {
+						// Top Middle Edge
+						borderDraw = textboxStyler.activeStyle.borderU[borderPxl];
+					}
+				} else if (borderLeft) {
+					// Left Edge
+					borderDraw = textboxStyler.activeStyle.borderL[borderPxl];
+				} else if (borderRight) {
+					// Right Edge
+					borderDraw = textboxStyler.activeStyle.borderR[rightPxl];
+				} else {
+					// Middle
+					borderDraw = textboxStyler.activeStyle.borderM[borderPxl];
+				}
+
+				// scaling shenanigans (maps sprite scale pixels to bitsy/screen-scale pixels)
+				for (var sy = 0; sy < textboxStyler.activeStyle.borderScale; sy++) {
+					for (var sx = 0; sx < textboxStyler.activeStyle.borderScale; sx++) {
+						var pxl = 4 * ((((textboxStyler.activeStyle.borderScale * y) + sy) * (4 * window.textboxInfo.width)) + (textboxStyler.activeStyle.borderScale * x) + sx);
+
+						// If it's a border pixel, Retrieves RGBA values for the border, and draws it.
+						if (borderDraw) {
+							if (borderTop || borderBottom || borderLeft || borderRight) {
+								window.textboxInfo.img.data[pxl + 0] = textboxStyler.activeStyle.borderColor[0];
+								window.textboxInfo.img.data[pxl + 1] = textboxStyler.activeStyle.borderColor[1];
+								window.textboxInfo.img.data[pxl + 2] = textboxStyler.activeStyle.borderColor[2];
+								window.textboxInfo.img.data[pxl + 3] = textboxStyler.activeStyle.borderColor[3];
+							} else {
+								window.textboxInfo.img.data[pxl + 0] = textboxStyler.activeStyle.borderMidColor[0];
+								window.textboxInfo.img.data[pxl + 1] = textboxStyler.activeStyle.borderMidColor[1];
+								window.textboxInfo.img.data[pxl + 2] = textboxStyler.activeStyle.borderMidColor[2];
+								window.textboxInfo.img.data[pxl + 3] = textboxStyler.activeStyle.borderMidColor[3];
+							}
+						} else if (borderTop || borderBottom || borderLeft || borderRight) {
+							// If it's a border BG pixel, gets RGBA colors based on if it's on an edge or in middle.
+							window.textboxInfo.img.data[pxl + 0] = textboxStyler.activeStyle.borderBGColor[0];
+							window.textboxInfo.img.data[pxl + 1] = textboxStyler.activeStyle.borderBGColor[1];
+							window.textboxInfo.img.data[pxl + 2] = textboxStyler.activeStyle.borderBGColor[2];
+							window.textboxInfo.img.data[pxl + 3] = textboxStyler.activeStyle.borderBGColor[3];
+						} else {
+							window.textboxInfo.img.data[pxl + 0] = textboxStyler.activeStyle.textboxColor[0];
+							window.textboxInfo.img.data[pxl + 1] = textboxStyler.activeStyle.textboxColor[1];
+							window.textboxInfo.img.data[pxl + 2] = textboxStyler.activeStyle.textboxColor[2];
+							window.textboxInfo.img.data[pxl + 3] = textboxStyler.activeStyle.textboxColor[3];
+						}
+					}
+				}
+			}
+		}
+	},
+};
+
 // Applies only a Style's defined attributes to the current textbox style.
 // {style "StyleName"}
 // {textStyleNow "StyleName"}
-addDialogTag('textStyleNow', function (environment, parameters, onReturn) {
-	textboxStyler.style(parameters[0]);
-	onReturn(null);
-});
-addDeferredDialogTag('textStyle', function (environment, parameters) {
+addDualDialogTag('textStyleNow', function (_environment, parameters) {
 	textboxStyler.style(parameters[0]);
 });
 
 // Sets the current Style of the textbox (undefined attributes use Defaults instead)
 // {setTextStyle "StyleName"}
 // {setTextStyleNow "StyleName"}
-addDialogTag('setTextStyleNow', function (environment, parameters, onReturn) {
-	textboxStyler.setStyle(parameters[0]);
-	onReturn(null);
-});
-addDeferredDialogTag('setTextStyle', function (environment, parameters) {
+addDualDialogTag('setTextStyle', function (_environment, parameters) {
 	textboxStyler.setStyle(parameters[0]);
 });
 
 // Applies the current Style of the textbox (undefined attributes use Defaults instead)
 // {textProperty "StyleProperty, StyleValue"}
 // {textPropertyNow "StyleProperty, StyleValue"}
-addDialogTag('textPropertyNow', function (environment, parameters, onReturn) {
-	var params = parameters[0].split(',');
-	textboxStyler.setProperty(params[0], params[1]);
-	onReturn(null);
-});
-addDeferredDialogTag('textProperty', function (environment, parameters) {
+addDualDialogTag('textProperty', function (_environment, parameters) {
 	var params = parameters[0].split(',');
 	textboxStyler.setProperty(params[0], params[1]);
 });
@@ -782,39 +1143,24 @@ addDeferredDialogTag('textProperty', function (environment, parameters) {
 // Resets the Style of the textbox to the Default style.
 // {resetTextStyle}
 // {resetTextStyleNow}
-addDialogTag('resetTextStyleNow', function (environment, parameters, onReturn) {
-	textboxStyler.resetStyle();
-	onReturn(null);
-});
-addDeferredDialogTag('resetTextStyle', function (environment, parameters) {
+addDualDialogTag('resetTextStyle', function () {
 	textboxStyler.resetStyle();
 });
 
 // Resets a Style Property of the textbox to it's Default value.
 // {resetTextProperty "StyleProperty"}
 // {resetTextPropertyNow "StyleProperty"}
-addDialogTag('resetTextPropertyNow', function (environment, parameters, onReturn) {
-	textboxStyler.resetProperty(parameters[0]);
-	onReturn(null);
-});
-addDeferredDialogTag('resetTextProperty', function (environment, parameters) {
+addDualDialogTag('resetTextProperty', function (_environment, parameters) {
 	textboxStyler.resetProperty(parameters[0]);
 });
 
 // Repositions and resizes textbox at an absolute position, based on coordinates.
 // {textPosition "x, y, width, minLines, maxLines"}
 // {textPositionNow "x, y, width, minLines, maxLines"}
-addDialogTag('textPositionNow', function (environment, parameters, onReturn) {
-	var params = parameters[0].split(',');
-	textboxStyler.textboxPosition(params[0], params[1], params[2], params[3], params[4]);
-	onReturn(null);
-});
-addDeferredDialogTag('textPosition', function (environment, parameters) {
+addDualDialogTag('textPosition', function (_environment, parameters) {
 	var params = parameters[0].split(',');
 	textboxStyler.textboxPosition(params[0], params[1], params[2], params[3], params[4]);
 });
-
-
 
 // =============================================================
 // | HACK SCRIPT INJECTS |/////////////////////////////////////|
@@ -989,7 +1335,6 @@ var fontSizeInject = `else if (args[0] == "SIZE") {
 	console.log(fontHeight);
 }`;
 inject$1(/else if \(args\[0\] == "SIZE"\) {[^]*?}/, fontSizeInject);
-console.log(fontSizeInject);
 // =============================================================
 // | RE-IMPLEMENTED LONG DIALOG HACK INJECTS |/////////////////|
 // =============================================================
@@ -1007,535 +1352,7 @@ inject$1(/(if\(textboxInfo\.img == null\))/, '// $1');
 
 // rewrite hard-coded row limit
 inject$1(/(else if \(curRowIndex )== 0/g, '$1 < textboxStyler.activeStyle.textMaxLines - 1');
-inject$1(/(if\( lastPage\.length) <= 1( \) {)/, '$1 < textboxStyler.activeStyle.textMaxLines $2');
-
-// =============================================================
-// | HACK FUNCTIONS |//////////////////////////////////////////|
-// =============================================================
-
-// Make them accessible at a higher scope, so Dialog functions can see them.
-var textboxStyler = window.textboxStyler = {
-	defaultStyle: {
-		verticalPosition: hackOptions.verticalPosition,
-		horizontalPosition: hackOptions.horizontalPosition,
-		textboxColor: hackOptions.textboxColor,
-		textboxWidth: hackOptions.textboxWidth,
-		textboxMarginX: hackOptions.textboxMarginX,
-		textboxMarginY: hackOptions.textboxMarginY,
-		textColor: hackOptions.textColor,
-		textMinLines: hackOptions.textMinLines,
-		textMaxLines: hackOptions.textMaxLines,
-		textScale: hackOptions.textScale,
-		textSpeed: hackOptions.textSpeed,
-		textPaddingX: hackOptions.textPaddingX,
-		textPaddingY: hackOptions.textPaddingY,
-		borderColor: hackOptions.borderColor,
-		borderBGColor: hackOptions.borderBGColor,
-		borderMidColor: hackOptions.borderMidColor,
-		borderWidth: hackOptions.borderWidth,
-		borderHeight: hackOptions.borderHeight,
-		borderScale: hackOptions.borderScale,
-		arrowColor: hackOptions.arrowColor,
-		arrowBGColor: hackOptions.arrowBGColor,
-		arrowScale: hackOptions.arrowScale,
-		arrowAlign: hackOptions.arrowAlign,
-		arrowInsetX: hackOptions.arrowInsetX,
-		arrowInsetY: hackOptions.arrowInsetY,
-		arrowWidth: hackOptions.arrowWidth,
-		arrowHeight: hackOptions.arrowHeight,
-		arrowSprite: hackOptions.arrowSprite,
-		borderUL: hackOptions.borderUL,
-		borderU: hackOptions.borderU,
-		borderUR: hackOptions.borderUR,
-		borderL: hackOptions.borderL,
-		borderR: hackOptions.borderR,
-		borderDL: hackOptions.borderDL,
-		borderD: hackOptions.borderD,
-		borderDR: hackOptions.borderDR,
-		borderM: hackOptions.borderM,
-	},
-
-	activeStyle: {
-		verticalPosition: hackOptions.verticalPosition,
-		horizontalPosition: hackOptions.horizontalPosition,
-		textboxColor: hackOptions.textboxColor,
-		textboxWidth: hackOptions.textboxWidth,
-		textboxMarginX: hackOptions.textboxMarginX,
-		textboxMarginY: hackOptions.textboxMarginY,
-		textColor: hackOptions.textColor,
-		textMinLines: hackOptions.textMinLines,
-		textMaxLines: hackOptions.textMaxLines,
-		textScale: hackOptions.textScale,
-		textSpeed: hackOptions.textSpeed,
-		textPaddingX: hackOptions.textPaddingX,
-		textPaddingY: hackOptions.textPaddingY,
-		borderColor: hackOptions.borderColor,
-		borderBGColor: hackOptions.borderBGColor,
-		borderMidColor: hackOptions.borderMidColor,
-		borderWidth: hackOptions.borderWidth,
-		borderHeight: hackOptions.borderHeight,
-		borderScale: hackOptions.borderScale,
-		arrowColor: hackOptions.arrowColor,
-		arrowBGColor: hackOptions.arrowBGColor,
-		arrowScale: hackOptions.arrowScale,
-		arrowAlign: hackOptions.arrowAlign,
-		arrowInsetX: hackOptions.arrowInsetX,
-		arrowInsetY: hackOptions.arrowInsetY,
-		arrowWidth: hackOptions.arrowWidth,
-		arrowHeight: hackOptions.arrowHeight,
-		arrowSprite: hackOptions.arrowSprite,
-		borderUL: hackOptions.borderUL,
-		borderU: hackOptions.borderU,
-		borderUR: hackOptions.borderUR,
-		borderL: hackOptions.borderL,
-		borderR: hackOptions.borderR,
-		borderDL: hackOptions.borderDL,
-		borderD: hackOptions.borderD,
-		borderDR: hackOptions.borderDR,
-		borderM: hackOptions.borderM,
-	},
-
-	styles: hackOptions.dialogStyles,
-
-	// Sets activeStyle elements to the new style if defined, or to defaultStyle's elements if not.
-	style: function (newStyle) {
-		console.log('SETTING TEXTBOX STYLE TO: ' + newStyle);
-		// If newStyle doesn't exist, resets to default
-		if (newStyle == undefined || textboxStyler.styles[newStyle] == undefined) {
-			textboxStyler.resetStyle();
-			console.log('UNDEFINED STYLE. RESETTING TO DEFAULT.');
-			return false;
-		}
-		textboxStyler.activeStyle = Object.assign({}, textboxStyler.defaultStyle, textboxStyler.styles[newStyle]);
-		/*
-		Object.keys(textboxStyler.activeStyle).forEach(function(prop) {
-			if (textboxStyler.styles[newStyle].hasOwnProperty(prop)) {
-				textboxStyler.activeStyle[prop] = textboxStyler.styles[newStyle][prop];
-			}
-			else {
-				textboxStyler.activeStyle[prop] = textboxStyler.defaultStyle[prop];
-			}
-		});
-		*/
-		textboxStyler.updateTextbox(); // Updates values used for rendering text.
-	},
-	// Applies defined style parameters to the existing style, without changing anything else.
-	setStyle: function (newStyle) {
-		console.log('APPLYING STYLE ' + newStyle + ' TO EXISTING TEXTBOX STYLE');
-		// If newStyle doesn't exist, does nothing.
-		if (textboxStyler.styles[newStyle] == undefined) {
-			console.log('UNDEFINED STYLE.');
-			return false;
-		}
-		textboxStyler.activeStyle = Object.assign({}, textboxStyler.activeStyle, textboxStyler.styles[newStyle]);
-		/*
-		Object.keys(textboxStyler.activeStyle).forEach(function(prop) {
-			if (textboxStyler.styles[newStyle].hasOwnProperty(prop))
-			{
-				textboxStyler.activeStyle[prop] = textboxStyler.styles[newStyle][prop];
-			}
-		});
-		*/
-		textboxStyler.updateTextbox();
-	},
-	// Manually sets a specific property of the active style.
-	setProperty: function (property, value) {
-		value = 'default';
-		console.log('APPLYING STYLE PROPERTY: ' + property + ', ' + value);
-		if (textboxStyler.activeStyle.hasOwnProperty(property)) {
-			if (value == undefined || value == 'default') {
-				console.log('UNDEFINED PROPERTY. SETTING TO DEFAULT.');
-				// textboxStyle.activeStyle[property] = textboxStyle.defaultStyle[property];
-				textboxStyler.activeStyle[property] = Object.assign({}, textboxStyler.defaultStyle)[property];
-			} else {
-				textboxStyler.activeStyle[property] = value;
-			}
-		}
-
-		textboxStyler.updateTextbox();
-	},
-	// Resets Active Textbox Style to Default Style
-	resetStyle: function () {
-		console.log('RESETTING TO DEFAULT TEXTBOX STYLE');
-		// textboxStyler.activeStyle = textboxStyler.defaultStyle;
-		textboxStyler.activeStyle = Object.assign({}, textboxStyler.defaultStyle);
-
-		textboxStyler.updateTextbox();
-	},
-	// Resets a Textbox Style Property to it's Default value
-	resetProperty: function (property) {
-		console.log('RESETTING STYLE PROPERTY TO DEFAULT: ' + property);
-		if (textboxStyler.activeStyle.hasOwnProperty(property)) {
-			// textboxStyle.activeStyle[property] = textboxStyle.defaultStyle[property]; //Don't do it like this. Clone object instead of passing ref.
-			textboxStyler.activeStyle[property] = Object.assign({}, textboxStyler.defaultStyle)[property];
-		} else {
-			console.log('UNDEFINED PROPERTY.');
-			return false;
-		}
-
-		textboxStyler.updateTextbox();
-	},
-	// A command to set or adjust the absolute position, width, and lines of a textbox.
-	textboxPosition: function (x, y, boxWidth, boxMinLines, boxMaxLines) {
-		var curX = textboxStyler.activeStyle.textboxMarginX;
-		var curY = textboxStyler.activeStyle.textboxMarginY;
-		var curWidth = textboxStyler.activeStyle.textboxWidth;
-		var curMinLines = textboxStyler.activeStyle.textboxMinLines;
-		var curMaxLines = textboxStyler.activeStyle.textboxMaxLines;
-
-		// X Position
-		if (x == undefined) {
-			x = curX;
-		} else {
-			x = x.toString().trim();
-			if (x == '') {
-				x = curX;
-			} else if (x.includes('+')) {
-				x = curX + parseInt(x.substring(1), 10);
-			} else if (x.includes('-')) {
-				x = curX - parseInt(x.substring(1), 10);
-			}
-		}
-		if (x < -128 || x > 128) {
-			console.log('CLAMPING X POSITION. XPOS (' + x + ') OUT OF BOUNDS. 0-128 EXPECTED.');
-			x = Math.max(0, Math.min(x, 128));
-		}
-		// Y Position
-		if (y == undefined) {
-			y = curY;
-		} else {
-			y = y.toString().trim();
-			if (y == '') {
-				y = curY;
-			} else if (y.includes('+')) {
-				y = curY + parseInt(y.substring(1), 10);
-			} else if (y.includes('-')) {
-				y = curY - parseInt(y.substring(1), 10);
-			}
-		}
-		if (y < -128 || y > 128) {
-			console.log('CLAMPING Y POSITION. YPOS (' + y + ') OUT OF BOUNDS. 0-128 EXPECTED.');
-			y = Math.max(0, Math.min(y, 128));
-		}
-		// Width
-		if (boxWidth == undefined) {
-			boxWidth = curWidth;
-		} else {
-			boxWidth = boxWidth.toString().trim();
-			if (boxWidth == '') {
-				boxWidth = curWidth;
-			} else if (boxWidth.includes('+')) {
-				boxWidth = curWidth + parseInt(boxWidth.substring(1), 10);
-			} else if (boxWidth.includes('-')) {
-				boxWidth = curWidth - parseInt(boxWidth.substring(1), 10);
-			}
-		}
-		if (boxWidth < 0 || boxWidth > 128) {
-			console.log('CLAMPING WIDTH (' + (boxWidth) + '). 0-128 EXPECTED.');
-			boxWidth = Math.max(0, Math.min(boxWidth, 128));
-		}
-		// Minimum Lines
-		if (boxMinLines == undefined) {
-			boxMinLines = curMinLines;
-		} else {
-			boxMinLines = boxMinLines.toString().trim();
-			if (boxMinLines == '') {
-				boxMinLines = curMinLines;
-			} else if (boxMinLines.includes('+')) {
-				boxMinLines = curMinLines + parseInt(boxMinLines.substring(1), 10);
-			} else if (boxMinLines.includes('-')) {
-				boxMinLines = curMinLines - parseInt(boxMinLines.substring(1), 10);
-			}
-		}
-		if (boxMinLines < 0 || boxMinLines > 128) {
-			console.log('CLAMPING TEXT MIN LINES (' + (boxMinLines) + '). 0-128 EXPECTED.');
-			boxMinLines = Math.max(0, Math.min(boxMinLines, 128));
-		}
-		// Maximum Lines
-		if (boxMaxLines == undefined) {
-			boxMaxLines = curMaxLines;
-		} else {
-			boxMaxLines = boxMaxLines.toString().trim();
-			if (boxMaxLines == '') {
-				boxMaxLines = boxMaxLines;
-			} else if (boxMaxLines.includes('+')) {
-				boxMaxLines += parseInt(boxMaxLines.substring(1), 10);
-			} else if (boxMaxLines.includes('-')) {
-				boxMaxLines -= parseInt(boxMaxLines.substring(1), 10);
-			}
-		}
-		if (boxMaxLines < 0 || boxMaxLines > 128) {
-			console.log('CLAMPING TEXT MAX LINES (' + (boxMaxLines) + '). 0-128 EXPECTED.');
-			boxMaxLines = Math.max(0, Math.min(boxMaxLines, 128));
-		}
-
-		textboxStyler.activeStyle.textboxWidth = boxWidth;
-		textboxStyler.activeStyle.textboxMinLines = boxMinLines;
-		textboxStyler.activeStyle.textboxMaxLines = boxMaxLines;
-		textboxStyler.activeStyle.textboxMarginY = y;
-		textboxStyler.activeStyle.textboxMarginX = x;
-		textboxStyler.activeStyle.verticalPosition = 'top';
-		textboxStyler.activeStyle.horizontalPosition = 'left';
-
-		textboxStyler.updateTextbox();
-	},
-
-	// First draft of position. Kept here for future versions.
-	textboxCornersWIP: function (x1, y1, x2, y2) {
-		// Trim and sanitize X and Y Positions, and set to current position if omitted.
-		var curX1 = textboxStyler.activeStyle.textboxMarginX;
-		var curX2 = curX1 + textboxStyler.activeStyle.textboxWidth;
-		var curY1 = textboxStyler.activeStyle.textboxMarginY;
-		var curY2 = curY1 + (textboxStyler.activeStyle.textPaddingY + textboxStyler.activeStyle.borderHeight - 2 + (2 * textboxStyler.activeStyle.textMinLines));
-
-		if (x1 == undefined) {
-			x1 = curX1;
-		} else {
-			x1 = x1.toString().trim();
-			if (x1 == '') {
-				x1 = curX1;
-			} else if (x1.includes('+')) {
-				x1 = curX1 + parseInt(x1.substring(1), 10);
-			} else if (x1.includes('-')) {
-				x1 = curX1 - parseInt(x1.substring(1), 10);
-			}
-		}
-		if (x1 < 0 || x1 > 128) {
-			console.log('CLAMPING X1 POSITION. XPOS (' + x1 + ') OUT OF BOUNDS. 0-128 EXPECTED.');
-			x1 = Math.max(0, Math.min(x1, 128));
-		}
-		// X2
-		if (x2 == undefined) {
-			x2 = curX2;
-		} else {
-			x2 = x2.toString().trim();
-			if (x2 == '') {
-				x2 = curX2;
-			} else if (x2.includes('+')) {
-				x2 = curX2 + parseInt(x2.substring(1), 10);
-			} else if (x2.includes('-')) {
-				x2 = curX2 - parseInt(x2.substring(1), 10);
-			}
-		}
-		if (x2 < 0 || x2 > 128) {
-			console.log('CLAMPING X2 POSITION. xPos (' + x2 + ') OUT OF BOUNDS. 0-128 EXPECTED.');
-			x2 = Math.max(0, Math.min(x2, 128));
-		}
-		// Y1
-		if (y1 == undefined) {
-			y1 = curY1;
-		} else {
-			y1 = y1.toString().trim();
-			if (y1 == '') {
-				y1 = curY1;
-			} else if (y1.includes('+')) {
-				y1 = curY1 + parseInt(y1.substring(1), 10);
-			} else if (y1.includes('-')) {
-				y1 = curY1 - parseInt(y1.substring(1), 10);
-			}
-		}
-		if (y1 < 0 || y1 > 128) {
-			console.log('CLAMPING Y1 POSITION. XPOS (' + y1 + ') OUT OF BOUNDS. 0-128 EXPECTED.');
-			y1 = Math.max(0, Math.min(y1, 128));
-		}
-		// Y2
-		if (y2 == undefined) {
-			y2 = curY2;
-		} else {
-			y2 = y2.toString().trim();
-			if (y2 == '') {
-				y2 = curY2;
-			} else if (y2.includes('+')) {
-				y2 = curY2 + parseInt(y2.substring(1), 10);
-			} else if (y2.includes('-')) {
-				y2 = curY2 - parseInt(y2.substring(1), 10);
-			}
-		}
-		if (y2 < 0 || y2 > 128) {
-			console.log('CLAMPING Y2 POSITION. xPos (' + y2 + ') OUT OF BOUNDS. 0-128 EXPECTED.');
-			y2 = Math.max(0, Math.min(y2, 128));
-		}
-
-		console.log('SETTING TEXTBOX CORNERS TO (' + x1 + ',' + y1 + ') and (' + x2 + ',' + y2 + ')');
-		var topPos = Math.min(y1, y2);
-		var leftPos = Math.min(x1, x2);
-		var bottomPos = Math.max(y1, y2);
-		var rightPos = Math.max(x1, x2);
-		var width = rightPos - leftPos;
-		var height = bottomPos - topPos;
-		var lineCount = Math.floor(height / 8);
-
-		textboxStyler.activeStyle.textboxWidth = width;
-		textboxStyler.activeStyle.textMinLines = Math.max(1, lineCount);
-		textboxStyler.activeStyle.textMaxLines = Math.max(1, lineCount);
-		textboxStyler.activeStyle.textPaddingY = (height - (textboxStyler.activeStyle.textMinLines * 8)) / 2;
-		textboxStyler.activeStyle.textboxMarginY = topPos;
-		textboxStyler.activeStyle.textboxMarginX = leftPos;
-		textboxStyler.activeStyle.verticalPosition = 'top';
-		textboxStyler.activeStyle.horizontalPosition = 'left';
-
-		textboxStyler.updateTextbox();
-	},
-	// Updates parameters of the textbox based on style settings.
-	// TODO: see if you can re-render existing textbox content in new style?
-	updateTextbox: function () {
-		window.textboxInfo.width = textboxStyler.activeStyle.textboxWidth;
-		// window.textboxInfo.height = textboxStyler.activeStyle.textPaddingY + textboxStyler.activeStyle.borderHeight - 2 + (2 * textboxStyler.activeStyle.textMinLines);
-		window.textboxInfo.top = textboxStyler.activeStyle.textboxMarginY;
-		window.textboxInfo.left = textboxStyler.activeStyle.textboxMarginX;
-		window.textboxInfo.bottom = textboxStyler.activeStyle.textboxMarginY;
-		window.textboxInfo.font_scale = textboxStyler.activeStyle.textScale / 4;
-		window.textboxInfo.padding_vert = textboxStyler.activeStyle.textPaddingY;
-		window.textboxInfo.padding_horz = textboxStyler.activeStyle.textPaddingX;
-		window.textboxInfo.arrow_height = textboxStyler.activeStyle.textPaddingY + textboxStyler.activeStyle.borderHeight - 4;
-
-		var pixelsPerRow = (textboxStyler.activeStyle.textboxWidth * 2) - (textboxStyler.activeStyle.borderWidth * 2) - (textboxStyler.activeStyle.textPaddingX * 2);
-
-		window.textboxInfo.img = bitsy.ctx.createImageData(window.textboxInfo.width * bitsy.scale, window.textboxInfo.height * bitsy.scale);
-	},
-	// Draw border to the background of the textbox image, before rendering text or arrows.
-	drawBorder: function () {
-		// console.log ("DRAWING TEXTBOX BORDER");
-		// Iterates through each pixel of the textbox, and determines if a border pixel should be drawn.
-		// Compares 1D array of textbox pixels to 1D arrays for each border sprite, to determine whether to draw a pixel.
-		for (var y = 0; y < (4 / textboxStyler.activeStyle.borderScale) * window.textboxInfo.height; y++) {
-			for (var x = 0; x < (4 / textboxStyler.activeStyle.borderScale) * window.textboxInfo.width; x++) {
-				// NOTE: borderXId and borderYId translate message box coordinates to border tile coordinates.
-				// Use modulo to translate textbox space into tiles, for drawing borders pixel-by-pixel.
-				// For bottom/right borders, border sprites should be anchored to the bottom/right instead.
-				// borderYId and borderXId get pixel coordinates anchored to the top or left
-				// borderDId and borderRId get pixel coordinates anchored to down or right (for right/bottom edges)
-				var borderYId = (y % textboxStyler.activeStyle.borderHeight);
-				var borderXId = (x % textboxStyler.activeStyle.borderWidth);
-				var borderDId = ((y + ((4 / textboxStyler.activeStyle.borderScale) * window.textboxInfo.height)) % textboxStyler.activeStyle.borderHeight);
-				var borderRId = ((x + ((4 / textboxStyler.activeStyle.borderScale) * window.textboxInfo.width)) % textboxStyler.activeStyle.borderWidth);
-
-				// NOTE: There's a weird bug with odd vs even textbox heights. Here's a hacky fix for now.
-				// TODO: Handle decimal heights? Still bugs with those (may come up with bitsy's text scaling)
-				if (window.textboxInfo.height % textboxStyler.activeStyle.borderScale != 0) {
-					borderDId = ((y - 4 + ((4 / textboxStyler.activeStyle.borderScale) * window.textboxInfo.height)) % textboxStyler.activeStyle.borderHeight);
-				}
-
-				// Calculates index in the 1D array of the border sprite.
-				var borderPxl = (borderYId * textboxStyler.activeStyle.borderWidth) + borderXId;
-				var bottomPxl = (borderDId * textboxStyler.activeStyle.borderWidth) + borderXId;
-				var rightPxl = (borderYId * textboxStyler.activeStyle.borderWidth) + borderRId;
-				var bottomRightPxl = (borderDId * textboxStyler.activeStyle.borderWidth) + borderRId;
-
-				// Determines if the current pixel is along one of the textbox's edges, or if it's in the center.
-				var borderTop = y < textboxStyler.activeStyle.borderHeight;
-				var borderBottom = y >= window.textboxInfo.height * (4 / textboxStyler.activeStyle.borderScale) - textboxStyler.activeStyle.borderHeight;
-				var borderLeft = x < textboxStyler.activeStyle.borderWidth;
-				var borderRight = x >= window.textboxInfo.width * (4 / textboxStyler.activeStyle.borderScale) - textboxStyler.activeStyle.borderWidth;
-
-				// Does this pixel is draw???
-				// 1= draw a border pixel, 0= No! Draw a border bg pixel instead
-				var borderDraw;
-
-				// Retrieve pixel data from appropriate sprite. Special handling for bottom/right borders!
-				if (borderBottom) {
-					// Bottom Left Corner
-					if (borderLeft) {
-						borderDraw = textboxStyler.activeStyle.borderDL[bottomPxl];
-					}
-					// Bottom Right Corner
-					else if (borderRight) {
-						borderDraw = textboxStyler.activeStyle.borderDR[bottomRightPxl];
-					}
-					// Bottom Middle Edge
-					else {
-						borderDraw = textboxStyler.activeStyle.borderD[bottomPxl];
-					}
-				} else if (borderTop) {
-					// Top Left Corner
-					if (borderLeft) {
-						borderDraw = textboxStyler.activeStyle.borderUL[borderPxl];
-					}
-					// Top Right Corner
-					else if (borderRight) {
-						borderDraw = textboxStyler.activeStyle.borderUR[rightPxl];
-					}
-					// Top Middle Edge
-					else {
-						borderDraw = textboxStyler.activeStyle.borderU[borderPxl];
-					}
-				}
-				// Left Edge
-				else if (borderLeft) {
-					borderDraw = textboxStyler.activeStyle.borderL[borderPxl];
-				}
-				// Right Edge
-				else if (borderRight) {
-					borderDraw = textboxStyler.activeStyle.borderR[rightPxl];
-				}
-				// Middle
-				else {
-					borderDraw = textboxStyler.activeStyle.borderM[borderPxl];
-				}
-
-				// scaling shenanigans (maps sprite scale pixels to bitsy/screen-scale pixels)
-				for (var sy = 0; sy < textboxStyler.activeStyle.borderScale; sy++) {
-					for (var sx = 0; sx < textboxStyler.activeStyle.borderScale; sx++) {
-						var pxl = 4 * ((((textboxStyler.activeStyle.borderScale * y) + sy) * (4 * window.textboxInfo.width)) + (textboxStyler.activeStyle.borderScale * x) + sx);
-
-						// If it's a border pixel, Retrieves RGBA values for the border, and draws it.
-						if (borderDraw) {
-							if (borderTop || borderBottom || borderLeft || borderRight) {
-								window.textboxInfo.img.data[pxl + 0] = textboxStyler.activeStyle.borderColor[0];
-								window.textboxInfo.img.data[pxl + 1] = textboxStyler.activeStyle.borderColor[1];
-								window.textboxInfo.img.data[pxl + 2] = textboxStyler.activeStyle.borderColor[2];
-								window.textboxInfo.img.data[pxl + 3] = textboxStyler.activeStyle.borderColor[3];
-							} else {
-								window.textboxInfo.img.data[pxl + 0] = textboxStyler.activeStyle.borderMidColor[0];
-								window.textboxInfo.img.data[pxl + 1] = textboxStyler.activeStyle.borderMidColor[1];
-								window.textboxInfo.img.data[pxl + 2] = textboxStyler.activeStyle.borderMidColor[2];
-								window.textboxInfo.img.data[pxl + 3] = textboxStyler.activeStyle.borderMidColor[3];
-							}
-							// DEBUG COLORS. UNCOMMENT TO DRAW PIXELS BASED ON TEXTBOX COORDINATES, 0-255
-							/* window.textboxInfo.img.data[pxl+0] = 204-(x);
-							window.textboxInfo.img.data[pxl+1] = 204-(x+y);
-							window.textboxInfo.img.data[pxl+2] = 204-(y*2);
-							window.textboxInfo.img.data[pxl+3] = 255;
-							//DRAWS TOP-LEFT-ANCHORED GRID TILE COORDINATES IN GREY
-							if (y % borderHeight == 0 || x % borderWidth == 0) {
-								window.textboxInfo.img.data[pxl+0] = 128;
-								window.textboxInfo.img.data[pxl+1] = 128;
-								window.textboxInfo.img.data[pxl+2] = 128;
-								window.textboxInfo.img.data[pxl+3] = 255;
-							} */
-						}
-						// If it's a border BG pixel, gets RGBA colors based on if it's on an edge or in middle.
-						else {
-							if (borderTop || borderBottom || borderLeft || borderRight) {
-								window.textboxInfo.img.data[pxl + 0] = textboxStyler.activeStyle.borderBGColor[0];
-								window.textboxInfo.img.data[pxl + 1] = textboxStyler.activeStyle.borderBGColor[1];
-								window.textboxInfo.img.data[pxl + 2] = textboxStyler.activeStyle.borderBGColor[2];
-								window.textboxInfo.img.data[pxl + 3] = textboxStyler.activeStyle.borderBGColor[3];
-							} else {
-								window.textboxInfo.img.data[pxl + 0] = textboxStyler.activeStyle.textboxColor[0];
-								window.textboxInfo.img.data[pxl + 1] = textboxStyler.activeStyle.textboxColor[1];
-								window.textboxInfo.img.data[pxl + 2] = textboxStyler.activeStyle.textboxColor[2];
-								window.textboxInfo.img.data[pxl + 3] = textboxStyler.activeStyle.textboxColor[3];
-							}
-							// DEBUG COLORS. UNCOMMENT TO DRAW PIXELS BASED ON TEXTBOX COORDINATES, 0-255
-							/* window.textboxInfo.img.data[pxl+0] = (x)+102;
-							window.textboxInfo.img.data[pxl+1] = (x+y);
-							window.textboxInfo.img.data[pxl+2] = (y*2)+51;
-							window.textboxInfo.img.data[pxl+3] = 255;
-							//DRAWS TOP-LEFT-ANCHORED GRID COORDINATES IN GREY
-							if (y % borderHeight == 0 || x % borderWidth == 0) {
-								window.textboxInfo.img.data[pxl+0] = 76;
-								window.textboxInfo.img.data[pxl+1] = 76;
-								window.textboxInfo.img.data[pxl+2] = 76;
-								window.textboxInfo.img.data[pxl+3] = 255;
-							} */
-						}
-					}
-				}
-			}
-		}
-	},
-};
+inject$1(/(if \(lastPage\.length) <= 1/, '$1 < textboxStyler.activeStyle.textMaxLines');
 
 exports.hackOptions = hackOptions;
 

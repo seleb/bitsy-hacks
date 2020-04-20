@@ -3,7 +3,7 @@
 @file 3d
 @summary bitsy in three dee
 @license MIT
-@version 1.3.1
+@version 1.3.2
 @requires 6.3
 @author Sean S. LeBlanc & Elkie Nova
 
@@ -393,7 +393,7 @@ function inject(searchRegex, replaceString) {
 
 	// error-handling
 	if (!code) {
-		throw 'Couldn\'t find "' + searchRegex + '" in script tags';
+		throw new Error('Couldn\'t find "' + searchRegex + '" in script tags');
 	}
 
 	// modify the content
@@ -407,7 +407,7 @@ function inject(searchRegex, replaceString) {
 }
 
 /**
- * Helper for getting an array with unique elements 
+ * Helper for getting an array with unique elements
  * @param  {Array} array Original array
  * @return {Array}       Copy of array, excluding duplicates
  */
@@ -568,7 +568,7 @@ function _reinitEngine() {
 @file smooth moves
 @summary ease the player's movement
 @license MIT
-@version 2.0.1
+@version 2.0.2
 @requires Bitsy Version: 6.3
 @author Sean S. LeBlanc
 
@@ -663,7 +663,7 @@ after('drawRoom', function () {
 @file transparent sprites
 @summary makes all sprites have transparent backgrounds
 @license MIT
-@version 4.0.5
+@version 4.0.6
 @requires Bitsy Version: 6.1
 @author Sean S. LeBlanc
 
