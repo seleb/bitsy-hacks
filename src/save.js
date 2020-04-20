@@ -3,7 +3,7 @@
 @file save
 @summary save/load your game
 @license MIT
-@version 1.0.8
+@version 2.0.0
 @requires 5.4
 @author Sean S. LeBlanc
 
@@ -147,7 +147,7 @@ bitsy.saveHack = {
 };
 
 // use saved index to eval/calc next index if available
-inject(/(ptions\[index\].Eval)/g, 'ptions[window.saveHack.loadSeqIdx(this) || index].Eval');
+inject(/(ptionsShuffled\[index\].Eval)/g, 'ptionsShuffled[window.saveHack.loadSeqIdx(this) || index].Eval');
 inject(/var next = index \+ 1;/g, 'var next = (window.saveHack.loadSeqIdx(this) || index) + 1;');
 // save index on changes
 inject(/(index = next);/g, '$1,window.saveHack.saveSeqIdx(this, next);');
