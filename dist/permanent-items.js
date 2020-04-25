@@ -4,6 +4,7 @@
 @summary prevent some items from being picked up
 @license MIT
 @version 3.0.0
+@requires 7.0
 @author Sean S. LeBlanc
 
 @description
