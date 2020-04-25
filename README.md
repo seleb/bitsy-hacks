@@ -28,6 +28,7 @@ A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamled
 - 🖼 [dynamic background](/dist/dynamic-background.js): HTML background matching bitsy background
 - 📝 [edit dialog from dialog](/dist/edit-dialog-from-dialog.js): edit dialog from dialog (yes really)
 - 🖌 [edit image from dialog](/dist/edit-image-from-dialog.js): edit sprites, items, and tiles from dialog
+- 👯‍♂️ [edit player from dialog](/dist/edit-player-from-dialog.js): change which sprite is controlled by the player
 - 🏠 [edit room from dialog](/dist/edit-room-from-dialog.js): modify the content of a room from dialog
 - 🔚 [end-from-dialog](/dist/end-from-dialog.js): trigger an ending from dialog, including narration text
 - 🚪 [exit-from-dialog](/dist/exit-from-dialog.js): exit to another room from dialog, including conditionals
