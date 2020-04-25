@@ -3,7 +3,8 @@
 @file solid items
 @summary treat some items like sprites that can be placed multiple times
 @license MIT
-@version 2.1.6
+@version 3.0.0
+@requires 7.0
 @author Sean S. LeBlanc
 
 @description
@@ -17,7 +18,6 @@ HOW TO USE:
 import bitsy from 'bitsy';
 import {
 	before,
-	after,
 } from './helpers/kitsy-script-toolkit';
 
 export var hackOptions = {
@@ -36,37 +36,49 @@ var y;
 before('movePlayer', function () {
 	x = bitsy.player().x;
 	y = bitsy.player().y;
+});
+before('startItemDialog', function (itemId, dialogCallback) {
 	room = bitsy.room[bitsy.curRoom];
 	oldItems = room.items.slice();
-});
-after('movePlayer', function () {
-	var newItems = room.items;
-	if (newItems.length === oldItems.length) {
-		return; // nothing changed
+	// something changed
+	if (!hackOptions.itemIsSolid(bitsy.item[itemId])) {
+		return undefined;
 	}
+	// get back there!
+	bitsy.player().x = x;
+	bitsy.player().y = y;
+	return [itemId, function () {
 
-	// check for changes
-	for (var i = 0; i < oldItems.length; ++i) {
-		if (!newItems[i]
-			|| oldItems[i].x !== newItems[i].x
-			|| oldItems[i].y !== newItems[i].y
-			|| oldItems[i].id !== newItems[i].id
-		) {
-			// something changed
-			if (hackOptions.itemIsSolid(bitsy.item[oldItems[i].id])) {
-				// put that back!
-				newItems.splice(i, 0, oldItems[i]);
-				// get back there!
-				bitsy.player().x = x;
-				bitsy.player().y = y;
-			} else {
-				// add an empty entry for now to keep the arrays aligned
-				newItems.splice(i, 0, null);
+		var newItems = room.items;
+		if (newItems.length === oldItems.length) {
+			return; // nothing changed
+		}
+
+		// check for changes
+		for (var i = 0; i < oldItems.length; ++i) {
+			if (!newItems[i] ||
+				oldItems[i].x !== newItems[i].x ||
+				oldItems[i].y !== newItems[i].y ||
+				oldItems[i].id !== newItems[i].id
+			) {
+				// something changed
+				if (hackOptions.itemIsSolid(bitsy.item[oldItems[i].id])) {
+					// put that back!
+					newItems.splice(i, 0, oldItems[i]);
+				} else {
+					// add an empty entry for now to keep the arrays aligned
+					newItems.splice(i, 0, null);
+				}
 			}
 		}
-	}
-	// clear out those empty entries
-	room.items = newItems.filter(function (item) {
-		return !!item;
-	});
+		// clear out those empty entries
+		room.items = newItems.filter(function (item) {
+			return !!item;
+		});
+
+		// run the actual callback
+		if (dialogCallback) {
+			dialogCallback();
+		}
+	}];
 });
