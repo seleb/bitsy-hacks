@@ -5,7 +5,7 @@ import {
 	snapshot,
 } from './test/bitsy';
 
-test('p', async () => {
+test('solid items', async () => {
 	await start({
 		gamedata: `
 
