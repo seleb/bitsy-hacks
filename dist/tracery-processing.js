@@ -3,7 +3,7 @@
 @file tracery processing
 @summary process all dialog text with a tracery grammar
 @license MIT
-@version 4.0.1
+@version 4.0.2
 @requires 7.0
 @author Sean S. LeBlanc
 
@@ -19,7 +19,11 @@ HOW TO USE:
 2. Add your entries to the `hackOptions` object below
 
 TRACERY NOTES:
-Tracery will look for symbols wrapped in hashes ("#"), and then use the entries in a provided
+Tracery will process the all dialog text using its syntax,
+which includes special characters such as "#", ":", "[", and "]"
+(these can be escaped by putting "\\" in front of them)
+
+The most common use will be symbols wrapped in hashes ("#"), which use the entries in a provided
 grammar object to "expand" them into the final text. For example, if you have the text and grammar
 	"I'm a #animal#"
 	+
