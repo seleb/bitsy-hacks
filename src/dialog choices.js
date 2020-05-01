@@ -291,3 +291,5 @@ if(window.dialogChoices.choicesActive){
 	return false;
 }
 `);
+
+inject(/\((this\.CurChar\(\)\.isPageBreak\))/g, '(this.CurChar() && $1');
