@@ -162,7 +162,7 @@ var dialogChoices = {
 				// make sure to close dialog if there's nothing to say
 				// after the choice has been made
 				if (!dialogBuffer.CurCharCount()) {
-					dialogBuffer.Continue();
+					dialogBuffer.EndDialog();
 				}
 			}
 			return true;
@@ -217,7 +217,11 @@ var ChoiceNode = function(options) {
 		function evalChildren(children,done) {
 			if(i < children.length) {
 				children[i].Eval(environment, function(val) {
-					environment.GetDialogBuffer().AddLinebreak();
+					if (i === children.length - 1) {
+						environment.GetDialogBuffer().AddParagraphBreak();
+					} else {
+						environment.GetDialogBuffer().AddLinebreak();
+					}
 					lastVal = val;
 					i++;
 					evalChildren(children,done);
@@ -238,8 +242,7 @@ var ChoiceNode = function(options) {
 		if (environment.GetDialogBuffer().CurCharCount() > 0) {
 			environment.GetDialogBuffer().AddParagraphBreak();
 		}
-		evalChildren(this.options, function() {
-			environment.GetDialogBuffer().AddParagraphBreak();
+		evalChildren(this.options, function () {
 			onReturn(lastVal);
 		});
 	}
@@ -291,5 +294,3 @@ if(window.dialogChoices.choicesActive){
 	return false;
 }
 `);
-
-inject(/\((this\.CurChar\(\)\.isPageBreak\))/g, '(this.CurChar() && $1');
