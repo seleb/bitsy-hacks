@@ -189,10 +189,10 @@ function getCursorSprite(cursor) {
 // parsing
 // (adds a new sequence node type)
 inject(/(\|\| str === "shuffle")/, '$1 || str === "choice"');
-inject(/(state\.curNode\.AddChild\( new ShuffleNode\( options \) \);)/, `$1
-else if(sequenceType === "choice")
-	state.curNode.AddChild( new ChoiceNode( options ) );
-`);
+inject(/(state\.curNode\.AddChild\(new ShuffleNode\(options\)\);\n.*})/, `$1
+else if(sequenceType === "choice") {
+	state.curNode.AddChild(new ChoiceNode(options));
+}`);
 
 inject(/(var ShuffleNode = )/, `
 var ChoiceNode = function(options) {
