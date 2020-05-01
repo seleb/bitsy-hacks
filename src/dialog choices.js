@@ -13,38 +13,36 @@ Uses as an arrow cursor by default, but this can be changed in the hackOptions t
 
 Usage:
 {choice
-	- option one
-	  result of picking option
-	- option two
-	  result of picking option
+  - option one
+    result of picking option
+  - option two
+    result of picking option
 }
 
 Recommended uses:
 DLG_simple_response
 """
-Greeting text
-{choice
-	- Response one
-	  answer to response one
-	- Response two
-	  answer to response two
+Greeting text{choice
+  - Response one
+    answer to response one
+  - Response two
+    answer to response two
 }
 """
 
 DLG_complex_response
 """
-Greeting text
-{choice
-	- Response one
-	  {a = 1}
-	- Response two
-	  {a = 2}
+Greeting text{choice
+  - Response one
+    {a = 1}
+  - Response two
+    {a = 2}
 }
 constant part of answer{
-	- a == 1 ?
-	  custom part based on response one
-	- a == 2 ?
-	  custom part based on response two
+  - a == 1 ?
+    custom part based on response one
+  - a == 2 ?
+    custom part based on response two
 }
 """
 
@@ -62,18 +60,18 @@ e.g.
 """
 {a = 1}
 {choice
-	- Response one
-	  {a = 2}
-	- Response two
-	  {a = 3}
+  - Response one
+    {a = 2}
+  - Response two
+    {a = 3}
 }
 {
-	- a == 1 ?
-	  this will print
-	- a == 2 ?
-	  these will not
-	- a == 3 ?
-	  these will not
+  - a == 1 ?
+    this will print
+  - a == 2 ?
+    these will not
+  - a == 3 ?
+    these will not
 }
 """
 
