@@ -73,14 +73,14 @@ export async function start({
 	// add hacks
 	if (hacks.length) {
 		game = game.replace(/(<\/script>)(?![^]*?<\/script>)[^]*?(<\/head>)/, `$1${
-			hacks.map(hack => `
-<script>
-${
-	// make sure not to screw up the regex in the process
-	hackDist[hack.replace(/\s/g, '-')].replace(/\$([0-9]+)/g, '$$$$$1')
-}
-</script>
-`).join('\n')
+			hacks.map(hack => {
+				if (typeof hack === 'string') {
+					// make sure not to screw up the regex in the process
+					return `<script>${hackDist[hack.replace(/\s/g, '-')].replace(/\$([0-9]+)/g, '$$$$$1')}</script>`;
+				}
+				const [hackStr, options] = hack;
+				return `<script>${hackDist[hackStr.replace(/\s/g, '-')].replace(/(var hackOptions.*=)[^]*?;/m, `$1 ${JSON.stringify(options, undefined, '\t')};`).replace(/\$([0-9]+)/g, '$$$$$1')}</script>`;
+			}).join('\n')
 		}$2`);
 	}
 
