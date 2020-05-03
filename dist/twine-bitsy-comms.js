@@ -3,7 +3,7 @@
 @file twine bitsy comms
 @summary interprocess communication for twine and bitsy
 @license MIT
-@version 1.1.7
+@version 1.1.8
 @requires 5.4
 @author Sean S. LeBlanc
 
@@ -47,7 +47,8 @@ HOW TO USE:
 3. Add `.bitsy { ... }` CSS to the Story Stylesheet of your Twine game
 4. Edit the variable naming functions below as needed
 */
-(function (bitsy) {
+this.hacks = this.hacks || {};
+(function (exports, bitsy) {
 'use strict';
 var hackOptions = {
 	// how dialog variables will be named when they are sent out
@@ -472,4 +473,6 @@ after('startExportedGame', function () {
 	addDualDialogTag('twine' + command.substr(0, 1).toUpperCase() + command.substr(1), doCommand);
 });
 
-}(window));
+exports.hackOptions = hackOptions;
+
+}(this.hacks['twine-bitsy-comms'] = this.hacks['twine-bitsy-comms'] || {}, window));

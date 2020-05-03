@@ -3,7 +3,7 @@
 @file dialog choices
 @summary binary dialog choices
 @license MIT
-@version 4.0.0
+@version 4.0.1
 @requires 7.0
 @author Sean S. LeBlanc
 
@@ -79,7 +79,8 @@ HOW TO USE:
 1. Copy-paste into a script tag after the bitsy source
 2. Edit hackOptions below as needed
 */
-(function (bitsy) {
+this.hacks = this.hacks || {};
+(function (exports, bitsy) {
 'use strict';
 var hackOptions = {
 	// if defined, the cursor is drawn as the sprite with the given id
@@ -494,4 +495,6 @@ if(window.dialogChoices.choicesActive){
 }
 `);
 
-}(window));
+exports.hackOptions = hackOptions;
+
+}(this.hacks.dialog_choices = this.hacks.dialog_choices || {}, window));

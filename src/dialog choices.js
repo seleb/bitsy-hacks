@@ -3,7 +3,7 @@
 @file dialog choices
 @summary binary dialog choices
 @license MIT
-@version 4.0.0
+@version 4.0.1
 @requires 7.0
 @author Sean S. LeBlanc
 
@@ -85,7 +85,7 @@ import {
 } from './helpers/kitsy-script-toolkit';
 import './helpers/addParagraphBreak';
 
-var hackOptions = {
+export var hackOptions = {
 	// if defined, the cursor is drawn as the sprite with the given id
 	// e.g. replace with `getCursorSprite('A')` to use the player's avatar as a cursor
 	// if not defined, uses an arrow graphic similar to the continue arrow

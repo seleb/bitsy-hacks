@@ -3,7 +3,7 @@
 @file twine bitsy comms
 @summary interprocess communication for twine and bitsy
 @license MIT
-@version 1.1.7
+@version 1.1.8
 @requires 5.4
 @author Sean S. LeBlanc
 
@@ -53,7 +53,7 @@ import {
 	addDualDialogTag,
 } from './helpers/kitsy-script-toolkit';
 
-var hackOptions = {
+export var hackOptions = {
 	// how dialog variables will be named when they are sent out
 	// default implementation is bitsy_<name>
 	variableNameOut: function (name) {
