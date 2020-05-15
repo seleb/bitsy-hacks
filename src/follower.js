@@ -157,35 +157,50 @@ before('movePlayerThroughExit', function (exit) {
 function filterFollowing(id) {
 	return follower === bitsy.sprite[id] ? null : id;
 }
-// filter follower out of collisions
-var originalGetSpriteLeft = bitsy.getSpriteLeft;
-bitsy.getSpriteLeft = function () {
-	if (!hackOptions.allowFollowerCollision) {
-		return filterFollowing(originalGetSpriteLeft());
-	}
-	return originalGetSpriteLeft();
-};
-var originalGetSpriteRight = bitsy.getSpriteRight;
-bitsy.getSpriteRight = function () {
-	if (!hackOptions.allowFollowerCollision) {
-		return filterFollowing(originalGetSpriteRight());
-	}
-	return originalGetSpriteRight();
-};
-var originalGetSpriteUp = bitsy.getSpriteUp;
-bitsy.getSpriteUp = function () {
-	if (!hackOptions.allowFollowerCollision) {
-		return filterFollowing(originalGetSpriteUp());
-	}
-	return originalGetSpriteUp();
-};
-var originalGetSpriteDown = bitsy.getSpriteDown;
-bitsy.getSpriteDown = function () {
-	if (!hackOptions.allowFollowerCollision) {
-		return filterFollowing(originalGetSpriteDown());
-	}
-	return originalGetSpriteDown();
-};
+
+var originalGetSpriteLeft;
+var originalGetSpriteRight;
+var originalGetSpriteUp;
+var originalGetSpriteDown;
+before('movePlayer', function () {
+	originalGetSpriteLeft = bitsy.getSpriteLeft;
+	originalGetSpriteRight = bitsy.getSpriteRight;
+	originalGetSpriteUp = bitsy.getSpriteUp;
+	originalGetSpriteDown = bitsy.getSpriteDown;
+
+	// filter follower out of collisions
+	bitsy.getSpriteLeft = function () {
+		if (!hackOptions.allowFollowerCollision) {
+			return filterFollowing(originalGetSpriteLeft());
+		}
+		return originalGetSpriteLeft();
+	};
+	bitsy.getSpriteRight = function () {
+		if (!hackOptions.allowFollowerCollision) {
+			return filterFollowing(originalGetSpriteRight());
+		}
+		return originalGetSpriteRight();
+	};
+	bitsy.getSpriteUp = function () {
+		if (!hackOptions.allowFollowerCollision) {
+			return filterFollowing(originalGetSpriteUp());
+		}
+		return originalGetSpriteUp();
+	};
+	bitsy.getSpriteDown = function () {
+		if (!hackOptions.allowFollowerCollision) {
+			return filterFollowing(originalGetSpriteDown());
+		}
+		return originalGetSpriteDown();
+	};
+});
+
+after('movePlayer', function () {
+	bitsy.getSpriteLeft = originalGetSpriteLeft;
+	bitsy.getSpriteRight = originalGetSpriteRight;
+	bitsy.getSpriteUp = originalGetSpriteUp;
+	bitsy.getSpriteDown = originalGetSpriteDown;
+});
 
 addDualDialogTag('follower', function (environment, parameters) {
 	setFollower(parameters[0]);
