@@ -39,8 +39,8 @@
 		"eslint": "^6.8.0",
 		"eslint-config-airbnb-base": "^14.1.0",
 		"eslint-plugin-import": "^2.20.2",
-		"jest": "^25.5.4",
-		"jest-image-snapshot": "^3.1.0",
+		"jest": "^26.0.1",
+		"jest-image-snapshot": "^4.0.0",
 		"puppeteer": "^3.1.0"
 	},
 	"jest": {
