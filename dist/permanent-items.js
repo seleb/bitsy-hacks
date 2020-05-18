@@ -3,7 +3,7 @@
 @file permanent items
 @summary prevent some items from being picked up
 @license MIT
-@version 3.0.0
+@version 3.0.1
 @requires 7.0
 @author Sean S. LeBlanc
 
@@ -244,10 +244,10 @@ before('startItemDialog', function (itemId, dialogCallback) {
 
 		// check for changes
 		for (var i = 0; i < oldItems.length; ++i) {
-			if (!newItems[i] ||
-				oldItems[i].x !== newItems[i].x ||
-				oldItems[i].y !== newItems[i].y ||
-				oldItems[i].id !== newItems[i].id
+			if (!newItems[i]
+				|| oldItems[i].x !== newItems[i].x
+				|| oldItems[i].y !== newItems[i].y
+				|| oldItems[i].id !== newItems[i].id
 			) {
 				// something changed
 				if (hackOptions.itemIsPermanent(bitsy.item[oldItems[i].id])) {

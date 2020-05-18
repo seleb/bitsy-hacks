@@ -3,7 +3,7 @@
 @file solid items
 @summary treat some items like sprites that can be placed multiple times
 @license MIT
-@version 3.0.0
+@version 3.0.1
 @requires 7.0
 @author Sean S. LeBlanc
 
@@ -243,7 +243,6 @@ before('startItemDialog', function (itemId, dialogCallback) {
 	bitsy.player().x = x;
 	bitsy.player().y = y;
 	return [itemId, function () {
-
 		var newItems = room.items;
 		if (newItems.length === oldItems.length) {
 			return; // nothing changed
@@ -251,10 +250,10 @@ before('startItemDialog', function (itemId, dialogCallback) {
 
 		// check for changes
 		for (var i = 0; i < oldItems.length; ++i) {
-			if (!newItems[i] ||
-				oldItems[i].x !== newItems[i].x ||
-				oldItems[i].y !== newItems[i].y ||
-				oldItems[i].id !== newItems[i].id
+			if (!newItems[i]
+				|| oldItems[i].x !== newItems[i].x
+				|| oldItems[i].y !== newItems[i].y
+				|| oldItems[i].id !== newItems[i].id
 			) {
 				// something changed
 				if (hackOptions.itemIsSolid(bitsy.item[oldItems[i].id])) {
