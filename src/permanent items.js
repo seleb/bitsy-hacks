@@ -15,9 +15,7 @@ HOW TO USE:
 2. Update the `itemIsPermanent` function below to match your needs
 */
 import bitsy from 'bitsy';
-import {
-	before,
-} from './helpers/kitsy-script-toolkit';
+import { before } from './helpers/kitsy-script-toolkit';
 
 export var hackOptions = {
 	itemIsPermanent: function (item) {
@@ -49,10 +47,10 @@ before('startItemDialog', function (itemId, dialogCallback) {
 
 		// check for changes
 		for (var i = 0; i < oldItems.length; ++i) {
-			if (!newItems[i] ||
-				oldItems[i].x !== newItems[i].x ||
-				oldItems[i].y !== newItems[i].y ||
-				oldItems[i].id !== newItems[i].id
+			if (!newItems[i]
+				|| oldItems[i].x !== newItems[i].x
+				|| oldItems[i].y !== newItems[i].y
+				|| oldItems[i].id !== newItems[i].id
 			) {
 				// something changed
 				if (hackOptions.itemIsPermanent(bitsy.item[oldItems[i].id])) {
