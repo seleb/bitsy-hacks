@@ -3,7 +3,7 @@
 @file transitions
 @summary customizable WebGL transitions
 @license MIT
-@version 2.1.6
+@version 2.1.7
 @author Sean S. LeBlanc
 
 @description
@@ -55,9 +55,7 @@ NOTES:
 		result = mix(start, end, step(.5,t));
 */
 import bitsy from 'bitsy';
-import {
-	hackOptions as canvasReplacementHackOptions,
-} from './canvas replacement';
+import { hackOptions as canvasReplacementHackOptions } from './canvas replacement';
 
 export var hackOptions = {
 	// transition duration
