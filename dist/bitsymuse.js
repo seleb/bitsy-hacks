@@ -3,7 +3,7 @@
 @file bitsymuse
 @summary A variety of Bitsy sound and music handlers
 @license MIT
-@version 3.1.3
+@version 3.1.4
 @requires 4.8, 4.9
 @author David Mowatt
 
@@ -389,6 +389,17 @@ function addDualDialogTag(tag, fn) {
 var audioElementsById = {};
 var currentMusic;
 var roomMusicFlag = null;
+
+// cleanup old audio tags if any are present (e.g. on restart)
+before('load_game', function () {
+	Object.entries(hackOptions.audio).forEach(function (entry) {
+		var el = document.getElementById(entry[0]);
+		if (el) {
+			el.remove();
+		}
+		delete audioElementsById[entry[0]];
+	});
+});
 
 after('load_game', function () {
 	var room;
