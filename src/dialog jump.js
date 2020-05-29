@@ -50,6 +50,7 @@ function jump(targetDialog) {
 		dialogStr = targetDialog;
 	} else {
 		dialogId = targetDialog;
+		dialogStr = dialogStr.src;
 	}
 	bitsy.startDialog(dialogStr, dialogId);
 }
