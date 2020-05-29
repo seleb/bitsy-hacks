@@ -3,8 +3,8 @@
 @file dialog jump
 @summary jump from one dialog entry to another
 @license MIT
-@version 1.1.8
-@requires 5.3
+@version 2.0.0
+@requires 7.0
 @author Sean S. LeBlanc
 
 @description
@@ -361,6 +361,7 @@ function jump(targetDialog) {
 		dialogStr = targetDialog;
 	} else {
 		dialogId = targetDialog;
+		dialogStr = dialogStr.src;
 	}
 	bitsy.startDialog(dialogStr, dialogId);
 }
