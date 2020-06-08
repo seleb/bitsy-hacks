@@ -3,7 +3,7 @@
 @file dynamic background
 @summary HTML background matching bitsy background
 @license MIT
-@version 2.1.6
+@version 2.2.0
 @author Sean S. LeBlanc
 
 @description
@@ -13,39 +13,51 @@ HOW TO USE:
 Copy-paste this script into a script tag after the bitsy source
 */
 import bitsy from 'bitsy';
-import {
-	before,
-	after,
-} from './helpers/kitsy-script-toolkit';
+import { after } from './helpers/kitsy-script-toolkit';
+import { getRoom } from './helpers/utils';
 
-var p1;
-var p2;
-
-function getBg() {
-	try {
-		p1 = bitsy.curPal();
-	} catch (e) {
-		p1 = null;
+export var hackOptions = {
+	// which palette colour to use for the background
+	// 	0 = background
+	// 	1 = tile
+	// 	2 = sprite
+	default: 0,
+	// entries here will override the default for the given room
+	byRoom: {
+		// examples:
+		// 0: 2
+		// 'my room': 1
 	}
 }
 
 // helper function which detects when the palette has changed,
 // and updates the background to match
 function updateBg() {
-	// get the new palette
-	p2 = bitsy.curPal();
+	// get the palette colour
+	var c = hackOptions.byRoom[bitsy.curRoom];
+	if (c === undefined) {
+		c = hackOptions.default;
+	}
 
 	// if the palette changed, update background
-	if (p1 !== p2) {
-		document.body.style.background = 'rgb(' + bitsy.getPal(bitsy.curPal())[0].toString() + ')';
+	var bg = 'rgb(' + bitsy.getPal(bitsy.curPal())[c].join(',') + ')';
+	if (document.body.style.background !== bg) {
+		document.body.style.background = bg;
 	}
 }
 
+// expand the map to include ids of rooms listed by name
+after('load_game', function () {
+	var room;
+	Object.keys(hackOptions.byRoom).forEach(function (i) {
+		room = getRoom(i);
+		if (room) {
+			hackOptions.byRoom[room.id] = hackOptions.byRoom[i];
+		}
+	});
+});
+
 // wrap every function which involves changing the palette
-before('moveSprites', getBg);
-before('movePlayer', getBg);
-before('parseWorld', getBg);
-before('movePlayerThroughExit', getBg);
 after('moveSprites', updateBg);
 after('movePlayer', updateBg);
 after('parseWorld', updateBg);
