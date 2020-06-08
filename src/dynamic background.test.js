@@ -1,14 +1,6 @@
-import {
-	start,
-	press,
-	end,
-	snapshot,
-	evaluate,
-} from './test/bitsy';
+import { end, evaluate, press, snapshot, start } from './test/bitsy';
 
-test('dynamic background', async () => {
-	await start({
-		gamedata: `Write your game's title here
+const gamedata = `Write your game's title here
 
 # BITSY VERSION 5.3
 
@@ -117,10 +109,14 @@ You found a nice warm cup of tea
 VAR a
 42
 
-`,
+`;
+
+test('dynamic background', async () => {
+	await start({
+		gamedata,
 		hacks: ['dynamic background'],
 	});
-	await evaluate('document.getElementById("game").style.opacity = 0;');
+	await evaluate('document.getElementById("game").style.transform = "scale(0.5)";');
 	await press('Enter');
 	await press('Enter'); // complete title dialog
 	await press('ArrowUp');
@@ -134,4 +130,56 @@ VAR a
 	await press('ArrowLeft'); // walk through exit
 	await snapshot();
 	await end();
+});
+
+describe('hackOptions', () => {
+	test('default', async () => {
+		await start({
+			gamedata,
+			hacks: [['dynamic background', {
+				default: 1,
+				byRoom: {},
+			}]],
+		});
+		await evaluate('document.getElementById("game").style.transform = "scale(0.5)";');
+		await press('Enter');
+		await press('Enter'); // complete title dialog
+		await press('ArrowUp');
+		await press('ArrowUp');
+		await press('ArrowUp');
+		await press('ArrowUp');
+		await press('ArrowLeft');
+		await press('ArrowLeft');
+		await press('ArrowLeft'); // walk to exit
+		await snapshot();
+		await press('ArrowLeft'); // walk through exit
+		await snapshot();
+		await end();
+	});
+
+	test('byRoom', async () => {
+		await start({
+			gamedata,
+			hacks: [['dynamic background', {
+				default: 0,
+				byRoom: {
+					1: 2,
+				},
+			}]],
+		});
+		await evaluate('document.getElementById("game").style.transform = "scale(0.5)";');
+		await press('Enter');
+		await press('Enter'); // complete title dialog
+		await press('ArrowUp');
+		await press('ArrowUp');
+		await press('ArrowUp');
+		await press('ArrowUp');
+		await press('ArrowLeft');
+		await press('ArrowLeft');
+		await press('ArrowLeft'); // walk to exit
+		await snapshot();
+		await press('ArrowLeft'); // walk through exit
+		await snapshot();
+		await end();
+	});
 });
