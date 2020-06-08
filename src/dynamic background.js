@@ -27,8 +27,8 @@ export var hackOptions = {
 		// examples:
 		// 0: 2
 		// 'my room': 1
-	}
-}
+	},
+};
 
 // helper function which detects when the palette has changed,
 // and updates the background to match

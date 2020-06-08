@@ -26,7 +26,7 @@ var hackOptions = {
 		// examples:
 		// 0: 2
 		// 'my room': 1
-	}
+	},
 };
 
 bitsy = bitsy && Object.prototype.hasOwnProperty.call(bitsy, 'default') ? bitsy['default'] : bitsy;
