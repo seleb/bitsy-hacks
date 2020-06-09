@@ -25,23 +25,23 @@
 		"babylonjs": "^4.1.0",
 		"input-gamepads.js": "^2.0.2",
 		"omggif": "^1.0.10",
-		"rollup": "^2.10.8",
+		"rollup": "^2.15.0",
 		"rollup-plugin-commonjs": "^10.1.0",
 		"rollup-plugin-node-resolve": "^5.2.0",
 		"tracery-grammar": "^2.7.4",
 		"webglazy": "^3.0.4"
 	},
 	"devDependencies": {
-		"@babel/plugin-transform-runtime": "^7.9.6",
-		"@babel/preset-env": "^7.9.6",
-		"@babel/runtime": "^7.9.6",
+		"@babel/plugin-transform-runtime": "^7.10.1",
+		"@babel/preset-env": "^7.10.2",
+		"@babel/runtime": "^7.10.2",
 		"doctrine": "^3.0.0",
-		"eslint": "^7.1.0",
+		"eslint": "^7.2.0",
 		"eslint-config-airbnb-base": "^14.1.0",
-		"eslint-plugin-import": "^2.20.2",
+		"eslint-plugin-import": "^2.21.1",
 		"jest": "^26.0.1",
-		"jest-image-snapshot": "^4.0.0",
-		"puppeteer": "^3.1.0"
+		"jest-image-snapshot": "^4.0.2",
+		"puppeteer": "^3.3.0"
 	},
 	"jest": {
 		"testEnvironment": "node",
