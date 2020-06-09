@@ -3,7 +3,7 @@
 @file multi-sprite avatar
 @summary make the player big
 @license MIT
-@version 2.1.7
+@version 2.1.8
 @author Sean S. LeBlanc
 
 @description
@@ -381,7 +381,7 @@ var repeats = [
 // prevent player from colliding with their own pieces
 function filterPieces(id) {
 	for (var i = 0; i < pieces.length; ++i) {
-		if (id === pieces[i].spr) {
+		if (id === pieces[i].spr || (bitsy.sprite[id] && bitsy.sprite[id].name === pieces[i].spr)) {
 			return null;
 		}
 	}
