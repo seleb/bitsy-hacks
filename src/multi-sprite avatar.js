@@ -167,7 +167,7 @@ var repeats = [
 // prevent player from colliding with their own pieces
 function filterPieces(id) {
 	for (var i = 0; i < pieces.length; ++i) {
-		if (id === pieces[i].spr) {
+		if (id === pieces[i].spr || (bitsy.sprite[id] && bitsy.sprite[id].name === pieces[i].spr)) {
 			return null;
 		}
 	}
