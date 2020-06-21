@@ -25,20 +25,20 @@
 		"babylonjs": "^4.1.0",
 		"input-gamepads.js": "^2.0.2",
 		"omggif": "^1.0.10",
-		"rollup": "^2.15.0",
+		"rollup": "^2.17.1",
 		"rollup-plugin-commonjs": "^10.1.0",
 		"rollup-plugin-node-resolve": "^5.2.0",
 		"tracery-grammar": "^2.7.4",
 		"webglazy": "^3.0.4"
 	},
 	"devDependencies": {
-		"@babel/plugin-transform-runtime": "^7.10.1",
-		"@babel/preset-env": "^7.10.2",
-		"@babel/runtime": "^7.10.2",
+		"@babel/plugin-transform-runtime": "^7.10.3",
+		"@babel/preset-env": "^7.10.3",
+		"@babel/runtime": "^7.10.3",
 		"doctrine": "^3.0.0",
-		"eslint": "^7.2.0",
-		"eslint-config-airbnb-base": "^14.1.0",
-		"eslint-plugin-import": "^2.21.1",
+		"eslint": "^7.3.0",
+		"eslint-config-airbnb-base": "^14.2.0",
+		"eslint-plugin-import": "^2.21.2",
 		"jest": "^26.0.1",
 		"jest-image-snapshot": "^4.0.2",
 		"puppeteer": "^3.3.0"
@@ -56,9 +56,18 @@
 			"@semantic-release/changelog",
 			"@semantic-release/npm",
 			"@semantic-release/github",
-			["@semantic-release/git", {
-				"assets": ["dist/*.js", "README.md", "CHANGELOG.md", "package.json", "package-lock.json"]
-			}]
+			[
+				"@semantic-release/git",
+				{
+					"assets": [
+						"dist/*.js",
+						"README.md",
+						"CHANGELOG.md",
+						"package.json",
+						"package-lock.json"
+					]
+				}
+			]
 		]
 	}
 }
