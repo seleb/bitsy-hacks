@@ -33,7 +33,11 @@ function write() {
 
 A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamledoux)'s [Bitsy Game Maker](https://ledoux.itch.io/bitsy).
 
-## contents
+- [Contents](#contents)
+- [How to use](#how-to-use)
+- [Further reading](#further-reading)
+
+## Contents
 
 ${contents.map(hack => 
 `- ${hack.emoji} [${hack.file}](${hack.url}): ${hack.summary}`
@@ -44,7 +48,7 @@ ${contents.map(hack =>
 
 
 
-## how to use
+## How to use
 
 Each script has a short "HOW TO USE" section included in the comments. For steps which say to \`Copy-paste this script into a script tag after the bitsy source \`, open your exported bitsy game and scroll to the bottom of the file (at the time of writing, it looks like this):
 
@@ -91,12 +95,11 @@ then edit it to look like this:
 - [Writing hacks with this repo's source code](https://github.com/seleb/bitsy-hacks/wiki)
 - [Claire Morley's "A Bitsy Tutorial"](http://www.shimmerwitch.space/bitsyTutorial)
 - [Bitsy games!](https://itch.io/games/tag-bitsy)
-
 - [Andrew Yolland's Borksy](https://ayolland.itch.io/borksy): Hack helper
 - [ruin's image-to-bitsy](https://ruin.itch.io/image-to-bitsy): Artistic aid
 - [Fontsy](https://seansleblanc.itch.io/Fontsy): Typographic tool
 
-If you have any issues, feel free to ping me or ask for help on the [bitsy discord](https://discordapp.com/invite/9rAjhtr)!`);
+If you have any issues, feel free to ping me, [open an issue](https://github.com/seleb/bitsy-hacks/issues/new), or ask for help on the [bitsy discord](https://discordapp.com/invite/9rAjhtr)!`);
 }
 
 export default function (options = {}) {
