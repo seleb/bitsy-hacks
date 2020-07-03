@@ -1,3 +1,10 @@
+## [13.2.3](https://github.com/seleb/bitsy-hacks/compare/v13.2.2...v13.2.3) (2020-07-03)
+
+
+### Bug Fixes
+
+* include comment about character portraits taining canvas ([3cd5ecd](https://github.com/seleb/bitsy-hacks/commit/3cd5ecd51b21de3168c265ebaa8332557d4ff342))
+
 ## [13.2.2](https://github.com/seleb/bitsy-hacks/compare/v13.2.1...v13.2.2) (2020-06-21)
 
 

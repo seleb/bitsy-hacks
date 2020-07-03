@@ -1098,7 +1098,7 @@ function addDialogTag(tag, fn) {
 @file character portraits
 @summary high quality anime jpegs (or pngs i guess)
 @license MIT
-@version 2.0.7
+@version 2.0.8
 @requires Bitsy Version: 5.3
 @author Sean S. LeBlanc
 
@@ -1124,7 +1124,10 @@ and they simply won't draw if they're not loaded or have errored out.
 
 All standard browser image formats are supported, but keep filesize in mind!
 
-Note: The hack is called "character portraits", but this can easily be used to show images of any sort
+Notes:
+- The hack is called "character portraits", but this can easily be used to show images of any sort
+- Images drawn with this hack may taint bitsy's canvas, preventing exit transitions from working.
+  You can avoid this by only using images hosted alongside your game on a server.
 
 HOW TO USE:
 1. Copy-paste this script into a script tag after the bitsy source
