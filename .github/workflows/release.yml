@@ -12,7 +12,7 @@ jobs:
       - uses: josephbmanley/butler-publish-itchio-action@1.0.2
         env:
           BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
-          CHANNEL: build
+          CHANNEL: win-linux-mac-stable
           ITCH_GAME: bitsy-hacks
           ITCH_USER: seansleblanc
           PACKAGE: dist
