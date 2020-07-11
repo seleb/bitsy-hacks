@@ -1,3 +1,10 @@
+## [13.2.4](https://github.com/seleb/bitsy-hacks/compare/v13.2.3...v13.2.4) (2020-07-11)
+
+
+### Bug Fixes
+
+* test release ([b38bf8a](https://github.com/seleb/bitsy-hacks/commit/b38bf8aaa2d911fb92cb9e98b7165844015f87f6))
+
 ## [13.2.3](https://github.com/seleb/bitsy-hacks/compare/v13.2.2...v13.2.3) (2020-07-03)
 
 
