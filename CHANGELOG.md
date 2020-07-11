@@ -1,3 +1,10 @@
+## [13.2.5](https://github.com/seleb/bitsy-hacks/compare/v13.2.4...v13.2.5) (2020-07-11)
+
+
+### Bug Fixes
+
+* itch channel name ([ad93e71](https://github.com/seleb/bitsy-hacks/commit/ad93e716d67c82283948e259665abeff5fa2ad6a))
+
 ## [13.2.4](https://github.com/seleb/bitsy-hacks/compare/v13.2.3...v13.2.4) (2020-07-11)
 
 
