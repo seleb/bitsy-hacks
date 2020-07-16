@@ -40,7 +40,6 @@ NOTE: Chrome can only fetch external files when they're served from a
       external files.
 */
 
-
 import bitsy from 'bitsy';
 import {
 	before,

@@ -247,7 +247,6 @@ var ChoiceNode = function(options) {
 }
 $1`);
 
-
 // rendering
 // (re-uses existing arrow image data,
 // but draws rotated to point at text)

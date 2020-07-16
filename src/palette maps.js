@@ -259,7 +259,6 @@ function clearPaletteMap(roomId) {
 	paletteMap[roomId] = JSON.parse(JSON.stringify(defaultMap));
 }
 
-
 function resetPaletteMap(roomId) {
 	console.log('Resetting palette map for room "' + roomId + '"');
 

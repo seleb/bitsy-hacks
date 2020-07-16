@@ -121,7 +121,6 @@ before('onready', function () {
 	document.body.appendChild(promptForm);
 });
 
-
 addDialogTag('prompt', function (environment, parameters, onReturn) {
 	prompted = true;
 

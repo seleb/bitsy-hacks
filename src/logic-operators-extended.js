@@ -28,7 +28,6 @@ NOTE: The combining operators (&&, ||, &&!, ||!) have lower precedence than
       the way you want.
 */
 
-
 import {
 	inject,
 } from './helpers/kitsy-script-toolkit';

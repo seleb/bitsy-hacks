@@ -85,7 +85,6 @@ export var hackOptions = {
 		// return true; // all tiles are stopping
 	},
 
-
 	// EXIT HANDLING
 
 	spriteCanExit: function (spr, ext) {
@@ -97,7 +96,6 @@ export var hackOptions = {
 		// return ['10','11'].indexOf(ext.dest.room) !== -1; // specific destination room list
 		return true; // all sprites can use all exits
 	},
-
 
 	// TARGET STATES
 
@@ -169,7 +167,6 @@ export var hackOptions = {
 		},
 	},
 
-
 	// SPRITE FLIPPING
 
 	// If `horizontalFlipsAllowed` is true:
@@ -182,9 +179,7 @@ export var hackOptions = {
 	// 	pushing up will make a sprite right-side up
 	verticalFlipsAllowed: false,
 
-
 };
-
 
 before('movePlayer', function (direction) {
 	var spriteId = null;
@@ -214,7 +209,6 @@ before('movePlayer', function (direction) {
 		}
 	}
 });
-
 
 //
 // push handling
@@ -259,7 +253,6 @@ function pushSprite(spr, direction) {
 	return false;
 }
 
-
 function moveOK(spr, newx, newy, direction) {
 	var next = getFirstSpriteAt(spr.room, newx, newy);
 	// either there is a space or the next sprite moves
@@ -300,7 +293,6 @@ function getAllSpritesAt(r, x, y) {
 		return spr.room === r && spr.x === x && spr.y === y;
 	});
 }
-
 
 //
 // exit handling
@@ -424,7 +416,6 @@ function isCompatible(p, q) {
 	return q.includes(p);
 }
 
-
 //
 // sprite flipping
 //
@@ -432,7 +423,6 @@ function isCompatible(p, q) {
 var originalAnimations = [];
 var hflips = [];
 var vflips = [];
-
 
 before('onready', function () {
 	var i;
@@ -452,7 +442,6 @@ before('onready', function () {
 		}
 	}
 });
-
 
 function updateImage(spr) {
 	// determine which directions need flipping
