@@ -52,7 +52,6 @@ NOTE: This uses parentheses "()" instead of curly braces "{}" around function
       code at the end of the editor's `bitsy.js` file. Untested.
 */
 
-
 import bitsy from 'bitsy';
 import {
 	addDualDialogTag,

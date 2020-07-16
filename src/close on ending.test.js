@@ -107,7 +107,6 @@ VAR a
 	await end();
 });
 
-
 test('without ending text', async () => {
 	await start({
 		gamedata: `Write your game's title here

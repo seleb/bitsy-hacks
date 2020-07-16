@@ -32,7 +32,6 @@ By default, music tracks automatically restart from the beginning if you go back
 This can also be changed in the hackOptions below.
 */
 
-
 import bitsy from 'bitsy';
 import { addDualDialogTag, after, before } from './helpers/kitsy-script-toolkit';
 import { getRoom } from './helpers/utils';
@@ -114,7 +113,6 @@ after('load_game', function () {
 	document.body.addEventListener('pointerup', handleAutoPlayRestrictions);
 	document.body.addEventListener('keydown', handleAutoPlayRestrictions);
 });
-
 
 function getAudio(id) {
 	var el = audioElementsById[id] || (audioElementsById[id] = document.getElementById(id));

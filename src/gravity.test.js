@@ -130,7 +130,6 @@ test('gravity: jetpack', async () => {
 	await end();
 });
 
-
 test('gravity: force', async () => {
 	await start({
 		hacks: ['gravity'],

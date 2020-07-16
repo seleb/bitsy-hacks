@@ -32,7 +32,6 @@ HOW TO USE:
 Copy-paste into a script tag after the bitsy source
 */
 
-
 import bitsy from 'bitsy';
 import {
 	addDualDialogTag,

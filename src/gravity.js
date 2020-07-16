@@ -55,7 +55,6 @@ import {
 	setSpriteData,
 } from './helpers/edit image at runtime';
 
-
 export var hackOptions = {
 	// Configure whether or not gravity should be active when the game starts.
 	// Use the `toggleGravity` dialog tag to turn it on/off
@@ -219,7 +218,6 @@ before('movePlayer', function () {
 		forceGravityDir = undefined;
 	}
 });
-
 
 window.advanceGravity = function () {
 	if (!active) return;
@@ -400,7 +398,6 @@ function reallyMovePlayer(player, dir) {
 		console.warn('gravity: invalid move', player.x, player.y, dir);
 	}
 }
-
 
 function flipAvatar(gravityDirection) {
 	var hflip = false;

@@ -136,7 +136,6 @@ after('movePlayer', function () {
 	}
 });
 
-
 // handle wall/sprite collision
 function repeat(fn) {
 	var p = bitsy.player();

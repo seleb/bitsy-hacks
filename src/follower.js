@@ -32,7 +32,6 @@ Examples:
 	(followerDelay "1000") - sets follower to move once per second
 	(followerSync) - moves the follower on top of the player
 
-
 Known issues:
 - Followers will warp to the player on their first movement.
   This can be avoided by placing them next to or on the same tile as the player.

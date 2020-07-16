@@ -18,7 +18,6 @@ HOW TO USE:
      sprite in the first available palette's colors.
 */
 
-
 import bitsy from 'bitsy';
 import {
 	after,
