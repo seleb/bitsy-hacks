@@ -1316,7 +1316,6 @@ hackOptions.onLetter = function (character) {
 		return;
 	}
 
-
 	Glottis.isTouched = true;
 	applyVoice();
 
@@ -1356,7 +1355,6 @@ function applyVoice() {
 	Glottis.UIFrequency = getValue(voice.pitch || defaultVoice.pitch);
 	Tract.velumTarget = getValue(voice.nasal || defaultVoice.nasal);
 }
-
 
 var skipping = false;
 before('dialogBuffer.Skip', () => {

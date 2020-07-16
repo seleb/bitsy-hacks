@@ -554,7 +554,6 @@ function setSpriteData(id, frame, newData) {
 
 
 
-
 var active = hackOptions.activeOnLoad;
 var wasStandingOnSomething = false;
 var wasClimbing = false; //
@@ -648,7 +647,6 @@ before('movePlayer', function () {
 		forceGravityDir = undefined;
 	}
 });
-
 
 window.advanceGravity = function () {
 	if (!active) return;
@@ -829,7 +827,6 @@ function reallyMovePlayer(player, dir) {
 		console.warn('gravity: invalid move', player.x, player.y, dir);
 	}
 }
-
 
 function flipAvatar(gravityDirection) {
 	var hflip = false;

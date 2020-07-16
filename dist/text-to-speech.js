@@ -391,7 +391,6 @@ if (!speechSynthesis) {
 	};
 }
 
-
 function queueVoice(params) {
 	params = params || [];
 	var pitch = lastPitch = params[0] || lastPitch;

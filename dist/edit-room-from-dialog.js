@@ -606,7 +606,6 @@ function drawAt(mapId, sourceId, xPos, yPos, roomId) {
 		return;
 	}
 
-
 	// Trim and sanitize X Position parameter, and set relative positions, even if omitted.
 	xPos = getRelativeNumber(xPos, bitsy.player().x);
 	if (xPos < 0 || xPos > bitsy.mapsize - 1) {
@@ -985,7 +984,6 @@ function copyBoxAt(mapId, targetId, x1, y1, x2, y2, copyRoomId, pasteXPos, paste
 		console.log("CAN'T PASTE. Y POSITION (" + pasteYPos + ') OUT OF BOUNDS. 0-' + bitsy.mapsize - 1 + ' EXPECTED.');
 		return;
 	}
-
 
 	pasteRoomId = (pasteRoomId || bitsy.curRoom).toString().trim();
 	if (!bitsy.room[pasteRoomId]) {

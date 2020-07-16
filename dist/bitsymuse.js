@@ -439,7 +439,6 @@ after('load_game', function () {
 	document.body.addEventListener('keydown', handleAutoPlayRestrictions);
 });
 
-
 function getAudio(id) {
 	var el = audioElementsById[id] || (audioElementsById[id] = document.getElementById(id));
 	if (!el) {
