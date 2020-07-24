@@ -57,6 +57,7 @@ before('startExportedGame', function () {
 	portraitHackOptions.portraits = hackOptions.portraits;
 	portraitHackOptions.scale = hackOptions.scale;
 	portraitHackOptions.autoReset = hackOptions.autoReset;
+	portraitHackOptions.dialogOnly = hackOptions.dialogOnly;
 });
 
 // convert portrait state to new format supporting multiple frames
