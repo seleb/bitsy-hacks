@@ -3,7 +3,7 @@
 @file character portraits animated
 @summary high quality anime gifs
 @license MIT
-@version 1.0.8
+@version 1.1.0
 @requires Bitsy Version: 5.3
 @author Sean S. LeBlanc
 
@@ -35,6 +35,7 @@ var hackOptions$1 = {
 	// overrides for the base hack
 	scale: bitsy.scale,
 	autoReset: true,
+	dialogOnly: true,
 	portraits: {
 		earth: './GIF.gif',
 		cat: './test-export.gif',
@@ -1098,7 +1099,7 @@ function addDialogTag(tag, fn) {
 @file character portraits
 @summary high quality anime jpegs (or pngs i guess)
 @license MIT
-@version 2.0.8
+@version 2.1.0
 @requires Bitsy Version: 5.3
 @author Sean S. LeBlanc
 
@@ -1150,6 +1151,7 @@ var hackOptions = {
 		cat: './cat.png',
 	},
 	autoReset: true, // if true, automatically resets the portrait to blank when dialog is exited
+	dialogOnly: true, // if true, portrait is only shown when dialog is active
 };
 
 var state = {
@@ -1179,7 +1181,7 @@ addDialogTag('portrait', function (environment, parameters, onReturn) {
 // hook up drawing
 var context;
 after('drawRoom', function () {
-	if ((!bitsy.isDialogMode && !bitsy.isNarrating) || !state.portrait) {
+	if ((hackOptions.dialogOnly && !bitsy.isDialogMode && !bitsy.isNarrating) || !state.portrait) {
 		return;
 	}
 	if (!context) {
@@ -1209,6 +1211,7 @@ before('startExportedGame', function () {
 	hackOptions.portraits = hackOptions$1.portraits;
 	hackOptions.scale = hackOptions$1.scale;
 	hackOptions.autoReset = hackOptions$1.autoReset;
+	hackOptions.dialogOnly = hackOptions$1.dialogOnly;
 });
 
 // convert portrait state to new format supporting multiple frames

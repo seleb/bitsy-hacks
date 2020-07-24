@@ -3,7 +3,7 @@
 @file character portraits
 @summary high quality anime jpegs (or pngs i guess)
 @license MIT
-@version 2.0.8
+@version 2.1.0
 @requires Bitsy Version: 5.3
 @author Sean S. LeBlanc
 
@@ -57,6 +57,7 @@ var hackOptions = {
 		cat: './cat.png',
 	},
 	autoReset: true, // if true, automatically resets the portrait to blank when dialog is exited
+	dialogOnly: true, // if true, portrait is only shown when dialog is active
 };
 
 bitsy = bitsy && Object.prototype.hasOwnProperty.call(bitsy, 'default') ? bitsy['default'] : bitsy;
@@ -353,7 +354,7 @@ addDialogTag('portrait', function (environment, parameters, onReturn) {
 // hook up drawing
 var context;
 after('drawRoom', function () {
-	if ((!bitsy.isDialogMode && !bitsy.isNarrating) || !state.portrait) {
+	if ((hackOptions.dialogOnly && !bitsy.isDialogMode && !bitsy.isNarrating) || !state.portrait) {
 		return;
 	}
 	if (!context) {

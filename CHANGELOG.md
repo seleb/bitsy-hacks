@@ -1,3 +1,10 @@
+# [13.3.0](https://github.com/seleb/bitsy-hacks/compare/v13.2.7...v13.3.0) (2020-07-24)
+
+
+### Features
+
+* add `dialogOnly` option to allow portraits outside of dialog ([#160](https://github.com/seleb/bitsy-hacks/issues/160)) ([1611831](https://github.com/seleb/bitsy-hacks/commit/161183145e9292d94b928edc1639e4602edf7b1c))
+
 ## [13.2.7](https://github.com/seleb/bitsy-hacks/compare/v13.2.6...v13.2.7) (2020-07-16)
 
 
