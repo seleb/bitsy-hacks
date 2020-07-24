@@ -3,7 +3,7 @@
 @file character portraits
 @summary high quality anime jpegs (or pngs i guess)
 @license MIT
-@version 2.0.8
+@version 2.1.0
 @requires Bitsy Version: 5.3
 @author Sean S. LeBlanc
 
