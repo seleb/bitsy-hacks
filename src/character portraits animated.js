@@ -3,7 +3,7 @@
 @file character portraits animated
 @summary high quality anime gifs
 @license MIT
-@version 1.0.8
+@version 1.1.0
 @requires Bitsy Version: 5.3
 @author Sean S. LeBlanc
 
@@ -45,6 +45,7 @@ export var hackOptions = {
 	// overrides for the base hack
 	scale: bitsy.scale,
 	autoReset: true,
+	dialogOnly: true,
 	portraits: {
 		earth: './GIF.gif',
 		cat: './test-export.gif',
@@ -56,6 +57,7 @@ before('startExportedGame', function () {
 	portraitHackOptions.portraits = hackOptions.portraits;
 	portraitHackOptions.scale = hackOptions.scale;
 	portraitHackOptions.autoReset = hackOptions.autoReset;
+	portraitHackOptions.dialogOnly = hackOptions.dialogOnly;
 });
 
 // convert portrait state to new format supporting multiple frames
