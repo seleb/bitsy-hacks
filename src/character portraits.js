@@ -60,6 +60,7 @@ export var hackOptions = {
 		cat: './cat.png',
 	},
 	autoReset: true, // if true, automatically resets the portrait to blank when dialog is exited
+	dialogOnly: true, // if true, portrait is only shown when dialog is active
 };
 
 export var state = {
@@ -89,7 +90,7 @@ addDialogTag('portrait', function (environment, parameters, onReturn) {
 // hook up drawing
 var context;
 after('drawRoom', function () {
-	if ((!bitsy.isDialogMode && !bitsy.isNarrating) || !state.portrait) {
+	if ((hackOptions.dialogOnly && !bitsy.isDialogMode && !bitsy.isNarrating) || !state.portrait) {
 		return;
 	}
 	if (!context) {
