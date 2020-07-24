@@ -1099,7 +1099,7 @@ function addDialogTag(tag, fn) {
 @file character portraits
 @summary high quality anime jpegs (or pngs i guess)
 @license MIT
-@version 2.1.0
+@version 2.1.1
 @requires Bitsy Version: 5.3
 @author Sean S. LeBlanc
 
@@ -1172,6 +1172,7 @@ addDialogTag('portrait', function (environment, parameters, onReturn) {
 	var newPortrait = parameters[0];
 	var image = state.portraits[newPortrait];
 	if (state.portrait === image) {
+		onReturn(null);
 		return;
 	}
 	state.portrait = image;

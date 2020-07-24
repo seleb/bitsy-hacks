@@ -1,3 +1,10 @@
+## [13.3.1](https://github.com/seleb/bitsy-hacks/compare/v13.3.0...v13.3.1) (2020-07-24)
+
+
+### Bug Fixes
+
+* setting same portrait twice in a row causing issues ([b7b55ac](https://github.com/seleb/bitsy-hacks/commit/b7b55ac9a73a99da0ac637ab266ce0dd2d76ee28))
+
 # [13.3.0](https://github.com/seleb/bitsy-hacks/compare/v13.2.7...v13.3.0) (2020-07-24)
 
 
