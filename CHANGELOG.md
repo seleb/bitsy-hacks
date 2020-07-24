@@ -1,3 +1,10 @@
+## [13.3.2](https://github.com/seleb/bitsy-hacks/compare/v13.3.1...v13.3.2) (2020-07-24)
+
+
+### Bug Fixes
+
+* dialog tag not parsing `(tag "")` correctly ([#161](https://github.com/seleb/bitsy-hacks/issues/161)) ([7206644](https://github.com/seleb/bitsy-hacks/commit/72066447b0b5dec6341d490d459590bc04c662c1))
+
 ## [13.3.1](https://github.com/seleb/bitsy-hacks/compare/v13.3.0...v13.3.1) (2020-07-24)
 
 
