@@ -45,6 +45,7 @@ export var hackOptions = {
 	// overrides for the base hack
 	scale: bitsy.scale,
 	autoReset: true,
+	dialogOnly: true,
 	portraits: {
 		earth: './GIF.gif',
 		cat: './test-export.gif',
