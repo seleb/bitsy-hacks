@@ -63,5 +63,7 @@ describe('convertDialogTags', () => {
 		  (image "ITM, 7HU display PERMANENT, 7HU off PERMANENT")
 		  (image "ITM, 8HU display PERMANENT, 8HU off PERMANENT")
 		  }`, 'image')).toMatchSnapshot();
+		expect(convertDialogTags(convertDialogTags('(a "")(b "")', 'a'), 'b')).toMatchSnapshot();
+		expect(convertDialogTags(convertDialogTags('(a "")(b "")', 'b'), 'a')).toMatchSnapshot();
 	});
 })

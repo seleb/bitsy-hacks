@@ -33,3 +33,7 @@ exports[`convertDialogTags handles relatively complex cases 3`] = `
 		  {image \\"ITM, 8HU display PERMANENT, 8HU off PERMANENT\\"}
 		  }"
 `;
+
+exports[`convertDialogTags handles relatively complex cases 4`] = `"{a \\"\\"}{b \\"\\"}"`;
+
+exports[`convertDialogTags handles relatively complex cases 5`] = `"{a \\"\\"}{b \\"\\"}"`;
