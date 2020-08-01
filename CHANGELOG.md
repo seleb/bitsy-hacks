@@ -1,3 +1,10 @@
+## [13.3.5](https://github.com/seleb/bitsy-hacks/compare/v13.3.4...v13.3.5) (2020-08-01)
+
+
+### Bug Fixes
+
+* explicit auto versioning ([4f7914f](https://github.com/seleb/bitsy-hacks/commit/4f7914f52c83463154933dfafb2c8ec5de885b6e))
+
 ## [13.3.4](https://github.com/seleb/bitsy-hacks/compare/v13.3.3...v13.3.4) (2020-08-01)
 
 
