@@ -3,7 +3,7 @@
 @file transitions
 @summary customizable WebGL transitions
 @license MIT
-@version 13.3.3
+@version 13.3.6
 @author Sean S. LeBlanc
 
 @description
@@ -139,7 +139,6 @@ function unique(array) {
 @file kitsy-script-toolkit
 @summary makes it easier and cleaner to run code before and after Bitsy functions or to inject new code into Bitsy script tags
 @license WTFPL (do WTF you want)
-@version 4.0.1
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
@@ -276,7 +275,7 @@ function _reinitEngine() {
 @file canvas replacement
 @summary WebGLazy bitsy integration (this one's mostly just for me)
 @license MIT
-@version 3.0.6
+@version auto
 @author Sean S. LeBlanc
 
 @description

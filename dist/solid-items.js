@@ -3,7 +3,7 @@
 @file solid items
 @summary treat some items like sprites that can be placed multiple times
 @license MIT
-@version 13.3.3
+@version 13.3.6
 @requires 7.0
 @author Sean S. LeBlanc
 
@@ -86,7 +86,6 @@ function unique(array) {
 @file kitsy-script-toolkit
 @summary makes it easier and cleaner to run code before and after Bitsy functions or to inject new code into Bitsy script tags
 @license WTFPL (do WTF you want)
-@version 4.0.1
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 

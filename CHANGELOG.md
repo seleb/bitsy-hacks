@@ -1,3 +1,10 @@
+## [13.3.6](https://github.com/seleb/bitsy-hacks/compare/v13.3.5...v13.3.6) (2020-08-01)
+
+
+### Bug Fixes
+
+* use `postversion` instead of `prepack` ([cc38583](https://github.com/seleb/bitsy-hacks/commit/cc38583332dca43e3c0d7ab939ffa4866a11d0c7))
+
 ## [13.3.5](https://github.com/seleb/bitsy-hacks/compare/v13.3.4...v13.3.5) (2020-08-01)
 
 

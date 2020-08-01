@@ -3,7 +3,7 @@
 @file edit room from dialog
 @summary modify the content of a room from dialog
 @license MIT
-@version 13.3.3
+@version 13.3.6
 @requires Bitsy Version: 6.1
 @author Dana Holdampf
 
@@ -238,7 +238,6 @@ function clamp(value, min, max) {
 @file kitsy-script-toolkit
 @summary makes it easier and cleaner to run code before and after Bitsy functions or to inject new code into Bitsy script tags
 @license WTFPL (do WTF you want)
-@version 4.0.1
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
