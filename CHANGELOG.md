@@ -1,3 +1,10 @@
+## [13.3.3](https://github.com/seleb/bitsy-hacks/compare/v13.3.2...v13.3.3) (2020-08-01)
+
+
+### Bug Fixes
+
+* remove extra `Now` from dual dialog tag call ([#162](https://github.com/seleb/bitsy-hacks/issues/162)) ([a4ad2a6](https://github.com/seleb/bitsy-hacks/commit/a4ad2a62eb5ff561ffb92c1a834b89b936dd818d))
+
 ## [13.3.2](https://github.com/seleb/bitsy-hacks/compare/v13.3.1...v13.3.2) (2020-07-24)
 
 
