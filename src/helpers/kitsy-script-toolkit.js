@@ -176,7 +176,8 @@ function addDialogFunction(tag, fn) {
 	var kitsy = kitsyInit();
 	kitsy.dialogFunctions = kitsy.dialogFunctions || {};
 	if (kitsy.dialogFunctions[tag]) {
-		throw new Error('The dialog function "' + tag + '" already exists.');
+		console.warn('The dialog function "' + tag + '" already exists.');
+		return;
 	}
 
 	// Hook into game load and rewrite custom functions in game data to Bitsy format.
