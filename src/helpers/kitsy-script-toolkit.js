@@ -30,10 +30,18 @@ import {
 // Ex: inject(/(names.sprite.set\( name, id \);)/, '$1console.dir(names)');
 export function inject(searchRegex, replaceString) {
 	var kitsy = kitsyInit();
-	kitsy.queuedInjectScripts.push({
-		searchRegex: searchRegex,
-		replaceString: replaceString
-	});
+	if (
+		!kitsy.queuedInjectScripts.some(function (script) {
+			return searchRegex.toString() === script.searchRegex.toString() && replaceString === script.replaceString;
+		})
+	) {
+		kitsy.queuedInjectScripts.push({
+			searchRegex: searchRegex,
+			replaceString: replaceString,
+		});
+	} else {
+		console.warn('Ignored duplicate inject');
+	}
 }
 
 // Ex: before('load_game', function run() { alert('Loading!'); });
@@ -176,7 +184,8 @@ function addDialogFunction(tag, fn) {
 	var kitsy = kitsyInit();
 	kitsy.dialogFunctions = kitsy.dialogFunctions || {};
 	if (kitsy.dialogFunctions[tag]) {
-		throw new Error('The dialog function "' + tag + '" already exists.');
+		console.warn('The dialog function "' + tag + '" already exists.');
+		return;
 	}
 
 	// Hook into game load and rewrite custom functions in game data to Bitsy format.
