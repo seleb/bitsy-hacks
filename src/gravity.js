@@ -3,7 +3,7 @@
 @file gravity
 @summary Pseudo-platforming/gravity/physics
 @license MIT
-@version 1.0.3
+@version auto
 @requires 6.3
 @author Cole Sea
 

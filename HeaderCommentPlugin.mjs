@@ -16,7 +16,7 @@ export default function () {
 			}
 			const header = matches[matches.length - 1];
 			return {
-				code: `${header.replace(/^@version .*$/m, `@version ${pkg.version}`)}\n${code.replace(header, '')}`
+				code: `${header.replace(/^@version auto$/m, `@version ${pkg.version}`)}\n${code.replace(header, '')}`
 			};
 		}
 	};

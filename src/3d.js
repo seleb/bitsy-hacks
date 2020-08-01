@@ -3,7 +3,7 @@
 @file 3d
 @summary bitsy in three dee
 @license MIT
-@version 1.3.2
+@version auto
 @requires 6.3
 @author Sean S. LeBlanc & Elkie Nova
 
