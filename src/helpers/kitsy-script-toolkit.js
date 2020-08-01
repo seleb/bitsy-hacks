@@ -30,10 +30,18 @@ import {
 // Ex: inject(/(names.sprite.set\( name, id \);)/, '$1console.dir(names)');
 export function inject(searchRegex, replaceString) {
 	var kitsy = kitsyInit();
-	kitsy.queuedInjectScripts.push({
-		searchRegex: searchRegex,
-		replaceString: replaceString
-	});
+	if (
+		!kitsy.queuedInjectScripts.some(function (script) {
+			return searchRegex.toString() === script.searchRegex.toString() && replaceString === script.replaceString;
+		})
+	) {
+		kitsy.queuedInjectScripts.push({
+			searchRegex: searchRegex,
+			replaceString: replaceString,
+		});
+	} else {
+		console.warn('Ignored duplicate inject');
+	}
 }
 
 // Ex: before('load_game', function run() { alert('Loading!'); });
