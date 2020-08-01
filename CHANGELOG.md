@@ -1,3 +1,10 @@
+## [13.3.4](https://github.com/seleb/bitsy-hacks/compare/v13.3.3...v13.3.4) (2020-08-01)
+
+
+### Bug Fixes
+
+* ignore duplicate injects ([#163](https://github.com/seleb/bitsy-hacks/issues/163)) ([dd696a9](https://github.com/seleb/bitsy-hacks/commit/dd696a919cef65f8b104daadfde1c7df2b8d32f1))
+
 ## [13.3.3](https://github.com/seleb/bitsy-hacks/compare/v13.3.2...v13.3.3) (2020-08-01)
 
 

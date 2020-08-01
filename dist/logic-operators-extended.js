@@ -2,7 +2,7 @@
 🔀
 @file logic-operators-extended
 @summary adds conditional logic operators
-@version 1.1.6
+@version 13.3.3
 @author @mildmojo
 
 @description
@@ -111,10 +111,18 @@ HOW TO USE:
 // Ex: inject(/(names.sprite.set\( name, id \);)/, '$1console.dir(names)');
 function inject$1(searchRegex, replaceString) {
 	var kitsy = kitsyInit();
-	kitsy.queuedInjectScripts.push({
-		searchRegex: searchRegex,
-		replaceString: replaceString
-	});
+	if (
+		!kitsy.queuedInjectScripts.some(function (script) {
+			return searchRegex.toString() === script.searchRegex.toString() && replaceString === script.replaceString;
+		})
+	) {
+		kitsy.queuedInjectScripts.push({
+			searchRegex: searchRegex,
+			replaceString: replaceString,
+		});
+	} else {
+		console.warn('Ignored duplicate inject');
+	}
 }
 
 function kitsyInit() {

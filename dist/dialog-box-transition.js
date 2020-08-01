@@ -3,7 +3,7 @@
 @file dialog box transition
 @summary adds an easing transition animation to display the dialog box text
 @license MIT
-@version 1.0.4
+@version 13.3.3
 @requires 4.8, 4.9
 @author Delacannon
 
@@ -101,10 +101,18 @@ HOW TO USE:
 // Ex: inject(/(names.sprite.set\( name, id \);)/, '$1console.dir(names)');
 function inject$1(searchRegex, replaceString) {
 	var kitsy = kitsyInit();
-	kitsy.queuedInjectScripts.push({
-		searchRegex: searchRegex,
-		replaceString: replaceString
-	});
+	if (
+		!kitsy.queuedInjectScripts.some(function (script) {
+			return searchRegex.toString() === script.searchRegex.toString() && replaceString === script.replaceString;
+		})
+	) {
+		kitsy.queuedInjectScripts.push({
+			searchRegex: searchRegex,
+			replaceString: replaceString,
+		});
+	} else {
+		console.warn('Ignored duplicate inject');
+	}
 }
 
 function kitsyInit() {
