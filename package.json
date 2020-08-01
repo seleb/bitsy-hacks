@@ -11,7 +11,7 @@
 		"build": "rollup -c",
 		"test": "jest --runInBand",
 		"lint": "eslint ./src/*.js",
-		"prepare": "npm run build"
+		"prepack": "npm run build"
 	},
 	"author": "Sean S. LeBlanc <sean.s.leblanc@gmail.com>",
 	"license": "MIT (individual hacks have their own license specified)",
