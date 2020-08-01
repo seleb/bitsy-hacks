@@ -3,7 +3,7 @@
 @file textbox styler
 @summary customize the style and properties of the textbox
 @license MIT
-@version 1.0.3
+@version 1.0.4
 @requires Bitsy Version: 6.1
 @author Dana Holdampf & Sean S. LeBlanc
 
@@ -730,7 +730,7 @@ var textboxStyler = window.textboxStyler = {
 // Applies only a Style's defined attributes to the current textbox style.
 // {style "StyleName"}
 // {textStyleNow "StyleName"}
-addDualDialogTag('textStyleNow', function (_environment, parameters) {
+addDualDialogTag('textStyle', function (_environment, parameters) {
 	textboxStyler.style(parameters[0]);
 });
 
