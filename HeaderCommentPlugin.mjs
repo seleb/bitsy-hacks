@@ -1,4 +1,5 @@
 'use strict';
+const pkg = require('./package.json');
 // moves the last /**/ block to the top of the output
 // assuming the source doesn't have any other /**/ blocks,
 // this will be the header
@@ -15,7 +16,7 @@ export default function () {
 			}
 			const header = matches[matches.length - 1];
 			return {
-				code: `${header}\n${code.replace(header, '')}`
+				code: `${header.replace(/^@version .*$/m, `@version ${pkg.version}`)}\n${code.replace(header, '')}`
 			};
 		}
 	};
