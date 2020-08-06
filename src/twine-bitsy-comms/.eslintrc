@@ -1,0 +1,13 @@
+{
+	"globals": {
+		"State": "readonly",
+		"Engine": "readonly",
+		"Selectors": "readonly",
+		"Macro": "readonly",
+		"macros": "readonly",
+		"state": "readonly",
+		"prerender": "readonly",
+		"story": "readonly",
+		"$": "readonly"
+	}
+}
