@@ -44,7 +44,7 @@ let recording = false;
 
 // simple delay helper
 export function delay(ms) {
-	return new Promise(resolve => setTimeout(resolve, ms));
+	return new Promise((r) => setTimeout(r, ms));
 }
 
 // start pupeteer
@@ -120,10 +120,10 @@ export async function evaluate(fn) {
 
 // wait for bitsy to have handled input
 export async function waitForFrame() {
-	await evaluate(() => new Promise(resolve => {
+	await evaluate(() => new Promise((r) => {
 		window.jestUpdate = () => {
 			window.jestUpdate = null;
-			resolve();
+			r();
 		};
 	}));
 }
