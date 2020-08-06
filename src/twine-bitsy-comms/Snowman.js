@@ -35,7 +35,7 @@ story.bitsy = function (src) {
 				story.show(data);
 				break;
 			case 'back':
-				history.back();
+				window.history.back();
 				break;
 			case 'variable':
 				story.state[data.name] = data.value;
