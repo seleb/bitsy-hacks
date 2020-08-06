@@ -93,7 +93,7 @@ function doInjects() {
 	bitsy.kitsy.queuedInjectScripts.forEach(function (injectScript) {
 		utilsInject(injectScript.searchRegex, injectScript.replaceString);
 	});
-	_reinitEngine();
+	reinitEngine();
 }
 
 function applyAllHooks() {
@@ -155,7 +155,7 @@ function applyHook(functionName) {
 	};
 }
 
-function _reinitEngine() {
+function reinitEngine() {
 	// recreate the script and dialog objects so that they'll be
 	// referencing the code with injections instead of the original
 	bitsy.scriptModule = new bitsy.Script();
