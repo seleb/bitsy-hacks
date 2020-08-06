@@ -21,11 +21,11 @@ function handleBitsyMessage(event) {
 	switch (type) {
 		case 'start':
 			var variables = {};
-			for (var i in State.variables) {
-				if (!i.startsWith('TwineScript_')) {
-					variables[i] = State.variables[i];
+			Object.entries(State.variables).forEach(function (entry) {
+				if (!entry[0].startsWith('TwineScript_')) {
+					variables[entry[0]] = entry[1];
 				}
-			}
+			});
 			sendMessage({
 				type: 'variables',
 				data: variables,
