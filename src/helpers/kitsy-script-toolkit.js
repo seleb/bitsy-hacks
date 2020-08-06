@@ -188,8 +188,8 @@ function addDialogFunction(tag, fn) {
 	}
 
 	// Hook into game load and rewrite custom functions in game data to Bitsy format.
-	before('parseWorld', function (game_data) {
-		return [convertDialogTags(game_data, tag)];
+	before('parseWorld', function (gameData) {
+		return [convertDialogTags(gameData, tag)];
 	});
 
 	kitsy.dialogFunctions[tag] = fn;
