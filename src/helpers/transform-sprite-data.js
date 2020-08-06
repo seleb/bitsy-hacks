@@ -3,8 +3,6 @@
 @summary Helpers for flipping and rotating sprite data
 */
 
-import bitsy from "bitsy";
-
 // copied from https://stackoverflow.com/a/46805290
 function transpose(matrix) {
 	const rows = matrix.length,
