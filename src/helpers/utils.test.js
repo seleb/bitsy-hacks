@@ -2,7 +2,7 @@ import {
 	getImage,
 	unique,
 	getRelativeNumber,
-	clamp
+	clamp,
 } from './utils';
 
 describe('getImage', () => {
@@ -13,7 +13,7 @@ describe('getImage', () => {
 
 	it('returns the image in the map with the provided id if it exists', () => {
 		const map = {
-			a: {}
+			a: {},
 		};
 		expect(getImage('a', map)).toBe(map.a);
 	});
@@ -27,7 +27,7 @@ describe('getImage', () => {
 			b: {
 				name: '1',
 				order: 2,
-			}
+			},
 		};
 		expect(getImage('1', map)).toBe(map.a);
 	});
@@ -36,8 +36,8 @@ describe('getImage', () => {
 		const map = {
 			a: {},
 			b: {
-				name: 'a'
-			}
+				name: 'a',
+			},
 		};
 		expect(getImage('a', map)).toBe(map.a);
 	});

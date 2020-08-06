@@ -5,8 +5,8 @@
 
 // copied from https://stackoverflow.com/a/46805290
 function transpose(matrix) {
-	const rows = matrix.length,
-		cols = matrix[0].length;
+	const rows = matrix.length;
+	const cols = matrix[0].length;
 	const grid = [];
 	for (let j = 0; j < cols; j++) {
 		grid[j] = Array(rows);
@@ -21,7 +21,12 @@ function transpose(matrix) {
 
 // helper function to flip sprite data
 export function transformSpriteData(spriteData, v, h, rot) {
-	var x, y, x2, y2, col, tmp;
+	var x;
+	var y;
+	var x2;
+	var y2;
+	var col;
+	var tmp;
 	var s = spriteData.slice();
 	if (v) {
 		for (y = 0; y < s.length / 2; ++y) {

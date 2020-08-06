@@ -6,7 +6,7 @@ import {
 	snapshot,
 	startRecording,
 	stopRecording,
-	end
+	end,
 } from './bitsy';
 
 test('walkToCat moves the player to the left of the cat in the default game', async () => {
