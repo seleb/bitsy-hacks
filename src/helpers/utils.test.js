@@ -1,20 +1,9 @@
 import {
-	expose,
 	getImage,
-	inject,
 	unique,
 	getRelativeNumber,
 	clamp
 } from './utils';
-
-function constructor() {
-	var privateVar = {
-		privateVar: 'object',
-	};
-	this.getPrivateVar = function () {
-		return privateVar;
-	};
-}
 
 describe('getImage', () => {
 	it('requires a name/id and a map', () => {
@@ -52,12 +41,6 @@ describe('getImage', () => {
 		};
 		expect(getImage('a', map)).toBe(map.a);
 	});
-});
-
-xdescribe('inject', () => {
-	it('requires a search string and a string to inject', () => {});
-
-	it('replaces the script tag containing the search string with a copy containing the code to inject after the search string', () => {});
 });
 
 describe('unique', () => {
