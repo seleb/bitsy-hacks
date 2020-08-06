@@ -3,7 +3,7 @@
 @file itsy-bitsy
 @summary for when bitsy's not small enough
 @license MIT
-@version 13.3.6
+@version 13.3.7
 @requires Bitsy Version: 5.1
 @author Sean S. LeBlanc
 
@@ -107,7 +107,6 @@ HOW TO USE:
   https://github.com/seleb/bitsy-hacks/wiki/Coding-with-kitsy
 */
 
-
 // Ex: inject(/(names.sprite.set\( name, id \);)/, '$1console.dir(names)');
 function inject$1(searchRegex, replaceString) {
 	var kitsy = kitsyInit();
@@ -135,7 +134,7 @@ function kitsyInit() {
 	bitsy.kitsy = {
 		queuedInjectScripts: [],
 		queuedBeforeScripts: {},
-		queuedAfterScripts: {}
+		queuedAfterScripts: {},
 	};
 
 	var oldStartFunc = bitsy.startExportedGame;
@@ -154,12 +153,11 @@ function kitsyInit() {
 	return bitsy.kitsy;
 }
 
-
 function doInjects() {
 	bitsy.kitsy.queuedInjectScripts.forEach(function (injectScript) {
 		inject(injectScript.searchRegex, injectScript.replaceString);
 	});
-	_reinitEngine();
+	reinitEngine();
 }
 
 function applyAllHooks() {
@@ -207,21 +205,20 @@ function applyHook(functionName) {
 				// Assume funcs that accept more args than the original are
 				// async and accept a callback as an additional argument.
 				return functions[i++].apply(this, args.concat(runBefore.bind(this)));
-			} else {
-				// run synchronously
-				returnVal = functions[i++].apply(this, args);
-				if (returnVal && returnVal.length) {
-					args = returnVal;
-				}
-				return runBefore.apply(this, args);
 			}
+			// run synchronously
+			returnVal = functions[i++].apply(this, args);
+			if (returnVal && returnVal.length) {
+				args = returnVal;
+			}
+			return runBefore.apply(this, args);
 		}
 
 		return runBefore.apply(this, arguments);
 	};
 }
 
-function _reinitEngine() {
+function reinitEngine() {
 	// recreate the script and dialog objects so that they'll be
 	// referencing the code with injections instead of the original
 	bitsy.scriptModule = new bitsy.Script();

@@ -3,7 +3,7 @@
 @file directional avatar
 @summary flips the player's sprite based on directional movement
 @license MIT
-@version 13.3.6
+@version 13.3.7
 @requires 5.3
 @author Sean S. LeBlanc
 
@@ -141,7 +141,7 @@ function kitsyInit() {
 	bitsy.kitsy = {
 		queuedInjectScripts: [],
 		queuedBeforeScripts: {},
-		queuedAfterScripts: {}
+		queuedAfterScripts: {},
 	};
 
 	var oldStartFunc = bitsy.startExportedGame;
@@ -160,12 +160,11 @@ function kitsyInit() {
 	return bitsy.kitsy;
 }
 
-
 function doInjects() {
 	bitsy.kitsy.queuedInjectScripts.forEach(function (injectScript) {
 		inject(injectScript.searchRegex, injectScript.replaceString);
 	});
-	_reinitEngine();
+	reinitEngine();
 }
 
 function applyAllHooks() {
@@ -213,21 +212,20 @@ function applyHook(functionName) {
 				// Assume funcs that accept more args than the original are
 				// async and accept a callback as an additional argument.
 				return functions[i++].apply(this, args.concat(runBefore.bind(this)));
-			} else {
-				// run synchronously
-				returnVal = functions[i++].apply(this, args);
-				if (returnVal && returnVal.length) {
-					args = returnVal;
-				}
-				return runBefore.apply(this, args);
 			}
+			// run synchronously
+			returnVal = functions[i++].apply(this, args);
+			if (returnVal && returnVal.length) {
+				args = returnVal;
+			}
+			return runBefore.apply(this, args);
 		}
 
 		return runBefore.apply(this, arguments);
 	};
 }
 
-function _reinitEngine() {
+function reinitEngine() {
 	// recreate the script and dialog objects so that they'll be
 	// referencing the code with injections instead of the original
 	bitsy.scriptModule = new bitsy.Script();
@@ -245,8 +243,8 @@ function _reinitEngine() {
 
 // copied from https://stackoverflow.com/a/46805290
 function transpose(matrix) {
-	const rows = matrix.length,
-		cols = matrix[0].length;
+	const rows = matrix.length;
+	const cols = matrix[0].length;
 	const grid = [];
 	for (let j = 0; j < cols; j++) {
 		grid[j] = Array(rows);
@@ -261,7 +259,12 @@ function transpose(matrix) {
 
 // helper function to flip sprite data
 function transformSpriteData(spriteData, v, h, rot) {
-	var x, y, x2, y2, col, tmp;
+	var x;
+	var y;
+	var x2;
+	var y2;
+	var col;
+	var tmp;
 	var s = spriteData.slice();
 	if (v) {
 		for (y = 0; y < s.length / 2; ++y) {

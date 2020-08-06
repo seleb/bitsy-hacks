@@ -1,3 +1,10 @@
+## [13.3.7](https://github.com/seleb/bitsy-hacks/compare/v13.3.6...v13.3.7) (2020-08-06)
+
+
+### Bug Fixes
+
+* more thorough linting ([#164](https://github.com/seleb/bitsy-hacks/issues/164)) ([eda5209](https://github.com/seleb/bitsy-hacks/commit/eda520968693d9aad1a6fde7d1e8ff8577a81492))
+
 ## [13.3.6](https://github.com/seleb/bitsy-hacks/compare/v13.3.5...v13.3.6) (2020-08-01)
 
 

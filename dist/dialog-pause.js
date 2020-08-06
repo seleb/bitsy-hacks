@@ -3,7 +3,7 @@
 @file dialog pause
 @summary add pauses in between printing text
 @license MIT
-@version 13.3.6
+@version 13.3.7
 @author Sean S. LeBlanc
 
 @description
@@ -95,7 +95,6 @@ HOW TO USE:
   https://github.com/seleb/bitsy-hacks/wiki/Coding-with-kitsy
 */
 
-
 // Ex: inject(/(names.sprite.set\( name, id \);)/, '$1console.dir(names)');
 function inject$1(searchRegex, replaceString) {
 	var kitsy = kitsyInit();
@@ -132,7 +131,7 @@ function kitsyInit() {
 	bitsy.kitsy = {
 		queuedInjectScripts: [],
 		queuedBeforeScripts: {},
-		queuedAfterScripts: {}
+		queuedAfterScripts: {},
 	};
 
 	var oldStartFunc = bitsy.startExportedGame;
@@ -151,12 +150,11 @@ function kitsyInit() {
 	return bitsy.kitsy;
 }
 
-
 function doInjects() {
 	bitsy.kitsy.queuedInjectScripts.forEach(function (injectScript) {
 		inject(injectScript.searchRegex, injectScript.replaceString);
 	});
-	_reinitEngine();
+	reinitEngine();
 }
 
 function applyAllHooks() {
@@ -204,21 +202,20 @@ function applyHook(functionName) {
 				// Assume funcs that accept more args than the original are
 				// async and accept a callback as an additional argument.
 				return functions[i++].apply(this, args.concat(runBefore.bind(this)));
-			} else {
-				// run synchronously
-				returnVal = functions[i++].apply(this, args);
-				if (returnVal && returnVal.length) {
-					args = returnVal;
-				}
-				return runBefore.apply(this, args);
 			}
+			// run synchronously
+			returnVal = functions[i++].apply(this, args);
+			if (returnVal && returnVal.length) {
+				args = returnVal;
+			}
+			return runBefore.apply(this, args);
 		}
 
 		return runBefore.apply(this, arguments);
 	};
 }
 
-function _reinitEngine() {
+function reinitEngine() {
 	// recreate the script and dialog objects so that they'll be
 	// referencing the code with injections instead of the original
 	bitsy.scriptModule = new bitsy.Script();
@@ -241,7 +238,6 @@ function convertDialogTags(input, tag) {
 		});
 }
 
-
 function addDialogFunction(tag, fn) {
 	var kitsy = kitsyInit();
 	kitsy.dialogFunctions = kitsy.dialogFunctions || {};
@@ -251,8 +247,8 @@ function addDialogFunction(tag, fn) {
 	}
 
 	// Hook into game load and rewrite custom functions in game data to Bitsy format.
-	before('parseWorld', function (game_data) {
-		return [convertDialogTags(game_data, tag)];
+	before('parseWorld', function (gameData) {
+		return [convertDialogTags(gameData, tag)];
 	});
 
 	kitsy.dialogFunctions[tag] = fn;
@@ -261,7 +257,7 @@ function addDialogFunction(tag, fn) {
 function injectDialogTag(tag, code) {
 	inject$1(
 		/(var functionMap = new Map\(\);[^]*?)(this.HasFunction)/m,
-		'$1\nfunctionMap.set("' + tag + '", ' + code + ');\n$2'
+		'$1\nfunctionMap.set("' + tag + '", ' + code + ');\n$2',
 	);
 }
 
@@ -269,7 +265,7 @@ function injectDialogTag(tag, code) {
  * Adds a custom dialog tag which executes the provided function.
  * For ease-of-use with the bitsy editor, tags can be written as
  * (tagname "parameters") in addition to the standard {tagname "parameters"}
- * 
+ *
  * Function is executed immediately when the tag is reached.
  *
  * @param {string}   tag Name of tag
