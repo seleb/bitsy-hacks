@@ -59,6 +59,9 @@
 		"parserOptions": {
 		  "ecmaVersion": 9,
 		  "sourceType": "module"
+		},
+		"rules": {
+			"import/no-extraneous-dependencies": ["error", {"devDependencies": true}]
 		}
 	}]
 }
