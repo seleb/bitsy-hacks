@@ -1,7 +1,8 @@
 import {
-	toMatchImageSnapshot
+	toMatchImageSnapshot,
 } from 'jest-image-snapshot';
+
 expect.extend({
-	toMatchImageSnapshot
+	toMatchImageSnapshot,
 });
 jest.setTimeout(20000);

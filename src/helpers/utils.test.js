@@ -1,20 +1,9 @@
 import {
-	expose,
 	getImage,
-	inject,
 	unique,
 	getRelativeNumber,
-	clamp
+	clamp,
 } from './utils';
-
-function constructor() {
-	var privateVar = {
-		privateVar: 'object',
-	};
-	this.getPrivateVar = function () {
-		return privateVar;
-	};
-}
 
 describe('getImage', () => {
 	it('requires a name/id and a map', () => {
@@ -24,7 +13,7 @@ describe('getImage', () => {
 
 	it('returns the image in the map with the provided id if it exists', () => {
 		const map = {
-			a: {}
+			a: {},
 		};
 		expect(getImage('a', map)).toBe(map.a);
 	});
@@ -38,7 +27,7 @@ describe('getImage', () => {
 			b: {
 				name: '1',
 				order: 2,
-			}
+			},
 		};
 		expect(getImage('1', map)).toBe(map.a);
 	});
@@ -47,17 +36,11 @@ describe('getImage', () => {
 		const map = {
 			a: {},
 			b: {
-				name: 'a'
-			}
+				name: 'a',
+			},
 		};
 		expect(getImage('a', map)).toBe(map.a);
 	});
-});
-
-xdescribe('inject', () => {
-	it('requires a search string and a string to inject', () => {});
-
-	it('replaces the script tag containing the search string with a copy containing the code to inject after the search string', () => {});
 });
 
 describe('unique', () => {

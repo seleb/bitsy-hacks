@@ -1,10 +1,11 @@
 import puppeteer from 'puppeteer';
 import {
-	resolve
+	resolve,
 } from 'path';
 
 import fs from 'fs';
 import util from 'util';
+
 const readdir = util.promisify(fs.readdir);
 const readFile = util.promisify(fs.readFile);
 
@@ -21,8 +22,8 @@ async function loadResources() {
 async function getHackDist() {
 	const files = await readdir('./dist/');
 
-	const fileContents = await Promise.all(files.map(file => readFile(`./dist/${file}`, {
-		encoding: 'utf8'
+	const fileContents = await Promise.all(files.map((file) => readFile(`./dist/${file}`, {
+		encoding: 'utf8',
 	})));
 
 	const fileMap = files.reduce((result, file, idx) => ({
@@ -34,7 +35,7 @@ async function getHackDist() {
 
 async function getHackTemplate() {
 	return readFile(resolve(__dirname, 'bitsy 7.1.html'), {
-		encoding: 'utf8'
+		encoding: 'utf8',
 	});
 }
 
@@ -44,7 +45,7 @@ let recording = false;
 
 // simple delay helper
 export function delay(ms) {
-	return new Promise(resolve => setTimeout(resolve, ms));
+	return new Promise((r) => setTimeout(r, ms));
 }
 
 // start pupeteer
@@ -73,7 +74,7 @@ export async function start({
 	// add hacks
 	if (hacks.length) {
 		game = game.replace(/(<\/script>)(?![^]*?<\/script>)[^]*?(<\/head>)/, `$1${
-			hacks.map(hack => {
+			hacks.map((hack) => {
 				if (typeof hack === 'string') {
 					// make sure not to screw up the regex in the process
 					return `<script>${hackDist[hack.replace(/\s/g, '-')].replace(/\$([0-9]+)/g, '$$$$$1')}</script>`;
@@ -120,10 +121,10 @@ export async function evaluate(fn) {
 
 // wait for bitsy to have handled input
 export async function waitForFrame() {
-	await evaluate(() => new Promise(resolve => {
+	await evaluate(() => new Promise((r) => {
 		window.jestUpdate = () => {
 			window.jestUpdate = null;
-			resolve();
+			r();
 		};
 	}));
 }
@@ -139,7 +140,7 @@ export async function press(key) {
 	if (recording) {
 		await snapshot();
 	}
-};
+}
 
 // take a screenshot of the current frame
 // and perform a snapshot test on it

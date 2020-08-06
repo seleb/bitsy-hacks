@@ -18,13 +18,13 @@ e.g. the default player is:
 	[0,0,1,0,0,1,0,0]
 ]
 */
-import bitsy from "bitsy";
+import bitsy from 'bitsy';
 import {
-	getImage
-} from "./utils";
+	getImage,
+} from './utils';
 
 export {
-	getImage
+	getImage,
 };
 
 /*
