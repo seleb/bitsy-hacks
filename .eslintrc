@@ -51,7 +51,7 @@
 		"no-continue": "off",
 	},
 	"overrides": [{
-		"files": ["*.test.js", "test/*.js"],
+		"files": ["**/*.test.js", "**/*/test/**/*.js"],
 		"env": {
 			"jest": true,
 			"es6": true
