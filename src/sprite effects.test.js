@@ -1,4 +1,6 @@
-import { end, press, snapshot, start, walkToCat } from './test/bitsy';
+import {
+	end, press, snapshot, start, walkToCat,
+} from './test/bitsy';
 
 test('sprite effects', async () => {
 	await start({
