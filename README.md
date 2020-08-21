@@ -57,6 +57,7 @@ A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamled
 - 💾 [save](/dist/save.js): save/load your game
 - 🏃 [smooth moves](/dist/smooth-moves.js): ease the player's movement
 - 🛑 [solid items](/dist/solid-items.js): treat some items like sprites that can be placed multiple times
+- 💃 [sprite effects](/dist/sprite-effects.js): like text effects, but for sprites
 - ⏱️ [stopwatch](/dist/stopwatch.js): time player actions
 - 🗣 [text-to-speech](/dist/text-to-speech.js): text-to-speech for bitsy dialog
 - 📐 [textbox styler](/dist/textbox-styler.js): customize the style and properties of the textbox

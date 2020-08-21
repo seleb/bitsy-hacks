@@ -1,62 +1,79 @@
 /**
-🖌
-@file edit image from dialog
-@summary edit sprites, items, and tiles from dialog
+💃
+@file sprite effects
+@summary like text effects, but for sprites
 @license MIT
 @version 13.4.0
-@requires 5.3
+@requires 7.1
 @author Sean S. LeBlanc
 
 @description
-You can use this to edit the image data of sprites (including the player avatar), items, and tiles through dialog.
-Image data can be replaced with data from another image, and the palette index can be set.
+Adds support for applying effects to sprites, items, and tiles.
 
-(image "map, target, source")
-Parameters:
-  map:    Type of image (SPR, TIL, or ITM)
-  target: id/name of image to edit
-  source: id/name of image to copy
+Usage:
+	{spriteEffect "SPR,A,wvy"}
+	{spriteEffectNow "TIL,a,shk"}
 
-(imageNow "map, target, source")
-Same as (image), but applied immediately instead of after dialog is closed.
+To disable a text effect, call the dialog command again with the same parameters.
 
-(imagePal "map, target, palette")
-Parameters:
-  map:    Type of image (SPR, TIL, or ITM)
-  target: id/name of image to edit
-  source: palette index (0 is bg, 1 is tiles, 2 is sprites/items, anything higher requires editing your game data to include more)
-
-(imagePalNow "map, target, palette")
-Same as (imagePal), but applied immediately instead of after dialog is closed.
-
-Examples:
-  (image "SPR, A, a")
-  (imageNow "TIL, a, floor")
-  (image "ITM, a, b")
-  (imagePal "SPR, A, 1")
-  (imagePalNow "TIL, floor, 2")
+Note that if a name is used instead of an id,
+only the first tile with that name is affected.
 
 HOW TO USE:
-  1. Copy-paste this script into a new script tag after the Bitsy source code.
-     It should appear *before* any other mods that handle loading your game
-     data so it executes *after* them (last-in first-out).
+1. Copy-paste this script into a script tag after the bitsy source
+2. Update the `hackOptions` object at the top of the script with your custom effects
 
-TIPS:
-  - The player avatar is always a sprite with id "A"; you can edit your gamedata to give them a name for clarity
-  - You can use the full names or shorthand of image types (e.g. "SPR" and "sprite" will both work)
-  - The "source" images don't have to be placed anywhere; so long as they exist in the gamedata they'll work
-  - This is a destructive operation! Unless you have a copy of an overwritten image, you won't be able to get it back during that run
+EFFECT NOTES:
+Each effect looks like:
+	key: function(pos, time, context) {
+		...
+	}
 
-NOTE: This uses parentheses "()" instead of curly braces "{}" around function
-      calls because the Bitsy editor's fancy dialog window strips unrecognized
-      curly-brace functions from dialog text. To keep from losing data, write
-      these function calls with parentheses like the examples above.
+The key is the name of the effect, used in the dialog command to apply it.
 
-      For full editor integration, you'd *probably* also need to paste this
-      code at the end of the editor's `bitsy.js` file. Untested.
+The function is called every frame before rendering the images it is applied to.
+The function arguments are:
+	pos:     has the properties `x` and `y`; can be used to modify rendered position
+	time:    the current time in milliseconds; can be used to animate effects over time
+	context: the 2D canvas rendering context; can be used for various advanced effects
+	         (https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D)
 */
-(function (bitsy) {
+this.hacks = this.hacks || {};
+(function (exports, bitsy) {
 'use strict';
+var hackOptions = {
+	// map of custom effects
+	effects: {
+		wvy: function (pos, time) {
+			// sample effect based on bitsy's {wvy} text
+			pos.y += (Math.sin(time / 250 - pos.x / 2) * 4) / bitsy.mapsize;
+		},
+		shk: function (pos, time) {
+			// sample effect based on bitsy's {shk} text
+			function disturb(func, offset, mult1, mult2) {
+				return func(time * mult1 - offset * mult2);
+			}
+			var y = (3 / bitsy.mapsize) * disturb(Math.sin, pos.x, 0.1, 0.5) * disturb(Math.cos, pos.x, 0.3, 0.2) * disturb(Math.sin, pos.y, 2.0, 1.0);
+			var x = (3 / bitsy.mapsize) * disturb(Math.cos, pos.y, 0.1, 1.0) * disturb(Math.sin, pos.x, 3.0, 0.7) * disturb(Math.cos, pos.x, 0.2, 0.3);
+			pos.x += x;
+			pos.y += y;
+		},
+		rbw: function (pos, time, context) {
+			// sample effect based on bitsy's {rbw} text
+			// note that this uses CSS filters (https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/filter)
+			var t = Math.sin(time / 600 - (pos.x + pos.y) / 8);
+			context.filter = 'grayscale() sepia() saturate(2) hue-rotate(' + t + 'turn)';
+		},
+		invert: function (pos, time, context) {
+			context.filter = 'invert()';
+		},
+	},
+	// reset function called after drawing a tile
+	// this can be used to undo any modifications to the canvas or context
+	reset: function (img, context) {
+		context.filter = 'none';
+	},
+};
 
 bitsy = bitsy && Object.prototype.hasOwnProperty.call(bitsy, 'default') ? bitsy['default'] : bitsy;
 
@@ -391,142 +408,107 @@ function addDualDialogTag(tag, fn) {
 	addDeferredDialogTag(tag, fn);
 }
 
-/**
-@file edit image at runtime
-@summary API for updating image data at runtime.
-@author Sean S. LeBlanc
-@description
-Adds API for updating sprite, tile, and item data at runtime.
 
-Individual frames of image data in bitsy are 8x8 1-bit 2D arrays in yx order
-e.g. the default player is:
-[
-	[0,0,0,1,1,0,0,0],
-	[0,0,0,1,1,0,0,0],
-	[0,0,0,1,1,0,0,0],
-	[0,0,1,1,1,1,0,0],
-	[0,1,1,1,1,1,1,0],
-	[1,0,1,1,1,1,0,1],
-	[0,0,1,0,0,1,0,0],
-	[0,0,1,0,0,1,0,0]
-]
-*/
 
-/*
-Args:
-	   id: string id or name
-	frame: animation frame (0 or 1)
-	  map: map of images (e.g. `sprite`, `tile`, `item`)
 
-Returns: a single frame of a image data
-*/
-function getImageData(id, frame, map) {
-	return bitsy.renderer.GetImageSource(getImage(id, map).drw)[frame];
+
+var activeEffects = {
+	tile: {},
+	sprite: {},
+	item: {},
+};
+
+// create a map of the images to be rendered for reference
+// note: this is being done after `drawRoom` to avoid interfering
+// with transparent sprites, which needs to pre-process first
+var tileMap = {
+	tile: {},
+	sprite: {},
+	item: {},
+};
+function buildMap(map, room) {
+	var m = tileMap[map];
+	Object.keys(activeEffects[map]).forEach(function (id) {
+		var tile = bitsy[map][id];
+		if (!tile) {
+			return;
+		}
+		var t = (m[id] = m[id] || {});
+		var p = (t[room.pal] = t[room.pal] || {});
+		new Array(tile.animation.frameCount).fill(0).forEach(function (_, frame) {
+			p[frame] = bitsy.getTileImage(tile, room.pal, frame);
+		});
+	});
 }
-
-/*
-Updates a single frame of image data
-
-Args:
-	     id: string id or name
-	  frame: animation frame (0 or 1)
-	    map: map of images (e.g. `sprite`, `tile`, `item`)
-	newData: new data to write to the image data
-*/
-function setImageData(id, frame, map, newData) {
-	var drawing = getImage(id, map);
-	var drw = drawing.drw;
-	var img = bitsy.renderer.GetImageSource(drw).slice();
-	img[frame] = newData;
-	bitsy.renderer.SetImageSource(drw, img);
-}
-
-
-
-// map of maps
-var maps;
-after('load_game', function () {
-	maps = {
-		spr: bitsy.sprite,
-		sprite: bitsy.sprite,
-		til: bitsy.tile,
-		tile: bitsy.tile,
-		itm: bitsy.item,
-		item: bitsy.item,
-	};
+after('drawRoom', function (room) {
+	buildMap('tile', room);
+	buildMap('sprite', room);
+	buildMap('item', room);
 });
 
-function editImage(environment, parameters) {
-	var i;
+// apply effects before rendering tiles
+function preprocess(map, img, x, y, context) {
+	var m = tileMap[map];
+	var foundEffects = Object.entries(activeEffects[map]).find(function (entry) {
+		var t = m && m[entry[0]];
+		var p = t && t[bitsy.room[bitsy.curRoom].pal];
+		return (
+			p
+			&& Object.values(p).some(function (frame) {
+				return frame === img;
+			})
+		);
+	});
+	var effects = foundEffects ? foundEffects[1] : [];
 
-	// parse parameters
-	var params = parameters[0].split(/,\s?/);
-	params[0] = (params[0] || '').toLowerCase();
-	var mapId = params[0];
-	var tgtId = params[1];
-	var srcId = params[2];
-
-	if (!mapId || !tgtId || !srcId) {
-		throw new Error('Image expects three parameters: "map, target, source", but received: "' + params.join(', ') + '"');
-	}
-
-	// get objects
-	var mapObj = maps[mapId];
-	if (!mapObj) {
-		throw new Error('Invalid map "' + mapId + '". Try "SPR", "TIL", or "ITM" instead.');
-	}
-	var tgtObj = getImage(tgtId, mapObj);
-	if (!tgtObj) {
-		throw new Error('Target "' + tgtId + '" was not the id/name of a ' + mapId + '.');
-	}
-	var srcObj = getImage(srcId, mapObj);
-	if (!srcObj) {
-		throw new Error('Source "' + srcId + '" was not the id/name of a ' + mapId + '.');
-	}
-
-	// copy animation from target to source
-	tgtObj.animation = {
-		frameCount: srcObj.animation.frameCount,
-		isAnimated: srcObj.animation.isAnimated,
-		frameIndex: srcObj.animation.frameIndex,
-	};
-	for (i = 0; i < srcObj.animation.frameCount; ++i) {
-		setImageData(tgtId, i, mapObj, getImageData(srcId, i, mapObj));
-	}
+	var totalPos = { x: Number(x), y: Number(y) };
+	Object.keys(effects).forEach(function (effect) {
+		var pos = { x: totalPos.x, y: totalPos.y };
+		hackOptions.effects[effect](pos, Date.now(), context);
+		totalPos = pos;
+	});
+	return [img, totalPos.x.toString(), totalPos.y.toString(), context];
 }
+before('drawTile', function (img, x, y, context) {
+	return preprocess('tile', img, x, y, context);
+});
+before('drawSprite', function (img, x, y, context) {
+	return preprocess('sprite', img, x, y, context);
+});
+before('drawItem', function (img, x, y, context) {
+	return preprocess('item', img, x, y, context);
+});
 
-function editPalette(environment, parameters) {
-	// parse parameters
+// reset after having drawn a tile
+after('drawTile', function (img, x, y, context) {
+	hackOptions.reset(img, context);
+});
+
+// setup dialog commands
+var mapMap = {
+	spr: 'sprite',
+	sprite: 'sprite',
+	itm: 'item',
+	item: 'item',
+	til: 'tile',
+	tile: 'tile',
+};
+addDualDialogTag('spriteEffect', function (environment, parameters) {
 	var params = parameters[0].split(/,\s?/);
-	params[0] = (params[0] || '').toLowerCase();
-	var mapId = params[0];
-	var tgtId = params[1];
-	var palId = params[2];
-
-	if (!mapId || !tgtId || !palId) {
-		throw new Error('Image expects three parameters: "map, target, palette", but received: "' + params.join(', ') + '"');
+	var map = mapMap[(params[0] || '').toLowerCase()];
+	var id = getImage(params[1] || '', bitsy[map]).id;
+	var effect = params[2] || '';
+	if (!hackOptions.effects[effect]) {
+		throw new Error('Tried to use sprite effect "' + effect + '", but it does not exist');
 	}
-
-	// get objects
-	var mapObj = maps[mapId];
-	if (!mapObj) {
-		throw new Error('Invalid map "' + mapId + '". Try "SPR", "TIL", or "ITM" instead.');
+	var tile = (activeEffects[map][id] = activeEffects[map][id] || {});
+	if (tile && tile[effect]) {
+		delete tile[effect];
+	} else {
+		tile[effect] = true;
 	}
-	var tgtObj = getImage(tgtId, mapObj);
-	if (!tgtObj) {
-		throw new Error('Target "' + tgtId + '" was not the id/name of a ' + mapId + '.');
-	}
-	var palObj = parseInt(palId, 10);
-	if (Number.isNaN(Number(palObj))) {
-		throw new Error('Palette "' + palId + '" was not a number.');
-	}
+});
 
-	// set palette
-	tgtObj.col = palObj;
-}
+exports.hackOptions = hackOptions;
 
-// hook up the dialog tags
-addDualDialogTag('image', editImage);
-addDualDialogTag('imagePal', editPalette);
-
-}(window));
+}(this.hacks.sprite_effects = this.hacks.sprite_effects || {}, window));

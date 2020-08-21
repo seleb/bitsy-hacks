@@ -1,3 +1,10 @@
+# [13.4.0](https://github.com/seleb/bitsy-hacks/compare/v13.3.7...v13.4.0) (2020-08-21)
+
+
+### Features
+
+* add sprite effects hack ([#165](https://github.com/seleb/bitsy-hacks/issues/165)) ([0de423a](https://github.com/seleb/bitsy-hacks/commit/0de423a8cc9c753525dfe93b8d0647b7647520c8))
+
 ## [13.3.7](https://github.com/seleb/bitsy-hacks/compare/v13.3.6...v13.3.7) (2020-08-06)
 
 

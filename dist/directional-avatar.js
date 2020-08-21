@@ -3,7 +3,7 @@
 @file directional avatar
 @summary flips the player's sprite based on directional movement
 @license MIT
-@version 13.3.7
+@version 13.4.0
 @requires 5.3
 @author Sean S. LeBlanc
 
