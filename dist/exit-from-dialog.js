@@ -3,7 +3,7 @@
 @file exit-from-dialog
 @summary exit to another room from dialog, including conditionals
 @license WTFPL (do WTF you want)
-@version 13.4.0
+@version 13.4.1
 @requires Bitsy Version: 7.0
 @author @mildmojo
 
@@ -27,7 +27,7 @@ Usage:
 	(exitNow "<room name>,<x>,<y>,<transition_effect>")
 
 Parameter notes:
-	- Every paramater is optional
+	- Every parameter is optional
 	- If you omit the room, it will use the current room
 	- If you omit the x or y, it will use the current position
 	- x and y can be written as relative coordinates (e.g. +3, -4, +0)

@@ -3,7 +3,7 @@
 @file canvas replacement
 @summary WebGLazy bitsy integration (this one's mostly just for me)
 @license MIT
-@version 13.4.0
+@version 13.4.1
 @author Sean S. LeBlanc
 
 @description
@@ -14,7 +14,7 @@ HOW TO USE:
 2. For finer scaling, edit `var text_scale = 2` and `var scale = 4` in the bitsy source to `var text_scale = 1` and `var scale = 2`
 3. Edit the hackOptions object passed to the `new WebGLazy` call as needed
 
-The shader used to render the canvas can be overriden via hack options:
+The shader used to render the canvas can be overridden via hack options:
 e.g.
 var hackOptions = {
 	glazyOptions = {

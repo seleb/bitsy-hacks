@@ -3,7 +3,7 @@
 @file save
 @summary save/load your game
 @license MIT
-@version 13.4.0
+@version 13.4.1
 @requires 5.4
 @author Sean S. LeBlanc
 
@@ -28,8 +28,8 @@ Notes:
 	  Remember to clear storage while working on a game, otherwise loading may prevent you from seeing your changes!
 	  You can use the `clearOnStart` option to do this for you when testing.
 	- This hack only tracks state which could be modified via vanilla bitsy features,
-	  i.e. compatability with other hacks that modify state varies;
-	  you may need to modify save/load to include/exclude things for compatability.
+	  i.e. compatibility with other hacks that modify state varies;
+	  you may need to modify save/load to include/exclude things for compatibility.
 	  (feel free to ask for help tailoring these to your needs!)
 	- There is only one "save slot"; it would not be too difficult to implement more,
 	  but it adds a lot of complexity that most folks probably don't need.

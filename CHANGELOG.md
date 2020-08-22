@@ -1,3 +1,12 @@
+## [13.4.1](https://github.com/seleb/bitsy-hacks/compare/v13.4.0...v13.4.1) (2020-08-22)
+
+
+### Bug Fixes
+
+* add note about free to use server ([47e3971](https://github.com/seleb/bitsy-hacks/commit/47e39713692a905d01aedae7138b0930798ccf34))
+* more typos ([35e9532](https://github.com/seleb/bitsy-hacks/commit/35e9532db08c6a165f8ca163c53c3e018884322e))
+* typo ([e48b04b](https://github.com/seleb/bitsy-hacks/commit/e48b04b78b2590a3e1702768ca2cb71e99dee4d4))
+
 # [13.4.0](https://github.com/seleb/bitsy-hacks/compare/v13.3.7...v13.4.0) (2020-08-21)
 
 

@@ -3,7 +3,7 @@
 @file twine bitsy comms
 @summary interprocess communication for twine and bitsy
 @license MIT
-@version 13.4.0
+@version 13.4.1
 @requires 5.4
 @author Sean S. LeBlanc
 

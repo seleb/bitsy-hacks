@@ -3,7 +3,7 @@
 @file dialog choices
 @summary binary dialog choices
 @license MIT
-@version 13.4.0
+@version 13.4.1
 @requires 7.0
 @author Sean S. LeBlanc
 
@@ -55,7 +55,7 @@ Each option must fit on a single line, or the interaction will break.
 Checking the value of a variable set in an option
 *immediately after the choice* will not work,
 as it will evaluate before the player has selected
-an option if there is no text inbetween the two.
+an option if there is no text in-between the two.
 e.g.
 """
 {a = 1}

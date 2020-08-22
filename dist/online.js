@@ -3,7 +3,7 @@
 @file online
 @summary multiplayer bitsy
 @license MIT
-@version 13.4.0
+@version 13.4.1
 @requires 7.0
 @author Sean S. LeBlanc
 @description
@@ -12,9 +12,12 @@ Provides the groundwork for running a small online multiplayer bitsy game.
 Running it requires running a copy of this server: https://github.com/seleb/web-rtc-mesh
 Server notes:
 	- The actual game data is sent using peer-to-peer data channels;
-	the server just hosts client code and negotaties initial connections.
+	the server just hosts client code and negotiates initial connections.
 	(i.e. it uses very little bandwidth)
 	- A single server can host multiple games simultaneously
+	- A sample server is wss://bitsy-online.herokuapp.com
+	  This server is free to use, but I recommend setting up your own
+	  if you need to guarantee stability or maintenance
 	- If you're not sure how to setup/use the server, ask for help!
 
 This hack also includes the hacks for editing images/dialog at runtime through dialog.
@@ -397,7 +400,7 @@ Examples:
 	(js "getPal(curPal())[0] = [255,0,0];renderImages();")
 	place an item next to player:
 	(js "room[curRoom].items.push({id:'0',x:player().x+1,y:player().y});")
-	verbose facimile of exit-from-dialog:
+	verbose facsimile of exit-from-dialog:
 	(js "var _onExitDialog=onExitDialog;onExitDialog=function(){player().room=curRoom='3';_onExitDialog.apply(this,arguments);onExitDialog=_onExitDialog;};")
 
 HOW TO USE:
