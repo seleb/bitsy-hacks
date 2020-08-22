@@ -27,7 +27,7 @@ Usage:
 	(exitNow "<room name>,<x>,<y>,<transition_effect>")
 
 Parameter notes:
-	- Every paramater is optional
+	- Every parameter is optional
 	- If you omit the room, it will use the current room
 	- If you omit the x or y, it will use the current position
 	- x and y can be written as relative coordinates (e.g. +3, -4, +0)

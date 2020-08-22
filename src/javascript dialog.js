@@ -23,7 +23,7 @@ Examples:
 	(js "getPal(curPal())[0] = [255,0,0];renderImages();")
 	place an item next to player:
 	(js "room[curRoom].items.push({id:'0',x:player().x+1,y:player().y});")
-	verbose facimile of exit-from-dialog:
+	verbose facsimile of exit-from-dialog:
 	(js "var _onExitDialog=onExitDialog;onExitDialog=function(){player().room=curRoom='3';_onExitDialog.apply(this,arguments);onExitDialog=_onExitDialog;};")
 
 HOW TO USE:
