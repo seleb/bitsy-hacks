@@ -12,7 +12,7 @@ Provides the groundwork for running a small online multiplayer bitsy game.
 Running it requires running a copy of this server: https://github.com/seleb/web-rtc-mesh
 Server notes:
 	- The actual game data is sent using peer-to-peer data channels;
-	the server just hosts client code and negotaties initial connections.
+	the server just hosts client code and negotiates initial connections.
 	(i.e. it uses very little bandwidth)
 	- A single server can host multiple games simultaneously
 	- If you're not sure how to setup/use the server, ask for help!
