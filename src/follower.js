@@ -101,8 +101,18 @@ after('startExportedGame', function () {
 	bitsy.sprite[bitsy.playerId] = p;
 });
 
+let px;
+let py;
+before('update', function () {
+	px = bitsy.player().x;
+	py = bitsy.player().y;
+});
 let movedFollower = false;
-after('onPlayerMoved', function () {
+after('update', function () {
+	// only walk if player moved
+	if (px === bitsy.player().x && py === bitsy.player().y) {
+		return;
+	}
 	// skip walking if already moved due to exits
 	if (movedFollower) {
 		movedFollower = false;
