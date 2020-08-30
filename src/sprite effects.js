@@ -172,3 +172,17 @@ addDualDialogTag('spriteEffect', function (environment, parameters) {
 		tile[effect] = true;
 	}
 });
+
+// reset
+after('reset_cur_game', function () {
+	activeEffects = {
+		tile: {},
+		sprite: {},
+		item: {},
+	};
+	tileMap = {
+		tile: {},
+		sprite: {},
+		item: {},
+	};
+});
