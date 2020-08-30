@@ -174,7 +174,7 @@ addDualDialogTag('spriteEffect', function (environment, parameters) {
 });
 
 // reset
-after('reset_cur_game', function () {
+before('reset_cur_game', function () {
 	activeEffects = {
 		tile: {},
 		sprite: {},
