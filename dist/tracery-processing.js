@@ -3,7 +3,7 @@
 @file tracery processing
 @summary process all dialog text with a tracery grammar
 @license MIT
-@version 13.5.0
+@version 13.5.1
 @requires 7.0
 @author Sean S. LeBlanc
 

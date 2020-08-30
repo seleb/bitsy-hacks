@@ -3,7 +3,7 @@
 @file end-from-dialog
 @summary trigger an ending from dialog, including narration text
 @license WTFPL (do WTF you want)
-@version 13.5.0
+@version 13.5.1
 @requires Bitsy Version: 7.0
 @author @mildmojo
 

@@ -1,3 +1,10 @@
+## [13.5.1](https://github.com/seleb/bitsy-hacks/compare/v13.5.0...v13.5.1) (2020-08-30)
+
+
+### Bug Fixes
+
+* reset sprite effects on game reset ([c20accd](https://github.com/seleb/bitsy-hacks/commit/c20accd5e6d18f20445dd77ea8a1ffb7fb3da81a))
+
 # [13.5.0](https://github.com/seleb/bitsy-hacks/compare/v13.4.3...v13.5.0) (2020-08-30)
 
 

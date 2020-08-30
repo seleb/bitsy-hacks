@@ -3,7 +3,7 @@
 @file canvas replacement
 @summary WebGLazy bitsy integration (this one's mostly just for me)
 @license MIT
-@version 13.5.0
+@version 13.5.1
 @author Sean S. LeBlanc
 
 @description

@@ -3,7 +3,7 @@
 @file sprite effects
 @summary like text effects, but for sprites
 @license MIT
-@version 13.5.0
+@version 13.5.1
 @requires 7.1
 @author Sean S. LeBlanc
 
@@ -509,6 +509,20 @@ addDualDialogTag('spriteEffect', function (environment, parameters) {
 	} else {
 		tile[effect] = true;
 	}
+});
+
+// reset
+after('reset_cur_game', function () {
+	activeEffects = {
+		tile: {},
+		sprite: {},
+		item: {},
+	};
+	tileMap = {
+		tile: {},
+		sprite: {},
+		item: {},
+	};
 });
 
 exports.hackOptions = hackOptions;
