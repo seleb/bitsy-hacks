@@ -1,3 +1,10 @@
+# [13.5.0](https://github.com/seleb/bitsy-hacks/compare/v13.4.3...v13.5.0) (2020-08-30)
+
+
+### Features
+
+* add modulo (`%`) to extended logic operators ([1fa9d61](https://github.com/seleb/bitsy-hacks/commit/1fa9d611ab8a01b38dc9a87acfc5af8fac329710))
+
 ## [13.4.3](https://github.com/seleb/bitsy-hacks/compare/v13.4.2...v13.4.3) (2020-08-30)
 
 

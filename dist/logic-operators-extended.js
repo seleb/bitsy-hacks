@@ -2,7 +2,7 @@
 🔀
 @file logic-operators-extended
 @summary adds conditional logic operators
-@version 13.4.3
+@version 13.5.0
 @author @mildmojo
 
 @description
@@ -12,6 +12,7 @@ Adds conditional logic operators:
   - || (or)
   - &&! (and not)
   - ||! (or not)
+  - % (modulo)
 
 Examples: candlecount > 5 && haslighter == 1
           candlecount > 5 && papercount > 1 && isIndoors
@@ -272,6 +273,14 @@ function orNotExp(environment, left, right, onReturn) {
 	});
 }
 
+function modExp(environment, left, right, onReturn) {
+	right.Eval(environment, function (rVal) {
+		left.Eval(environment, function (lVal) {
+			onReturn(lVal % rVal);
+		});
+	});
+}
+
 inject$1(/(operatorMap\.set\("-", subExp\);)/, `
 	$1
 	operatorMap.set("&&", ${andExp.toString()});
@@ -279,10 +288,11 @@ inject$1(/(operatorMap\.set\("-", subExp\);)/, `
 	operatorMap.set("&&!", ${andNotExp.toString()});
 	operatorMap.set("||!", ${orNotExp.toString()});
 	operatorMap.set("!==", ${notEqExp.toString()});
+	operatorMap.set("%", ${modExp.toString()});
 `);
 inject$1(
 	/(var operatorSymbols = \[.+\];)/,
-	'$1operatorSymbols.unshift("!==", "&&", "||", "&&!", "||!");',
+	'$1operatorSymbols.unshift("!==", "&&", "||", "&&!", "||!", "%");',
 );
 // End of logic operators mod
 

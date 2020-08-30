@@ -3,7 +3,7 @@
 @file external-game-data
 @summary separate Bitsy game data from your (modded) HTML for easier development
 @license WTFPL (do WTF you want)
-@version 13.4.3
+@version 13.5.0
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
