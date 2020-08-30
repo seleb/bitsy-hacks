@@ -1,3 +1,10 @@
+## [13.5.2](https://github.com/seleb/bitsy-hacks/compare/v13.5.1...v13.5.2) (2020-08-30)
+
+
+### Bug Fixes
+
+* sprite effects resetting after title text ([d6f147a](https://github.com/seleb/bitsy-hacks/commit/d6f147a01a5c0bfc218aa322155ee550222e11ab))
+
 ## [13.5.1](https://github.com/seleb/bitsy-hacks/compare/v13.5.0...v13.5.1) (2020-08-30)
 
 

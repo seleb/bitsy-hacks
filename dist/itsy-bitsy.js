@@ -3,7 +3,7 @@
 @file itsy-bitsy
 @summary for when bitsy's not small enough
 @license MIT
-@version 13.5.1
+@version 13.5.2
 @requires Bitsy Version: 5.1
 @author Sean S. LeBlanc
 
