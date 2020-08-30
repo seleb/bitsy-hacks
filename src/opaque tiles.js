@@ -49,6 +49,7 @@ after('movePlayer', function () {
 var room;
 before('drawRoom', function () {
 	var player = bitsy.player();
+        if (player.room == null) return;
 	room = player.room;
 	player.room = opaque ? null : room;
 });
