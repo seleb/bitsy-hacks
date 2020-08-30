@@ -12,6 +12,7 @@ Adds conditional logic operators:
   - || (or)
   - &&! (and not)
   - ||! (or not)
+  - % (modulo)
 
 Examples: candlecount > 5 && haslighter == 1
           candlecount > 5 && papercount > 1 && isIndoors
@@ -72,6 +73,14 @@ function orNotExp(environment, left, right, onReturn) {
 	});
 }
 
+function modExp(environment, left, right, onReturn) {
+	right.Eval(environment, function (rVal) {
+		left.Eval(environment, function (lVal) {
+			onReturn(lVal % rVal);
+		});
+	});
+}
+
 inject(/(operatorMap\.set\("-", subExp\);)/, `
 	$1
 	operatorMap.set("&&", ${andExp.toString()});
@@ -79,9 +88,10 @@ inject(/(operatorMap\.set\("-", subExp\);)/, `
 	operatorMap.set("&&!", ${andNotExp.toString()});
 	operatorMap.set("||!", ${orNotExp.toString()});
 	operatorMap.set("!==", ${notEqExp.toString()});
+	operatorMap.set("%", ${modExp.toString()});
 `);
 inject(
 	/(var operatorSymbols = \[.+\];)/,
-	'$1operatorSymbols.unshift("!==", "&&", "||", "&&!", "||!");',
+	'$1operatorSymbols.unshift("!==", "&&", "||", "&&!", "||!", "%");',
 );
 // End of logic operators mod
