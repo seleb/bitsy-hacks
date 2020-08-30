@@ -3,7 +3,7 @@
 @file edit image from dialog
 @summary edit sprites, items, and tiles from dialog
 @license MIT
-@version 13.4.2
+@version 13.4.3
 @requires 5.3
 @author Sean S. LeBlanc
 

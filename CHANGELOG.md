@@ -1,3 +1,10 @@
+## [13.4.3](https://github.com/seleb/bitsy-hacks/compare/v13.4.2...v13.4.3) (2020-08-30)
+
+
+### Bug Fixes
+
+* follower hack for 7.2 ([890d941](https://github.com/seleb/bitsy-hacks/commit/890d941ba0c9f26860cd7826807b9ed73af1047e))
+
 ## [13.4.2](https://github.com/seleb/bitsy-hacks/compare/v13.4.1...v13.4.2) (2020-08-30)
 
 

@@ -3,7 +3,7 @@
 @file follower
 @summary makes a single sprite follow the player
 @license MIT
-@version 13.4.2
+@version 13.4.3
 @requires 7.0
 @author Sean S. LeBlanc
 
@@ -430,8 +430,18 @@ after('startExportedGame', function () {
 	bitsy.sprite[bitsy.playerId] = p;
 });
 
+let px;
+let py;
+before('update', function () {
+	px = bitsy.player().x;
+	py = bitsy.player().y;
+});
 let movedFollower = false;
-after('onPlayerMoved', function () {
+after('update', function () {
+	// only walk if player moved
+	if (px === bitsy.player().x && py === bitsy.player().y) {
+		return;
+	}
 	// skip walking if already moved due to exits
 	if (movedFollower) {
 		movedFollower = false;
