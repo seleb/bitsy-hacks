@@ -3,7 +3,7 @@
 @file text-to-speech
 @summary text-to-speech for bitsy dialog
 @license MIT
-@version 13.4.1
+@version 13.4.2
 @requires 5.5
 @author Sean S. LeBlanc
 
@@ -52,7 +52,9 @@ var hackOptions = {
 	hurried: true, // disable this to let bitsy text animations play out normally (not recommended for automatic mode)
 };
 
-bitsy = bitsy && Object.prototype.hasOwnProperty.call(bitsy, 'default') ? bitsy['default'] : bitsy;
+function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
+
+bitsy = bitsy || /*#__PURE__*/_interopDefaultLegacy(bitsy);
 
 /**
 @file utils

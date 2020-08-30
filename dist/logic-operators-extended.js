@@ -2,7 +2,7 @@
 🔀
 @file logic-operators-extended
 @summary adds conditional logic operators
-@version 13.4.1
+@version 13.4.2
 @author @mildmojo
 
 @description
@@ -30,7 +30,9 @@ NOTE: The combining operators (&&, ||, &&!, ||!) have lower precedence than
 (function (bitsy) {
 'use strict';
 
-bitsy = bitsy && Object.prototype.hasOwnProperty.call(bitsy, 'default') ? bitsy['default'] : bitsy;
+function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
+
+bitsy = bitsy || /*#__PURE__*/_interopDefaultLegacy(bitsy);
 
 /**
 @file utils

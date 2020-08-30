@@ -3,7 +3,7 @@
 @file external-game-data
 @summary separate Bitsy game data from your (modded) HTML for easier development
 @license WTFPL (do WTF you want)
-@version 13.4.1
+@version 13.4.2
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
@@ -42,7 +42,9 @@ NOTE: Chrome can only fetch external files when they're served from a
 (function (bitsy) {
 'use strict';
 
-bitsy = bitsy && Object.prototype.hasOwnProperty.call(bitsy, 'default') ? bitsy['default'] : bitsy;
+function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
+
+bitsy = bitsy || /*#__PURE__*/_interopDefaultLegacy(bitsy);
 
 /**
 @file utils

@@ -3,7 +3,7 @@
 @file edit image from dialog
 @summary edit sprites, items, and tiles from dialog
 @license MIT
-@version 13.4.1
+@version 13.4.2
 @requires 5.3
 @author Sean S. LeBlanc
 
@@ -58,7 +58,9 @@ NOTE: This uses parentheses "()" instead of curly braces "{}" around function
 (function (bitsy) {
 'use strict';
 
-bitsy = bitsy && Object.prototype.hasOwnProperty.call(bitsy, 'default') ? bitsy['default'] : bitsy;
+function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
+
+bitsy = bitsy || /*#__PURE__*/_interopDefaultLegacy(bitsy);
 
 /**
 @file utils

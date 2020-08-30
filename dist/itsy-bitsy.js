@@ -3,7 +3,7 @@
 @file itsy-bitsy
 @summary for when bitsy's not small enough
 @license MIT
-@version 13.4.1
+@version 13.4.2
 @requires Bitsy Version: 5.1
 @author Sean S. LeBlanc
 
@@ -31,7 +31,9 @@ var hackOptions = {
 	rows: 2, // number of rows per text box (bitsy default is 2)
 };
 
-bitsy = bitsy && Object.prototype.hasOwnProperty.call(bitsy, 'default') ? bitsy['default'] : bitsy;
+function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
+
+bitsy = bitsy || /*#__PURE__*/_interopDefaultLegacy(bitsy);
 
 /**
 @file utils

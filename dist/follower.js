@@ -3,7 +3,7 @@
 @file follower
 @summary makes a single sprite follow the player
 @license MIT
-@version 13.4.1
+@version 13.4.2
 @requires 7.0
 @author Sean S. LeBlanc
 
@@ -53,7 +53,9 @@ var hackOptions = {
 	delay: 200, // delay between each follower step (0 is immediate, 400 is twice as slow as normal)
 };
 
-bitsy = bitsy && Object.prototype.hasOwnProperty.call(bitsy, 'default') ? bitsy['default'] : bitsy;
+function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
+
+bitsy = bitsy || /*#__PURE__*/_interopDefaultLegacy(bitsy);
 
 /**
 @file utils

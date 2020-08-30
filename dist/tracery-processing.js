@@ -3,7 +3,7 @@
 @file tracery processing
 @summary process all dialog text with a tracery grammar
 @license MIT
-@version 13.4.1
+@version 13.4.2
 @requires 7.0
 @author Sean S. LeBlanc
 
@@ -55,7 +55,9 @@ var hackOptions = {
 	modifiers: undefined,
 };
 
-bitsy = bitsy && Object.prototype.hasOwnProperty.call(bitsy, 'default') ? bitsy['default'] : bitsy;
+function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
+
+bitsy = bitsy || /*#__PURE__*/_interopDefaultLegacy(bitsy);
 
 /**
  * @author Kate
@@ -355,7 +357,7 @@ var tracery = function() {
             this.defaultRules = raw;
         } else if ( typeof raw === 'string' || raw instanceof String) {
             this.defaultRules = [raw];
-        }
+        } else ;
 
     }
     RuleSet.prototype.selectRule = function(errors) {

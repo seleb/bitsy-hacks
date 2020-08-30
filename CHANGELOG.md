@@ -1,3 +1,10 @@
+## [13.4.2](https://github.com/seleb/bitsy-hacks/compare/v13.4.1...v13.4.2) (2020-08-30)
+
+
+### Bug Fixes
+
+* upgrade dependencies ([1bfa52a](https://github.com/seleb/bitsy-hacks/commit/1bfa52a79d2718928c8c54cf983fd4eeef6ecd7c))
+
 ## [13.4.1](https://github.com/seleb/bitsy-hacks/compare/v13.4.0...v13.4.1) (2020-08-22)
 
 
