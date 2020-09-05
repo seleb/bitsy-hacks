@@ -87,6 +87,7 @@ function takeStep() {
 	}
 	walking = true;
 	setTimeout(() => {
+		let takeAnother = false;
 		followers.forEach(function (follower) {
 			var path = paths[follower.id];
 			var point = path.shift();
@@ -97,9 +98,12 @@ function takeStep() {
 			}
 			walking = false;
 			if (path.length) {
-				takeStep();
+				takeAnother = true;
 			}
 		});
+		if (takeAnother) {
+			takeStep();
+		}
 	}, hackOptions.delay);
 }
 
