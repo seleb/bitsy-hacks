@@ -57,15 +57,25 @@ import {
 
 export var hackOptions = {
 	allowFollowerCollision: false, // if true, the player can walk into the follower and talk to them (possible to get stuck this way)
-	follower: 'a', // id or name of sprite to be the follower; use '' to start without a follower
+	followers: ['a'], // ids or names of sprites to be followers; use [] to start without a follower
 	delay: 200, // delay between each follower step (0 is immediate, 400 is twice as slow as normal)
+	stack: false, // if true, followers stack on top of each other; otherwise, they will form a chain
 };
 
-export var follower;
+export var followers = [];
 var paths = {};
 
 function setFollower(followerName) {
-	follower = followerName && getImage(followerName, bitsy.sprite);
+	var follower = followerName && getImage(followerName, bitsy.sprite);
+	if (!follower) {
+		throw new Error('Failed to find sprite with id/name "' + followerName + '"');
+	}
+	var idx = followers.indexOf(follower);
+	if (idx > 0) {
+		followers.splice(idx, 1);
+	} else {
+		followers.push(follower);
+	}
 	paths[follower.id] = paths[follower.id] || [];
 	takeStep();
 }
@@ -78,22 +88,28 @@ function takeStep() {
 	}
 	walking = true;
 	setTimeout(() => {
-		var path = paths[follower.id];
-		var point = path.shift();
-		if (point) {
-			follower.x = point.x;
-			follower.y = point.y;
-			follower.room = point.room;
-		}
-		walking = false;
-		if (path.length) {
+		let takeAnother = false;
+		followers.forEach(function (follower) {
+			var path = paths[follower.id];
+			var point = path.shift();
+			if (point) {
+				follower.x = point.x;
+				follower.y = point.y;
+				follower.room = point.room;
+			}
+			walking = false;
+			if (path.length) {
+				takeAnother = true;
+			}
+		});
+		if (takeAnother) {
 			takeStep();
 		}
 	}, hackOptions.delay);
 }
 
 after('startExportedGame', function () {
-	setFollower(hackOptions.follower);
+	hackOptions.followers.forEach(setFollower);
 
 	// remove + add player to sprite list to force rendering them on top of follower
 	var p = bitsy.sprite[bitsy.playerId];
@@ -119,7 +135,7 @@ after('update', function () {
 		return;
 	}
 
-	if (!follower) {
+	if (!followers.length) {
 		return;
 	}
 
@@ -146,25 +162,41 @@ after('update', function () {
 	default:
 		break;
 	}
-	paths[follower.id].push(step);
+	followers.forEach(function (follower, idx) {
+		if (idx === 0 || hackOptions.stack) {
+			paths[follower.id].push(step);
+		} else {
+			var prevFollower = followers[idx - 1];
+			var prev = paths[prevFollower.id];
+			paths[follower.id].push(prev[prev.length - 2] || {
+				x: prevFollower.x,
+				y: prevFollower.y,
+				room: prevFollower.room,
+			});
+		}
+	});
 	takeStep();
 });
 
 // make follower walk "through" exits
 before('movePlayerThroughExit', function (exit) {
-	if (follower) {
+	if (followers.length) {
 		movedFollower = true;
-		paths[follower.id].push({
-			x: exit.dest.x,
-			y: exit.dest.y,
-			room: exit.dest.room,
+		followers.forEach(function (follower) {
+			paths[follower.id].push({
+				x: exit.dest.x,
+				y: exit.dest.y,
+				room: exit.dest.room,
+			});
 		});
 		takeStep();
 	}
 });
 
 function filterFollowing(id) {
-	return follower === bitsy.sprite[id] ? null : id;
+	return followers.some(function (follower) {
+		return follower.id === id;
+	}) ? null : id;
 }
 
 var originalGetSpriteLeft;
@@ -221,13 +253,13 @@ addDualDialogTag('followerDelay', function (environment, parameters) {
 	hackOptions.delay = parseInt(parameters[0], 10);
 });
 addDualDialogTag('followerSync', function () {
-	if (follower) {
-		var player = bitsy.player();
+	var player = bitsy.player();
+	followers.forEach(function (follower) {
 		follower.room = player.room;
 		follower.x = player.x;
 		follower.y = player.y;
 		paths[follower.id].length = 0;
-	}
+	});
 });
 
 before('moveSprites', function () {

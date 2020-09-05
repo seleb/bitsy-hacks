@@ -48,7 +48,7 @@ export function delay(ms) {
 	return new Promise((r) => setTimeout(r, ms));
 }
 
-// start pupeteer
+// start puppeteer
 // and configure it for testing a bitsy game
 export async function start({
 	gamedata = '',
@@ -80,7 +80,7 @@ export async function start({
 					return `<script>${hackDist[hack.replace(/\s/g, '-')].replace(/\$([0-9]+)/g, '$$$$$1')}</script>`;
 				}
 				const [hackStr, options] = hack;
-				return `<script>${hackDist[hackStr.replace(/\s/g, '-')].replace(/(var hackOptions.*=)[^]*?;/m, `$1 ${JSON.stringify(options, undefined, '\t')};`).replace(/\$([0-9]+)/g, '$$$$$1')}</script>`;
+				return `<script>${hackDist[hackStr.replace(/\s/g, '-')].replace(/(var hackOptions.*=)[^]*?;$/m, `$1 ${JSON.stringify(options, undefined, '\t')};`).replace(/\$([0-9]+)/g, '$$$$$1')}</script>`;
 			}).join('\n')
 		}$2`);
 	}
