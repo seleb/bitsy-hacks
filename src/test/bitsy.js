@@ -48,7 +48,7 @@ export function delay(ms) {
 	return new Promise((r) => setTimeout(r, ms));
 }
 
-// start pupeteer
+// start puppeteer
 // and configure it for testing a bitsy game
 export async function start({
 	gamedata = '',
