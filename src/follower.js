@@ -65,13 +65,17 @@ export var followers = [];
 var paths = {};
 
 function setFollower(followerName) {
-	var idx = followers.indexOf(followerName);
+	var follower = followerName && getImage(followerName, bitsy.sprite);
+	if (!follower) {
+		throw new Error('Failed to find sprite with id/name "' + followerName + '"');
+	}
+	var idx = followers.indexOf(follower);
 	if (idx > 0) {
 		followers.splice(idx, 1);
 	} else {
-		followers.push(followerName);
+		followers.push(follower);
 	}
-	paths[followerName] = paths[followerName] || [];
+	paths[follower.id] = paths[follower.id] || [];
 	takeStep();
 }
 
@@ -83,12 +87,8 @@ function takeStep() {
 	}
 	walking = true;
 	setTimeout(() => {
-		followers.forEach(function (followerName) {
-			var follower = followerName && getImage(followerName, bitsy.sprite);
-			if (!follower) {
-				return;
-			}
-			var path = paths[followerName];
+		followers.forEach(function (follower) {
+			var path = paths[follower.id];
 			var point = path.shift();
 			if (point) {
 				follower.x = point.x;
@@ -157,8 +157,8 @@ after('update', function () {
 	default:
 		break;
 	}
-	followers.forEach(function (followerName) {
-		paths[followerName].push(step);
+	followers.forEach(function (follower) {
+		paths[follower.id].push(step);
 	});
 	takeStep();
 });
@@ -167,8 +167,8 @@ after('update', function () {
 before('movePlayerThroughExit', function (exit) {
 	if (followers.length) {
 		movedFollower = true;
-		followers.forEach(function (followerName) {
-			paths[followerName].push({
+		followers.forEach(function (follower) {
+			paths[follower.id].push({
 				x: exit.dest.x,
 				y: exit.dest.y,
 				room: exit.dest.room,
@@ -179,9 +179,8 @@ before('movePlayerThroughExit', function (exit) {
 });
 
 function filterFollowing(id) {
-	return followers.some(function (followerName) {
-		var follower = followerName && getImage(followerName, bitsy.sprite);
-		return follower && (followerName === id || getImage(followerName, bitsy.sprite).id === id);
+	return followers.some(function (follower) {
+		return follower.id === id;
 	}) ? null : id;
 }
 
@@ -239,16 +238,13 @@ addDualDialogTag('followerDelay', function (environment, parameters) {
 	hackOptions.delay = parseInt(parameters[0], 10);
 });
 addDualDialogTag('followerSync', function () {
-	if (followers.length) {
-		var player = bitsy.player();
-		followers.forEach(function (followerName) {
-			var follower = followerName && getImage(followerName, bitsy.sprite);
-			follower.room = player.room;
-			follower.x = player.x;
-			follower.y = player.y;
-			paths[followerName].length = 0;
-		});
-	}
+	var player = bitsy.player();
+	followers.forEach(function (follower) {
+		follower.room = player.room;
+		follower.x = player.x;
+		follower.y = player.y;
+		paths[follower.id].length = 0;
+	});
 });
 
 before('moveSprites', function () {
