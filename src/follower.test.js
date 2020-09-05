@@ -6,9 +6,6 @@ import {
 	delay,
 } from './test/bitsy';
 
-		snapshot, start
-	} from './test/bitsy';
-
 const multiple = `
 
 # BITSY VERSION 7.2
