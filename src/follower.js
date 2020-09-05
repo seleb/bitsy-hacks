@@ -59,6 +59,7 @@ export var hackOptions = {
 	allowFollowerCollision: false, // if true, the player can walk into the follower and talk to them (possible to get stuck this way)
 	followers: ['a'], // ids or names of sprites to be followers; use [] to start without a follower
 	delay: 200, // delay between each follower step (0 is immediate, 400 is twice as slow as normal)
+	stack: false, // if true, followers stack on top of each other; otherwise, they will form a chain
 };
 
 export var followers = [];
@@ -161,8 +162,18 @@ after('update', function () {
 	default:
 		break;
 	}
-	followers.forEach(function (follower) {
-		paths[follower.id].push(step);
+	followers.forEach(function (follower, idx) {
+		if (idx === 0 || hackOptions.stack) {
+			paths[follower.id].push(step);
+		} else {
+			var prevFollower = followers[idx - 1];
+			var prev = paths[prevFollower.id];
+			paths[follower.id].push(prev[prev.length - 2] || {
+				x: prevFollower.x,
+				y: prevFollower.y,
+				room: prevFollower.room,
+			});
+		}
 	});
 	takeStep();
 });
