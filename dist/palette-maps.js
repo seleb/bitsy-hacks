@@ -3,7 +3,7 @@
 @file palette maps
 @summary allows color pallettes to be defined on a tile-by-tile basis
 @license MIT
-@version 13.5.2
+@version 14.0.0
 @requires Bitsy Version: 6.1
 @author Dana Holdampf
 

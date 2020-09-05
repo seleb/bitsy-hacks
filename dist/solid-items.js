@@ -3,7 +3,7 @@
 @file solid items
 @summary treat some items like sprites that can be placed multiple times
 @license MIT
-@version 13.5.2
+@version 14.0.0
 @requires 7.0
 @author Sean S. LeBlanc
 

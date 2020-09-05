@@ -3,7 +3,7 @@
 @file opaque tiles
 @summary tiles which hide the player
 @license MIT
-@version 13.5.2
+@version 14.0.0
 @author Sean S. LeBlanc
 
 @description

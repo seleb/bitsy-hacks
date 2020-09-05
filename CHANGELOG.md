@@ -1,3 +1,15 @@
+# [14.0.0](https://github.com/seleb/bitsy-hacks/compare/v13.5.2...v14.0.0) (2020-09-05)
+
+
+### Features
+
+* add support for multiple followers (with option for stack/chain) ([#170](https://github.com/seleb/bitsy-hacks/issues/170)) ([675f713](https://github.com/seleb/bitsy-hacks/commit/675f71369d2f7adc4baae3ed08841ed38d638417))
+
+
+### BREAKING CHANGES
+
+* this changes the `follower` export to `followers`, since it's now a list
+
 ## [13.5.2](https://github.com/seleb/bitsy-hacks/compare/v13.5.1...v13.5.2) (2020-08-30)
 
 
