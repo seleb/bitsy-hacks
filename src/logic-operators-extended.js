@@ -10,8 +10,6 @@ Adds conditional logic operators:
   - !== (not equal to)
   - && (and)
   - || (or)
-  - &&! (and not)
-  - ||! (or not)
   - % (modulo)
 
 Examples: candlecount > 5 && haslighter == 1
@@ -57,22 +55,6 @@ function notEqExp(environment, left, right, onReturn) {
 	});
 }
 
-function andNotExp(environment, left, right, onReturn) {
-	right.Eval(environment, function (rVal) {
-		left.Eval(environment, function (lVal) {
-			onReturn(lVal && !rVal);
-		});
-	});
-}
-
-function orNotExp(environment, left, right, onReturn) {
-	right.Eval(environment, function (rVal) {
-		left.Eval(environment, function (lVal) {
-			onReturn(lVal || !rVal);
-		});
-	});
-}
-
 function modExp(environment, left, right, onReturn) {
 	right.Eval(environment, function (rVal) {
 		left.Eval(environment, function (lVal) {
@@ -85,8 +67,6 @@ inject(/(operatorMap\.set\("-", subExp\);)/, `
 	$1
 	operatorMap.set("&&", ${andExp.toString()});
 	operatorMap.set("||", ${orExp.toString()});
-	operatorMap.set("&&!", ${andNotExp.toString()});
-	operatorMap.set("||!", ${orNotExp.toString()});
 	operatorMap.set("!==", ${notEqExp.toString()});
 	operatorMap.set("%", ${modExp.toString()});
 `);
