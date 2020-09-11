@@ -91,7 +91,7 @@ inject(/(operatorMap\.set\("-", subExp\);)/, `
 	operatorMap.set("%", ${modExp.toString()});
 `);
 inject(
-	/(var operatorSymbols = \[.+\];)/,
-	'$1operatorSymbols.unshift("!==", "&&", "||", "&&!", "||!", "%");',
+	/(Operators : \[)(.+\],)/,
+	'$1 "!==", "&&", "||", "&&!", "||!", "%", $2',
 );
 // End of logic operators mod
