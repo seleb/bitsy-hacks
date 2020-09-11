@@ -38,7 +38,7 @@ A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamled
 - 🚪 [exit-from-dialog](/dist/exit-from-dialog.js): exit to another room from dialog, including conditionals
 - 🛰 [external-game-data](/dist/external-game-data.js): separate Bitsy game data from your (modded) HTML for easier development
 - 🌐 [favicon-from-sprite](/dist/favicon-from-sprite.js): generate a browser favicon (tab icon) from a Bitsy sprite, including animation!
-- 💕 [follower](/dist/follower.js): makes a single sprite follow the player
+- 💕 [follower](/dist/follower.js): make sprites follow the player
 - 🎮 [gamepad input](/dist/gamepad-input.js): HTML5 gamepad support
 - 🍂 [gravity](/dist/gravity.js): Pseudo-platforming/gravity/physics
 - 🕷 [itsy-bitsy](/dist/itsy-bitsy.js): for when bitsy's not small enough

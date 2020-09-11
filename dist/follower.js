@@ -1,15 +1,15 @@
 /**
 💕
 @file follower
-@summary makes a single sprite follow the player
+@summary make sprites follow the player
 @license MIT
-@version 14.0.0
+@version 15.0.0
 @requires 7.0
 @author Sean S. LeBlanc
 
 @description
-Makes a single sprite follow the player.
-The follower can optionally collide with the player,
+Make sprites follow the player.
+Followers can optionally collide with the player,
 and can be changed at runtime with dialog commands.
 
 Usage:
@@ -22,9 +22,8 @@ Usage:
 	(followerSyncNow)
 
 Examples:
-	(follower "a") - the sprite with the id "a" starts following
-	(follower "my follower") - the sprite with the name "my follower" starts following
-	(follower) - stops a current follower
+	(follower "a") - the sprite with the id "a" starts/stops following
+	(follower "my follower") - the sprite with the name "my follower" starts/stops following
 	(followerCollision "true") - enables follower collision
 	(followerCollision "false") - disables follower collision
 	(followerDelay "0") - sets follower to move immediately after player
@@ -36,19 +35,19 @@ Known issues:
 - Followers will warp to the player on their first movement.
   This can be avoided by placing them next to or on the same tile as the player.
 - When collision is enabled, it's possible for the player to get stuck
-  between walls and their follower. Make sure to avoid single-tile width
+  between walls and their followers. Make sure to avoid single-tile width
   spaces when using this (or design with that restriction in mind!)
 
 HOW TO USE:
 1. Copy-paste this script into a script tag after the bitsy source
-2. Edit hackOptions below to set up an initial follower
+2. Edit hackOptions below to set up initial followers
 3. Use dialog commands as needed
 */
 this.hacks = this.hacks || {};
 (function (exports, bitsy) {
 'use strict';
 var hackOptions = {
-	allowFollowerCollision: false, // if true, the player can walk into the follower and talk to them (possible to get stuck this way)
+	allowFollowerCollision: false, // if true, the player can walk into followers and talk to them (possible to get stuck this way)
 	followers: ['a'], // ids or names of sprites to be followers; use [] to start without a follower
 	delay: 200, // delay between each follower step (0 is immediate, 400 is twice as slow as normal)
 	stack: false, // if true, followers stack on top of each other; otherwise, they will form a chain
@@ -442,7 +441,7 @@ function takeStep() {
 after('startExportedGame', function () {
 	hackOptions.followers.forEach(setFollower);
 
-	// remove + add player to sprite list to force rendering them on top of follower
+	// remove + add player to sprite list to force rendering them on top of followers
 	var p = bitsy.sprite[bitsy.playerId];
 	delete bitsy.sprite[bitsy.playerId];
 	bitsy.sprite[bitsy.playerId] = p;
@@ -507,7 +506,7 @@ after('update', function () {
 	takeStep();
 });
 
-// make follower walk "through" exits
+// make followers walk "through" exits
 before('movePlayerThroughExit', function (exit) {
 	if (followers.length) {
 		movedFollower = true;

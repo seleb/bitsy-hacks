@@ -3,7 +3,7 @@
 @file dialog box transition
 @summary adds an easing transition animation to display the dialog box text
 @license MIT
-@version 14.0.0
+@version 15.0.0
 @requires 4.8, 4.9
 @author Delacannon
 

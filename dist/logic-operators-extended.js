@@ -2,7 +2,8 @@
 🔀
 @file logic-operators-extended
 @summary adds conditional logic operators
-@version 14.0.0
+@version 15.0.0
+@requires 7.2
 @author @mildmojo
 
 @description
@@ -10,8 +11,6 @@ Adds conditional logic operators:
   - !== (not equal to)
   - && (and)
   - || (or)
-  - &&! (and not)
-  - ||! (or not)
   - % (modulo)
 
 Examples: candlecount > 5 && haslighter == 1
@@ -233,67 +232,29 @@ function reinitEngine() {
 
 
 
-function andExp(environment, left, right, onReturn) {
-	right.Eval(environment, function (rVal) {
-		left.Eval(environment, function (lVal) {
-			onReturn(lVal && rVal);
-		});
-	});
-}
+var operators = ['!==', '&&', '||', '%'];
 
-function orExp(environment, left, right, onReturn) {
+function expression(operator) {
+	return `function (environment, left, right, onReturn) {
 	right.Eval(environment, function (rVal) {
 		left.Eval(environment, function (lVal) {
-			onReturn(lVal || rVal);
+			onReturn(lVal ${operator} rVal);
 		});
 	});
-}
-
-function notEqExp(environment, left, right, onReturn) {
-	right.Eval(environment, function (rVal) {
-		left.Eval(environment, function (lVal) {
-			onReturn(lVal !== rVal);
-		});
-	});
-}
-
-function andNotExp(environment, left, right, onReturn) {
-	right.Eval(environment, function (rVal) {
-		left.Eval(environment, function (lVal) {
-			onReturn(lVal && !rVal);
-		});
-	});
-}
-
-function orNotExp(environment, left, right, onReturn) {
-	right.Eval(environment, function (rVal) {
-		left.Eval(environment, function (lVal) {
-			onReturn(lVal || !rVal);
-		});
-	});
-}
-
-function modExp(environment, left, right, onReturn) {
-	right.Eval(environment, function (rVal) {
-		left.Eval(environment, function (lVal) {
-			onReturn(lVal % rVal);
-		});
-	});
+}`;
 }
 
 inject$1(/(operatorMap\.set\("-", subExp\);)/, `
 	$1
-	operatorMap.set("&&", ${andExp.toString()});
-	operatorMap.set("||", ${orExp.toString()});
-	operatorMap.set("&&!", ${andNotExp.toString()});
-	operatorMap.set("||!", ${orNotExp.toString()});
-	operatorMap.set("!==", ${notEqExp.toString()});
-	operatorMap.set("%", ${modExp.toString()});
+	${operators.map(function (operator) {
+		return `operatorMap.set("${operator}", ${expression(operator)});`;
+	}).join('\n')}
 `);
 inject$1(
-	/(var operatorSymbols = \[.+\];)/,
-	'$1operatorSymbols.unshift("!==", "&&", "||", "&&!", "||!", "%");',
+	/(Operators : \[)(.+\],)/,
+	`$1 ${operators.map(function (operator) {
+		return `"${operator}", `;
+	}).join('')} $2`,
 );
-// End of logic operators mod
 
 }(window));

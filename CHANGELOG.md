@@ -1,3 +1,16 @@
+# [15.0.0](https://github.com/seleb/bitsy-hacks/compare/v14.0.0...v15.0.0) (2020-09-11)
+
+
+### Bug Fixes
+
+* logic operators not working in 7.x ([7c034a4](https://github.com/seleb/bitsy-hacks/commit/7c034a430d507f1109b6c9d8ebbc5de1695dbfcc)), closes [#168](https://github.com/seleb/bitsy-hacks/issues/168)
+* remove "and not" and "or not" operators ([ffd7b81](https://github.com/seleb/bitsy-hacks/commit/ffd7b811f251a968cf95a4be532dea3b8528754f))
+
+
+### BREAKING CHANGES
+
+* removed "and not" and "or not" operators from logic operators extended hack
+
 # [14.0.0](https://github.com/seleb/bitsy-hacks/compare/v13.5.2...v14.0.0) (2020-09-05)
 
 
