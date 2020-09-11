@@ -31,47 +31,27 @@ import {
 	inject,
 } from './helpers/kitsy-script-toolkit';
 
-function andExp(environment, left, right, onReturn) {
-	right.Eval(environment, function (rVal) {
-		left.Eval(environment, function (lVal) {
-			onReturn(lVal && rVal);
-		});
-	});
-}
+var operators = ['!==', '&&', '||', '%'];
 
-function orExp(environment, left, right, onReturn) {
+function expression(operator) {
+	return `function (environment, left, right, onReturn) {
 	right.Eval(environment, function (rVal) {
 		left.Eval(environment, function (lVal) {
-			onReturn(lVal || rVal);
+			onReturn(lVal ${operator} rVal);
 		});
 	});
-}
-
-function notEqExp(environment, left, right, onReturn) {
-	right.Eval(environment, function (rVal) {
-		left.Eval(environment, function (lVal) {
-			onReturn(lVal !== rVal);
-		});
-	});
-}
-
-function modExp(environment, left, right, onReturn) {
-	right.Eval(environment, function (rVal) {
-		left.Eval(environment, function (lVal) {
-			onReturn(lVal % rVal);
-		});
-	});
+}`;
 }
 
 inject(/(operatorMap\.set\("-", subExp\);)/, `
 	$1
-	operatorMap.set("&&", ${andExp.toString()});
-	operatorMap.set("||", ${orExp.toString()});
-	operatorMap.set("!==", ${notEqExp.toString()});
-	operatorMap.set("%", ${modExp.toString()});
+	${operators.map(function (operator) {
+		return `operatorMap.set("${operator}", ${expression(operator)});`;
+	}).join('\n')}
 `);
 inject(
 	/(Operators : \[)(.+\],)/,
-	'$1 "!==", "&&", "||", "&&!", "||!", "%", $2',
+	`$1 ${operators.map(function (operator) {
+		return `"${operator}", `;
+	}).join('')} $2`,
 );
-// End of logic operators mod
