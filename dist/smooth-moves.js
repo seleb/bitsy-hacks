@@ -3,7 +3,7 @@
 @file smooth moves
 @summary ease the player's movement
 @license MIT
-@version 15.0.0
+@version 15.0.1
 @requires Bitsy Version: 6.3
 @author Sean S. LeBlanc
 

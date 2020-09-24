@@ -1,3 +1,10 @@
+## [15.0.1](https://github.com/seleb/bitsy-hacks/compare/v15.0.0...v15.0.1) (2020-09-24)
+
+
+### Bug Fixes
+
+* update docs ([e1bd9f1](https://github.com/seleb/bitsy-hacks/commit/e1bd9f16add5a5a8d35781425f53fc42d362860f))
+
 # [15.0.0](https://github.com/seleb/bitsy-hacks/compare/v14.0.0...v15.0.0) (2020-09-11)
 
 

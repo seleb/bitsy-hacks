@@ -2,7 +2,7 @@
 🔀
 @file logic-operators-extended
 @summary adds conditional logic operators
-@version 15.0.0
+@version 15.0.1
 @requires 7.2
 @author @mildmojo
 
@@ -17,10 +17,8 @@ Examples: candlecount > 5 && haslighter == 1
           candlecount > 5 && papercount > 1 && isIndoors
           haslighter == 1 || hasmatches == 1
           candlecount > 5 && candlecount !== 666
-          candlecount > 5 &&! droppedlighter
-          droppedlighter ||! hasmatches
 
-NOTE: The combining operators (&&, ||, &&!, ||!) have lower precedence than
+NOTE: The combining operators (&&, ||) have lower precedence than
       all other math and comparison operators, so it might be hard to write
       tests that mix and match these new operators and have them evaluate
       correctly. If you're using multiple `&&` and `||` operators in one

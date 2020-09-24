@@ -3,13 +3,15 @@
 @file bitsymuse
 @summary A variety of Bitsy sound and music handlers
 @license MIT
-@version 15.0.0
+@version 15.0.1
 @requires 4.8, 4.9
 @author David Mowatt
 
 @description
 A hack that adds a variety of audio controls, including music that changes as you move between rooms.
 If the same song is played as you move between rooms, the audio file will continue playing.
+
+Check out https://kool.tools/bitsy/tools/bitsymuse-ui for a tool to help configure this hack
 
 HOW TO USE:
 1. Place your audio files somewhere relative to your bitsy html file (in the zip if you're uploading to itch.io)
