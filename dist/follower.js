@@ -3,7 +3,7 @@
 @file follower
 @summary make sprites follow the player
 @license MIT
-@version 15.0.1
+@version 15.0.2
 @requires 7.0
 @author Sean S. LeBlanc
 
@@ -597,5 +597,7 @@ before('moveSprites', function () {
 
 exports.followers = followers;
 exports.hackOptions = hackOptions;
+
+Object.defineProperty(exports, '__esModule', { value: true });
 
 }(this.hacks.follower = this.hacks.follower || {}, window));

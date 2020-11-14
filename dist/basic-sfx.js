@@ -3,7 +3,7 @@
 @file basic sfx
 @summary "walk" and "talk" sound effect support
 @license MIT
-@version 15.0.1
+@version 15.0.2
 @author Sean S. LeBlanc
 
 @description
@@ -282,5 +282,7 @@ after('dialogBuffer.FlipPage', function () {
 });
 
 exports.hackOptions = hackOptions;
+
+Object.defineProperty(exports, '__esModule', { value: true });
 
 }(this.hacks.basic_sfx = this.hacks.basic_sfx || {}, window));

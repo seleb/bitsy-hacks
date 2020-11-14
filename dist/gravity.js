@@ -3,7 +3,7 @@
 @file gravity
 @summary Pseudo-platforming/gravity/physics
 @license MIT
-@version 15.0.1
+@version 15.0.2
 @requires 6.3
 @author Cole Sea
 
@@ -917,5 +917,7 @@ addDualDialogTag('forceGravity', function (env, params) {
 });
 
 exports.hackOptions = hackOptions;
+
+Object.defineProperty(exports, '__esModule', { value: true });
 
 }(this.hacks.gravity = this.hacks.gravity || {}, window));

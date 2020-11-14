@@ -3,7 +3,7 @@
 @file avatar by room
 @summary change the avatar in certain rooms
 @license MIT
-@version 15.0.1
+@version 15.0.2
 @requires 5.3
 @author Sean S. LeBlanc
 
@@ -304,5 +304,7 @@ before('drawRoom', function () {
 });
 
 exports.hackOptions = hackOptions;
+
+Object.defineProperty(exports, '__esModule', { value: true });
 
 }(this.hacks.avatar_by_room = this.hacks.avatar_by_room || {}, window));

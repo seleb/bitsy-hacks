@@ -3,7 +3,7 @@
 @file long dialog
 @summary put more words onscreen
 @license MIT
-@version 15.0.1
+@version 15.0.2
 @requires 7.0
 @author Sean S. LeBlanc
 
@@ -362,5 +362,7 @@ inject$1(/(else if \(curRowIndex )== 0/g, '$1< ' + hackOptions.maxRows + ' - 1')
 inject$1(/(if \(lastPage\.length) <= 1/, '$1 < ' + hackOptions.maxRows);
 
 exports.hackOptions = hackOptions;
+
+Object.defineProperty(exports, '__esModule', { value: true });
 
 }(this.hacks.long_dialog = this.hacks.long_dialog || {}, window));

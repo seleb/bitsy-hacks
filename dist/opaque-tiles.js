@@ -3,7 +3,7 @@
 @file opaque tiles
 @summary tiles which hide the player
 @license MIT
-@version 15.0.1
+@version 15.0.2
 @author Sean S. LeBlanc
 
 @description
@@ -276,5 +276,7 @@ after('drawRoom', function () {
 inject$1(/(\/\/draw tiles)/, 'drawTile(getSpriteImage(player(), getRoomPal(room.id), frameIndex), player().x, player().y, context);\n$1');
 
 exports.hackOptions = hackOptions;
+
+Object.defineProperty(exports, '__esModule', { value: true });
 
 }(this.hacks.opaque_tiles = this.hacks.opaque_tiles || {}, window));

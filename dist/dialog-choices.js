@@ -3,7 +3,7 @@
 @file dialog choices
 @summary binary dialog choices
 @license MIT
-@version 15.0.1
+@version 15.0.2
 @requires 7.0
 @author Sean S. LeBlanc
 
@@ -501,5 +501,7 @@ if(window.dialogChoices.choicesActive){
 `);
 
 exports.hackOptions = hackOptions;
+
+Object.defineProperty(exports, '__esModule', { value: true });
 
 }(this.hacks.dialog_choices = this.hacks.dialog_choices || {}, window));

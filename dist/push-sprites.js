@@ -3,7 +3,7 @@
 @file push sprites
 @summary sokoban-style sprite pushing
 @license MIT
-@version 15.0.1
+@version 15.0.2
 @requires 6.4
 @author jan0sc
 
@@ -784,5 +784,7 @@ function updateImage(spr) {
 }
 
 exports.hackOptions = hackOptions;
+
+Object.defineProperty(exports, '__esModule', { value: true });
 
 }(this.hacks['push-sprites'] = this.hacks['push-sprites'] || {}, window));

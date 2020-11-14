@@ -3,7 +3,7 @@
 @file dialog audio
 @summary animal crossing-style audio
 @license MIT
-@version 15.0.1
+@version 15.0.2
 @author Sean S. LeBlanc
 
 @description
@@ -271,5 +271,7 @@ before('dialogBuffer.DoNextChar', function () {
 });
 
 exports.hackOptions = hackOptions;
+
+Object.defineProperty(exports, '__esModule', { value: true });
 
 }(this.hacks.dialog_audio = this.hacks.dialog_audio || {}, window));

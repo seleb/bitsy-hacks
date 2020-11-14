@@ -3,7 +3,7 @@
 @file custom text effect
 @summary make {custom}text effects{custom}
 @license MIT
-@version 15.0.1
+@version 15.0.2
 @requires 5.3
 @author Sean S. LeBlanc
 
@@ -463,5 +463,7 @@ inject$1(/(var functionMap = new Map\(\);)/, '$1' + functionMapCode);
 inject$1(/(var TextEffects = new Map\(\);)/, '$1' + textEffectCode);
 
 exports.hackOptions = hackOptions;
+
+Object.defineProperty(exports, '__esModule', { value: true });
 
 }(this.hacks.custom_text_effect = this.hacks.custom_text_effect || {}, window));

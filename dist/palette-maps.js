@@ -3,7 +3,7 @@
 @file palette maps
 @summary allows color pallettes to be defined on a tile-by-tile basis
 @license MIT
-@version 15.0.1
+@version 15.0.2
 @requires Bitsy Version: 6.1
 @author Dana Holdampf
 
@@ -757,5 +757,7 @@ function overdrawRecoloredTiles(room, context, frameIndex) {
 }
 
 exports.hackOptions = hackOptions;
+
+Object.defineProperty(exports, '__esModule', { value: true });
 
 }(this.hacks.palette_maps = this.hacks.palette_maps || {}, window));

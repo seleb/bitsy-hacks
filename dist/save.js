@@ -3,7 +3,7 @@
 @file save
 @summary save/load your game
 @license MIT
-@version 15.0.1
+@version 15.0.2
 @requires 5.4
 @author Sean S. LeBlanc
 
@@ -512,5 +512,7 @@ addDualDialogTag('load', dialogLoad);
 addDualDialogTag('clear', clear);
 
 exports.hackOptions = hackOptions;
+
+Object.defineProperty(exports, '__esModule', { value: true });
 
 }(this.hacks.save = this.hacks.save || {}, window));

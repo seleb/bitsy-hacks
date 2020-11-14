@@ -3,7 +3,7 @@
 @file custom-exit-effects
 @summary make custom exit transition effects
 @license MIT
-@version 15.0.1
+@version 15.0.2
 @requires 6.0
 @author Sean S. LeBlanc
 
@@ -296,5 +296,7 @@ before('startExportedGame', function () {
 });
 
 exports.hackOptions = hackOptions;
+
+Object.defineProperty(exports, '__esModule', { value: true });
 
 }(this.hacks['custom-exit-effects'] = this.hacks['custom-exit-effects'] || {}, window));

@@ -3,7 +3,7 @@
 @file stopwatch
 @summary time player actions
 @license MIT
-@version 15.0.1
+@version 15.0.2
 @author Lenny Magner
 
 @description
@@ -472,5 +472,7 @@ addDialogTag('sayWatch', function (environment, parameters, onReturn) {
 });
 
 exports.hackOptions = hackOptions;
+
+Object.defineProperty(exports, '__esModule', { value: true });
 
 }(this.hacks.stopwatch = this.hacks.stopwatch || {}, window));

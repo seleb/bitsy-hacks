@@ -3,7 +3,7 @@
 @file dynamic background
 @summary HTML background matching bitsy background
 @license MIT
-@version 15.0.1
+@version 15.0.2
 @author Sean S. LeBlanc
 
 @description
@@ -267,5 +267,7 @@ after('parseWorld', updateBg);
 after('movePlayerThroughExit', updateBg);
 
 exports.hackOptions = hackOptions;
+
+Object.defineProperty(exports, '__esModule', { value: true });
 
 }(this.hacks.dynamic_background = this.hacks.dynamic_background || {}, window));

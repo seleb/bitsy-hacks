@@ -3,7 +3,7 @@
 @file character portraits animated
 @summary high quality anime gifs
 @license MIT
-@version 15.0.1
+@version 15.0.2
 @requires Bitsy Version: 5.3
 @author Sean S. LeBlanc
 
@@ -1322,5 +1322,7 @@ after('drawRoom', function () {
 });
 
 exports.hackOptions = hackOptions$1;
+
+Object.defineProperty(exports, '__esModule', { value: true });
 
 }(this.hacks.character_portraits_animated = this.hacks.character_portraits_animated || {}, window));

@@ -3,7 +3,7 @@
 @file directional avatar
 @summary flips the player's sprite based on directional movement
 @license MIT
-@version 15.0.1
+@version 15.0.2
 @requires 5.3
 @author Sean S. LeBlanc
 
@@ -396,5 +396,7 @@ after('updateInput', function () {
 });
 
 exports.hackOptions = hackOptions;
+
+Object.defineProperty(exports, '__esModule', { value: true });
 
 }(this.hacks.directional_avatar = this.hacks.directional_avatar || {}, window));

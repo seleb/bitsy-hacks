@@ -3,7 +3,7 @@
 @file bitsymuse
 @summary A variety of Bitsy sound and music handlers
 @license MIT
-@version 15.0.1
+@version 15.0.2
 @requires 4.8, 4.9
 @author David Mowatt
 
@@ -513,5 +513,7 @@ addDualDialogTag('soundeffect', function (environment, parameters) {
 // End of (music) dialog function mod
 
 exports.hackOptions = hackOptions;
+
+Object.defineProperty(exports, '__esModule', { value: true });
 
 }(this.hacks.bitsymuse = this.hacks.bitsymuse || {}, window));

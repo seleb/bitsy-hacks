@@ -3,7 +3,7 @@
 @file corrupt
 @summary corrupts gamedata at runtime
 @license MIT
-@version 15.0.1
+@version 15.0.2
 @requires 5.5
 @author Sean S. LeBlanc
 
@@ -462,5 +462,7 @@ function rndItem(array) {
 }
 
 exports.hackOptions = hackOptions;
+
+Object.defineProperty(exports, '__esModule', { value: true });
 
 }(this.hacks.corrupt = this.hacks.corrupt || {}, window));

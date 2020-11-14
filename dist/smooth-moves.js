@@ -3,7 +3,7 @@
 @file smooth moves
 @summary ease the player's movement
 @license MIT
-@version 15.0.1
+@version 15.0.2
 @requires Bitsy Version: 6.3
 @author Sean S. LeBlanc
 
@@ -299,5 +299,7 @@ after('drawRoom', function () {
 });
 
 exports.hackOptions = hackOptions;
+
+Object.defineProperty(exports, '__esModule', { value: true });
 
 }(this.hacks.smooth_moves = this.hacks.smooth_moves || {}, window));

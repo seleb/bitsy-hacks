@@ -3,7 +3,7 @@
 @file itsy-bitsy
 @summary for when bitsy's not small enough
 @license MIT
-@version 15.0.1
+@version 15.0.2
 @requires Bitsy Version: 5.1
 @author Sean S. LeBlanc
 
@@ -270,5 +270,7 @@ style.innerText = '#game{ -ms-interpolation-mode: nearest-neighbor;image-renderi
 document.head.appendChild(style);
 
 exports.hackOptions = hackOptions;
+
+Object.defineProperty(exports, '__esModule', { value: true });
 
 }(this.hacks['itsy-bitsy'] = this.hacks['itsy-bitsy'] || {}, window));

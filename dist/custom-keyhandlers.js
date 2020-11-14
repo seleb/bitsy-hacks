@@ -3,7 +3,7 @@
 @file custom-keyhandlers
 @summary run custom code on key inputs
 @license MIT
-@version 15.0.1
+@version 15.0.2
 @requires Bitsy Version: 7.0
 @author Sean S. LeBlanc
 
@@ -273,5 +273,7 @@ after('updateInput', function () {
 });
 
 exports.hackOptions = hackOptions;
+
+Object.defineProperty(exports, '__esModule', { value: true });
 
 }(this.hacks['custom-keyhandlers'] = this.hacks['custom-keyhandlers'] || {}, window));

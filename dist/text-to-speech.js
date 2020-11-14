@@ -3,7 +3,7 @@
 @file text-to-speech
 @summary text-to-speech for bitsy dialog
 @license MIT
-@version 15.0.1
+@version 15.0.2
 @requires 5.5
 @author Sean S. LeBlanc
 
@@ -494,5 +494,7 @@ addDualDialogTag('tts', function (environment, parameters) {
 });
 
 exports.hackOptions = hackOptions;
+
+Object.defineProperty(exports, '__esModule', { value: true });
 
 }(this.hacks['text-to-speech'] = this.hacks['text-to-speech'] || {}, window));

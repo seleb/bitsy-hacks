@@ -3,7 +3,7 @@
 @file textbox styler
 @summary customize the style and properties of the textbox
 @license MIT
-@version 15.0.1
+@version 15.0.2
 @requires Bitsy Version: 6.1
 @author Dana Holdampf & Sean S. LeBlanc
 
@@ -1361,5 +1361,7 @@ inject$1(/(else if \(curRowIndex )== 0/g, '$1 < textboxStyler.activeStyle.textMa
 inject$1(/(if \(lastPage\.length) <= 1/, '$1 < textboxStyler.activeStyle.textMaxLines');
 
 exports.hackOptions = hackOptions;
+
+Object.defineProperty(exports, '__esModule', { value: true });
 
 }(this.hacks.textbox_styler = this.hacks.textbox_styler || {}, window));

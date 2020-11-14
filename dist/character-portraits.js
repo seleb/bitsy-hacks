@@ -3,7 +3,7 @@
 @file character portraits
 @summary high quality anime jpegs (or pngs i guess)
 @license MIT
-@version 15.0.1
+@version 15.0.2
 @requires Bitsy Version: 5.3
 @author Sean S. LeBlanc
 
@@ -385,5 +385,7 @@ after('onExitDialog', function () {
 
 exports.hackOptions = hackOptions;
 exports.state = state;
+
+Object.defineProperty(exports, '__esModule', { value: true });
 
 }(this.hacks.character_portraits = this.hacks.character_portraits || {}, window));

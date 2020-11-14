@@ -3,7 +3,7 @@
 @file gamepad input
 @summary HTML5 gamepad support
 @license MIT
-@version 15.0.1
+@version 15.0.2
 @requires Bitsy Version: 5.1
 @author Sean S. LeBlanc
 

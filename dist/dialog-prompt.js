@@ -3,7 +3,7 @@
 @file dialog prompt
 @summary prompt the user for text input in dialog
 @license MIT
-@version 15.0.1
+@version 15.0.2
 @requires 6.4
 @author Sean S. LeBlanc
 
@@ -482,5 +482,7 @@ addDialogTag('prompt', function (environment, parameters, onReturn) {
 inject$1(/(this\.CurPage =)/, 'this.GetBuffer = function(){ return buffer; };this.SetBuffer = function(b){ buffer = b; };\n$1');
 
 exports.hackOptions = hackOptions;
+
+Object.defineProperty(exports, '__esModule', { value: true });
 
 }(this.hacks.dialog_prompt = this.hacks.dialog_prompt || {}, window));

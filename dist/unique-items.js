@@ -3,7 +3,7 @@
 @file unique items
 @summary items which, when picked up, remove all other instances of that item from the game
 @license MIT
-@version 15.0.1
+@version 15.0.2
 @author Sean S. LeBlanc
 
 @description
@@ -231,5 +231,7 @@ after('onInventoryChanged', function (id) {
 });
 
 exports.hackOptions = hackOptions;
+
+Object.defineProperty(exports, '__esModule', { value: true });
 
 }(this.hacks.unique_items = this.hacks.unique_items || {}, window));

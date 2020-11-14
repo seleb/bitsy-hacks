@@ -3,7 +3,7 @@
 @file tracery processing
 @summary process all dialog text with a tracery grammar
 @license MIT
-@version 15.0.1
+@version 15.0.2
 @requires 7.0
 @author Sean S. LeBlanc
 
@@ -1121,5 +1121,7 @@ before('onready', function () {
 inject$1(/onReturn\(this\.value\)/, 'onReturn(window.tracery(this.value))');
 
 exports.hackOptions = hackOptions;
+
+Object.defineProperty(exports, '__esModule', { value: true });
 
 }(this.hacks.tracery_processing = this.hacks.tracery_processing || {}, window));

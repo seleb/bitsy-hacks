@@ -3,7 +3,7 @@
 @file transparent sprites
 @summary makes all sprites have transparent backgrounds
 @license MIT
-@version 15.0.1
+@version 15.0.2
 @requires Bitsy Version: 6.1
 @author Sean S. LeBlanc
 
@@ -266,5 +266,7 @@ before('drawTile', function (canvas) {
 });
 
 exports.hackOptions = hackOptions;
+
+Object.defineProperty(exports, '__esModule', { value: true });
 
 }(this.hacks.transparent_sprites = this.hacks.transparent_sprites || {}, window));

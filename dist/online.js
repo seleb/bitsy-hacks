@@ -3,7 +3,7 @@
 @file online
 @summary multiplayer bitsy
 @license MIT
-@version 15.0.1
+@version 15.0.2
 @requires 7.0
 @author Sean S. LeBlanc
 @description
@@ -847,5 +847,7 @@ function getSpriteUpdate() {
 });
 
 exports.hackOptions = hackOptions;
+
+Object.defineProperty(exports, '__esModule', { value: true });
 
 }(this.hacks.online = this.hacks.online || {}, window));

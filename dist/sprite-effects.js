@@ -3,7 +3,7 @@
 @file sprite effects
 @summary like text effects, but for sprites
 @license MIT
-@version 15.0.1
+@version 15.0.2
 @requires 7.1
 @author Sean S. LeBlanc
 
@@ -526,5 +526,7 @@ before('reset_cur_game', function () {
 });
 
 exports.hackOptions = hackOptions;
+
+Object.defineProperty(exports, '__esModule', { value: true });
 
 }(this.hacks.sprite_effects = this.hacks.sprite_effects || {}, window));

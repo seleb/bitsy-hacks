@@ -3,7 +3,7 @@
 @file solid items
 @summary treat some items like sprites that can be placed multiple times
 @license MIT
-@version 15.0.1
+@version 15.0.2
 @requires 7.0
 @author Sean S. LeBlanc
 
@@ -277,5 +277,7 @@ before('startItemDialog', function (itemId, dialogCallback) {
 });
 
 exports.hackOptions = hackOptions;
+
+Object.defineProperty(exports, '__esModule', { value: true });
 
 }(this.hacks.solid_items = this.hacks.solid_items || {}, window));

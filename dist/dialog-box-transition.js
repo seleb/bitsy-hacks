@@ -3,7 +3,7 @@
 @file dialog box transition
 @summary adds an easing transition animation to display the dialog box text
 @license MIT
-@version 15.0.1
+@version 15.0.2
 @requires 4.8, 4.9
 @author Delacannon
 
@@ -273,5 +273,7 @@ inject$1(
 inject$1(/(this\.DrawTextbox = function\(\) {)/, `$1${drawOverride}`);
 
 exports.hackOptions = hackOptions;
+
+Object.defineProperty(exports, '__esModule', { value: true });
 
 }(this.hacks.dialog_box_transition = this.hacks.dialog_box_transition || {}, window));
