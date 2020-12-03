@@ -153,14 +153,9 @@ function applyHook(functionName) {
 }
 
 function reinitEngine() {
+	// TODO: determine which (if any) objects need to be re-created in v8
 	// recreate the script and dialog objects so that they'll be
 	// referencing the code with injections instead of the original
-	bitsy.scriptModule = new bitsy.Script();
-	bitsy.scriptInterpreter = bitsy.scriptModule.CreateInterpreter();
-
-	bitsy.dialogModule = new bitsy.Dialog();
-	bitsy.dialogRenderer = bitsy.dialogModule.CreateRenderer();
-	bitsy.dialogBuffer = bitsy.dialogModule.CreateBuffer();
 }
 
 // Rewrite custom functions' parentheses to curly braces for Bitsy's
