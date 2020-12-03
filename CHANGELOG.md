@@ -1,3 +1,10 @@
+## [15.0.3](https://github.com/seleb/bitsy-hacks/compare/v15.0.2...v15.0.3) (2020-12-03)
+
+
+### Bug Fixes
+
+* **canvas replacement:** add guard around missing functions in hack options ([b646302](https://github.com/seleb/bitsy-hacks/commit/b646302087ff0cd16d1bfe114e553098673d1582))
+
 ## [15.0.2](https://github.com/seleb/bitsy-hacks/compare/v15.0.1...v15.0.2) (2020-11-14)
 
 

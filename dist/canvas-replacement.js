@@ -3,7 +3,7 @@
 @file canvas replacement
 @summary WebGLazy bitsy integration (this one's mostly just for me)
 @license MIT
-@version 15.0.2
+@version 15.0.3
 @author Sean S. LeBlanc
 
 @description
@@ -257,11 +257,15 @@ function reinitEngine() {
 var glazy;
 after('startExportedGame', function () {
 	glazy = new r(hackOptions.glazyOptions);
-	hackOptions.init(glazy);
+	if (hackOptions.init) {
+		hackOptions.init(glazy);
+	}
 });
 
 after('update', function () {
-	hackOptions.update(glazy);
+	if (hackOptions.update) {
+		hackOptions.update(glazy);
+	}
 });
 
 exports.hackOptions = hackOptions;
