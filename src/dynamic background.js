@@ -30,22 +30,6 @@ export var hackOptions = {
 	},
 };
 
-// helper function which detects when the palette has changed,
-// and updates the background to match
-function updateBg() {
-	// get the palette colour
-	var c = hackOptions.byRoom[bitsy.curRoom];
-	if (c === undefined) {
-		c = hackOptions.default;
-	}
-
-	// if the palette changed, update background
-	var bg = 'rgb(' + bitsy.getPal(bitsy.curPal())[c].join(',') + ')';
-	if (document.body.style.background !== bg) {
-		document.body.style.background = bg;
-	}
-}
-
 // expand the map to include ids of rooms listed by name
 after('load_game', function () {
 	var room;
@@ -57,8 +41,16 @@ after('load_game', function () {
 	});
 });
 
-// wrap every function which involves changing the palette
-after('moveSprites', updateBg);
-after('movePlayer', updateBg);
-after('parseWorld', updateBg);
-after('movePlayerThroughExit', updateBg);
+after('initRoom', function (roomId) {
+	// get the palette colour
+	var c = hackOptions.byRoom[roomId];
+	if (c === undefined) {
+		c = hackOptions.default;
+	}
+
+	// if the palette changed, update background
+	var bg = 'rgb(' + bitsy.getPal(bitsy.room[roomId].pal)[c].join(',') + ')';
+	if (document.body.style.background !== bg) {
+		document.body.style.background = bg;
+	}
+});
