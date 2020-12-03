@@ -61,9 +61,13 @@ export var hackOptions = {
 var glazy;
 after('startExportedGame', function () {
 	glazy = new WebGLazy(hackOptions.glazyOptions);
-	hackOptions.init(glazy);
+	if (hackOptions.init) {
+		hackOptions.init(glazy);
+	}
 });
 
 after('update', function () {
-	hackOptions.update(glazy);
+	if (hackOptions.update) {
+		hackOptions.update(glazy);
+	}
 });
