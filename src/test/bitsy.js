@@ -145,8 +145,13 @@ export async function press(key) {
 // take a screenshot of the current frame
 // and perform a snapshot test on it
 export async function snapshot() {
-	const screenshot = await page.screenshot();
-	expect(screenshot).toMatchImageSnapshot();
+	try {
+		const screenshot = await page.screenshot();
+		expect(screenshot).toMatchImageSnapshot();
+	} catch (err) {
+		await end();
+		throw err;
+	}
 }
 
 // perform the sequence of key presses
