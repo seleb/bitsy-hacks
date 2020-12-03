@@ -80,7 +80,15 @@ export async function start({
 					return `<script>${hackDist[hack.replace(/\s/g, '-')].replace(/\$([0-9]+)/g, '$$$$$1')}</script>`;
 				}
 				const [hackStr, options] = hack;
-				return `<script>${hackDist[hackStr.replace(/\s/g, '-')].replace(/(var hackOptions.*=)[^]*?;$/m, `$1 ${JSON.stringify(options, undefined, '\t')};`).replace(/\$([0-9]+)/g, '$$$$$1')}</script>`;
+				return `<script>${
+					hackDist[hackStr.replace(/\s/g, '-')]
+						// remove comments (they can interfer with hackOptions regex)
+						.replace(/\/\*\*[^]*?\*\//m)
+						// replace hackOptions
+						.replace(/(var hackOptions.*= ){[^]*?};$/m, `$1 ${JSON.stringify(options, undefined, '\t')};`)
+						// make sure not to screw up the regex in the process
+						.replace(/\$([0-9]+)/g, '$$$$$1')
+				}</script>`;
 			}).join('\n')
 		}$2`);
 	}
