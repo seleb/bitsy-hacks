@@ -101,6 +101,8 @@ export async function start({
 		headless: true,
 	});
 	page = await browser.newPage();
+	// disable console logs since they slow things down
+	await evaluate('console.log = () => {};');
 	await page.goto(game);
 	await page.setViewport({
 		width: 256,
