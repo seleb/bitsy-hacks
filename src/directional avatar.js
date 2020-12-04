@@ -1,84 +1,47 @@
 /**
 ↔
 @file directional avatar
-@summary flips the player's sprite based on directional movement
+@summary edit the player's sprite based on directional movement
 @license MIT
 @version auto
-@requires 5.3
+@requires 8.0
 @author Sean S. LeBlanc
 
 @description
-Flips the player's sprite based on directional movement.
+Edits the player's sprite based on directional movement.
+
+```curlicue
+{FN {BTN}
+	{IF
+		{IS BTN "OK"}
+			{>> }
+		{: THIS TIL {ADD "AVA_" BTN}}
+	}
+}
+```
+
+To only use a subset of directions,
+more branches can be added to filter out others.
+
+e.g. To only use horizontal sprites:
+
+```curlicue
+{FN {BTN}
+	{IF
+		{IS BTN "OK"}
+			{>> }
+		{IS BTN "UP"}
+			{>> }
+		{IS BTN "DWN"}
+			{>> }
+		{: THIS TIL {ADD "AVA_" BTN}}
+	}
+}
+```
 
 HOW TO USE:
-1. Copy-paste into a script tag after the bitsy source
-2. Edit `horizontalFlipAllowed` and `verticalFlipAllowed` below as needed
+1. Copy-paste the curlicue script into a dialog
+2. Attach the dialog to the avatar's "on button" hook
+3. Add a sprite for each direction
+4. Edit the sprites' IDs (not their names) to be "AVA_UP", "AVA_DWN", "AVA_LFT", "AVA_RGT"
 */
-import bitsy from 'bitsy';
-import {
-	after,
-} from './helpers/kitsy-script-toolkit';
-import {
-	transformSpriteData,
-} from './helpers/transform-sprite-data';
-import {
-	getSpriteData,
-	setSpriteData,
-} from './helpers/edit image at runtime';
-
-export var hackOptions = {
-	allowed: function () {
-		return {
-			// If `horizontalFlipAllowed` is true:
-			// 	pressing left will make the player's sprite face backwards
-			// 	pressing right will make the player's sprite face forwards
-			horizontalFlipAllowed: true,
-			// If `verticalFlipAllowed` is true:
-			// 	pressing down will make the player's sprite upside-down
-			// 	pressing up will make the player's sprite right-side up
-			verticalFlipAllowed: false,
-		};
-	},
-};
-
-var hflip = false;
-var vflip = false;
-var originalAnimation;
-
-after('updateInput', function () {
-	var i;
-	// save the original frames
-	if (!originalAnimation || originalAnimation.referenceFrame !== getSpriteData(bitsy.playerId, 0)) {
-		originalAnimation = {
-			frames: [],
-		};
-		for (i = 0; i < bitsy.player().animation.frameCount; ++i) {
-			originalAnimation.frames.push(getSpriteData(bitsy.playerId, i));
-		}
-	}
-
-	// determine which directions need flipping
-	var allowed = hackOptions.allowed();
-	switch (bitsy.curPlayerDirection) {
-	case bitsy.Direction.Up:
-		vflip = false;
-		break;
-	case bitsy.Direction.Down:
-		vflip = allowed.verticalFlipAllowed;
-		break;
-	case bitsy.Direction.Left:
-		hflip = allowed.horizontalFlipAllowed;
-		break;
-	case bitsy.Direction.Right:
-		hflip = false;
-		break;
-	default:
-		break;
-	}
-
-	// update sprite with flipped frames
-	for (i = 0; i < originalAnimation.frames.length; ++i) {
-		setSpriteData(bitsy.playerId, i, transformSpriteData(originalAnimation.frames[i], vflip, hflip));
-	}
-	originalAnimation.referenceFrame = getSpriteData(bitsy.playerId, 0);
-});
