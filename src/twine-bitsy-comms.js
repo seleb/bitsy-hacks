@@ -153,7 +153,7 @@ after('startExportedGame', function () {
 	'play',
 	'back',
 ].forEach(function (command) {
-	function doCommand(environment, parameters) {
+	function doCommand(parameters) {
 		hackOptions.send(command, parameters[0]);
 	}
 	addDualDialogTag('twine' + command.substr(0, 1).toUpperCase() + command.substr(1), doCommand);

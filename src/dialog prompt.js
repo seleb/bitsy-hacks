@@ -121,7 +121,7 @@ before('onready', function () {
 	document.body.appendChild(promptForm);
 });
 
-addDialogTag('prompt', function (environment, parameters, onReturn) {
+addDialogTag('prompt', function (parameters, onReturn) {
 	prompted = true;
 
 	// parse parameters
@@ -134,9 +134,9 @@ addDialogTag('prompt', function (environment, parameters, onReturn) {
 	var isPlayerEmbeddedInEditor = bitsy.isPlayerEmbeddedInEditor;
 	var anyKeyPressed = bitsy.input.anyKeyPressed;
 	var isTapReleased = bitsy.input.isTapReleased;
-	var CanContinue = environment.GetDialogBuffer().CanContinue;
+	var CanContinue = bitsy.dialogBuffer.CanContinue;
 	bitsy.key = {};
-	bitsy.input.anyKeyPressed = bitsy.input.isTapReleased = environment.GetDialogBuffer().CanContinue = function () { return false; };
+	bitsy.input.anyKeyPressed = bitsy.input.isTapReleased = bitsy.dialogBuffer.CanContinue = function () { return false; };
 	bitsy.isPlayerEmbeddedInEditor = true;
 
 	promptInput.value = defaultValue;
@@ -145,7 +145,8 @@ addDialogTag('prompt', function (environment, parameters, onReturn) {
 		event.preventDefault();
 		try {
 			var value = hackOptions.onSubmit(variableName, promptInput.value);
-			environment.SetVariable(variableName, value);
+			// TODO: figure out how to set the variable
+			// environment.SetVariable(variableName, value);
 		} catch (error) {
 			return;
 		}
@@ -158,14 +159,14 @@ addDialogTag('prompt', function (environment, parameters, onReturn) {
 		bitsy.isPlayerEmbeddedInEditor = isPlayerEmbeddedInEditor;
 		bitsy.input.anyKeyPressed = anyKeyPressed;
 		bitsy.input.isTapReleased = isTapReleased;
-		environment.GetDialogBuffer().CanContinue = CanContinue;
+		bitsy.dialogBuffer.CanContinue = CanContinue;
 
-		onReturn(null);
+		onReturn(false);
 	};
 	// save a copy of the current buffer state for display purposes
-	cachedBuffer = bufferCopy(environment.GetDialogBuffer().GetBuffer());
+	cachedBuffer = bufferCopy(bitsy.dialogBuffer.GetBuffer());
 	// add a caret character immediately (otherwise it won't show up till a key is pressed)
-	environment.GetDialogBuffer().AddText(hackOptions.caret);
+	bitsy.dialogBuffer.AddText(hackOptions.caret);
 });
 
 // expose a setter/getter for private buffer in DialogBuffer class

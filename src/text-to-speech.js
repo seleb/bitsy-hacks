@@ -168,9 +168,9 @@ after('dialogBuffer.FlipPage', hurry);
 after('startDialog', hurry);
 
 // hook up dialog commands
-addDualDialogTag('ttsVoice', function (environment, parameters) {
+addDualDialogTag('ttsVoice', function (parameters) {
 	queueVoice(parameters[0].split(','));
 });
-addDualDialogTag('tts', function (environment, parameters) {
+addDualDialogTag('tts', function (parameters) {
 	queueSpeak(parameters[0]);
 });

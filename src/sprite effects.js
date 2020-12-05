@@ -157,7 +157,7 @@ var mapMap = {
 	til: 'tile',
 	tile: 'tile',
 };
-addDualDialogTag('spriteEffect', function (environment, parameters) {
+addDualDialogTag('spriteEffect', function (parameters) {
 	var params = parameters[0].split(/,\s?/);
 	var map = mapMap[(params[0] || '').toLowerCase()];
 	var id = getImage(params[1] || '', bitsy[map]).id;

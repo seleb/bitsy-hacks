@@ -34,14 +34,13 @@ NOTE: This uses parentheses "()" instead of curly braces "{}" around function
       code at the end of the editor's `bitsy.js` file. Untested.
 */
 
-import {
-	addDialogTag,
-} from './helpers/kitsy-script-toolkit';
+import bitsy from 'bitsy';
 import './helpers/addParagraphBreak';
+import { addDialogTag } from './helpers/kitsy-script-toolkit';
 
 // Adds the actual dialogue tag. No deferred version is required.
-addDialogTag('p', function (environment, parameters, onReturn) {
-	environment.GetDialogBuffer().AddParagraphBreak();
-	onReturn(null);
+addDialogTag('p', function (parameters, onReturn) {
+	bitsy.dialogBuffer.AddParagraphBreak();
+	onReturn(false);
 });
 // End of (p) paragraph break mod

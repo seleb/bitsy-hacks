@@ -46,7 +46,7 @@ import {
 // eslint-disable-next-line no-eval
 var indirectEval = eval;
 
-function executeJs(environment, parameters) {
+function executeJs(parameters) {
 	indirectEval(parameters[0]);
 }
 

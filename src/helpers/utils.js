@@ -82,16 +82,16 @@ export function unique(array) {
  * Helper for printing dialog inside of a dialog function.
  * Intended to be called using the environment + onReturn parameters of the original function;
  * e.g.
- * addDialogTag('myTag', function (environment, parameters, onReturn) {
- * 	printDialog(environment, 'my text', onReturn);
+ * addDialogTag('myTag', function (parameters, onReturn) {
+ * 	printDialog('my text', onReturn);
  * });
  * @param {Environment} environment Bitsy environment object; first param to a dialog function
  * @param {String} text Text to print
  * @param {Function} onReturn Bitsy onReturn function; third param to a dialog function
  */
-export function printDialog(environment, text, onReturn) {
-	environment.GetDialogBuffer().AddText(text, function () {
-		onReturn(null);
+export function printDialog(text, onReturn) {
+	bitsy.dialogBuffer.AddText(text, function () {
+		onReturn(false);
 	});
 }
 

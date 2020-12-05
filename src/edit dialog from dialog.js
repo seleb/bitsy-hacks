@@ -46,7 +46,7 @@ after('load_game', function () {
 	};
 });
 
-function editDialog(environment, parameters) {
+function editDialog(parameters) {
 	// parse parameters
 	var params = parameters[0].split(/,\s?/);
 	params[0] = (params[0] || '').toLowerCase();

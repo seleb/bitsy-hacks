@@ -81,7 +81,7 @@ after('load_game', function () {
 	};
 });
 
-function editImage(environment, parameters) {
+function editImage(parameters) {
 	var i;
 
 	// parse parameters
@@ -120,7 +120,7 @@ function editImage(environment, parameters) {
 	}
 }
 
-function editPalette(environment, parameters) {
+function editPalette(parameters) {
 	// parse parameters
 	var params = parameters[0].split(/,\s?/);
 	params[0] = (params[0] || '').toLowerCase();

@@ -75,7 +75,7 @@ function getTimeDifferenceInMs(timer) {
 // map of timers
 var timers;
 
-function startWatch(environment, parameters) {
+function startWatch(parameters) {
 	var id = parameters[0];
 	timers[id] = {
 		start: Date.now(),
@@ -84,13 +84,13 @@ function startWatch(environment, parameters) {
 }
 
 // note: this updates start time directly
-function resumeWatch(environment, parameters) {
+function resumeWatch(parameters) {
 	var id = parameters[0];
 	var timer = timers[id];
 
 	// just start the timer if there isn't one
 	if (!timer) {
-		startWatch(environment, parameters);
+		startWatch(parameters);
 		return;
 	}
 
@@ -104,7 +104,7 @@ function resumeWatch(environment, parameters) {
 	timer.end = undefined;
 }
 
-function stopWatch(environment, parameters) {
+function stopWatch(parameters) {
 	var id = parameters[0];
 	var timer = timers[id];
 	// don't do anything if there's no timer
@@ -130,10 +130,10 @@ addDualDialogTag('stopWatch', stopWatch);
 addDualDialogTag('resumeWatch', resumeWatch);
 
 // add display function
-addDialogTag('sayWatch', function (environment, parameters, onReturn) {
+addDialogTag('sayWatch', function (parameters, onReturn) {
 	var timer = timers[parameters[0]];
 	if (!timer) {
 		throw new Error('Tried to sayWatch "' + parameters[0] + '" but it was never started');
 	}
-	printDialog(environment, hackOptions.timeToString(timer), onReturn);
+	printDialog(hackOptions.timeToString(timer), onReturn);
 });

@@ -242,13 +242,13 @@ after('movePlayer', function () {
 	bitsy.getSpriteDown = originalGetSpriteDown;
 });
 
-addDualDialogTag('follower', function (environment, parameters) {
+addDualDialogTag('follower', function (parameters) {
 	setFollower(parameters[0]);
 });
-addDialogTag('followerCollision', function (environment, parameters) {
+addDialogTag('followerCollision', function (parameters) {
 	hackOptions.allowFollowerCollision = parameters[0] !== 'false';
 });
-addDualDialogTag('followerDelay', function (environment, parameters) {
+addDualDialogTag('followerDelay', function (parameters) {
 	hackOptions.delay = parseInt(parameters[0], 10);
 });
 addDualDialogTag('followerSync', function () {

@@ -186,7 +186,7 @@ before('startExportedGame', function () {
 });
 
 // hook up dialog functions
-function dialogLoad(environment, parameters) {
+function dialogLoad(parameters) {
 	bitsy.reset_cur_game();
 	bitsy.dialogBuffer.EndDialog();
 	bitsy.startNarrating(parameters[0] || '');

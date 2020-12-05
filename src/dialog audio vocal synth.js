@@ -385,9 +385,9 @@ after('onExitDialog', function () {
 	}
 });
 
-addDialogTag('voice', function (environment, parameters, onReturn) {
+addDialogTag('voice', function (parameters, onReturn) {
 	voice = hackOptions.voices[parameters[0]] || defaultVoice;
-	onReturn(null);
+	onReturn(false);
 });
 
 after('onready', function () {

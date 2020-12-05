@@ -54,6 +54,6 @@ function jump(targetDialog) {
 	bitsy.startDialog(dialogStr, dialogId);
 }
 
-addDualDialogTag('jump', function (environment, parameters) {
+addDualDialogTag('jump', function (parameters) {
 	jump(parameters[0]);
 });

@@ -212,24 +212,24 @@ after('parseWorld', parsePaletteMaps);
 after('drawRoom', overdrawRecoloredTiles);
 
 // Implement tags to set a room's Default Palette
-addDualDialogTag('palette', function (environment, parameters) {
+addDualDialogTag('palette', function (parameters) {
 	var params = parameters[0].split(',');
 	setRoomPalette(params[0], params[1]);
 });
 
 // Implement tags to modify a room's Palette Map
-addDualDialogTag('tilePalette', function (environment, parameters) {
+addDualDialogTag('tilePalette', function (parameters) {
 	var params = parameters[0].split(',');
 	setPaletteAt(params[0], params[1], params[2], params[3]);
 });
 
 // Implement tags to delete a room's Palette Map
-addDualDialogTag('clearTilePalette', function (environment, parameters) {
+addDualDialogTag('clearTilePalette', function (parameters) {
 	clearPaletteMap(parameters[0]);
 });
 
 // Implement tags to set a reset a room's Palette Map to starting values
-addDualDialogTag('resetTilePalette', function (environment, parameters) {
+addDualDialogTag('resetTilePalette', function (parameters) {
 	resetPaletteMap(parameters[0]);
 });
 

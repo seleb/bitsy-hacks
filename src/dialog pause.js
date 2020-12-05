@@ -16,11 +16,10 @@ Note: pause times are in milliseconds
 HOW TO USE:
 Copy-paste into a script tag after the bitsy source
 */
-import {
-	addDialogTag,
-} from './helpers/kitsy-script-toolkit';
+import bitsy from 'bitsy';
+import { addDialogTag } from './helpers/kitsy-script-toolkit';
 
-addDialogTag('pause', function (environment, parameters, onReturn) {
-	environment.GetDialogBuffer().Update(-parseFloat(parameters[0]));
-	onReturn(null);
+addDialogTag('pause', function (parameters, onReturn) {
+	bitsy.dialogBuffer.Update(-parseFloat(parameters[0]));
+	onReturn(false);
 });

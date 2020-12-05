@@ -36,7 +36,7 @@ import {
 	getImage,
 } from './helpers/utils';
 
-addDualDialogTag('player', function (environment, parameters) {
+addDualDialogTag('player', function (parameters) {
 	var targetId = parameters[0];
 	var target = getImage(targetId, bitsy.sprite);
 	if (!target) {

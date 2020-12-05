@@ -166,14 +166,14 @@ after('drawRoom', function () {
 });
 
 // Implement the dialog functions
-addDualDialogTag('music', function (environment, parameters) {
+addDualDialogTag('music', function (parameters) {
 	if (!parameters[0]) {
 		throw new Error('{music/musicNow} was missing parameters! Usage: {music/musicNow "track name"}');
 	}
 	changeMusic(parameters[0]);
 });
 
-addDualDialogTag('soundeffect', function (environment, parameters) {
+addDualDialogTag('soundeffect', function (parameters) {
 	if (!parameters[0]) {
 		throw new Error('{soundeffect/soundeffectNow} was missing parameters! Usage: {soundeffect/soundeffectNow "track name"}');
 	}

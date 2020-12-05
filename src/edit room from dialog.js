@@ -160,7 +160,7 @@ import {
 // Draws an Item, Sprite, or Tile at a location in a room
 // {draw "mapId, sourceId, xPos, yPos, roomID"}
 // {drawNow "mapId, sourceId, xPos, yPos, roomID"}
-addDualDialogTag('draw', function (environment, parameters) {
+addDualDialogTag('draw', function (parameters) {
 	var params = parameters[0].split(',');
 	drawAt(params[0], params[1], params[2], params[3], params[4]);
 });
@@ -168,7 +168,7 @@ addDualDialogTag('draw', function (environment, parameters) {
 // As above, but affects a box area, between two corners.
 // {drawBox "mapId, sourceId, x1, y1, x2, y2, roomID"}
 // {drawBoxNow "mapId, sourceId, x1, y1, x2, y2, roomID"}
-addDualDialogTag('drawBox', function (environment, parameters) {
+addDualDialogTag('drawBox', function (parameters) {
 	var params = parameters[0].split(',');
 	drawBoxAt(params[0], params[1], params[2], params[3], params[4], params[5], params[6]);
 });
@@ -176,7 +176,7 @@ addDualDialogTag('drawBox', function (environment, parameters) {
 // As above, but affects an entire room.
 // {drawAll "mapId, sourceId, roomID"}
 // {drawAllNow "mapId, sourceId, roomID"}
-addDualDialogTag('drawAll', function (environment, parameters) {
+addDualDialogTag('drawAll', function (parameters) {
 	var params = parameters[0].split(',');
 	drawBoxAt(params[0], params[1], 0, 0, bitsy.mapsize - 1, bitsy.mapsize - 1, params[2]);
 });
@@ -184,7 +184,7 @@ addDualDialogTag('drawAll', function (environment, parameters) {
 // Removes Items, Sprites, and/or Tiles at a location in a room
 // {erase "mapId, targetId, xPos, yPos, roomID"}
 // {eraseNow "mapId, targetId, xPos, yPos, roomID"}
-addDualDialogTag('erase', function (environment, parameters) {
+addDualDialogTag('erase', function (parameters) {
 	var params = parameters[0].split(',');
 	eraseAt(params[0], params[1], params[2], params[3], params[4]);
 });
@@ -192,7 +192,7 @@ addDualDialogTag('erase', function (environment, parameters) {
 // As above, but affects a box area, between two corners.
 // {eraseBox "mapId, targetId, x1, y1, x2, y2, roomID"}
 // {eraseBoxNow "mapId, targetId, x1, y1, x2, y2, roomID"}
-addDualDialogTag('eraseBox', function (environment, parameters) {
+addDualDialogTag('eraseBox', function (parameters) {
 	var params = parameters[0].split(',');
 	eraseBoxAt(params[0], params[1], params[2], params[3], params[4], params[5], params[6]);
 });
@@ -200,7 +200,7 @@ addDualDialogTag('eraseBox', function (environment, parameters) {
 // As above, but affects an entire room.
 // {eraseAll "mapId, targetId, roomID"}
 // {eraseAllNow "mapId, targetId, roomID"}
-addDualDialogTag('eraseAll', function (environment, parameters) {
+addDualDialogTag('eraseAll', function (parameters) {
 	var params = parameters[0].split(',');
 	eraseBoxAt(params[0], params[1], 0, 0, bitsy.mapsize - 1, bitsy.mapsize - 1, params[2]);
 });
@@ -208,7 +208,7 @@ addDualDialogTag('eraseAll', function (environment, parameters) {
 // Converts instances of target Item, Sprite, or Tile at a location in a room into something new
 // {replace "targetMapId, targetId, newMapId, newId, xPos, yPos, roomID"}
 // {replaceNow "targetMapId, targetId, newMapId, newId, xPos, yPos, roomID"}
-addDualDialogTag('replace', function (environment, parameters) {
+addDualDialogTag('replace', function (parameters) {
 	var params = parameters[0].split(',');
 	replaceAt(params[0], params[1], params[2], params[3], params[4], params[5], params[6]);
 });
@@ -216,7 +216,7 @@ addDualDialogTag('replace', function (environment, parameters) {
 // As above, but affects a box area between two corners.
 // {replaceBox "targetMapId, targetId, newMapId, newId, x1, y1, x2, y2, roomID"}
 // {replaceBoxNow "targetMapId, targetId, newMapId, newId, x1, y1, x2, y2, roomID"}
-addDualDialogTag('replaceBox', function (environment, parameters) {
+addDualDialogTag('replaceBox', function (parameters) {
 	var params = parameters[0].split(',');
 	replaceBoxAt(params[0], params[1], params[2], params[3], params[4], params[5], params[6], params[7], params[8]);
 });
@@ -224,7 +224,7 @@ addDualDialogTag('replaceBox', function (environment, parameters) {
 // As above, but affects an entire room.
 // {replaceAll "targetMapId, targetId, newMapId, roomID"}
 // {replaceAllNow "targetMapId, targetId, newMapId, newId, roomID"}
-addDualDialogTag('replaceAll', function (environment, parameters) {
+addDualDialogTag('replaceAll', function (parameters) {
 	var params = parameters[0].split(',');
 	replaceBoxAt(params[0], params[1], params[2], params[3], 0, 0, bitsy.mapsize - 1, bitsy.mapsize - 1, params[4]);
 });
@@ -232,7 +232,7 @@ addDualDialogTag('replaceAll', function (environment, parameters) {
 // Duplicates Items, Sprites, and/or Tiles from one location in a room to another
 // {copy "mapId, targetId, copyX, copyY, copyRoom, pasteX, pasteY, pasteRoom"}
 // {copyNow "mapId, targetId, copyX, copyY, copyRoom, pasteX, pasteY, pasteRoom"}
-addDualDialogTag('copy', function (environment, parameters) {
+addDualDialogTag('copy', function (parameters) {
 	var params = parameters[0].split(',');
 	copyAt(params[0], params[1], params[2], params[3], params[4], params[5], params[6], params[7]);
 });
@@ -241,7 +241,7 @@ addDualDialogTag('copy', function (environment, parameters) {
 // NOTE: positioning the paste coordinates out of bounds will only draw the section overlapping with the room.
 // {copyBox "mapId, targetId, copyX1, copyY1, copyX2, copyY2, copyRoom, pasteX, pasteY, pasteRoom"}
 // {copyBoxNow "mapId, targetId, copyX1, copyY1, copyX2, copyY2, copyRoom, pasteX, pasteY, pasteRoom"}
-addDualDialogTag('copyBox', function (environment, parameters) {
+addDualDialogTag('copyBox', function (parameters) {
 	var params = parameters[0].split(',');
 	copyBoxAt(params[0], params[1], params[2], params[3], params[4], params[5], params[6], params[7], params[8], params[9]);
 });
@@ -249,7 +249,7 @@ addDualDialogTag('copyBox', function (environment, parameters) {
 // As above, but affects an entire room.
 // {copyAll "mapId, targetId, copyRoom, pasteRoom"}
 // {copyAllNow "mapId, targetId, copyRoom, pasteRoom"}
-addDualDialogTag('copyAll', function (environment, parameters) {
+addDualDialogTag('copyAll', function (parameters) {
 	var params = parameters[0].split(',');
 	copyBoxAt(params[0], params[1], 0, 0, bitsy.mapsize - 1, bitsy.mapsize - 1, params[3], 0, 0, params[4]);
 });
