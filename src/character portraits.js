@@ -8,12 +8,12 @@
 @author Sean S. LeBlanc
 
 @description
-Adds a tag (portrait "id") which adds the ability to draw high resolution images during dialog.
+Adds a tag {portrait "id"} which adds the ability to draw high resolution images during dialog.
 
 Examples:
-	(portrait "cat")
+	{portrait "cat"}
 		draws the image named "cat" in the hackOptions
-	(portrait "")
+	{portrait ""}
 		resets the portrait to not draw
 
 By default, the portrait will clear when dialog is exited,
@@ -39,10 +39,7 @@ HOW TO USE:
 2. Edit the hackOptions object as needed
 */
 import bitsy from 'bitsy';
-import {
-	addDialogTag,
-	after,
-} from './helpers/kitsy-script-toolkit';
+import { addDialogTag, after } from './helpers/kitsy-script-toolkit';
 
 export var hackOptions = {
 	// influences the resolution of the drawn image
@@ -76,22 +73,38 @@ after('startExportedGame', function () {
 	});
 });
 
+// hook up autoreset
+after('load_game', function () {
+	bitsy.dialogBuffer.OnDialogEnd(function () {
+		if (hackOptions.autoReset) {
+			state.portrait = '';
+		}
+	});
+});
+after('dialogBuffer.Reset', function () {
+	bitsy.dialogBuffer.OnDialogEnd(function () {
+		if (hackOptions.autoReset) {
+			state.portrait = '';
+		}
+	});
+});
+
 // hook up dialog tag
-addDialogTag('portrait', function (environment, parameters, onReturn) {
+addDialogTag('portrait', function (parameters, onReturn) {
 	var newPortrait = parameters[0];
 	var image = state.portraits[newPortrait];
 	if (state.portrait === image) {
-		onReturn(null);
+		onReturn(false);
 		return;
 	}
 	state.portrait = image;
-	onReturn(null);
+	onReturn(false);
 });
 
 // hook up drawing
 var context;
 after('drawRoom', function () {
-	if ((hackOptions.dialogOnly && !bitsy.isDialogMode && !bitsy.isNarrating) || !state.portrait) {
+	if ((hackOptions.dialogOnly && !(bitsy.dialogBuffer.IsActive() || bitsy.isNarrating)) || !state.portrait) {
 		return;
 	}
 	if (!context) {
@@ -104,11 +117,5 @@ after('drawRoom', function () {
 		// log and ignore errors
 		// so broken images don't break the game
 		console.error('Portrait error', error);
-	}
-});
-
-after('onExitDialog', function () {
-	if (hackOptions.autoReset) {
-		state.portrait = '';
 	}
 });
