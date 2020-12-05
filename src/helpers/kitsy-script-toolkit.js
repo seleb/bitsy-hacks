@@ -190,8 +190,8 @@ function addDialogFunction(tag, fn) {
 
 function injectDialogTag(tag, code) {
 	inject(
-		/(var functionMap = new Map\(\);[^]*?)(this.HasFunction)/m,
-		'$1\nfunctionMap.set("' + tag + '", ' + code + ');\n$2',
+		/(return instanceEnv;)/,
+		'instanceEnv.Set("' + tag + '", ' + code + ');\n\t$1',
 	);
 }
 
