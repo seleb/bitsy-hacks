@@ -93,6 +93,9 @@ export async function start({
 		}$2`);
 	}
 
+	// disable console logs since they slow things down
+	game = game.replace(/(<\/script>)(?![^]*?<\/script>)[^]*?(<\/head>)/, '$1<script>console.log = () => {};</script>$2');
+
 	// convert to url
 	game = `data:text/html;base64,${Buffer.from(game).toString('base64')}`;
 
@@ -101,8 +104,6 @@ export async function start({
 		headless: true,
 	});
 	page = await browser.newPage();
-	// disable console logs since they slow things down
-	await evaluate('console.log = () => {};');
 	await page.goto(game);
 	await page.setViewport({
 		width: 256,
