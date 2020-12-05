@@ -3,54 +3,40 @@
 @file logic-operators-extended
 @summary adds conditional logic operators
 @version auto
-@requires 7.2
+@requires 8.0
 @author @mildmojo
 
 @description
-Adds conditional logic operators:
-  - !== (not equal to)
-  - && (and)
-  - || (or)
-  - % (modulo)
+Adds conditional logic functions:
+  - {AND x y}
+  - {OR x y}
+And modulo function:
+  - {MOD x y}
 
-Examples: candlecount > 5 && haslighter == 1
-          candlecount > 5 && papercount > 1 && isIndoors
-          haslighter == 1 || hasmatches == 1
-          candlecount > 5 && candlecount !== 666
-
-NOTE: The combining operators (&&, ||) have lower precedence than
-      all other math and comparison operators, so it might be hard to write
-      tests that mix and match these new operators and have them evaluate
-      correctly. If you're using multiple `&&` and `||` operators in one
-      condition, be sure to test every possibility to make sure it behaves
-      the way you want.
+Examples: {AND {GT candlecount 5} {IS haslighter 1}}
+          {AND {AND {GT candlecount 5} {GT papercount 1} isIndoors}
+          {OR {IS haslighter 1} {IS hasmatches 1}}
+          {MOD candlecount 4}
 */
 
-import {
-	inject,
-} from './helpers/kitsy-script-toolkit';
+import { inject } from './helpers/kitsy-script-toolkit';
 
-var operators = ['!==', '&&', '||', '%'];
+var operators = [
+	['AND', '&&'],
+	['OR', '||'],
+	['MOD', '%'],
+];
 
-function expression(operator) {
-	return `function (environment, left, right, onReturn) {
-	right.Eval(environment, function (rVal) {
-		left.Eval(environment, function (lVal) {
-			onReturn(lVal ${operator} rVal);
-		});
-	});
-}`;
-}
-
-inject(/(operatorMap\.set\("-", subExp\);)/, `
-	$1
-	${operators.map(function (operator) {
-		return `operatorMap.set("${operator}", ${expression(operator)});`;
-	}).join('\n')}
-`);
 inject(
-	/(Operators : \[)(.+\],)/,
-	`$1 ${operators.map(function (operator) {
-		return `"${operator}", `;
-	}).join('')} $2`,
+	/(return instanceEnv;)/,
+	`
+	${operators
+		.map(function (operator) {
+			return `instanceEnv.Set("${operator[0]}", function(parameters, onReturn) {
+			onReturn(parameters[0] ${operator[1]} parameters[1]);
+		});`;
+		})
+		.join('\n')}
+	$1
+`,
 );
