@@ -156,6 +156,8 @@ function reinitEngine() {
 	// TODO: determine which (if any) objects need to be re-created in v8
 	// recreate the script and dialog objects so that they'll be
 	// referencing the code with injections instead of the original
+	bitsy.library = new bitsy.Library();
+	bitsy.scriptInterpreter = new bitsy.CurlicueScript();
 }
 
 // Rewrite custom functions' parentheses to curly braces for Bitsy's
