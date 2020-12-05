@@ -19,24 +19,14 @@ Examples: {AND {GT candlecount 5} {IS haslighter 1}}
           {MOD candlecount 4}
 */
 
-import { inject } from './helpers/kitsy-script-toolkit';
+import { addDialogTag } from './helpers/kitsy-script-toolkit';
 
-var operators = [
-	['AND', '&&'],
-	['OR', '||'],
-	['MOD', '%'],
-];
-
-inject(
-	/(return instanceEnv;)/,
-	`
-	${operators
-		.map(function (operator) {
-			return `instanceEnv.Set("${operator[0]}", function(parameters, onReturn) {
-			onReturn(parameters[0] ${operator[1]} parameters[1]);
-		});`;
-		})
-		.join('\n')}
-	$1
-`,
-);
+addDialogTag('AND', function (parameters, onReturn) {
+	onReturn(parameters[0] && parameters[1]);
+});
+addDialogTag('OR', function (parameters, onReturn) {
+	onReturn(parameters[0] || parameters[1]);
+});
+addDialogTag('MOD', function (parameters, onReturn) {
+	onReturn(parameters[0] % parameters[1]);
+});
