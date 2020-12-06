@@ -158,6 +158,9 @@ function reinitEngine() {
 	// referencing the code with injections instead of the original
 	bitsy.library = new bitsy.Library();
 	bitsy.scriptInterpreter = new bitsy.CurlicueScript();
+	bitsy.dialogModule = new bitsy.Dialog();
+	bitsy.dialogRenderer = bitsy.dialogModule.CreateRenderer();
+	bitsy.dialogBuffer = bitsy.dialogModule.CreateBuffer();
 }
 
 // Rewrite custom functions' parentheses to curly braces for Bitsy's
