@@ -8,7 +8,7 @@ import {
 
 test('strike', async () => {
 	await start({
-		catDialog: '{strike}strike{strike}{br}custom text effect',
+		catDialog: '{strike}strike{/strike}{BR}custom text effect',
 		hacks: ['custom text effect'],
 	});
 	await walkToCat();

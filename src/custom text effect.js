@@ -1,15 +1,15 @@
 /**
 🅰
 @file custom text effect
-@summary make {custom}text effects{custom}
+@summary make {custom}text effects{/custom}
 @license MIT
 @version auto
-@requires 5.3
+@requires 8.0
 @author Sean S. LeBlanc
 
 @description
 Adds support for a custom text effect
-e.g. "normal text {my-effect}custom wavy text{my-effect}"
+e.g. "normal text {my-effect}custom wavy text{/my-effect}"
 
 Multiple text effects can be added this way.
 Without the hack, the game will still run normally since
@@ -53,7 +53,9 @@ The second argument is `time`, which is the time in milliseconds
 
 A number of example effects are included
 */
+import bitsy from 'bitsy';
 import {
+	addDialogTag,
 	inject,
 } from './helpers/kitsy-script-toolkit';
 
@@ -248,13 +250,20 @@ window.customTextEffects = {
 };
 
 // generate code for each text effect
-var functionMapCode = '';
 var textEffectCode = '';
 Object.entries(hackOptions).forEach(function (entry) {
-	functionMapCode += 'functionMap.set("' + entry[0] + '", function (environment, parameters, onReturn) {addOrRemoveTextEffect(environment, "' + entry[0] + '");onReturn(null);});';
-	textEffectCode += 'TextEffects["' + entry[0] + '"] = new (' + entry[1].toString() + ')();';
+	var key = entry[0];
+	var effect = entry[1];
+	addDialogTag(key, function(parameters, onReturn) {
+		bitsy.dialogBuffer.AddTextEffect(key, parameters);
+		onReturn(false);
+	});
+	addDialogTag('/' + key, function(_parameters, onReturn) {
+		bitsy.dialogBuffer.RemoveTextEffect(key);
+		onReturn(false);
+	});
+	textEffectCode += 'TextEffects["' + key + '"] = new (' + effect.toString() + ')();';
 });
 
 // inject custom text effect code
-inject(/(var functionMap = new Map\(\);)/, '$1' + functionMapCode);
 inject(/(var TextEffects = new Map\(\);)/, '$1' + textEffectCode);
