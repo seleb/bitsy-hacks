@@ -62,7 +62,7 @@ export var hackOptions = {
 	duration: 1000,
 	// whether to transition title screen
 	includeTitle: true,
-	// function which defines when a transition occured
+	// function which defines when a transition occurred
 	// return true to indicate a transition; false otherwise
 	// example implementation is transition on room change
 	checkTransition: function () {
