@@ -10,7 +10,12 @@ import
 
 test('autoreset, dialog only', async () => {
 	await start({
-		catDialog: '(portrait "cat")\\(portrait "cat"\\)',
+		catDialog: `{>>
+	{SEQ
+		{>> {portrait "cat"}portrait applied}
+		{>> portrait autoreset}
+	}
+}`,
 		hacks: [['character portraits animated', {
 			scale: 1 / 128,
 			portraits: {
@@ -33,12 +38,12 @@ test('autoreset, dialog only', async () => {
 
 test('no reset, persist', async () => {
 	await start({
-		catDialog: `"""
-{sequence
-  - (portrait "cat")\\(portrait "cat"\\)
-  - (portrait "")\\(portrait ""\\)
-}
-"""`,
+		catDialog: `{>>
+	{SEQ
+		{>> {portrait "cat"}portrait applied}
+		{>> {portrait ""}portrait removed}
+	}
+}`,
 		hacks: [['character portraits animated', {
 			scale: 1 / 128,
 			portraits: {
