@@ -3,7 +3,7 @@
 @file character portraits animated
 @summary high quality anime gifs
 @license MIT
-@version 15.0.3
+@version 15.1.0
 @requires Bitsy Version: 5.3
 @author Sean S. LeBlanc
 
@@ -1227,7 +1227,7 @@ after('startExportedGame', function () {
 	Object.keys(state.portraits).forEach(function (portrait) {
 		var src = state.portraits[portrait].src;
 
-		if (src.substr(-4).toUpperCase() !== '.GIF') {
+		if (src.substr(-4).toUpperCase() !== '.GIF' && src.substr(0, 14) !== 'data:image/gif') {
 			state.portraits[portrait] = {
 				loop: false,
 				duration: 0,

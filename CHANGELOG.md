@@ -1,3 +1,17 @@
+# [15.1.0](https://github.com/seleb/bitsy-hacks/compare/v15.0.4...v15.1.0) (2020-12-06)
+
+
+### Features
+
+* **transitions:** add `glazyOptions` to `hackOptions` ([4f18e34](https://github.com/seleb/bitsy-hacks/commit/4f18e34639acb98d7b19f3c5ab3b53c842708da9))
+
+## [15.0.4](https://github.com/seleb/bitsy-hacks/compare/v15.0.3...v15.0.4) (2020-12-06)
+
+
+### Bug Fixes
+
+* **character portraits animated:** detect base64 gif ([a96d73d](https://github.com/seleb/bitsy-hacks/commit/a96d73d81601b477f1219b793babb0534a04e3bd))
+
 ## [15.0.3](https://github.com/seleb/bitsy-hacks/compare/v15.0.2...v15.0.3) (2020-12-03)
 
 

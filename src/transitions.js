@@ -76,8 +76,11 @@ export var hackOptions = {
 	},
 	// glsl snippet which defines the rendered output of the transition
 	transition: 'result = mix(start, end, t);',
+	// options forwarded to canvas replacement
+	glazyOptions: {},
 };
 
+Object.assign(canvasReplacementHackOptions.glazyOptions, hackOptions.glazyOptions);
 canvasReplacementHackOptions.glazyOptions.disableFeedbackTexture = false;
 canvasReplacementHackOptions.init = function (glazy) {
 	glazy.glLocations.transitionTime = glazy.gl.getUniformLocation(glazy.shader.program, 'transitionTime');
