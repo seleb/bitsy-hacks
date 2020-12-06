@@ -25,7 +25,7 @@ HOW TO USE:
 TEXT EFFECT NOTES:
 Each effect looks like:
 	key: function() {
-		this.DoEffect = function (char, time) {
+		this.DoEffect = function (char, time, parameters) {
 			// effect code
 		}
 	}
@@ -50,6 +50,8 @@ A few helpers are provided under `window.customTextEffects` for more complex eff
 	- `editBitmapCopy`: copies the character bitmap and runs an edit function once
 
 The second argument is `time`, which is the time in milliseconds
+The third argument is `parameters`, which is an array of any parameters
+passed in the opening tag (e.g. {COLOR 1} would have `parameters` set to `[1]`)
 
 A number of example effects are included
 */
