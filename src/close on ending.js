@@ -4,6 +4,7 @@
 @summary Prevents from playing past an ending
 @license MIT
 @version auto
+@requires 8.0
 @author Sean S. LeBlanc
 
 @description
@@ -28,7 +29,7 @@ import {
 // prevent ctrl+r restart prompt
 inject(/(function tryRestartGame\(e\) {)/, '$1return;');
 
-after('onExitDialog', function () {
+after('dialogBuffer.Reset', function () {
 	if (bitsy.isEnding) {
 		// prevent further input
 		var no = function () {
