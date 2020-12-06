@@ -9,7 +9,7 @@ import {
 
 test('strike', async () => {
 	await start({
-		catDialog: '{exit "0" 0 0 "test"}',
+		catDialog: '{EXT "1" 0 0 "test"}',
 		hacks: [
 			[
 				'custom-exit-effects',
@@ -19,13 +19,10 @@ test('strike', async () => {
 						showPlayerEnd: true,
 						duration: 2000,
 						frameRate: 8,
+						onStep: function () {},
 						pixelEffectFunc: function (_start, _end, _pixelX, _pixelY, delta) {
 							return delta < 0.5
-								? {
-									r: 255, g: 0, b: 0, a: 255,
-								} : {
-									r: 0, g: 255, b: 0, a: 255,
-								};
+								? window.COLOR_INDEX.TEXT : window.COLOR_INDEX.TEXTBOX;
 						},
 					},
 				},
