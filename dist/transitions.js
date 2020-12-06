@@ -3,7 +3,7 @@
 @file transitions
 @summary customizable WebGL transitions
 @license MIT
-@version 15.0.4
+@version 15.1.0
 @author Sean S. LeBlanc
 
 @description
@@ -76,6 +76,8 @@ var hackOptions$1 = {
 	},
 	// glsl snippet which defines the rendered output of the transition
 	transition: 'result = mix(start, end, t);',
+	// options forwarded to canvas replacement
+	glazyOptions: {},
 };
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
@@ -346,6 +348,7 @@ after('update', function () {
 
 
 
+Object.assign(hackOptions.glazyOptions, hackOptions$1.glazyOptions);
 hackOptions.glazyOptions.disableFeedbackTexture = false;
 hackOptions.init = function (glazy) {
 	glazy.glLocations.transitionTime = glazy.gl.getUniformLocation(glazy.shader.program, 'transitionTime');

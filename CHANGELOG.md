@@ -1,3 +1,10 @@
+# [15.1.0](https://github.com/seleb/bitsy-hacks/compare/v15.0.4...v15.1.0) (2020-12-06)
+
+
+### Features
+
+* **transitions:** add `glazyOptions` to `hackOptions` ([4f18e34](https://github.com/seleb/bitsy-hacks/commit/4f18e34639acb98d7b19f3c5ab3b53c842708da9))
+
 ## [15.0.4](https://github.com/seleb/bitsy-hacks/compare/v15.0.3...v15.0.4) (2020-12-06)
 
 
