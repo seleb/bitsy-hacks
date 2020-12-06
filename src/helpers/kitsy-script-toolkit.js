@@ -230,20 +230,7 @@ export function addDialogTag(tag, fn) {
  */
 export function addDeferredDialogTag(tag, fn) {
 	addDialogFunction(tag, fn);
-	bitsy.kitsy.deferredDialogFunctions = bitsy.kitsy.deferredDialogFunctions || {};
-	var deferred = bitsy.kitsy.deferredDialogFunctions[tag] = [];
-	injectDialogTag(tag, 'function(e, p, o){ kitsy.deferredDialogFunctions["' + tag + '"].push({e:e,p:p}); o(null); }');
-	// Hook into the dialog finish event and execute the actual function
-	after('onExitDialog', function () {
-		while (deferred.length) {
-			var args = deferred.shift();
-			bitsy.kitsy.dialogFunctions[tag](args.e, args.p, args.o);
-		}
-	});
-	// Hook into the game reset and make sure data gets cleared
-	after('clearGameData', function () {
-		deferred.length = 0;
-	});
+	injectDialogTag(tag, 'function(parameters, onReturn){ dialogBuffer.OnDialogEnd(function(){ kitsy.dialogFunctions["' + tag + '"](parameters); }); onReturn(false); }');
 }
 
 /**
