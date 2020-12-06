@@ -36,7 +36,7 @@ The key is the text you'll write inside {} in bitsy to trigger the effect
 
 The first argument is `char`, an individual character, which has the following properties:
 	offset: offset from actual position in pixels. starts at {x:0, y:0}
-	color: color of rendered text in [0-255]. starts at {r:255, g:255, b:255, a:255}
+	color: color of rendered text. needs to be one of the values available in window.COLOR_INDEX
 	bitmap: character bitmap as array of pixels
 	row: vertical position in rows (doesn't affect rendering)
 	col: horizontal position in characters (doesn't affect rendering)
@@ -63,10 +63,9 @@ import {
 
 export var hackOptions = {
 	'my-effect': function () {
-		// a horizontal wavy effect with a blue tint
+		// a horizontal wavy effect
 		this.DoEffect = function (char, time) {
 			char.offset.x += 5 * Math.sin(time / 100 + char.col / 3);
-			char.color.r = 255 * Math.cos(time / 100 + char.col / 3);
 		};
 	},
 	droop: function () {
@@ -79,9 +78,10 @@ export var hackOptions = {
 	},
 	fadeout: function () {
 		// fades text to invisible after appearing
-		this.DoEffect = function (char, time) {
+		// note that it's using parameters to allow a custom fadeout time, falling back to a default
+		this.DoEffect = function (char, time, parameters) {
 			char.start = char.start || time;
-			char.color.a = Math.max(0, 255 - (time - char.start) / 2);
+			char.color = ((parameters[0] || 255) - (time - char.start)) > 0 ? char.color : window.COLOR_INDEX.TRANSPARENT;
 		};
 	},
 	noise: function () {
@@ -125,11 +125,13 @@ export var hackOptions = {
 		// puts letters through the rot13 cipher (see www.rot13.com)
 		this.DoEffect = function (char) {
 			window.customTextEffects.saveOriginalChar(char);
-			var bitmap = char.original.replace(/[a-z]/, function (c) {
-				return String.fromCharCode(((c.codePointAt(0) - 97 + 13) % 26) + 97);
-			}).replace(/[A-Z]/, function (c) {
-				return String.fromCharCode(((c.codePointAt(0) - 65 + 13) % 26) + 65);
-			});
+			var bitmap = char.original
+				.replace(/[a-z]/, function (c) {
+					return String.fromCharCode(((c.codePointAt(0) - 97 + 13) % 26) + 97);
+				})
+				.replace(/[A-Z]/, function (c) {
+					return String.fromCharCode(((c.codePointAt(0) - 65 + 13) % 26) + 65);
+				});
 			window.customTextEffects.setBitmap(char, bitmap);
 		};
 	},
@@ -160,7 +162,7 @@ export var hackOptions = {
 				lastSpace = char.col - 1;
 			}
 			lastCol = char.col;
-			char.offset.y -= ((char.col - lastSpace) ** 1.5) * (Math.sin(time / 120 + char.col / 2));
+			char.offset.y -= (char.col - lastSpace) ** 1.5 * Math.sin(time / 120 + char.col / 2);
 		};
 	},
 	// some common formatting effects for general use
@@ -232,13 +234,13 @@ window.customTextEffects = {
 		var font = window.fontManager.Get(window.fontName);
 		var characters = Object.entries(font.getData());
 		var character = characters.find(function (keyval) {
-			return keyval[1].toString() === char.bitmap.toString();
+			return keyval[1].data.toString() === char.bitmap.toString();
 		});
 		char.original = String.fromCharCode(character[0]);
 	},
 	// helper for setting new character bitmap by string on character object
 	setBitmap: function (char, c) {
-		char.bitmap = window.fontManager.Get(window.fontName).getChar(c);
+		char.bitmap = window.fontManager.Get(window.fontName).getChar(c).data;
 	},
 	// helper for editing bitmap without affecting other characters
 	editBitmapCopy: function (char, editFn) {
@@ -256,11 +258,11 @@ var textEffectCode = '';
 Object.entries(hackOptions).forEach(function (entry) {
 	var key = entry[0];
 	var effect = entry[1];
-	addDialogTag(key, function(parameters, onReturn) {
+	addDialogTag(key, function (parameters, onReturn) {
 		bitsy.dialogBuffer.AddTextEffect(key, parameters);
 		onReturn(false);
 	});
-	addDialogTag('/' + key, function(_parameters, onReturn) {
+	addDialogTag('/' + key, function (_parameters, onReturn) {
 		bitsy.dialogBuffer.RemoveTextEffect(key);
 		onReturn(false);
 	});
