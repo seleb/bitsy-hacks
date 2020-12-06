@@ -3,7 +3,7 @@
 @file text-to-speech
 @summary text-to-speech for bitsy dialog
 @license MIT
-@version 15.0.3
+@version 15.0.4
 @requires 5.5
 @author Sean S. LeBlanc
 

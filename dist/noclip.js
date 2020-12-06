@@ -3,7 +3,7 @@
 @file noclip
 @summary walk through wall tiles, sprites, items, exits, and endings
 @license MIT
-@version 15.0.3
+@version 15.0.4
 @author Sean S. LeBlanc
 
 @description

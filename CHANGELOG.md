@@ -1,3 +1,10 @@
+## [15.0.4](https://github.com/seleb/bitsy-hacks/compare/v15.0.3...v15.0.4) (2020-12-06)
+
+
+### Bug Fixes
+
+* **character portraits animated:** detect base64 gif ([a96d73d](https://github.com/seleb/bitsy-hacks/commit/a96d73d81601b477f1219b793babb0534a04e3bd))
+
 ## [15.0.3](https://github.com/seleb/bitsy-hacks/compare/v15.0.2...v15.0.3) (2020-12-03)
 
 

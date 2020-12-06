@@ -3,7 +3,7 @@
 @file transitions
 @summary customizable WebGL transitions
 @license MIT
-@version 15.0.3
+@version 15.0.4
 @author Sean S. LeBlanc
 
 @description
@@ -62,7 +62,7 @@ var hackOptions$1 = {
 	duration: 1000,
 	// whether to transition title screen
 	includeTitle: true,
-	// function which defines when a transition occured
+	// function which defines when a transition occurred
 	// return true to indicate a transition; false otherwise
 	// example implementation is transition on room change
 	checkTransition: function () {
