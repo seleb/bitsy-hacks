@@ -10,13 +10,14 @@ test('itsy-bitsy', async () => {
 	await start({
 		hacks: ['itsy-bitsy'],
 	});
-	await evaluate(() => {
-		window.sprite.a.x = window.player().x + 1;
-		window.sprite.a.y = window.player().y;
-	});
 	await press('Enter');
+	await snapshot();
 	await press('Enter');
 	await press('Enter'); // complete title pages
+	await evaluate(() => {
+		window.room[window.curRoom].tilemap[window.player().y][window.player().x + 1] = '2';
+		window.initRoom(window.curRoom);
+	});
 	await snapshot();
 	await press('Enter'); // end title
 	await snapshot();
