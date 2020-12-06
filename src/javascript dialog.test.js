@@ -21,7 +21,7 @@ test('now', async () => {
 test('deferred', async () => {
 	await start({
 		hacks: ['javascript dialog'],
-		catDialog: '{js "canvas.width *= 2"}I\'m a cat',
+		catDialog: 'I{js "canvas.width *= 2"}\'m a cat',
 	});
 	await walkToCat();
 	await press('ArrowRight'); // talk to cat
