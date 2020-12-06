@@ -85,7 +85,10 @@ export async function start({
 						// remove comments (they can interfer with hackOptions regex)
 						.replace(/\/\*\*[^]*?\*\//m)
 						// replace hackOptions
-						.replace(/(var hackOptions.*= ){[^]*?};$/m, `$1 ${JSON.stringify(options, undefined, '\t')};`)
+						.replace(/(var hackOptions.*= ){[^]*?};$/m, `$1 ${
+							JSON.stringify(options, (key, val) => ((typeof val === 'function') ? val.toString() : val), '\t')
+								.replace(/"(function[^]*?})"/g, (_, s) => s.replace(/\\n/g, '\n').replace(/\\t/g, '\t'))
+						};`)
 						// make sure not to screw up the regex in the process
 						.replace(/\$([0-9]+)/g, '$$$$$1')
 				}</script>`;
