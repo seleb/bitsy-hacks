@@ -66,7 +66,7 @@ after('startExportedGame', function () {
 	Object.keys(state.portraits).forEach(function (portrait) {
 		var src = state.portraits[portrait].src;
 
-		if (src.substr(-4).toUpperCase() !== '.GIF') {
+		if (src.substr(-4).toUpperCase() !== '.GIF' && src.substr(0, 14) !== 'data:image/gif') {
 			state.portraits[portrait] = {
 				loop: false,
 				duration: 0,
