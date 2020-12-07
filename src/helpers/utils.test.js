@@ -1,3 +1,4 @@
+import bitsy from 'bitsy';
 import {
 	getImage,
 	unique,
@@ -7,15 +8,20 @@ import {
 
 describe('getImage', () => {
 	it('requires a name/id and a map', () => {
+		bitsy.tile = {};
 		expect(() => getImage()).toThrow();
-		expect(() => getImage('', {})).not.toThrow();
+		expect(() => getImage('')).toThrow();
+		expect(() => getImage('test')).not.toThrow();
+		delete bitsy.tile;
 	});
 
 	it('returns the image in the map with the provided id if it exists', () => {
 		const map = {
 			a: {},
 		};
-		expect(getImage('a', map)).toBe(map.a);
+		bitsy.tile = map;
+		expect(getImage('a')).toBe(map.a);
+		delete bitsy.tile;
 	});
 
 	it('returns the first image in the map with the provided name if one exists', () => {
@@ -29,7 +35,9 @@ describe('getImage', () => {
 				order: 2,
 			},
 		};
-		expect(getImage('1', map)).toBe(map.a);
+		bitsy.tile = map;
+		expect(getImage('1')).toBe(map.a);
+		delete bitsy.tile;
 	});
 
 	it('returns the image in the map with the provided id if there exists both an image with that id, and with that name', () => {
@@ -39,7 +47,9 @@ describe('getImage', () => {
 				name: 'a',
 			},
 		};
-		expect(getImage('a', map)).toBe(map.a);
+		bitsy.tile = map;
+		expect(getImage('a')).toBe(map.a);
+		delete bitsy.tile;
 	});
 });
 

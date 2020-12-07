@@ -51,6 +51,9 @@ Args:
 Returns: the image in the given map with the given name/id
  */
 export function getImage(name) {
+	if (!name) {
+		throw new Error('`getImage` error: no `name` provided');
+	}
 	var id = Object.prototype.hasOwnProperty.call(bitsy.tile, name) ? name : Object.keys(bitsy.tile).find(function (e) {
 		return bitsy.tile[e].name === name;
 	});
