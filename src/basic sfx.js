@@ -60,14 +60,28 @@ before('startExportedGame', function () {
 });
 
 // walk hook
-after('onPlayerMoved', function () {
-	sounds.walk();
+var px;
+var py;
+var r;
+before('movePlayer', function () {
+	var p = bitsy.player();
+	px = p.x;
+	py = p.y;
+	r = p.room;
 });
-
+after('movePlayer', function () {
+	var p = bitsy.player();
+	if (sounds.walk && (p.x !== px || p.y !== py || p.room !== r)) sounds.walk();
+});
 // talk hooks
-after('startDialog', function () {
-	sounds.talk();
+after('startTitle', function () {
+	if (bitsy.dialogBuffer.IsActive() && sounds.talk) sounds.talk();
 });
-after('dialogBuffer.FlipPage', function () {
-	sounds.talk();
+after('cueScript', function () {
+	requestAnimationFrame(function () {
+		if (bitsy.dialogBuffer.IsActive() && sounds.talk) sounds.talk();
+	});
+});
+after('dialogBuffer.Continue', function () {
+	if (bitsy.dialogBuffer.IsActive() && sounds.talk) sounds.talk();
 });
