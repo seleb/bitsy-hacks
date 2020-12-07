@@ -44,7 +44,6 @@ export var hackOptions = {
 // expand the map to include ids of rooms listed by name
 // and store the original player sprite
 var originalDrw;
-var originalAnimation;
 after('load_game', function () {
 	var room;
 	Object.keys(hackOptions.avatarByRoom).forEach(function (i) {
@@ -54,7 +53,6 @@ after('load_game', function () {
 		}
 	});
 	originalDrw = bitsy.player().drw;
-	originalAnimation = bitsy.player().animation;
 });
 
 var currentRoom;
@@ -70,13 +68,11 @@ before('drawRoom', function () {
 		|| (newAvatarId === player.id) // manual reset
 	) {
 		player.drw = originalDrw;
-		player.animation = originalAnimation;
 		return;
 	}
-	var newAvatar = getImage(newAvatarId, bitsy.sprite);
+	var newAvatar = getImage(newAvatarId);
 	if (!newAvatar) {
 		throw new Error('Could not find sprite "' + newAvatarId + '" for room "' + currentRoom + '"');
 	}
 	player.drw = newAvatar.drw;
-	player.animation = Object.assign({}, newAvatar.animation);
 });

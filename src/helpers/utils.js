@@ -50,11 +50,11 @@ Args:
 
 Returns: the image in the given map with the given name/id
  */
-export function getImage(name, map) {
-	var id = Object.prototype.hasOwnProperty.call(map, name) ? name : Object.keys(map).find(function (e) {
-		return map[e].name === name;
+export function getImage(name) {
+	var id = Object.prototype.hasOwnProperty.call(bitsy.tile, name) ? name : Object.keys(bitsy.tile).find(function (e) {
+		return bitsy.tile[e].name === name;
 	});
-	return map[id];
+	return bitsy.tile[id];
 }
 
 /**
