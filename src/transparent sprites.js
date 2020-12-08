@@ -4,7 +4,7 @@
 @summary makes all sprites have transparent backgrounds
 @license MIT
 @version auto
-@requires Bitsy Version: 6.1
+@requires 8.0
 @author Sean S. LeBlanc
 
 @description
@@ -16,57 +16,18 @@ HOW TO USE:
 2. Edit hackOptions below as needed
 */
 import bitsy from 'bitsy';
-import {
-	before,
-} from './helpers/kitsy-script-toolkit';
+import { after } from './helpers/kitsy-script-toolkit';
 
 export var hackOptions = {
-	isTransparent: function (drawing) {
-		// return drawing.name == 'tea'; // specific transparent drawing
-		// return ['tea', 'flower', 'hat'].indexOf(drawing.name) !== -1; // specific transparent drawing list
-		// return drawing.name && drawing.name.indexOf('TRANSPARENT') !== -1; // transparent drawing flag in name
-		return true; // all drawings are transparent
+	isTransparent: function (tile) {
+		// return tile.name == 'tea'; // specific transparent tile
+		// return tile.type === 'AVA'; // make only the avatar transparent
+		// return ['tea', 'flower', 'hat'].indexOf(tile.name) !== -1; // specific transparent tile list
+		// return tile.name && tile.name.indexOf('TRANSPARENT') !== -1; // transparent tile flag in name
+		return true; // all tiles are transparent
 	},
 };
 
-var madeTransparent;
-var makeTransparent;
-before('onready', function () {
-	madeTransparent = {};
-	makeTransparent = false;
-});
-before('renderer.GetImage', function (drawing, paletteId, frameOverride) {
-	// check cache first
-	var cache = madeTransparent[drawing.drw] = madeTransparent[drawing.drw] || {};
-	var p = cache[paletteId] = cache[paletteId] || {};
-	var frameIndex = frameOverride || drawing.animation.frameIndex;
-	var source = bitsy.renderer.GetImageSource(drawing.drw);
-	if (p[frameIndex] === source) {
-		// already made this transparent
-		return;
-	}
-
-	// flag the next draw as needing to be made transparent
-	p[frameIndex] = source;
-	makeTransparent = hackOptions.isTransparent(drawing);
-});
-
-before('drawTile', function (canvas) {
-	if (makeTransparent) {
-		// redraw with all bg pixels transparent
-		var ctx = canvas.getContext('2d');
-		var data = ctx.getImageData(0, 0, canvas.width, canvas.height);
-		var bg = bitsy.getPal(bitsy.getRoomPal(bitsy.player().room))[0];
-		for (let i = 0; i < data.data.length; i += 4) {
-			var r = data.data[i];
-			var g = data.data[i + 1];
-			var b = data.data[i + 2];
-			if (r === bg[0] && g === bg[1] && b === bg[2]) {
-				data.data[i + 3] = 0;
-			}
-		}
-		ctx.putImageData(data, 0, 0);
-		// clear the flag
-		makeTransparent = false;
-	}
+after('createTile', function (id, type, options) {
+	bitsy.tile[id].bgc = hackOptions.isTransparent(bitsy.tile[id]) ? bitsy.COLOR_INDEX.TRANSPARENT - bitsy.tile[id].colorOffset : bitsy.tile[id].bgc;
 });
