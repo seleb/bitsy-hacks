@@ -4,6 +4,7 @@
 @summary tiles which hide the player
 @license MIT
 @version auto
+@requires 8.0
 @author Sean S. LeBlanc
 
 @description
@@ -46,15 +47,13 @@ after('movePlayer', function () {
 });
 
 // prevent player from drawing on top of opaque tiles
-var room;
 before('drawRoom', function () {
-	var player = bitsy.player();
-	room = player.room;
-	player.room = opaque ? null : room;
+	window.backupPlayer = bitsy.player();
+	bitsy.spriteInstances[bitsy.playerInstanceId] = opaque ? null : window.backupPlayer;
 });
 after('drawRoom', function () {
-	bitsy.player().room = room;
+	bitsy.spriteInstances[bitsy.playerInstanceId] = window.backupPlayer;
 });
 
 // draw player underneath opaque tile
-inject(/(\/\/draw tiles)/, 'drawTile(getSpriteImage(player(), getRoomPal(room.id), frameIndex), player().x, player().y, context);\n$1');
+inject(/(renderTarget\.Clear\(\);)/, '$1\nrenderer.CreateScreenTarget().DrawSprite(window.backupPlayer, window.backupPlayer.x, window.backupPlayer.y);');
