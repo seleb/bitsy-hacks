@@ -4,7 +4,7 @@
 @summary generate a browser favicon (tab icon) from a Bitsy sprite, including animation!
 @license WTFPL (do WTF you want)
 @version auto
-@requires Bitsy Version: 5.5
+@requires 8.0
 @author @mildmojo
 
 @description
@@ -29,9 +29,9 @@ import {
 // CONFIGURATION FOR FAVICON
 export var hackOptions = {
 	SPRITE_NAME: '', // Sprite name as entered in editor (not case-sensitive). Defaults to player avatar.
-	PALETTE_ID: 0, // Palette name or number to draw colors from. (Names not case-sensitive.)
 	BG_COLOR_NUM: 0, // Favicon background color in palette. 0 = BG, 1 = Tile, 2 = Sprite.
 	FG_COLOR_NUM: 2, // Favicon sprite color in palette. 0 = BG, 1 = Tile, 2 = Sprite.
+	PALETTE_ID: 1, // Palette name or number to draw colors from. (Names not case-sensitive.)
 	PIXEL_PADDING: 1, // Padding around sprite, in Bitsy pixel units.
 	ROUNDED_CORNERS: true, // Should the favicon have rounded corners? (Suggest margin 2px if rounding.)
 	FRAME_DELAY: 400, // Frame change interval (ms) if sprite is animated. Use `Infinity` to disable.
@@ -122,7 +122,7 @@ function updateBrowserFavicon(dataURL) {
 }
 
 function getFrames(spriteName) {
-	var frames = bitsy.renderer.GetImageSource(getImage(spriteName || bitsy.playerId, bitsy.sprite).drw);
+	var frames = bitsy.renderer.GetTileSource(getImage(spriteName || bitsy.playerId).drw);
 	return frames;
 }
 
