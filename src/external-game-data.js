@@ -76,7 +76,7 @@ function tryImportGameData(gameData, done) {
 		return line.trim();
 	};
 	var isImport = function (line) {
-		return bitsy.getType(line) === 'IMPORT';
+		return line.indexOf('IMPORT') === 0;
 	};
 	var importCmd = gameData
 		.split('\n')
