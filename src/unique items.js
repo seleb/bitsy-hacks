@@ -4,6 +4,7 @@
 @summary items which, when picked up, remove all other instances of that item from the game
 @license MIT
 @version auto
+@requires 8.0
 @author Sean S. LeBlanc
 
 @description
@@ -15,9 +16,7 @@ HOW TO USE:
 2. Update the `itemIsUnique` function to match your needs
 */
 import bitsy from 'bitsy';
-import {
-	after,
-} from './helpers/kitsy-script-toolkit';
+import { after } from './helpers/kitsy-script-toolkit';
 
 export var hackOptions = {
 	itemIsUnique: function (item) {
@@ -29,10 +28,19 @@ export var hackOptions = {
 };
 
 after('onInventoryChanged', function (id) {
-	if (hackOptions.itemIsUnique(bitsy.item[id])) {
+	if (hackOptions.itemIsUnique(bitsy.tile[id])) {
+		Object.values(bitsy.spriteInstances).forEach(function (instance) {
+			if (instance.id === id) {
+				delete bitsy.spriteInstances[instance.instanceId];
+			}
+		});
 		Object.values(bitsy.room).forEach(function (room) {
-			room.items = room.items.filter(function (i) {
-				return i.id !== id;
+			room.tilemap.forEach(function (row) {
+				row.forEach(function (t, idx) {
+					if (t === id) {
+						row[idx] = '0';
+					}
+				});
 			});
 		});
 	}
