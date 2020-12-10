@@ -1,10 +1,14 @@
 import {
-	end, press, snapshot, start, walkToCat,
+	end,
+	press,
+	snapshot,
+	start,
+	walkToCat,
 } from './test/bitsy';
 
 test('sprite effects', async () => {
 	await start({
-		catDialog: '\\(spriteEffect "SPR,A,invert"\\){spriteEffect "SPR,A,invert"}',
+		catDialog: '(spriteEffect "A" "invert"){spriteEffect "A" "invert"}',
 		hacks: [
 			'sprite effects',
 		],
@@ -23,7 +27,7 @@ test('sprite effects', async () => {
 
 test('compatible with transparency', async () => {
 	await start({
-		catDialog: '\\(spriteEffect "SPR,A,invert"\\){spriteEffect "SPR,A,invert"}',
+		catDialog: '(spriteEffect "A" "invert"){spriteEffect "A" "invert"}',
 		hacks: [
 			'transparent sprites',
 			'sprite effects',

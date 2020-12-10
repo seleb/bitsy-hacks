@@ -11,8 +11,8 @@
 Adds support for applying effects to sprites, items, and tiles.
 
 Usage:
-	{spriteEffect "SPR,A,wvy"}
-	{spriteEffectNow "TIL,a,shk"}
+	{spriteEffect "A" "wvy"}
+	{spriteEffectNow "A" "shk"}
 
 To disable a text effect, call the dialog command again with the same parameters.
 
@@ -40,7 +40,7 @@ The function arguments are:
 */
 import bitsy from 'bitsy';
 import { addDualDialogTag, after, before } from './helpers/kitsy-script-toolkit';
-import { getImage } from './helpers/utils';
+import { getImage, inject } from './helpers/utils';
 
 export var hackOptions = {
 	// map of custom effects
@@ -71,118 +71,64 @@ export var hackOptions = {
 	},
 	// reset function called after drawing a tile
 	// this can be used to undo any modifications to the canvas or context
-	reset: function (img, context) {
+	reset: function (context) {
 		context.filter = 'none';
 	},
 };
 
-var activeEffects = {
-	tile: {},
-	sprite: {},
-	item: {},
-};
-
-// create a map of the images to be rendered for reference
-// note: this is being done after `drawRoom` to avoid interfering
-// with transparent sprites, which needs to pre-process first
-var tileMap = {
-	tile: {},
-	sprite: {},
-	item: {},
-};
-function buildMap(map, room) {
-	var m = tileMap[map];
-	Object.keys(activeEffects[map]).forEach(function (id) {
-		var tile = bitsy[map][id];
-		if (!tile) {
-			return;
-		}
-		var t = (m[id] = m[id] || {});
-		var p = (t[room.pal] = t[room.pal] || {});
-		new Array(tile.animation.frameCount).fill(0).forEach(function (_, frame) {
-			p[frame] = bitsy.getTileImage(tile, room.pal, frame);
-		});
-	});
-}
-after('drawRoom', function (room) {
-	buildMap('tile', room);
-	buildMap('sprite', room);
-	buildMap('item', room);
-});
+var activeEffects = {};
 
 // apply effects before rendering tiles
-function preprocess(map, img, x, y, context) {
-	var m = tileMap[map];
-	var foundEffects = Object.entries(activeEffects[map]).find(function (entry) {
-		var t = m && m[entry[0]];
-		var p = t && t[bitsy.room[bitsy.curRoom].pal];
-		return (
-			p
-			&& Object.values(p).some(function (frame) {
-				return frame === img;
-			})
-		);
-	});
-	var effects = foundEffects ? foundEffects[1] : [];
-
-	var totalPos = { x: Number(x), y: Number(y) };
-	Object.keys(effects).forEach(function (effect) {
+function preprocess() {
+	var tile = window.spriteEffectsTile;
+	var effects = activeEffects[tile.drawing.id] || [];
+	var totalPos = { x: Number(tile.x), y: Number(tile.y) };
+	effects.forEach(function (effect) {
 		var pos = { x: totalPos.x, y: totalPos.y };
-		hackOptions.effects[effect](pos, Date.now(), context);
+		hackOptions.effects[effect](pos, Date.now(), bitsy.context);
 		totalPos = pos;
 	});
-	return [img, totalPos.x.toString(), totalPos.y.toString(), context];
+	return [totalPos.x.toString(), totalPos.y.toString()];
 }
-before('drawTile', function (img, x, y, context) {
-	return preprocess('tile', img, x, y, context);
-});
-before('drawSprite', function (img, x, y, context) {
-	return preprocess('sprite', img, x, y, context);
-});
-before('drawItem', function (img, x, y, context) {
-	return preprocess('item', img, x, y, context);
+
+inject(/(renderTarget\.DrawTile\(id, j, i, renderOptions\);)/, 'window.spriteEffectsTile = { drawing: tile[id], x: j, y: i };\n$1');
+inject(/(renderTarget\.DrawSprite\(spriteInstances\[id\], j, i, renderOptions\);)/, 'window.spriteEffectsTile = { drawing: spriteInstances[id], x: j, y: i };\n$1');
+inject(/(renderTarget\.DrawSprite\(tile\[id\], j, i, renderOptions\);)/, 'window.spriteEffectsTile = { drawing: tile[id], x: j, y: i };\n$1');
+
+before('bitsyCanvasPutTexture', function (textureId, x, y) {
+	if (!window.spriteEffectsTile) {
+		return [textureId, x, y];
+	}
+	var mx = x / window.spriteEffectsTile.x;
+	var my = y / window.spriteEffectsTile.y;
+	var processed = preprocess();
+	return [textureId, processed[0] * mx, processed[1] * my];
 });
 
 // reset after having drawn a tile
-after('drawTile', function (img, x, y, context) {
-	hackOptions.reset(img, context);
+after('bitsyCanvasPutTexture', function () {
+	hackOptions.reset(bitsy.context);
+	window.spriteEffectsTile = undefined;
 });
 
 // setup dialog commands
-var mapMap = {
-	spr: 'sprite',
-	sprite: 'sprite',
-	itm: 'item',
-	item: 'item',
-	til: 'tile',
-	tile: 'tile',
-};
 addDualDialogTag('spriteEffect', function (parameters) {
-	var params = parameters[0].split(/,\s?/);
-	var map = mapMap[(params[0] || '').toLowerCase()];
-	var id = getImage(params[1] || '', bitsy[map]).id;
-	var effect = params[2] || '';
+	var id = (getImage(parameters[0]) || {}).id;
+	var effect = parameters[1];
+	if (!id || !effect) {
+		throw new Error('Tried to use sprite effect, but missing id or effect');
+	}
 	if (!hackOptions.effects[effect]) {
 		throw new Error('Tried to use sprite effect "' + effect + '", but it does not exist');
 	}
-	var tile = (activeEffects[map][id] = activeEffects[map][id] || {});
-	if (tile && tile[effect]) {
-		delete tile[effect];
-	} else {
-		tile[effect] = true;
+	var effects = activeEffects[id] || [];
+	activeEffects[id] = effects.filter(function (i) { return i !== effect; });
+	if (effects.length === activeEffects[id].length) {
+		activeEffects[id].push(effect);
 	}
 });
 
 // reset
 before('reset_cur_game', function () {
-	activeEffects = {
-		tile: {},
-		sprite: {},
-		item: {},
-	};
-	tileMap = {
-		tile: {},
-		sprite: {},
-		item: {},
-	};
+	activeEffects = {};
 });
