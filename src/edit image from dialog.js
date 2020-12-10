@@ -16,26 +16,26 @@ Curlicue edits only the instances, which means changes will be lost
 after leaving a room (except for the avatar).
 This edits the originals too, so changes persist across rooms.
 
-{image "target, source"}
+{image "target" "source"}
 	target: id/name of image to edit
 	source: id/name of image to copy
 
-{imageNow "target, source"}
+{imageNow "target" "source"}
 	Same as {image}, but applied immediately instead of after dialog is closed.
 
-{imagePal "target, palette"}
+{imagePal "target" "palette"}
 	target: id/name of image to edit
 	source: palette index (0 is bg, 1 is tiles, 2 is sprites/items)
 
-{imagePalNow "target, palette"}
+{imagePalNow "target" "palette"}
 	Same as {imagePal}, but applied immediately instead of after dialog is closed.
 
 Examples:
-	{image "SPR, A, a"}
-	{imageNow "TIL, a, floor"}
-	{image "ITM, a, b"}
-	{imagePal "SPR, A, 1"}
-	{imagePalNow "TIL, floor, 2"}
+	{image "A" "a"}
+	{imageNow "a" "floor"}
+	{image "a" "b"}
+	{imagePal "A" "1"}
+	{imagePalNow "floor" "2"}
 
 HOW TO USE:
 	1. Copy-paste this script into a new script tag after the Bitsy source code.
