@@ -4,6 +4,7 @@
 @summary animal crossing-style audio
 @license MIT
 @version auto
+@requires 8.0
 @author Sean S. LeBlanc
 
 @description
@@ -14,17 +15,13 @@ HOW TO USE:
 1. Copy-paste into a script tag after the bitsy source
 2. Edit `onLetter` below as needed
 */
-import bitsy from 'bitsy';
-import {
-	inject,
-	before,
-} from './helpers/kitsy-script-toolkit';
+import { inject } from './helpers/kitsy-script-toolkit';
 
 export var hackOptions = {
 	// function called for each character printed to the dialog box
 	// the single parameter is the character with the following properties:
 	// 	offset: offset from actual position in pixels. starts at {x:0, y:0}
-	// 	color: color of rendered text in [0-255]. starts at {r:255, g:255, b:255, a:255}
+	// 	color: palette index of rendered text. starts at 1
 	// 	bitmap: character bitmap as array of pixels
 	// 	row: vertical position in rows
 	// 	col: horizontal position in characters
@@ -56,6 +53,7 @@ export var hackOptions = {
 inject(/(function DialogFontChar\(font, char, effectList\) {)/, '$1\nthis.char = char;');
 
 // hook up letter function
-before('dialogBuffer.DoNextChar', function () {
-	hackOptions.onLetter(bitsy.dialogBuffer.CurChar());
-});
+window.dialogAudioOnLetter = function (char) {
+	return hackOptions.onLetter(char);
+};
+inject(/(function DoNextChar\(\) {)/, '$1\nwindow.dialogAudioOnLetter(CurChar());');
