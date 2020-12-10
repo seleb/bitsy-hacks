@@ -35,7 +35,7 @@ Symbols can be nested to easily add variety, e.g. the text and grammar
 	"I'm a #thing#"
 	+
 	{
-		thing: ['#animal#', '#adjective# #animal#']
+		thing: ['#animal#', '#adjective# #animal#'],
 		animal: ['cat', 'dog', 'mouse'],
 		adjective: ['good', 'nice', 'powerful']
 	}
