@@ -4,7 +4,7 @@
 @summary process all dialog text with a tracery grammar
 @license MIT
 @version auto
-@requires 7.0
+@requires 8.0
 @author Sean S. LeBlanc
 
 @description
@@ -45,10 +45,7 @@ can create
 See http://www.crystalcodepalace.com/traceryTut.html for more on how to use tracery
 */
 import tracery from 'tracery-grammar';
-import {
-	before,
-	inject,
-} from './helpers/kitsy-script-toolkit';
+import { before } from './helpers/kitsy-script-toolkit';
 
 export var hackOptions = {
 	grammar: {
@@ -63,8 +60,10 @@ var bitsyGrammar;
 before('onready', function () {
 	bitsyGrammar = tracery.createGrammar(hackOptions.grammar);
 	bitsyGrammar.addModifiers(hackOptions.modifiers || tracery.baseEngModifiers);
-	window.tracery = window.tracery || bitsyGrammar.flatten.bind(bitsyGrammar);
 });
-
-// pre-process LiteralNode values with tracery grammar
-inject(/onReturn\(this\.value\)/, 'onReturn(window.tracery(this.value))');
+before('dialogBuffer.AddText', function (textStr, suppressWhitespace) {
+	return [bitsyGrammar.flatten(textStr), suppressWhitespace];
+});
+before('dialogBuffer.AddWord', function (wordStr) {
+	return [bitsyGrammar.flatten(wordStr)];
+});
