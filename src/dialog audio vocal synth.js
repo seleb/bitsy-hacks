@@ -4,6 +4,7 @@
 @summary animal crossing-style audio powered by the pink trombone vocal synth
 @license MIT
 @version auto
+@requires 8.0
 @author Sean S. LeBlanc
 
 @description
@@ -377,7 +378,7 @@ after('dialogRenderer.DrawNextArrow', () => {
 	resetTract();
 });
 
-after('onExitDialog', function () {
+after('dialogBuffer.OnDialogEnd', function () {
 	if (hackOptions.autoReset) {
 		voice = defaultVoice;
 		resetTract();
