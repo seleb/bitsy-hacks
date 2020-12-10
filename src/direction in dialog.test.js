@@ -99,7 +99,6 @@ test('direction in dialog', async () => {
 	await start({
 		gamedata,
 	});
-	await evaluate('console.log = () => {};');
 	await press('ArrowRight'); // talk to cat from the right
 	await press('Enter'); // complete dialog page
 	await snapshot();
