@@ -1,14 +1,14 @@
 import {
+	end,
+	press,
+	snapshot,
 	start,
 	walkToCat,
-	press,
-	end,
-	snapshot,
 } from './test/bitsy';
 
 test('image', async () => {
 	await start({
-		catDialog: '\\(image "SPR, a, A"\\)(image "SPR, a, A")',
+		catDialog: '(image "2" "A"){image "2" "A"}',
 		hacks: ['edit image from dialog'],
 	});
 	await walkToCat();
@@ -22,7 +22,7 @@ test('image', async () => {
 
 test('imageNow', async () => {
 	await start({
-		catDialog: '\\(imageNow "SPR, a, A"\\)(imageNow "SPR, a, A")',
+		catDialog: '(imageNow "2" "A"){imageNow "2" "A"}',
 		hacks: ['edit image from dialog'],
 	});
 	await walkToCat();
@@ -35,7 +35,7 @@ test('imageNow', async () => {
 
 test('compatible with transparency', async () => {
 	await start({
-		catDialog: '\\(imageNow "SPR, A, a"\\)(imageNow "SPR, A, a")',
+		catDialog: '(imageNow "A" "2"){imageNow "A" "2"}',
 		hacks: ['edit image from dialog', 'transparent sprites'],
 	});
 	await walkToCat();
