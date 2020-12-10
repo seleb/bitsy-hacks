@@ -4,7 +4,7 @@
 @summary text-to-speech for bitsy dialog
 @license MIT
 @version auto
-@requires 5.5
+@requires 8.0
 @author Sean S. LeBlanc
 
 @description
@@ -16,7 +16,6 @@ and a manual mode in which TTS can be triggered via dialog commands.
 Due to how bitsy handles scripting, the automatic mode is only able to read a segment of dialog *after* it has finished printing.
 This means that normally you'd often be waiting a long time for text animation to complete before hearing the TTS.
 Players could manually skip the dialog animations to speed this up, but I've found that this is still quite stilted.
-The hackOption `hurried` is included below, which automatically skips text animation in order to help counteract this.
 
 Usage:
 	(ttsVoice "<pitch>,<rate>,<voice>")
@@ -54,7 +53,6 @@ import {
 
 export var hackOptions = {
 	automatic: true, // disable this to prevent TTS from playing for all dialog (i.e. you only want to use TTS via commands)
-	hurried: true, // disable this to let bitsy text animations play out normally (not recommended for automatic mode)
 };
 
 var speaking = false;
@@ -139,9 +137,11 @@ function speak() {
 
 // queue a newline when dialog ends in case you start a new dialog before the TTS finishes
 // this smooths out the TTS playback in cases without punctuation (which is common b/c bitsyfolk)
-after('dialogBuffer.EndDialog', function () {
+after('dialogBuffer.OnDialogEnd', function () {
 	queueVoice();
 });
+
+inject(/(function CurPage\(\) {)/, 'var CurPage = this.CurPage = $1;');
 
 // save the character on dialog font characters so we can read it back post-render
 inject(/(function DialogFontChar\(font, char, effectList\) {)/, '$1\nthis.char = char;');
@@ -150,22 +150,13 @@ inject(/(function DialogFontChar\(font, char, effectList\) {)/, '$1\nthis.char =
 var spoke = false;
 after('dialogRenderer.DrawNextArrow', function () {
 	if (hackOptions.automatic && !spoke) {
-		queueSpeak(bitsy.dialogBuffer.CurPage().map((a) => a.map((i) => i.char).join('')).join(' '));
+		queueSpeak(bitsy.dialogBuffer.CurPage().rows.map((a) => a.chars.map((i) => i.char).join('')).join(' '));
 		spoke = true;
 	}
 });
 after('dialogBuffer.Continue', function () {
 	spoke = false;
 });
-
-// hook up hurried mode
-function hurry() {
-	if (hackOptions.hurried) {
-		bitsy.dialogBuffer.Skip();
-	}
-}
-after('dialogBuffer.FlipPage', hurry);
-after('startDialog', hurry);
 
 // hook up dialog commands
 addDualDialogTag('ttsVoice', function (parameters) {
