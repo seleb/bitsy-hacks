@@ -8,7 +8,7 @@ import {
 
 test('dialog prompt', async () => {
 	await start({
-		catDialog: 'Who am I? {prompt "name,cat"}{p}I\'m a {say name}',
+		catDialog: 'Who am I? {prompt "name" "cat"}{PG}I\'m a {SAY name}',
 		hacks: ['dialog prompt'],
 	});
 	await walkToCat();

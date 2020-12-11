@@ -4,26 +4,25 @@
 @summary prompt the user for text input in dialog
 @license MIT
 @version auto
-@requires 6.4
+@requires 8.0
 @author Sean S. LeBlanc
 
 @description
 Adds a dialog command which prompts the user for input,
 and stores the result in a variable.
 
-Note: This hack also includes the paragraph break hack;
-this is because text after a dialog prompt won't show up unless
-there is a paragraph break in between them.
+Note: text after a dialog prompt won't show up unless
+there is a page break in between them.
 
 Usage:
-	(prompt "variableName")
-	(prompt "variableName,defaultValue")
+	{prompt "variableName"}
+	{prompt "variableName" "defaultValue"}
 
 Examples:
-	Set name: (prompt "name")
-	Set name with default: (prompt "name,Adam")
-	Set name using current as default: {temp="name,"+name}(prompt temp)
-	Set name with text after: (prompt "name")(p)Name is now {print name}
+	Set name: {prompt "name"}
+	Set name with default: {prompt "name" "Adam"}
+	Set name using current as default: {prompt "name" name}
+	Set name with text after: {prompt "name"}{PG}Name is now {SAY name}
 
 By default, no validation or transformation is applied to the user input;
 whatever they submit (even a blank input) is used as the variable value.
@@ -42,7 +41,6 @@ import {
 	before,
 	addDialogTag,
 } from './helpers/kitsy-script-toolkit';
-import './paragraph-break';
 
 export var hackOptions = {
 	// character used to indicate caret
@@ -69,8 +67,10 @@ var prompted = false;
 // helper for making a deep copy of dialog buffer
 function bufferCopy(buffer) {
 	return buffer.map(function (page) {
-		return page.map(function (row) {
-			return row.slice();
+		return Object.assign({}, page, {
+			rows: page.rows.map(function (row) {
+				return Object.assign({}, row, { rows: row.chars.slice() });
+			}),
 		});
 	});
 }
@@ -125,9 +125,8 @@ addDialogTag('prompt', function (parameters, onReturn) {
 	prompted = true;
 
 	// parse parameters
-	var params = parameters[0].split(/,\s?/);
-	var variableName = params[0];
-	var defaultValue = params[1] || '';
+	var variableName = parameters[0];
+	var defaultValue = parameters[1] || '';
 
 	// prevent bitsy from handling input
 	var key = bitsy.key;
@@ -145,8 +144,8 @@ addDialogTag('prompt', function (parameters, onReturn) {
 		event.preventDefault();
 		try {
 			var value = hackOptions.onSubmit(variableName, promptInput.value);
-			// TODO: figure out how to set the variable
-			// environment.SetVariable(variableName, value);
+			console.log('set value', variableName, value);
+			bitsy.variable[variableName] = value;
 		} catch (error) {
 			return;
 		}
@@ -161,13 +160,13 @@ addDialogTag('prompt', function (parameters, onReturn) {
 		bitsy.input.isTapReleased = isTapReleased;
 		bitsy.dialogBuffer.CanContinue = CanContinue;
 
-		onReturn(false);
+		onReturn(null);
 	};
 	// save a copy of the current buffer state for display purposes
 	cachedBuffer = bufferCopy(bitsy.dialogBuffer.GetBuffer());
 	// add a caret character immediately (otherwise it won't show up till a key is pressed)
-	bitsy.dialogBuffer.AddText(hackOptions.caret);
+	bitsy.dialogBuffer.AddText(defaultValue + hackOptions.caret);
 });
 
 // expose a setter/getter for private buffer in DialogBuffer class
-inject(/(this\.CurPage =)/, 'this.GetBuffer = function(){ return buffer; };this.SetBuffer = function(b){ buffer = b; };\n$1');
+inject(/(this\.ForEachActiveChar = function\(handler\) {)/, 'this.GetBuffer = function(){ return buffer; };this.SetBuffer = function(b){ buffer = b; };\n$1');
