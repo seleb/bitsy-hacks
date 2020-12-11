@@ -8,7 +8,7 @@ import {
 
 test('dialog', async () => {
 	await start({
-		catDialog: '\\(dialog "SPR, a, new dialog"\\)(dialog "SPR, a, new dialog")',
+		catDialog: '{dialog "2" "new dialog"}(dialog "2" "new dialog")',
 		hacks: ['edit dialog from dialog'],
 	});
 	await walkToCat();
