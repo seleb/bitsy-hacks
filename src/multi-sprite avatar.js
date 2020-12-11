@@ -4,6 +4,7 @@
 @summary make the player big
 @license MIT
 @version auto
+@requires 8.0
 @author Sean S. LeBlanc
 
 @description
@@ -15,40 +16,37 @@ but multi-sprite avatar's shape can be arbitrary.
 
 Notes:
 - will probably break any other hacks involving moving other sprites around (they'll probably use the player's modified collision)
-- the original avatar sprite isn't changed, but will be covered by a piece at x:0,y:0
+- the original avatar sprite isn't changed, and will covered a piece at x:0,y:0
 - make sure not to include the original avatar sprite in the pieces list (this will cause the syncing to remove the player from the game)
 
 HOW TO USE:
 1. Copy-paste into a script tag after the bitsy source
 2. Edit `pieces` below to customize the multi-sprite avatar
-	Pieces must have an x,y offset and a sprite id
+	Pieces must have an x,y offset and a tile id
 */
 import bitsy from 'bitsy';
 import {
 	before,
 	after,
 } from './helpers/kitsy-script-toolkit';
-import {
-	getImage,
-} from './helpers/utils';
 
 export var hackOptions = {
 	pieces: [{
 		x: 0,
 		y: 0,
-		spr: 'c',
+		til: 'c',
 	}, {
 		x: 1,
 		y: 0,
-		spr: 'd',
+		til: 'd',
 	}, {
 		x: 0,
 		y: 1,
-		spr: 'e',
+		til: 'e',
 	}, {
 		x: 1,
 		y: 1,
-		spr: 'f',
+		til: 'f',
 	}],
 	enabledOnStart: true,
 };
@@ -59,46 +57,50 @@ if (hackOptions.enabledOnStart) {
 
 var enabled = false;
 var pieces = [];
+var instances = [];
 
 function syncPieces() {
 	var p = bitsy.player();
-	for (var i = 0; i < pieces.length; ++i) {
-		var piece = pieces[i];
-		var spr = getImage(piece.spr, bitsy.sprite);
-
-		spr.room = p.room;
-		spr.x = p.x + piece.x;
-		spr.y = p.y + piece.y;
+	for (var i = 0; i < instances.length; ++i) {
+		instances[i].x = p.x + pieces[i].x;
+		instances[i].y = p.y + pieces[i].y;
 	}
 }
 
 function enableBig(newPieces) {
 	disableBig();
 	pieces = newPieces || hackOptions.pieces;
+	instances = pieces.map(function (piece) {
+		var instanceId = ['msa', piece.til, piece.x, piece.y].join('-');
+		var instance = bitsy.createSpriteInstance(instanceId, { id: piece.til, x: 0, y: 0 });
+		bitsy.spriteInstances[instanceId] = instance;
+		return instance;
+	});
 	enabled = true;
 	syncPieces();
 }
 
 function disableBig() {
 	enabled = false;
-	for (var i = 0; i < pieces.length; ++i) {
-		getImage(pieces[i].spr, bitsy.sprite).room = null;
-	}
+	instances.forEach(function (instance) {
+		delete bitsy.spriteInstances[instance];
+	});
+	instances = [];
 }
 
 // handle item/ending/exit collision
-var originalGetItemIndex = bitsy.getItemIndex;
+var originalGetItemId = bitsy.getItemId;
 var originalGetEnding = bitsy.getEnding;
 var originalGetExit = bitsy.getExit;
-var getItemIndexOverride = function (roomId, x, y) {
+var getItemIdOverride = function (roomId, x, y) {
 	for (var i = 0; i < pieces.length; ++i) {
 		var piece = pieces[i];
-		var idx = originalGetItemIndex(roomId, x + piece.x, y + piece.y);
-		if (idx !== -1) {
-			return idx;
+		var id = originalGetItemId(roomId, x + piece.x, y + piece.y);
+		if (id !== null) {
+			return id;
 		}
 	}
-	return -1;
+	return null;
 };
 var getEndingOverride = function (roomId, x, y) {
 	for (var i = 0; i < pieces.length; ++i) {
@@ -122,13 +124,13 @@ var getExitOverride = function (roomId, x, y) {
 };
 before('movePlayer', function () {
 	if (enabled) {
-		bitsy.getItemIndex = getItemIndexOverride;
+		bitsy.getItemId = getItemIdOverride;
 		bitsy.getEnding = getEndingOverride;
 		bitsy.getExit = getExitOverride;
 	}
 });
 after('movePlayer', function () {
-	bitsy.getItemIndex = originalGetItemIndex;
+	bitsy.getItemId = originalGetItemId;
 	bitsy.getEnding = originalGetEnding;
 	bitsy.getExit = originalGetExit;
 	if (enabled) {
@@ -136,54 +138,16 @@ after('movePlayer', function () {
 	}
 });
 
-// handle wall/sprite collision
-function repeat(fn) {
-	var p = bitsy.player();
-	var x = p.x;
-	var y = p.y;
-	var r;
-	for (var i = 0; i < pieces.length; ++i) {
-		var piece = pieces[i];
-		p.x = x + piece.x;
-		p.y = y + piece.y;
-		r = r || fn();
-	}
-	p.x = x;
-	p.y = y;
-	return r;
-}
-var repeats = [
-	'getSpriteLeft',
-	'getSpriteRight',
-	'getSpriteUp',
-	'getSpriteDown',
-	'isWallLeft',
-	'isWallRight',
-	'isWallUp',
-	'isWallDown',
-];
-
 // prevent player from colliding with their own pieces
-function filterPieces(id) {
-	for (var i = 0; i < pieces.length; ++i) {
-		if (id === pieces[i].spr || (bitsy.sprite[id] && bitsy.sprite[id].name === pieces[i].spr)) {
-			return null;
-		}
-	}
-	return id;
+function filterPieces(instance) {
+	return instance.some(function (i) {
+		return i === instance;
+	});
 }
 
 after('startExportedGame', function () {
-	for (var i = 0; i < repeats.length; ++i) {
-		var r = repeats[i];
-		var originalFn = bitsy[r];
-		// eslint-disable-next-line no-loop-func
-		bitsy[r] = function (fn) {
-			return enabled ? repeat(fn) : fn();
-		}.bind(undefined, originalFn);
-	}
-	var originalGetSpriteAt = bitsy.getSpriteAt;
-	bitsy.getSpriteAt = function () {
-		return filterPieces(originalGetSpriteAt.apply(this, arguments));
+	var originalGetAllSpritesAt = bitsy.getAllSpritesAt;
+	bitsy.getAllSpritesAt = function () {
+		return filterPieces(originalGetAllSpritesAt.apply(this, arguments));
 	};
 });
