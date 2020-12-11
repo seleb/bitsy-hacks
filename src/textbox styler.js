@@ -126,7 +126,6 @@ import {
 	inject,
 	addDualDialogTag,
 } from './helpers/kitsy-script-toolkit';
-import './paragraph-break';
 import { getRelativeNumber, clamp } from './helpers/utils';
 
 export var hackOptions = {
