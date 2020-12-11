@@ -144,7 +144,6 @@ addDialogTag('prompt', function (parameters, onReturn) {
 		event.preventDefault();
 		try {
 			var value = hackOptions.onSubmit(variableName, promptInput.value);
-			console.log('set value', variableName, value);
 			bitsy.variable[variableName] = value;
 		} catch (error) {
 			return;
