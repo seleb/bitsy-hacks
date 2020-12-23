@@ -187,7 +187,10 @@ before('startExportedGame', function () {
 
 // hook up dialog functions
 function dialogLoad(environment, parameters) {
+	var loadOnStart = hackOptions.loadOnStart;
+	hackOptions.loadOnStart = true;
 	bitsy.reset_cur_game();
+	hackOptions.loadOnStart = loadOnStart;
 	bitsy.dialogBuffer.EndDialog();
 	bitsy.startNarrating(parameters[0] || '');
 }
