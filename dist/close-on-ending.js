@@ -3,7 +3,7 @@
 @file close on ending
 @summary Prevents from playing past an ending
 @license MIT
-@version 15.1.0
+@version 15.1.1
 @author Sean S. LeBlanc
 
 @description

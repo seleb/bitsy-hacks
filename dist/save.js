@@ -3,7 +3,7 @@
 @file save
 @summary save/load your game
 @license MIT
-@version 15.1.0
+@version 15.1.1
 @requires 5.4
 @author Sean S. LeBlanc
 
@@ -503,7 +503,10 @@ before('startExportedGame', function () {
 
 // hook up dialog functions
 function dialogLoad(environment, parameters) {
+	var loadOnStart = hackOptions.loadOnStart;
+	hackOptions.loadOnStart = true;
 	bitsy.reset_cur_game();
+	hackOptions.loadOnStart = loadOnStart;
 	bitsy.dialogBuffer.EndDialog();
 	bitsy.startNarrating(parameters[0] || '');
 }

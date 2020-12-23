@@ -3,7 +3,7 @@
 @file custom text effect
 @summary make {custom}text effects{custom}
 @license MIT
-@version 15.1.0
+@version 15.1.1
 @requires 5.3
 @author Sean S. LeBlanc
 

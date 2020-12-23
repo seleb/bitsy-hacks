@@ -1,3 +1,10 @@
+## [15.1.1](https://github.com/seleb/bitsy-hacks/compare/v15.1.0...v15.1.1) (2020-12-23)
+
+
+### Bug Fixes
+
+* load from dialog not working if `loadOnStart` not enabled ([3efdcad](https://github.com/seleb/bitsy-hacks/commit/3efdcadcfc8f295479464a50db59148137cedb1a))
+
 # [15.1.0](https://github.com/seleb/bitsy-hacks/compare/v15.0.4...v15.1.0) (2020-12-06)
 
 

@@ -3,7 +3,7 @@
 @file tracery processing
 @summary process all dialog text with a tracery grammar
 @license MIT
-@version 15.1.0
+@version 15.1.1
 @requires 7.0
 @author Sean S. LeBlanc
 
@@ -35,7 +35,7 @@ Symbols can be nested to easily add variety, e.g. the text and grammar
 	"I'm a #thing#"
 	+
 	{
-		thing: ['#animal#', '#adjective# #animal#']
+		thing: ['#animal#', '#adjective# #animal#'],
 		animal: ['cat', 'dog', 'mouse'],
 		adjective: ['good', 'nice', 'powerful']
 	}
