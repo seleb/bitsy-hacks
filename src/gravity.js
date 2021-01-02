@@ -180,14 +180,26 @@ var offsets = {
 	right: [0, 1],
 };
 
-after('onPlayerMoved', function () {
-	if (!active) return;
+var px;
+var py;
+var pr;
+before('update', function () {
 	var player = bitsy.player();
+	px = player.x;
+	py = player.y;
+	pr = player.room;
+});
+after('update', function () {
+	var player = bitsy.player();
+	if (px !== player.x || py !== player.y || pr !== player.room) {
+		if (!active) return;
+		var player = bitsy.player();
 
-	wasStandingOnSomething = isSolid(gravityDir, player.x, player.y);
+		wasStandingOnSomething = isSolid(gravityDir, player.x, player.y);
 
-	// if player is standing on something and has a fallCounter > 0, then they just landed
-	if (wasStandingOnSomething && fallCounter && hackOptions.landed) hackOptions.landed(fallCounter);
+		// if player is standing on something and has a fallCounter > 0, then they just landed
+		if (wasStandingOnSomething && fallCounter && hackOptions.landed) hackOptions.landed(fallCounter);
+	}
 });
 
 before('movePlayer', function () {
