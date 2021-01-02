@@ -29,6 +29,7 @@ export var hackOptions = {
 	},
 };
 
+// pass through transparent sprites option
 transparentSprites.isTransparent = function (drawing) {
 	return hackOptions.isTransparent(drawing);
 };
