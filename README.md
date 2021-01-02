@@ -10,6 +10,7 @@ A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamled
 
 - 📦 [3d](/dist/3d.js): bitsy in three dee
 - 👥 [avatar by room](/dist/avatar-by-room.js): change the avatar in certain rooms
+- 🖼 [backdrops](/dist/backdrops.js): makes the game have a backdrop
 - 🔈 [basic sfx](/dist/basic-sfx.js): "walk" and "talk" sound effect support
 - 😌 [bitsymuse](/dist/bitsymuse.js): A variety of Bitsy sound and music handlers
 - 😴 [canvas replacement](/dist/canvas-replacement.js): WebGLazy bitsy integration (this one's mostly just for me)

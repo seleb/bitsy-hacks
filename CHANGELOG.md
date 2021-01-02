@@ -1,3 +1,10 @@
+# [15.3.0](https://github.com/seleb/bitsy-hacks/compare/v15.2.0...v15.3.0) (2021-01-02)
+
+
+### Features
+
+* add backdrops hack ([ad2da85](https://github.com/seleb/bitsy-hacks/commit/ad2da85c3470897ce21ca386021ee32e10e3ee68))
+
 # [15.2.0](https://github.com/seleb/bitsy-hacks/compare/v15.1.1...v15.2.0) (2021-01-02)
 
 

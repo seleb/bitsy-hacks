@@ -1,30 +1,42 @@
 /**
-⬛
-@file opaque tiles
-@summary tiles which hide the player
+🖼
+@file backdrops
+@summary makes the game have a backdrop
 @license MIT
 @version 15.3.0
-@author Sean S. LeBlanc
+@requires Bitsy Version: 7.2
+@author Cephalopodunk & Sean S. LeBlanc
 
 @description
-Render the player underneath certain tiles
-instead of always on top of the map.
+Shows backdrops behind the game
 
-Note: compatible with transparency hack!
+Note: includes transparent background/sprites
 
 HOW TO USE:
 1. Copy-paste this script into a script tag after the bitsy source
-2. Update the `tileIsOpaque` function below to match your needs
+2. Edit hackOptions below as needed
 */
 this.hacks = this.hacks || {};
 (function (exports, bitsy) {
 'use strict';
-var hackOptions = {
-	tileIsOpaque: function (tile) {
-		// return tile.name == 'wall'; // specific opaque tile
-		// return ['wall', 'column', 'door'].indexOf(tile.name) !== -1; // specific opaque tile list
-		// return tile.name && tile.name.indexOf('OPAQUE') !== -1; // opaque tile flag in name
-		return true; // all tiles are opaque
+var hackOptions$2 = {
+	// If true, backdrop changes will persist across rooms without a backdrop defined
+	permanent: false,
+	// Backdrops shown by room
+	// Include an entry in this map for every room that you want to trigger a change,
+	// and then specify the image source for the backdrop (generally a file path relative to your game's html file).
+	// Expand the map to include as many rooms as you need.
+	backdropsByRoom: {
+		'room name or id': './images/image for room.png',
+	},
+	// Backdrop shown during title
+	backdropTitle: './images/title.png',
+	// transparent sprites option
+	isTransparent: function (drawing) {
+		// return drawing.name == 'tea'; // specific transparent drawing
+		// return ['tea', 'flower', 'hat'].indexOf(drawing.name) !== -1; // specific transparent drawing list
+		// return drawing.name && drawing.name.indexOf('TRANSPARENT') !== -1; // transparent drawing flag in name
+		return true; // all drawings are transparent
 	},
 };
 
@@ -244,39 +256,171 @@ function reinitEngine() {
 	bitsy.dialogBuffer = bitsy.dialogModule.CreateBuffer();
 }
 
+/**
+🏁
+@file transparent sprites
+@summary makes all sprites have transparent backgrounds
+@license MIT
+@version auto
+@requires Bitsy Version: 6.1
+@author Sean S. LeBlanc
 
+@description
+Makes all sprites have transparent backgrounds.
+i.e. tiles can be seen underneath the player, sprites, and items.
 
+HOW TO USE:
+1. Copy-paste this script into a script tag after the bitsy source
+2. Edit hackOptions below as needed
+*/
 
+var hackOptions = {
+	isTransparent: function (drawing) {
+		// return drawing.name == 'tea'; // specific transparent drawing
+		// return ['tea', 'flower', 'hat'].indexOf(drawing.name) !== -1; // specific transparent drawing list
+		// return drawing.name && drawing.name.indexOf('TRANSPARENT') !== -1; // transparent drawing flag in name
+		return true; // all drawings are transparent
+	},
+};
 
-// track whether opaque
-var opaque = false;
-after('movePlayer', function () {
-	// check for changes
-	var player = bitsy.player();
-	var tile = bitsy.tile[bitsy.getTile(player.x, player.y)];
-	if (!tile) {
-		opaque = false;
+var madeTransparent;
+var makeTransparent;
+before('onready', function () {
+	madeTransparent = {};
+	makeTransparent = false;
+});
+before('renderer.GetImage', function (drawing, paletteId, frameOverride) {
+	// check cache first
+	var cache = madeTransparent[drawing.drw] = madeTransparent[drawing.drw] || {};
+	var p = cache[paletteId] = cache[paletteId] || {};
+	var frameIndex = frameOverride || drawing.animation.frameIndex;
+	var source = bitsy.renderer.GetImageSource(drawing.drw);
+	if (p[frameIndex] === source) {
+		// already made this transparent
 		return;
 	}
-	opaque = hackOptions.tileIsOpaque(tile);
+
+	// flag the next draw as needing to be made transparent
+	p[frameIndex] = source;
+	makeTransparent = hackOptions.isTransparent(drawing);
 });
 
-// prevent player from drawing on top of opaque tiles
-var room;
+before('drawTile', function (canvas) {
+	if (makeTransparent) {
+		// redraw with all bg pixels transparent
+		var ctx = canvas.getContext('2d');
+		var data = ctx.getImageData(0, 0, canvas.width, canvas.height);
+		var bg = bitsy.getPal(bitsy.getRoomPal(bitsy.player().room))[0];
+		for (let i = 0; i < data.data.length; i += 4) {
+			var r = data.data[i];
+			var g = data.data[i + 1];
+			var b = data.data[i + 2];
+			if (r === bg[0] && g === bg[1] && b === bg[2]) {
+				data.data[i + 3] = 0;
+			}
+		}
+		ctx.putImageData(data, 0, 0);
+		// clear the flag
+		makeTransparent = false;
+	}
+});
+
+/**
+🔳
+@file transparent background
+@summary makes the game have a transparent background
+@license MIT
+@version auto
+@requires Bitsy Version: 7.2
+@author Cephalopodunk & Sean S. LeBlanc
+
+@description
+Makes the game background transparent, showing whatever would be visible behind it in the html document.
+
+Note: also includes transparent sprites
+
+HOW TO USE:
+1. Copy-paste this script into a script tag after the bitsy source
+2. Edit hackOptions below as needed
+*/
+
+var hackOptions$1 = {
+	// transparent sprites option
+	isTransparent: function (drawing) {
+		// return drawing.name == 'tea'; // specific transparent drawing
+		// return ['tea', 'flower', 'hat'].indexOf(drawing.name) !== -1; // specific transparent drawing list
+		// return drawing.name && drawing.name.indexOf('TRANSPARENT') !== -1; // transparent drawing flag in name
+		return true; // all drawings are transparent
+	},
+};
+
+// pass through transparent sprites option
+hackOptions.isTransparent = function (drawing) {
+	return hackOptions$1.isTransparent(drawing);
+};
+
+inject$1(/ctx.fillRect(\(0,0,canvas.width,canvas.height\);)/g, 'ctx.clearRect$1');
+inject$1(/context.fillRect(\(0,0,canvas.width,canvas.height\);)/g, 'context.clearRect$1');
+
+
+
+
+
+// pass through transparent sprites option
+hackOptions$1.isTransparent = function (drawing) {
+	return hackOptions$2.isTransparent(drawing);
+};
+
+var imgCache = [];
+after('onload', function () {
+	// set base style
+	var game = document.getElementById('game');
+	game.style.backgroundSize = 'cover';
+	// preload images
+	Object.values(hackOptions$2.imagesByRoom)
+		.concat([hackOptions$2.imageTitle, hackOptions$2.imageDefault])
+		.filter(function (src) {
+			return src;
+		})
+		.reduce(function (result, src) {
+			var img = new Image();
+			img.src = src;
+			result.push(img);
+			return result;
+		}, imgCache);
+});
+
+// hook up backdrops
+var currentBackdrop;
+function setBackdrop(src) {
+	if (src === currentBackdrop) {
+		return;
+	}
+	currentBackdrop = src;
+	var game = document.getElementById('game');
+	if (!src) {
+		game.style.backgroundImage = null;
+		return;
+	}
+	game.style.backgroundImage = 'url("' + src + '")';
+}
+
 before('drawRoom', function () {
-	var player = bitsy.player();
-	room = player.room;
-	player.room = opaque ? null : room;
-});
-after('drawRoom', function () {
-	bitsy.player().room = room;
+	var backdrop = hackOptions$2.backdropsByRoom[bitsy.player().room];
+	// if no backdrop defined + not permanent, reset
+	if (backdrop !== undefined || !hackOptions$2.permanent) {
+		setBackdrop(backdrop);
+	}
 });
 
-// draw player underneath opaque tile
-inject$1(/(\/\/draw tiles)/, 'drawTile(getSpriteImage(player(), getRoomPal(room.id), frameIndex), player().x, player().y, context);\n$1');
+after('startNarrating', function (dialogStr, end) {
+	if (!end) {
+		setBackdrop(hackOptions$2.backdropTitle);
+	}
+});
 
-exports.hackOptions = hackOptions;
+exports.hackOptions = hackOptions$2;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-}(this.hacks.opaque_tiles = this.hacks.opaque_tiles || {}, window));
+}(this.hacks.backdrops = this.hacks.backdrops || {}, window));

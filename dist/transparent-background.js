@@ -3,7 +3,7 @@
 @file transparent background
 @summary makes the game have a transparent background
 @license MIT
-@version 15.2.0
+@version 15.3.0
 @requires Bitsy Version: 7.2
 @author Cephalopodunk & Sean S. LeBlanc
 
@@ -311,6 +311,7 @@ before('drawTile', function (canvas) {
 
 
 
+// pass through transparent sprites option
 hackOptions.isTransparent = function (drawing) {
 	return hackOptions$1.isTransparent(drawing);
 };
