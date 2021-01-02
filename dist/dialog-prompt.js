@@ -3,7 +3,7 @@
 @file dialog prompt
 @summary prompt the user for text input in dialog
 @license MIT
-@version 15.1.1
+@version 15.2.0
 @requires 6.4
 @author Sean S. LeBlanc
 

@@ -3,7 +3,7 @@
 @file edit room from dialog
 @summary modify the content of a room from dialog
 @license MIT
-@version 15.1.1
+@version 15.2.0
 @requires Bitsy Version: 6.1
 @author Dana Holdampf
 

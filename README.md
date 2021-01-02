@@ -63,6 +63,7 @@ A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamled
 - 📐 [textbox styler](/dist/textbox-styler.js): customize the style and properties of the textbox
 - 🏰 [tracery processing](/dist/tracery-processing.js): process all dialog text with a tracery grammar
 - 🎞 [transitions](/dist/transitions.js): customizable WebGL transitions
+- 🔳 [transparent background](/dist/transparent-background.js): makes the game have a transparent background
 - 👁️‍🗨️ [transparent dialog](/dist/transparent-dialog.js): makes the dialog box have a transparent background
 - 🏁 [transparent sprites](/dist/transparent-sprites.js): makes all sprites have transparent backgrounds
 - 💱 [twine bitsy comms](/dist/twine-bitsy-comms.js): interprocess communication for twine and bitsy

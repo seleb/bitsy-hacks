@@ -1,3 +1,10 @@
+# [15.2.0](https://github.com/seleb/bitsy-hacks/compare/v15.1.1...v15.2.0) (2021-01-02)
+
+
+### Features
+
+* add transparent background hack ([3713fef](https://github.com/seleb/bitsy-hacks/commit/3713fef01ffdb867643a8e6874b2c2ab714bd6f7))
+
 ## [15.1.1](https://github.com/seleb/bitsy-hacks/compare/v15.1.0...v15.1.1) (2020-12-23)
 
 

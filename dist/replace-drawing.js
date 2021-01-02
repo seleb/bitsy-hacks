@@ -3,7 +3,7 @@
 @file replace drawing
 @summary add name-tags to replace drawings when the game is loading
 @license MIT
-@version 15.1.1
+@version 15.2.0
 @requires 6.3
 @author Elkie Nova
 
