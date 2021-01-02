@@ -3,7 +3,7 @@
 @file corrupt
 @summary corrupts gamedata at runtime
 @license MIT
-@version 15.3.0
+@version 15.3.1
 @requires 5.5
 @author Sean S. LeBlanc
 
@@ -219,6 +219,15 @@ HOW TO USE:
   https://github.com/seleb/bitsy-hacks/wiki/Coding-with-kitsy
 */
 
+// Ex: before('load_game', function run() { alert('Loading!'); });
+//     before('show_text', function run(text) { return text.toUpperCase(); });
+//     before('show_text', function run(text, done) { done(text.toUpperCase()); });
+function before(targetFuncName, beforeFn) {
+	var kitsy = kitsyInit();
+	kitsy.queuedBeforeScripts[targetFuncName] = kitsy.queuedBeforeScripts[targetFuncName] || [];
+	kitsy.queuedBeforeScripts[targetFuncName].push(beforeFn);
+}
+
 // Ex: after('load_game', function run() { alert('Loaded!'); });
 function after(targetFuncName, afterFn) {
 	var kitsy = kitsyInit();
@@ -339,7 +348,21 @@ function reinitEngine() {
 
 
 // hook corruption to player movement
-after('onPlayerMoved', corrupt);
+var px;
+var py;
+var pr;
+before('update', function () {
+	var player = bitsy.player();
+	px = player.x;
+	py = player.y;
+	pr = player.room;
+});
+after('update', function () {
+	var player = bitsy.player();
+	if (px !== player.x || py !== player.y || pr !== player.room) {
+		corrupt();
+	}
+});
 
 // ////////////////
 // corrupt code //

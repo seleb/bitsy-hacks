@@ -3,7 +3,7 @@
 @file basic sfx
 @summary "walk" and "talk" sound effect support
 @license MIT
-@version 15.3.0
+@version 15.3.1
 @author Sean S. LeBlanc
 
 @description
@@ -269,8 +269,20 @@ before('startExportedGame', function () {
 });
 
 // walk hook
-after('onPlayerMoved', function () {
-	sounds.walk();
+var px;
+var py;
+var pr;
+before('update', function () {
+	var player = bitsy.player();
+	px = player.x;
+	py = player.y;
+	pr = player.room;
+});
+after('update', function () {
+	var player = bitsy.player();
+	if (px !== player.x || py !== player.y || pr !== player.room) {
+		sounds.walk();
+	}
 });
 
 // talk hooks

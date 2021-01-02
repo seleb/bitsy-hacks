@@ -1,3 +1,12 @@
+## [15.3.1](https://github.com/seleb/bitsy-hacks/compare/v15.3.0...v15.3.1) (2021-01-02)
+
+
+### Bug Fixes
+
+* basic sfx `onPlayerMoved` ([9b30207](https://github.com/seleb/bitsy-hacks/commit/9b302077c229a6919561abddeed5f134bcbf8b27))
+* corrupt `onPlayerMoved` ([96c98a5](https://github.com/seleb/bitsy-hacks/commit/96c98a58342e7d328e97db2ba5c99dea212d4c22))
+* gravity `onPlayerMoved` ([625b0cc](https://github.com/seleb/bitsy-hacks/commit/625b0cc58f71f6edbcb65cc883ca1d4b6889d663))
+
 # [15.3.0](https://github.com/seleb/bitsy-hacks/compare/v15.2.0...v15.3.0) (2021-01-02)
 
 
