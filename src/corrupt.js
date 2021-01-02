@@ -47,6 +47,7 @@ import {
 } from './helpers/edit image at runtime';
 import {
 	after,
+	before,
 } from './helpers/kitsy-script-toolkit';
 
 // /////////
@@ -65,7 +66,21 @@ export var hackOptions = {
 };
 
 // hook corruption to player movement
-after('onPlayerMoved', corrupt);
+var px;
+var py;
+var pr;
+before('update', function () {
+	var player = bitsy.player();
+	px = player.x;
+	py = player.y;
+	pr = player.room;
+});
+after('update', function () {
+	var player = bitsy.player();
+	if (px !== player.x || py !== player.y || pr !== player.room) {
+		corrupt();
+	}
+});
 
 // ////////////////
 // corrupt code //
