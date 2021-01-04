@@ -1,3 +1,11 @@
+## [15.3.2](https://github.com/seleb/bitsy-hacks/compare/v15.3.1...v15.3.2) (2021-01-04)
+
+
+### Bug Fixes
+
+* incorrect index check ([3fa73b7](https://github.com/seleb/bitsy-hacks/commit/3fa73b7bafad0afc8d9ea14834f7648fe351c2fd))
+* turning off all followers preventing followers from being added again ([ce7d118](https://github.com/seleb/bitsy-hacks/commit/ce7d1185cb8f50c4dac2471bc744d74fed22f3e1))
+
 ## [15.3.1](https://github.com/seleb/bitsy-hacks/compare/v15.3.0...v15.3.1) (2021-01-02)
 
 

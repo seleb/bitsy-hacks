@@ -3,7 +3,7 @@
 @file dialog audio
 @summary animal crossing-style audio
 @license MIT
-@version 15.3.1
+@version 15.3.2
 @author Sean S. LeBlanc
 
 @description

@@ -3,7 +3,7 @@
 @file follower
 @summary make sprites follow the player
 @license MIT
-@version 15.3.1
+@version 15.3.2
 @requires 7.0
 @author Sean S. LeBlanc
 
@@ -401,7 +401,7 @@ function setFollower(followerName) {
 		throw new Error('Failed to find sprite with id/name "' + followerName + '"');
 	}
 	var idx = followers.indexOf(follower);
-	if (idx > 0) {
+	if (idx >= 0) {
 		followers.splice(idx, 1);
 	} else {
 		followers.push(follower);
@@ -466,6 +466,7 @@ after('update', function () {
 	}
 
 	if (!followers.length) {
+		takeStep();
 		return;
 	}
 
