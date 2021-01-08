@@ -82,7 +82,7 @@ export async function start({
 				const [hackStr, options] = hack;
 				return `<script>${
 					hackDist[hackStr.replace(/\s/g, '-')]
-						// remove comments (they can interfer with hackOptions regex)
+						// remove comments (they can interfere with hackOptions regex)
 						.replace(/\/\*\*[^]*?\*\//m)
 						// replace hackOptions
 						.replace(/(var hackOptions.*= ){[^]*?};$/m, `$1 ${
