@@ -136,6 +136,7 @@ after('update', function () {
 
 	if (!followers.length) {
 		takeStep();
+		walking = false;
 		return;
 	}
 
