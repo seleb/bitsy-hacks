@@ -3,7 +3,7 @@
 @file paragraph-break
 @summary Adds paragraph breaks to the dialogue parser
 @license WTFPL (do WTF you want)
-@version 15.3.2
+@version 15.3.3
 @requires Bitsy Version: 5.0, 5.1
 @author Sean S. LeBlanc, David Mowatt
 

@@ -1,3 +1,10 @@
+## [15.3.3](https://github.com/seleb/bitsy-hacks/compare/v15.3.2...v15.3.3) (2021-01-09)
+
+
+### Bug Fixes
+
+* `walking` never being reset when there are no followers ([2f5fcf2](https://github.com/seleb/bitsy-hacks/commit/2f5fcf29de4ac0d64b701063adb3cce625845b75))
+
 ## [15.3.2](https://github.com/seleb/bitsy-hacks/compare/v15.3.1...v15.3.2) (2021-01-04)
 
 

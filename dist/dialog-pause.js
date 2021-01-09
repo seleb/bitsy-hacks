@@ -3,7 +3,7 @@
 @file dialog pause
 @summary add pauses in between printing text
 @license MIT
-@version 15.3.2
+@version 15.3.3
 @author Sean S. LeBlanc
 
 @description
