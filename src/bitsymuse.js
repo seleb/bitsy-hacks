@@ -42,11 +42,13 @@ export var hackOptions = {
 	// Put entries in this list for each audio file you want to use
 	// the key will be the id needed to play it in dialog tags and the musicByRoom options below,
 	// and the value will be the properties of the corresponding <audio> tag (e.g. src, loop, volume)
+	// `src` can be either a string, or an array of strings (to support fallbacks in different formats)
 	// Note: you can add <audio> tags to the html manually if you prefer
 	audio: {
 		// Note: the entries below are examples that should be removed and replaced with your own audio files
 		'example song ID': { src: './example song filepath.mp3', loop: true },
 		'example sfx ID': { src: './example sfx filepath.mp3', volume: 0.5 },
+		'example with multiple formats': { src: ['./preferred.mp3', './fallback.ogg'] },
 	},
 	// Put entries in this list for every room ID or name that will change the music
 	// If the player moves between rooms with the same audio ID, the music keeps playing seamlessly.
@@ -90,8 +92,18 @@ after('load_game', function () {
 	// add audio tags from options
 	Object.entries(hackOptions.audio).forEach(function (entry) {
 		var el = document.createElement('audio');
+		var src = entry[1].src;
 		el.id = entry[0];
 		Object.assign(el, entry[1]);
+		if (typeof src !== 'string') {
+			el.src = null;
+			src.forEach(function (s) {
+				var sourceEl = document.createElement('source');
+				sourceEl.src = s;
+				sourceEl.type = 'audio/' + s.split('.').pop();
+				el.appendChild(sourceEl);
+			});
+		}
 		document.body.appendChild(el);
 		audioElementsById[el.id] = el;
 	});
