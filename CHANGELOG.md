@@ -1,3 +1,10 @@
+# [15.4.0](https://github.com/seleb/bitsy-hacks/compare/v15.3.3...v15.4.0) (2021-01-18)
+
+
+### Features
+
+* add support for multiple sources to bitsymuse ([f5ba638](https://github.com/seleb/bitsy-hacks/commit/f5ba6382738c77cd9b71c431b4d8a508000a1596))
+
 ## [15.3.3](https://github.com/seleb/bitsy-hacks/compare/v15.3.2...v15.3.3) (2021-01-09)
 
 
