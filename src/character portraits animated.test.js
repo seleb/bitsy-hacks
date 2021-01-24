@@ -1,12 +1,12 @@
 import
-	{
-		delay,
-		end,
-		press,
-		snapshot,
-		start,
-		walkToCat
-	} from './test/bitsy';
+{
+	delay,
+	end,
+	press,
+	snapshot,
+	start,
+	walkToCat,
+} from './test/bitsy';
 
 test('autoreset, dialog only', async () => {
 	await start({
