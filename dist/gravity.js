@@ -3,7 +3,7 @@
 @file gravity
 @summary Pseudo-platforming/gravity/physics
 @license MIT
-@version 15.4.0
+@version 15.4.1
 @requires 6.3
 @author Cole Sea
 
@@ -633,7 +633,6 @@ after('update', function () {
 	var player = bitsy.player();
 	if (px !== player.x || py !== player.y || pr !== player.room) {
 		if (!active) return;
-		var player = bitsy.player();
 
 		wasStandingOnSomething = isSolid(gravityDir, player.x, player.y);
 

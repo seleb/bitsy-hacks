@@ -3,7 +3,7 @@
 @file dialog jump
 @summary jump from one dialog entry to another
 @license MIT
-@version 15.4.0
+@version 15.4.1
 @requires 7.0
 @author Sean S. LeBlanc
 

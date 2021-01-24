@@ -3,7 +3,7 @@
 @file character portraits animated
 @summary high quality anime gifs
 @license MIT
-@version 15.4.0
+@version 15.4.1
 @requires Bitsy Version: 5.3
 @author Sean S. LeBlanc
 
@@ -406,7 +406,7 @@ function GifReader(buf) {
   var global_palette_flag = pf0 >> 7;
   var num_global_colors_pow2 = pf0 & 0x7;
   var num_global_colors = 1 << (num_global_colors_pow2 + 1);
-  var background = buf[p++];
+  buf[p++];
   buf[p++];  // Pixel aspect ratio (unused?).
 
   var global_palette_offset = null;
@@ -832,7 +832,7 @@ function GifReaderLZWOutputIndexStream(code_stream, p, output, output_length) {
 // CommonJS.
 try { exports.GifWriter = GifWriter; exports.GifReader = GifReader; } catch(e) {}
 });
-var omggif_1 = omggif.GifWriter;
+omggif.GifWriter;
 var omggif_2 = omggif.GifReader;
 
 /**

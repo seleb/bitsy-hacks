@@ -1,3 +1,10 @@
+## [15.4.1](https://github.com/seleb/bitsy-hacks/compare/v15.4.0...v15.4.1) (2021-01-24)
+
+
+### Bug Fixes
+
+* **gravity:** remove redundant player get ([c6ef9b4](https://github.com/seleb/bitsy-hacks/commit/c6ef9b4fe241f2a500414b6dd7b478948ea031ce))
+
 # [15.4.0](https://github.com/seleb/bitsy-hacks/compare/v15.3.3...v15.4.0) (2021-01-18)
 
 
