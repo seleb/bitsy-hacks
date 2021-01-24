@@ -193,7 +193,6 @@ after('update', function () {
 	var player = bitsy.player();
 	if (px !== player.x || py !== player.y || pr !== player.room) {
 		if (!active) return;
-		var player = bitsy.player();
 
 		wasStandingOnSomething = isSolid(gravityDir, player.x, player.y);
 
