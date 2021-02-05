@@ -95,7 +95,7 @@ then edit it to look like this:
 - [Writing hacks with this repo's source code](https://github.com/seleb/bitsy-hacks/wiki)
 - [Claire Morley's "A Bitsy Tutorial"](http://www.shimmerwitch.space/bitsyTutorial)
 - [Bitsy games!](https://itch.io/games/tag-bitsy)
-- [Andrew Yolland's Borksy](https://ayolland.itch.io/borksy): Hack helper
+- [AYolland's Borksy](https://ayolland.itch.io/borksy): Hack helper
 - [ruin's image-to-bitsy](https://ruin.itch.io/image-to-bitsy): Artistic aid
 - [Fontsy](https://seansleblanc.itch.io/Fontsy): Typographic tool
 
