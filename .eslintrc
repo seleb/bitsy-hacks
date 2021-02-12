@@ -12,7 +12,7 @@
 	},
 	"rules": {
 		"max-len": "off", // just apply common-sense
-		"import/no-unresolved": "off", // `bitsy` can't be resolved
+		"import/no-unresolved": ["error", { "ignore": ["bitsy"] }], // `bitsy` can't be resolved
 		"no-param-reassign": "off", // necessary for most hacks
 
 		// for dev accessibility
