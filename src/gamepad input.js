@@ -17,13 +17,13 @@ HOW TO USE:
 Copy-paste this script into a script tag after the bitsy source
 */
 import bitsy from 'bitsy';
-import gamepads from 'input-gamepads.js';
+import { Gamepads, Buttons, Axes } from 'input-gamepads.js';
 import {
 	before,
 	after,
 } from './helpers/kitsy-script-toolkit';
 
-before('startExportedGame', gamepads.init.bind(gamepads));
+var gamepads = new Gamepads();
 var empty = function () {};
 
 var move = function (dpad, face, axis, axis2, axispast, axisdir, key) {
@@ -61,10 +61,10 @@ var move = function (dpad, face, axis, axis2, axispast, axisdir, key) {
 };
 
 before('update', function () {
-	move(gamepads.DPAD_LEFT, gamepads.X, gamepads.LSTICK_H, gamepads.RSTICK_H, -0.5, -1, bitsy.key.left);
-	move(gamepads.DPAD_RIGHT, gamepads.B, gamepads.LSTICK_H, gamepads.RSTICK_H, 0.5, 1, bitsy.key.right);
-	move(gamepads.DPAD_UP, gamepads.Y, gamepads.LSTICK_V, gamepads.RSTICK_V, -0.5, -1, bitsy.key.up);
-	move(gamepads.DPAD_DOWN, gamepads.A, gamepads.LSTICK_V, gamepads.RSTICK_V, 0.5, 1, bitsy.key.down);
+	move(Buttons.DPAD_LEFT, Buttons.X, Axes.LSTICK_H, Axes.RSTICK_H, -0.5, -1, bitsy.key.left);
+	move(Buttons.DPAD_RIGHT, Buttons.B, Axes.LSTICK_H, Axes.RSTICK_H, 0.5, 1, bitsy.key.right);
+	move(Buttons.DPAD_UP, Buttons.Y, Axes.LSTICK_V, Axes.RSTICK_V, -0.5, -1, bitsy.key.up);
+	move(Buttons.DPAD_DOWN, Buttons.A, Axes.LSTICK_V, Axes.RSTICK_V, 0.5, 1, bitsy.key.down);
 });
 after('update', function () {
 	gamepads.update();
