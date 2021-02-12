@@ -3,7 +3,7 @@
 @file javascript dialog
 @summary execute arbitrary javascript from dialog
 @license MIT
-@version 15.4.1
+@version 15.4.2
 @requires Bitsy Version: 4.5, 4.6
 @author Sean S. LeBlanc
 

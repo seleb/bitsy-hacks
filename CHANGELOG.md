@@ -1,3 +1,12 @@
+## [15.4.2](https://github.com/seleb/bitsy-hacks/compare/v15.4.1...v15.4.2) (2021-02-12)
+
+
+### Bug Fixes
+
+* add support for right stick as movement ([367bfb7](https://github.com/seleb/bitsy-hacks/commit/367bfb709f360673d9a3dc9230760a523f4e6eb5))
+* pull in gamepads update ([7da6114](https://github.com/seleb/bitsy-hacks/commit/7da6114ec5e41e5fb531ae5ecb8ce2ef7701187b))
+* various docs updates ([84419cf](https://github.com/seleb/bitsy-hacks/commit/84419cf25095602e241efdc9ccf32399508be8ec))
+
 ## [15.4.1](https://github.com/seleb/bitsy-hacks/compare/v15.4.0...v15.4.1) (2021-01-24)
 
 

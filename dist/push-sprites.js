@@ -3,7 +3,7 @@
 @file push sprites
 @summary sokoban-style sprite pushing
 @license MIT
-@version 15.4.1
+@version 15.4.2
 @requires 6.4
 @author jan0sc
 

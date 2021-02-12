@@ -3,7 +3,7 @@
 @file backdrops
 @summary makes the game have a backdrop
 @license MIT
-@version 15.4.1
+@version 15.4.2
 @requires Bitsy Version: 7.2
 @author Cephalopodunk & Sean S. LeBlanc
 
@@ -15,6 +15,7 @@ Note: includes transparent background/sprites
 HOW TO USE:
 1. Copy-paste this script into a script tag after the bitsy source
 2. Edit hackOptions below as needed
+3. You may need to add `background-size: cover` to the #game CSS up above to get the backdrop to fit correctly in the game screen
 */
 this.hacks = this.hacks || {};
 (function (exports, bitsy) {
