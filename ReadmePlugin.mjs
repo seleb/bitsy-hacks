@@ -29,7 +29,11 @@ function write() {
 		.sort((a, b) => {
 			return a.file < b.file ? -1 : a.file > b.file ? 1 : 0;
 		});
-	fs.writeFileSync("README.md", `# ${pkg.name}
+	fs.writeFileSync("README.md", `# bitsy hacks
+
+\`\`\`sh
+npm i ${pkg.name}
+\`\`\`
 
 A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamledoux)'s [Bitsy Game Maker](https://ledoux.itch.io/bitsy).
 
