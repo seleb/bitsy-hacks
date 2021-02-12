@@ -32,6 +32,7 @@ var move = function (dpad, face, axis, axis2, axispast, axisdir, key) {
 		gamepads.isJustDown(dpad)
 		|| gamepads.isJustDown(face)
 		|| gamepads.axisJustPast(axis, axispast, axisdir)
+		|| gamepads.axisJustPast(axis2, axispast, axisdir)
 		|| (
 			bitsy.playerHoldToMoveTimer <= 0 && (
 				gamepads.isDown(dpad)
@@ -52,6 +53,7 @@ var move = function (dpad, face, axis, axis2, axispast, axisdir, key) {
 		gamepads.isJustUp(dpad)
 		|| gamepads.isJustUp(face)
 		|| gamepads.axisJustPast(axis, axispast, -axisdir)
+		|| gamepads.axisJustPast(axis2, axispast, -axisdir)
 	) {
 		bitsy.input.onkeyup({
 			keyCode: key,
