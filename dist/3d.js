@@ -3,7 +3,7 @@
 @file 3d
 @summary bitsy in three dee
 @license MIT
-@version 15.4.2
+@version 15.4.3
 @requires 6.3
 @author Sean S. LeBlanc & Elkie Nova
 
@@ -133,7 +133,7 @@ HOW TO USE:
 this.hacks = this.hacks || {};
 (function (exports, bitsy) {
 'use strict';
-var hackOptions$2 = {
+var hackOptions = {
 	// Determines the resolution of the scene rendered
 	// If auto is true, the width/height will be ignored,
 	// and the scene will instead render at 1:1 with the canvas
@@ -580,7 +580,7 @@ HOW TO USE:
 2. Edit hackOptions below as needed
 */
 
-var hackOptions = {
+var hackOptions$2 = {
 	// duration of ease in ms
 	duration: 100,
 	// max distance to allow tweens
@@ -594,10 +594,10 @@ var hackOptions = {
 
 // smooth move
 var tweens = {};
-var sprites = {};
+var sprites$1 = {};
 
 function addTween(spr, fromX, fromY, toX, toY) {
-	if (Math.abs(toX - fromX) + Math.abs(toY - fromY) > hackOptions.delta) {
+	if (Math.abs(toX - fromX) + Math.abs(toY - fromY) > hackOptions$2.delta) {
 		delete tweens[spr];
 	} else {
 		var t = tweens[spr] = tweens[spr] || {};
@@ -610,24 +610,24 @@ function addTween(spr, fromX, fromY, toX, toY) {
 }
 before('onready', function () {
 	tweens = {};
-	sprites = {};
+	sprites$1 = {};
 });
 
 // listen for changes in sprite positions to add tweens
 before('update', function () {
 	Object.values(bitsy.sprite).forEach((spr) => {
 		if (spr.room === bitsy.curRoom) {
-			var s = sprites[spr.id] = sprites[spr.id] || {};
+			var s = sprites$1[spr.id] = sprites$1[spr.id] || {};
 			s.x = spr.x;
 			s.y = spr.y;
 		} else {
-			delete sprites[spr.id];
+			delete sprites$1[spr.id];
 		}
 	});
 });
 
 function addTweens() {
-	Object.entries(sprites).forEach(function (entry) {
+	Object.entries(sprites$1).forEach(function (entry) {
 		var spr = bitsy.sprite[entry[0]];
 		var pos = entry[1];
 		if (pos.x !== spr.x || pos.y !== spr.y) {
@@ -641,7 +641,7 @@ after('update', addTweens);
 before('drawRoom', function () {
 	Object.entries(tweens).forEach(function (entry) {
 		var tween = entry[1];
-		var t = hackOptions.ease(Math.min(1, (bitsy.prevTime - tween.start) / hackOptions.duration));
+		var t = hackOptions$2.ease(Math.min(1, (bitsy.prevTime - tween.start) / hackOptions$2.duration));
 		var sprite = bitsy.sprite[entry[0]];
 		sprite.x = tween.fromX + (tween.toX - tween.fromX) * t;
 		sprite.y = tween.fromY + (tween.toY - tween.fromY) * t;
@@ -738,10 +738,10 @@ function radians(degrees) {
 
 // forward transparent sprites hack option
 hackOptions$1.isTransparent = function (drawing) {
-	return hackOptions$2.isTransparent(drawing);
+	return hackOptions.isTransparent(drawing);
 };
-hackOptions.ease = function (t) {
-	return hackOptions$2.ease(t);
+hackOptions$2.ease = function (t) {
+	return hackOptions.ease(t);
 };
 
 // scene init helpers
@@ -801,6 +801,7 @@ function addFog(start, end) {
 }
 
 var engine;
+exports.scene = void 0;
 
 var baseMat;
 var textCanvas;
@@ -818,7 +819,7 @@ bitsy.renderer = new bitsy.Renderer(bitsy.tilesize, 1);
 var py;
 before('dialogRenderer.DrawTextbox', function () {
 	py = bitsy.player().y;
-	bitsy.player().y = hackOptions$2.topDialog ? bitsy.mapsize : 0;
+	bitsy.player().y = hackOptions.topDialog ? bitsy.mapsize : 0;
 });
 after('dialogRenderer.DrawTextbox', function () {
 	bitsy.player().y = py;
@@ -827,8 +828,8 @@ after('dialogRenderer.DrawTextbox', function () {
 // setup
 after('startExportedGame', function () {
 	// apply smooth moves hack options
-	hackOptions.delta = hackOptions$2.delta;
-	hackOptions.duration = hackOptions$2.duration;
+	hackOptions$2.delta = hackOptions.delta;
+	hackOptions$2.duration = hackOptions.duration;
 
 	// hide the original canvas and add a stylesheet
 	// to make the 3D render in its place
@@ -960,7 +961,7 @@ canvas:focus { outline: none; }
 	baseMat.maxSimultaneousLights = 0;
 	baseMat.freeze();
 
-	hackOptions$2.init(exports.scene);
+	hackOptions.init(exports.scene);
 
 	textCanvas = document.createElement('canvas');
 	textCanvas.id = 'textCanvas';
@@ -971,8 +972,8 @@ canvas:focus { outline: none; }
 	bitsy.dialogRenderer.AttachContext(textContext);
 
 	// Watch for browser/canvas resize events
-	engine.setSize(hackOptions$2.size.width, hackOptions$2.size.height);
-	if (hackOptions$2.size.auto) {
+	engine.setSize(hackOptions.size.width, hackOptions.size.height);
+	if (hackOptions.size.auto) {
 		engine.resize();
 		window.addEventListener('resize', function () {
 			engine.resize();
@@ -1007,7 +1008,7 @@ canvas:focus { outline: none; }
 	// preload textures
 	// safari, edge and ie don't support requestIdleCallback
 	// TODO: add requestIdleCallback shim
-	if (hackOptions$2.preloadTextures && Object.prototype.hasOwnProperty.call(window, 'requestIdleCallback')) {
+	if (hackOptions.preloadTextures && Object.prototype.hasOwnProperty.call(window, 'requestIdleCallback')) {
 		Object.values(bitsy.room).forEach(function (room) {
 			var items = room.items.map(function (item) {
 				return bitsy.item[item.id];
@@ -1070,7 +1071,7 @@ var tankFrom = 0;
 var tankTime = 0;
 before('movePlayer', function () {
 	rawDirection = bitsy.curPlayerDirection;
-	if (hackOptions$2.tankControls) {
+	if (hackOptions.tankControls) {
 		if (rawDirection === bitsy.Direction.Left) {
 			tankTime = bitsy.prevTime;
 			tankFrom = tankTarget;
@@ -1081,7 +1082,7 @@ before('movePlayer', function () {
 			tankTarget -= Math.PI / 2;
 		}
 	}
-	if (hackOptions$2.cameraRelativeMovement) {
+	if (hackOptions.cameraRelativeMovement) {
 		bitsy.curPlayerDirection = rotate(rawDirection);
 	}
 	if (tankTime === bitsy.prevTime) {
@@ -1101,7 +1102,7 @@ after('update', function () {
 		exports.scene.blockfreeActiveMeshesAndRenderingGroups = true;
 	}
 	update();
-	if (hackOptions$2.tankControls) {
+	if (hackOptions.tankControls) {
 		exports.scene.activeCamera.alpha = tankFrom + (tankTarget - tankFrom) * (1.0 - ((1.0 - Math.min((bitsy.prevTime - tankTime) / 200, 1)) ** 2.0));
 	}
 	if (prevRoom !== bitsy.curRoom) {
@@ -1173,7 +1174,7 @@ var getTextureFromCache = getCache(function (drawing, pal) {
 		height: c.height,
 	}, exports.scene, false, BABYLON$1.Texture.NEAREST_NEAREST_MIPNEAREST);
 	tex.wrapU = tex.wrapV = BABYLON$1.Texture.CLAMP_ADDRESSMODE;
-	if (hackOptions$2.isTransparent(drawing)) {
+	if (hackOptions.isTransparent(drawing)) {
 		tex.hasAlpha = true;
 	}
 	var ctx = tex.getContext();
@@ -1219,7 +1220,7 @@ var getMeshFromCache = getCache(function (drawing, pal, type) {
 });
 
 function getMesh(drawing, pal) {
-	var type = hackOptions$2.getType(drawing);
+	var type = hackOptions.getType(drawing);
 	var drw = drawing.drw;
 	var col = drawing.col;
 	var frame = drawing.animation.frameIndex;
@@ -1228,6 +1229,8 @@ function getMesh(drawing, pal) {
 	var key = `${drw},${col},${pal},${frame},${type}`;
 	return getMeshFromCache(key, [drawing, pal, type]);
 }
+
+exports.playerRef = void 0;
 var playerMovement = {
 	name: 'player-movement',
 	init: function () {},
@@ -1242,13 +1245,13 @@ var playerMovement = {
 var playerPosNode;
 
 function applyBehaviours(targetMesh, drawing) {
-	hackOptions$2.meshExtraSetup(drawing, targetMesh);
+	hackOptions.meshExtraSetup(drawing, targetMesh);
 	var isPlayer = targetMesh.name === 'player';
 	if (isPlayer) {
 		targetMesh.addBehavior(playerMovement);
 	}
 	if (targetMesh.sourceMesh.source.name === 'billboard') {
-		targetMesh.billboardMode = hackOptions$2.getBillboardMode(BABYLON$1);
+		targetMesh.billboardMode = hackOptions.getBillboardMode(BABYLON$1);
 	} else if (!isPlayer) {
 		targetMesh.freezeWorldMatrix();
 	}
@@ -1265,7 +1268,7 @@ var lastRoom;
 
 var tilesInStack = {};
 
-var sprites$1 = {};
+var sprites = {};
 var items = {};
 
 function makeTilesArray(stackSize) {
@@ -1289,11 +1292,11 @@ function update() {
 	curStack = stackPosOfRoom[bitsy.curRoom].stack;
 
 	// sprite changes
-	Object.entries(sprites$1).forEach(function (entry) {
+	Object.entries(sprites).forEach(function (entry) {
 		if (stackPosOfRoom[bitsy.sprite[entry[0]].room].stack !== curStack) {
 			entry[1].dispose();
 			entry[1] = null;
-			delete sprites$1[entry[0]];
+			delete sprites[entry[0]];
 		}
 	});
 	Object.values(bitsy.sprite).filter(function (sprite) {
@@ -1302,7 +1305,7 @@ function update() {
 		return stackPosOfRoom[sprite.room] && stackPosOfRoom[sprite.room].stack === curStack;
 	}).forEach(function (sprite) {
 		var id = sprite.id;
-		var oldMesh = sprites$1[id];
+		var oldMesh = sprites[id];
 		var newMesh = getMesh(sprite, bitsy.curPal());
 		if (newMesh !== (oldMesh && oldMesh.sourceMesh)) {
 			if (oldMesh) {
@@ -1316,13 +1319,13 @@ function update() {
 				newMesh.name = 'player';
 			}
 			applyBehaviours(newMesh, sprite);
-			sprites$1[id] = oldMesh = newMesh;
+			sprites[id] = oldMesh = newMesh;
 		}
 	});
 	// make sure the avatar is rendered at the correct height
 	// when they enter new rooms in the stack
 	if (lastRoom && lastRoom !== bitsy.curRoom) {
-		sprites$1[bitsy.playerId].position.y = stackPosOfRoom[bitsy.curRoom].pos;
+		sprites[bitsy.playerId].position.y = stackPosOfRoom[bitsy.curRoom].pos;
 	}
 
 	// item changes
@@ -1417,8 +1420,8 @@ function update() {
 	});
 
 	// bg changes
-	exports.scene.clearColor = getColor(hackOptions$2.clearColor);
-	exports.scene.fogColor = getColor(hackOptions$2.fogColor);
+	exports.scene.clearColor = getColor(hackOptions.clearColor);
+	exports.scene.fogColor = getColor(hackOptions.fogColor);
 
 	// remember what stack we were in in this frame
 	lastStack = curStack;
@@ -1437,7 +1440,7 @@ function getColor(colorId) {
 exports.addControls = addControls;
 exports.addFog = addFog;
 exports.addShader = addShader;
-exports.hackOptions = hackOptions$2;
+exports.hackOptions = hackOptions;
 exports.makeBaseCamera = makeBaseCamera;
 exports.makeFollowPlayer = makeFollowPlayer;
 exports.makeOrthographic = makeOrthographic;

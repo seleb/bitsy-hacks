@@ -3,7 +3,7 @@
 @file custom text effect
 @summary make {custom}text effects{custom}
 @license MIT
-@version 15.4.2
+@version 15.4.3
 @requires 5.3
 @author Sean S. LeBlanc
 
@@ -230,7 +230,7 @@ Helper used to replace code in a script tag based on a search regex
 To inject code without erasing original string, using capturing groups; e.g.
 	inject(/(some string)/,'injected before $1 injected after')
 */
-function inject(searchRegex, replaceString) {
+function inject$1(searchRegex, replaceString) {
 	// find the relevant script tag
 	var scriptTags = document.getElementsByTagName('script');
 	var scriptTag;
@@ -294,7 +294,7 @@ HOW TO USE:
 */
 
 // Ex: inject(/(names.sprite.set\( name, id \);)/, '$1console.dir(names)');
-function inject$1(searchRegex, replaceString) {
+function inject(searchRegex, replaceString) {
 	var kitsy = kitsyInit();
 	if (
 		!kitsy.queuedInjectScripts.some(function (script) {
@@ -341,7 +341,7 @@ function kitsyInit() {
 
 function doInjects() {
 	bitsy.kitsy.queuedInjectScripts.forEach(function (injectScript) {
-		inject(injectScript.searchRegex, injectScript.replaceString);
+		inject$1(injectScript.searchRegex, injectScript.replaceString);
 	});
 	reinitEngine();
 }
@@ -459,8 +459,8 @@ Object.entries(hackOptions).forEach(function (entry) {
 });
 
 // inject custom text effect code
-inject$1(/(var functionMap = new Map\(\);)/, '$1' + functionMapCode);
-inject$1(/(var TextEffects = new Map\(\);)/, '$1' + textEffectCode);
+inject(/(var functionMap = new Map\(\);)/, '$1' + functionMapCode);
+inject(/(var TextEffects = new Map\(\);)/, '$1' + textEffectCode);
 
 exports.hackOptions = hackOptions;
 

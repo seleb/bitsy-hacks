@@ -3,7 +3,7 @@
 @file long dialog
 @summary put more words onscreen
 @license MIT
-@version 15.4.2
+@version 15.4.3
 @requires 7.0
 @author Sean S. LeBlanc
 
@@ -49,7 +49,7 @@ Helper used to replace code in a script tag based on a search regex
 To inject code without erasing original string, using capturing groups; e.g.
 	inject(/(some string)/,'injected before $1 injected after')
 */
-function inject(searchRegex, replaceString) {
+function inject$1(searchRegex, replaceString) {
 	// find the relevant script tag
 	var scriptTags = document.getElementsByTagName('script');
 	var scriptTag;
@@ -113,7 +113,7 @@ HOW TO USE:
 */
 
 // Ex: inject(/(names.sprite.set\( name, id \);)/, '$1console.dir(names)');
-function inject$1(searchRegex, replaceString) {
+function inject(searchRegex, replaceString) {
 	var kitsy = kitsyInit();
 	if (
 		!kitsy.queuedInjectScripts.some(function (script) {
@@ -169,7 +169,7 @@ function kitsyInit() {
 
 function doInjects() {
 	bitsy.kitsy.queuedInjectScripts.forEach(function (injectScript) {
-		inject(injectScript.searchRegex, injectScript.replaceString);
+		inject$1(injectScript.searchRegex, injectScript.replaceString);
 	});
 	reinitEngine();
 }
@@ -272,7 +272,7 @@ function addDialogFunction(tag, fn) {
 }
 
 function injectDialogTag(tag, code) {
-	inject$1(
+	inject(
 		/(var functionMap = new Map\(\);[^]*?)(this.HasFunction)/m,
 		'$1\nfunctionMap.set("' + tag + '", ' + code + ');\n$2',
 	);
@@ -301,7 +301,7 @@ function addDialogTag(tag, fn) {
  * Adds the function `AddParagraphBreak` to `DialogBuffer`
  */
 
-inject$1(/(this\.AddLinebreak = )/, 'this.AddParagraphBreak = function() { buffer.push( [[]] ); isActive = true; };\n$1');
+inject(/(this\.AddLinebreak = )/, 'this.AddParagraphBreak = function() { buffer.push( [[]] ); isActive = true; };\n$1');
 
 /**
 📃
@@ -351,15 +351,15 @@ addDialogTag('p', function (environment, parameters, onReturn) {
 
 
 // override textbox height
-inject$1(/textboxInfo\.height = .+;/,
+inject(/textboxInfo\.height = .+;/,
 	`Object.defineProperty(textboxInfo, 'height', {
 	get() { return textboxInfo.padding_vert + (textboxInfo.padding_vert + relativeFontHeight()) * Math.max(${hackOptions.minRows}, dialogBuffer.CurPage().indexOf(dialogBuffer.CurRow())+Math.sign(dialogBuffer.CurCharCount())) + textboxInfo.arrow_height; }
 })`);
 // prevent textbox from caching
-inject$1(/(if\(textboxInfo\.img == null\))/, '// $1');
+inject(/(if\(textboxInfo\.img == null\))/, '// $1');
 // rewrite hard-coded row limit
-inject$1(/(else if \(curRowIndex )== 0/g, '$1< ' + hackOptions.maxRows + ' - 1');
-inject$1(/(if \(lastPage\.length) <= 1/, '$1 < ' + hackOptions.maxRows);
+inject(/(else if \(curRowIndex )== 0/g, '$1< ' + hackOptions.maxRows + ' - 1');
+inject(/(if \(lastPage\.length) <= 1/, '$1 < ' + hackOptions.maxRows);
 
 exports.hackOptions = hackOptions;
 

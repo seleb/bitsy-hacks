@@ -3,7 +3,7 @@
 @file dialog audio
 @summary animal crossing-style audio
 @license MIT
-@version 15.4.2
+@version 15.4.3
 @author Sean S. LeBlanc
 
 @description
@@ -64,7 +64,7 @@ Helper used to replace code in a script tag based on a search regex
 To inject code without erasing original string, using capturing groups; e.g.
 	inject(/(some string)/,'injected before $1 injected after')
 */
-function inject(searchRegex, replaceString) {
+function inject$1(searchRegex, replaceString) {
 	// find the relevant script tag
 	var scriptTags = document.getElementsByTagName('script');
 	var scriptTag;
@@ -128,7 +128,7 @@ HOW TO USE:
 */
 
 // Ex: inject(/(names.sprite.set\( name, id \);)/, '$1console.dir(names)');
-function inject$1(searchRegex, replaceString) {
+function inject(searchRegex, replaceString) {
 	var kitsy = kitsyInit();
 	if (
 		!kitsy.queuedInjectScripts.some(function (script) {
@@ -184,7 +184,7 @@ function kitsyInit() {
 
 function doInjects() {
 	bitsy.kitsy.queuedInjectScripts.forEach(function (injectScript) {
-		inject(injectScript.searchRegex, injectScript.replaceString);
+		inject$1(injectScript.searchRegex, injectScript.replaceString);
 	});
 	reinitEngine();
 }
@@ -263,7 +263,7 @@ function reinitEngine() {
 
 
 // save the character on dialog font characters so we can read it back post-render
-inject$1(/(function DialogFontChar\(font, char, effectList\) {)/, '$1\nthis.char = char;');
+inject(/(function DialogFontChar\(font, char, effectList\) {)/, '$1\nthis.char = char;');
 
 // hook up letter function
 before('dialogBuffer.DoNextChar', function () {

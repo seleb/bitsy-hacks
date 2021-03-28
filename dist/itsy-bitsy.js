@@ -3,7 +3,7 @@
 @file itsy-bitsy
 @summary for when bitsy's not small enough
 @license MIT
-@version 15.4.2
+@version 15.4.3
 @requires Bitsy Version: 5.1
 @author Sean S. LeBlanc
 
@@ -46,7 +46,7 @@ Helper used to replace code in a script tag based on a search regex
 To inject code without erasing original string, using capturing groups; e.g.
 	inject(/(some string)/,'injected before $1 injected after')
 */
-function inject(searchRegex, replaceString) {
+function inject$1(searchRegex, replaceString) {
 	// find the relevant script tag
 	var scriptTags = document.getElementsByTagName('script');
 	var scriptTag;
@@ -110,7 +110,7 @@ HOW TO USE:
 */
 
 // Ex: inject(/(names.sprite.set\( name, id \);)/, '$1console.dir(names)');
-function inject$1(searchRegex, replaceString) {
+function inject(searchRegex, replaceString) {
 	var kitsy = kitsyInit();
 	if (
 		!kitsy.queuedInjectScripts.some(function (script) {
@@ -157,7 +157,7 @@ function kitsyInit() {
 
 function doInjects() {
 	bitsy.kitsy.queuedInjectScripts.forEach(function (injectScript) {
-		inject(injectScript.searchRegex, injectScript.replaceString);
+		inject$1(injectScript.searchRegex, injectScript.replaceString);
 	});
 	reinitEngine();
 }
@@ -236,17 +236,17 @@ function reinitEngine() {
 
 
 // rewrite main canvas width/height
-inject$1(/(width =) 128/, '$1 64');
-inject$1(/(height =) 128/, '$1 64');
+inject(/(width =) 128/, '$1 64');
+inject(/(height =) 128/, '$1 64');
 
-inject$1(/4(; \/\/this is stupid but necessary)/, '1$1'); // rewrite canvas scale
-inject$1(/(mapsize =) 16/, '$1 8'); // rewrite mapsize
-inject$1(/(\+ 1 >=) 16/g, '$1 8'); // rewrite right/down wall checks
+inject(/4(; \/\/this is stupid but necessary)/, '1$1'); // rewrite canvas scale
+inject(/(mapsize =) 16/, '$1 8'); // rewrite mapsize
+inject(/(\+ 1 >=) 16/g, '$1 8'); // rewrite right/down wall checks
 
-inject$1(/2(; \/\/using a different scaling factor for text feels like cheating\.\.\. but it looks better)/, '1$1'); // rewrite text scale
+inject(/2(; \/\/using a different scaling factor for text feels like cheating\.\.\. but it looks better)/, '1$1'); // rewrite text scale
 
 // rewrite textbox info
-inject$1(/(var textboxInfo = {)[^]*?(};)/, '$1' + [
+inject(/(var textboxInfo = {)[^]*?(};)/, '$1' + [
 	'img : null,',
 	'width : 62,',
 	'height : 64,',
@@ -257,12 +257,12 @@ inject$1(/(var textboxInfo = {)[^]*?(};)/, '$1' + [
 	'padding_vert : 2,',
 	'arrow_height : 5',
 ].join('\n') + '$2');
-inject$1(/(top = \()4/, '$1 1');
-inject$1(/(left = \()4/, '$1 1');
+inject(/(top = \()4/, '$1 1');
+inject(/(left = \()4/, '$1 1');
 
-inject$1(/(relativeFontHeight\(\) \*) 2/, '$1 ' + hackOptions.rows); // rewrite textbox height
-inject$1(/(pixelsPerRow =) 192/, '$1 62'); // rewrite hard-coded textbox wrap width
-inject$1(/(else if \(curRowIndex )== 0/g, '$1< ' + (hackOptions.rows - 1)); // rewrite hard-coded row limit
+inject(/(relativeFontHeight\(\) \*) 2/, '$1 ' + hackOptions.rows); // rewrite textbox height
+inject(/(pixelsPerRow =) 192/, '$1 62'); // rewrite hard-coded textbox wrap width
+inject(/(else if \(curRowIndex )== 0/g, '$1< ' + (hackOptions.rows - 1)); // rewrite hard-coded row limit
 
 // inject pixelated rendering style
 var style = document.createElement('style');

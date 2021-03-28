@@ -3,7 +3,7 @@
 @file dialog choices
 @summary binary dialog choices
 @license MIT
-@version 15.4.2
+@version 15.4.3
 @requires 7.0
 @author Sean S. LeBlanc
 
@@ -114,7 +114,7 @@ Helper used to replace code in a script tag based on a search regex
 To inject code without erasing original string, using capturing groups; e.g.
 	inject(/(some string)/,'injected before $1 injected after')
 */
-function inject(searchRegex, replaceString) {
+function inject$1(searchRegex, replaceString) {
 	// find the relevant script tag
 	var scriptTags = document.getElementsByTagName('script');
 	var scriptTag;
@@ -178,7 +178,7 @@ HOW TO USE:
 */
 
 // Ex: inject(/(names.sprite.set\( name, id \);)/, '$1console.dir(names)');
-function inject$1(searchRegex, replaceString) {
+function inject(searchRegex, replaceString) {
 	var kitsy = kitsyInit();
 	if (
 		!kitsy.queuedInjectScripts.some(function (script) {
@@ -225,7 +225,7 @@ function kitsyInit() {
 
 function doInjects() {
 	bitsy.kitsy.queuedInjectScripts.forEach(function (injectScript) {
-		inject(injectScript.searchRegex, injectScript.replaceString);
+		inject$1(injectScript.searchRegex, injectScript.replaceString);
 	});
 	reinitEngine();
 }
@@ -304,7 +304,7 @@ function reinitEngine() {
  * Adds the function `AddParagraphBreak` to `DialogBuffer`
  */
 
-inject$1(/(this\.AddLinebreak = )/, 'this.AddParagraphBreak = function() { buffer.push( [[]] ); isActive = true; };\n$1');
+inject(/(this\.AddLinebreak = )/, 'this.AddParagraphBreak = function() { buffer.push( [[]] ); isActive = true; };\n$1');
 
 
 
@@ -394,13 +394,13 @@ function getCursorSprite(cursor) {
 
 // parsing
 // (adds a new sequence node type)
-inject$1(/(\|\| str === "shuffle")/, '$1 || str === "choice"');
-inject$1(/(state\.curNode\.AddChild\(new ShuffleNode\(options\)\);\n.*})/, `$1
+inject(/(\|\| str === "shuffle")/, '$1 || str === "choice"');
+inject(/(state\.curNode\.AddChild\(new ShuffleNode\(options\)\);\n.*})/, `$1
 else if(sequenceType === "choice") {
 	state.curNode.AddChild(new ChoiceNode(options));
 }`);
 
-inject$1(/(var ShuffleNode = )/, `
+inject(/(var ShuffleNode = )/, `
 var ChoiceNode = function(options) {
 	Object.assign( this, new TreeRelationship() );
 	Object.assign( this, new SequenceBase() );
@@ -458,7 +458,7 @@ $1`);
 // rendering
 // (re-uses existing arrow image data,
 // but draws rotated to point at text)
-inject$1(/(this\.DrawNextArrow = )/, `
+inject(/(this\.DrawNextArrow = )/, `
 this.DrawChoiceArrow = function() {
 	var rows = ${hackOptions.cursor};
 	var top = (${hackOptions.transform.y} + window.dialogChoices.choice * (textboxInfo.padding_vert + relativeFontHeight())) * scale;
@@ -482,7 +482,7 @@ this.DrawChoiceArrow = function() {
 	}
 };
 $1`);
-inject$1(/(this\.DrawTextbox\(\);)/, `
+inject(/(this\.DrawTextbox\(\);)/, `
 if (window.dialogChoices.choicesActive) {
 	this.DrawChoiceArrow();
 }
@@ -490,11 +490,11 @@ $1`);
 
 // interaction
 // (overrides the dialog skip/page flip)
-inject$1(/(if\( dialogBuffer\.IsActive\(\) \) {)/, `$1
+inject(/(if\( dialogBuffer\.IsActive\(\) \) {)/, `$1
 if(window.dialogChoices.handleInput(dialogBuffer)) {
 	return;
 } else `);
-inject$1(/(this\.CanContinue = function\(\) {)/, `$1
+inject(/(this\.CanContinue = function\(\) {)/, `$1
 if(window.dialogChoices.choicesActive){
 	return false;
 }

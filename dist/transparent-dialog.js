@@ -3,7 +3,7 @@
 @file transparent dialog
 @summary makes the dialog box have a transparent background
 @license MIT
-@version 15.4.2
+@version 15.4.3
 @author Sean S. LeBlanc
 
 @description
@@ -32,7 +32,7 @@ Helper used to replace code in a script tag based on a search regex
 To inject code without erasing original string, using capturing groups; e.g.
 	inject(/(some string)/,'injected before $1 injected after')
 */
-function inject(searchRegex, replaceString) {
+function inject$1(searchRegex, replaceString) {
 	// find the relevant script tag
 	var scriptTags = document.getElementsByTagName('script');
 	var scriptTag;
@@ -96,7 +96,7 @@ HOW TO USE:
 */
 
 // Ex: inject(/(names.sprite.set\( name, id \);)/, '$1console.dir(names)');
-function inject$1(searchRegex, replaceString) {
+function inject(searchRegex, replaceString) {
 	var kitsy = kitsyInit();
 	if (
 		!kitsy.queuedInjectScripts.some(function (script) {
@@ -143,7 +143,7 @@ function kitsyInit() {
 
 function doInjects() {
 	bitsy.kitsy.queuedInjectScripts.forEach(function (injectScript) {
-		inject(injectScript.searchRegex, injectScript.replaceString);
+		inject$1(injectScript.searchRegex, injectScript.replaceString);
 	});
 	reinitEngine();
 }
@@ -239,9 +239,9 @@ else {
 return;`;
 
 // override textbox drawing to use draw image version from above
-inject$1(/(this\.DrawTextbox = function\(\) {)/, '$1' + drawOverride);
+inject(/(this\.DrawTextbox = function\(\) {)/, '$1' + drawOverride);
 
 // override textbox clearing pixels to be fully transparent
-inject$1(/(textboxInfo\.img\.data\[i\+3\]=)255/, '$10');
+inject(/(textboxInfo\.img\.data\[i\+3\]=)255/, '$10');
 
 }(window));

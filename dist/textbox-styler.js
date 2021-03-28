@@ -3,7 +3,7 @@
 @file textbox styler
 @summary customize the style and properties of the textbox
 @license MIT
-@version 15.4.2
+@version 15.4.3
 @requires Bitsy Version: 6.1
 @author Dana Holdampf & Sean S. LeBlanc
 
@@ -414,7 +414,7 @@ Helper used to replace code in a script tag based on a search regex
 To inject code without erasing original string, using capturing groups; e.g.
 	inject(/(some string)/,'injected before $1 injected after')
 */
-function inject(searchRegex, replaceString) {
+function inject$1(searchRegex, replaceString) {
 	// find the relevant script tag
 	var scriptTags = document.getElementsByTagName('script');
 	var scriptTag;
@@ -507,7 +507,7 @@ HOW TO USE:
 */
 
 // Ex: inject(/(names.sprite.set\( name, id \);)/, '$1console.dir(names)');
-function inject$1(searchRegex, replaceString) {
+function inject(searchRegex, replaceString) {
 	var kitsy = kitsyInit();
 	if (
 		!kitsy.queuedInjectScripts.some(function (script) {
@@ -570,7 +570,7 @@ function kitsyInit() {
 
 function doInjects() {
 	bitsy.kitsy.queuedInjectScripts.forEach(function (injectScript) {
-		inject(injectScript.searchRegex, injectScript.replaceString);
+		inject$1(injectScript.searchRegex, injectScript.replaceString);
 	});
 	reinitEngine();
 }
@@ -673,7 +673,7 @@ function addDialogFunction(tag, fn) {
 }
 
 function injectDialogTag(tag, code) {
-	inject$1(
+	inject(
 		/(var functionMap = new Map\(\);[^]*?)(this.HasFunction)/m,
 		'$1\nfunctionMap.set("' + tag + '", ' + code + ');\n$2',
 	);
@@ -752,7 +752,7 @@ function addDualDialogTag(tag, fn) {
  * Adds the function `AddParagraphBreak` to `DialogBuffer`
  */
 
-inject$1(/(this\.AddLinebreak = )/, 'this.AddParagraphBreak = function() { buffer.push( [[]] ); isActive = true; };\n$1');
+inject(/(this\.AddLinebreak = )/, 'this.AddParagraphBreak = function() { buffer.push( [[]] ); isActive = true; };\n$1');
 
 /**
 📃
@@ -1187,7 +1187,7 @@ var textboxInfoReplace = `var textboxInfo = {
 	arrow_height : textboxStyler.activeStyle.textPaddingY + textboxStyler.activeStyle.borderHeight - 4,
 };
 window.textboxInfo = textboxInfo;`;
-inject$1(/var textboxInfo = [^]*?};/, textboxInfoReplace);
+inject(/var textboxInfo = [^]*?};/, textboxInfoReplace);
 
 // Replaces ClearTextbox function to include border-drawing scripts
 var clearTextboxReplace = `this.ClearTextbox = function() {
@@ -1208,7 +1208,7 @@ var clearTextboxReplace = `this.ClearTextbox = function() {
 
 	textboxStyler.drawBorder();
 };`;
-inject$1(/this.ClearTextbox = [^]*?};/, clearTextboxReplace);
+inject(/this.ClearTextbox = [^]*?};/, clearTextboxReplace);
 
 // Replaces Draw Textbox function, with function that supports vertical and horizontal shifting
 var drawTextboxReplace = `this.DrawTextbox = function() {
@@ -1258,7 +1258,7 @@ var drawTextboxReplace = `this.DrawTextbox = function() {
 		context.putImageData(textboxInfo.img, textboxXPosition, textboxYPosition);
 	}
 };`;
-inject$1(/this.DrawTextbox = [^]*?};/, drawTextboxReplace);
+inject(/this.DrawTextbox = [^]*?};/, drawTextboxReplace);
 
 // Replace DrawNextArrow function, to support custom sprites, colors, and arrow repositioning
 var drawNextArrowReplace = `this.DrawNextArrow = function() {
@@ -1312,25 +1312,25 @@ var drawNextArrowReplace = `this.DrawNextArrow = function() {
 		}
 	}
 };`;
-inject$1(/this.DrawNextArrow = [^]*?};/, drawNextArrowReplace);
+inject(/this.DrawNextArrow = [^]*?};/, drawNextArrowReplace);
 
 // Inject to support custom text scaling
-inject$1(/var text_scale = .+?;/, 'var text_scale = textboxStyler.activeStyle.textScale;');
+inject(/var text_scale = .+?;/, 'var text_scale = textboxStyler.activeStyle.textScale;');
 
 // Injects to support text padding within the textbox
 var topTextPaddingReplace = 'var top = (2 * textboxStyler.activeStyle.textPaddingY) + (textboxStyler.activeStyle.borderHeight * 2) + (row * 2 * scale) + (row * font.getHeight() * textboxStyler.activeStyle.textScale) + Math.floor( char.offset.y );';
 var leftTextPaddingReplace = 'var left = (2* textboxStyler.activeStyle.textPaddingX) + (textboxStyler.activeStyle.borderWidth * 2) + (leftPos * textboxStyler.activeStyle.textScale) + Math.floor( char.offset.x );';
-inject$1(/var top = \(4 \* scale\) \+ \(row \* 2 \* scale\) .+?\);/, topTextPaddingReplace);
-inject$1(/var left = \(4 \* scale\) \+ \(leftPos \* text_scale\) .+?\);/, leftTextPaddingReplace);
+inject(/var top = \(4 \* scale\) \+ \(row \* 2 \* scale\) .+?\);/, topTextPaddingReplace);
+inject(/var left = \(4 \* scale\) \+ \(leftPos \* text_scale\) .+?\);/, leftTextPaddingReplace);
 
 // Inject to support custom text speeds
-inject$1(/var nextCharMaxTime = .+?;/, 'var nextCharMaxTime = textboxStyler.activeStyle.textSpeed;');
+inject(/var nextCharMaxTime = .+?;/, 'var nextCharMaxTime = textboxStyler.activeStyle.textSpeed;');
 
 // Inject to support custom default text color
-inject$1(/this.color = .+?};/, 'this.color = { r:textboxStyler.activeStyle.textColor[0], g:textboxStyler.activeStyle.textColor[1], b:textboxStyler.activeStyle.textColor[2], a:textboxStyler.activeStyle.textColor[3] };');
+inject(/this.color = .+?};/, 'this.color = { r:textboxStyler.activeStyle.textColor[0], g:textboxStyler.activeStyle.textColor[1], b:textboxStyler.activeStyle.textColor[2], a:textboxStyler.activeStyle.textColor[3] };');
 
 // Inject to support dynamic textbox resizing. Attach to window to make it accessible from hack.
-inject$1(/var pixelsPerRow = .+?;/, 'window.pixelsPerRow = (textboxStyler.activeStyle.textboxWidth*(4/textboxStyler.activeStyle.textScale)) - (textboxStyler.activeStyle.borderWidth*(4/textboxStyler.activeStyle.textScale)) - (textboxStyler.activeStyle.textPaddingX*(4/textboxStyler.activeStyle.textScale));');
+inject(/var pixelsPerRow = .+?;/, 'window.pixelsPerRow = (textboxStyler.activeStyle.textboxWidth*(4/textboxStyler.activeStyle.textScale)) - (textboxStyler.activeStyle.borderWidth*(4/textboxStyler.activeStyle.textScale)) - (textboxStyler.activeStyle.textPaddingX*(4/textboxStyler.activeStyle.textScale));');
 // var pixelsPerRow = (textboxWidth*2) - (borderWidth*2) - (textPaddingX*2); // hard-coded fun times!!! 192
 
 // Store font height at parent level when calculated.
@@ -1340,7 +1340,7 @@ var fontSizeInject = `else if (args[0] == "SIZE") {
 	window.fontHeight = height;
 	console.log(fontHeight);
 }`;
-inject$1(/else if \(args\[0\] == "SIZE"\) {[^]*?}/, fontSizeInject);
+inject(/else if \(args\[0\] == "SIZE"\) {[^]*?}/, fontSizeInject);
 // =============================================================
 // | RE-IMPLEMENTED LONG DIALOG HACK INJECTS |/////////////////|
 // =============================================================
@@ -1349,16 +1349,16 @@ inject$1(/else if \(args\[0\] == "SIZE"\) {[^]*?}/, fontSizeInject);
 // Added textMinLines and textMaxLines to hackOptions parameters, to include in style swapping
 
 // override textbox height (and recalculate textboxWidth)
-inject$1(/textboxInfo\.height = .+;/, `Object.defineProperty(textboxInfo, 'height', {
+inject(/textboxInfo\.height = .+;/, `Object.defineProperty(textboxInfo, 'height', {
 	get() { return textboxStyler.activeStyle.textPaddingY + textboxStyler.activeStyle.borderHeight - 2 + ((2 + relativeFontHeight()) * Math.max(textboxStyler.activeStyle.textMinLines, dialogBuffer.CurPage().indexOf(dialogBuffer.CurRow())+Math.sign(dialogBuffer.CurCharCount()))); }
 })`);
 
 // prevent textbox from caching
-inject$1(/(if\(textboxInfo\.img == null\))/, '// $1');
+inject(/(if\(textboxInfo\.img == null\))/, '// $1');
 
 // rewrite hard-coded row limit
-inject$1(/(else if \(curRowIndex )== 0/g, '$1 < textboxStyler.activeStyle.textMaxLines - 1');
-inject$1(/(if \(lastPage\.length) <= 1/, '$1 < textboxStyler.activeStyle.textMaxLines');
+inject(/(else if \(curRowIndex )== 0/g, '$1 < textboxStyler.activeStyle.textMaxLines - 1');
+inject(/(if \(lastPage\.length) <= 1/, '$1 < textboxStyler.activeStyle.textMaxLines');
 
 exports.hackOptions = hackOptions;
 

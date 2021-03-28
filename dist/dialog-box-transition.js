@@ -3,7 +3,7 @@
 @file dialog box transition
 @summary adds an easing transition animation to display the dialog box text
 @license MIT
-@version 15.4.2
+@version 15.4.3
 @requires 4.8, 4.9
 @author Delacannon
 
@@ -35,7 +35,7 @@ Helper used to replace code in a script tag based on a search regex
 To inject code without erasing original string, using capturing groups; e.g.
 	inject(/(some string)/,'injected before $1 injected after')
 */
-function inject(searchRegex, replaceString) {
+function inject$1(searchRegex, replaceString) {
 	// find the relevant script tag
 	var scriptTags = document.getElementsByTagName('script');
 	var scriptTag;
@@ -99,7 +99,7 @@ HOW TO USE:
 */
 
 // Ex: inject(/(names.sprite.set\( name, id \);)/, '$1console.dir(names)');
-function inject$1(searchRegex, replaceString) {
+function inject(searchRegex, replaceString) {
 	var kitsy = kitsyInit();
 	if (
 		!kitsy.queuedInjectScripts.some(function (script) {
@@ -146,7 +146,7 @@ function kitsyInit() {
 
 function doInjects() {
 	bitsy.kitsy.queuedInjectScripts.forEach(function (injectScript) {
-		inject(injectScript.searchRegex, injectScript.replaceString);
+		inject$1(injectScript.searchRegex, injectScript.replaceString);
 	});
 	reinitEngine();
 }
@@ -256,21 +256,21 @@ var functionEasing = `
 	this.onExit = false;
 `;
 
-inject$1(
+inject(
 	/(this\.DrawTextbox\(\))/,
 	'$1\nif(this.onExit && this.onClose){dialogBuffer.EndDialog()}',
 );
-inject$1(/(this\.EndDialog\(\))/, 'dialogRenderer.onClose=true');
-inject$1(/(var DialogRenderer = function\(\) {)/, `$1${functionEasing}`);
-inject$1(/(var textboxInfo = {)/, '$1y:0,');
-inject$1(
+inject(/(this\.EndDialog\(\))/, 'dialogRenderer.onClose=true');
+inject(/(var DialogRenderer = function\(\) {)/, `$1${functionEasing}`);
+inject(/(var textboxInfo = {)/, '$1y:0,');
+inject(
 	/(this\.Reset = function\(\) {)/,
 	`$1 this.onClose=false;
 		this.onExit=false;
 		textboxInfo.y = player().y < mapsize/2 ? (height+textboxInfo.bottom+textboxInfo.height)*scale : -(textboxInfo.height) * scale;`,
 );
 
-inject$1(/(this\.DrawTextbox = function\(\) {)/, `$1${drawOverride}`);
+inject(/(this\.DrawTextbox = function\(\) {)/, `$1${drawOverride}`);
 
 exports.hackOptions = hackOptions;
 

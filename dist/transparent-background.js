@@ -3,7 +3,7 @@
 @file transparent background
 @summary makes the game have a transparent background
 @license MIT
-@version 15.4.2
+@version 15.4.3
 @requires Bitsy Version: 7.2
 @author Cephalopodunk & Sean S. LeBlanc
 
@@ -19,7 +19,7 @@ HOW TO USE:
 this.hacks = this.hacks || {};
 (function (exports, bitsy) {
 'use strict';
-var hackOptions$1 = {
+var hackOptions = {
 	// transparent sprites option
 	isTransparent: function (drawing) {
 		// return drawing.name == 'tea'; // specific transparent drawing
@@ -44,7 +44,7 @@ Helper used to replace code in a script tag based on a search regex
 To inject code without erasing original string, using capturing groups; e.g.
 	inject(/(some string)/,'injected before $1 injected after')
 */
-function inject(searchRegex, replaceString) {
+function inject$1(searchRegex, replaceString) {
 	// find the relevant script tag
 	var scriptTags = document.getElementsByTagName('script');
 	var scriptTag;
@@ -108,7 +108,7 @@ HOW TO USE:
 */
 
 // Ex: inject(/(names.sprite.set\( name, id \);)/, '$1console.dir(names)');
-function inject$1(searchRegex, replaceString) {
+function inject(searchRegex, replaceString) {
 	var kitsy = kitsyInit();
 	if (
 		!kitsy.queuedInjectScripts.some(function (script) {
@@ -164,7 +164,7 @@ function kitsyInit() {
 
 function doInjects() {
 	bitsy.kitsy.queuedInjectScripts.forEach(function (injectScript) {
-		inject(injectScript.searchRegex, injectScript.replaceString);
+		inject$1(injectScript.searchRegex, injectScript.replaceString);
 	});
 	reinitEngine();
 }
@@ -256,7 +256,7 @@ HOW TO USE:
 2. Edit hackOptions below as needed
 */
 
-var hackOptions = {
+var hackOptions$1 = {
 	isTransparent: function (drawing) {
 		// return drawing.name == 'tea'; // specific transparent drawing
 		// return ['tea', 'flower', 'hat'].indexOf(drawing.name) !== -1; // specific transparent drawing list
@@ -284,7 +284,7 @@ before('renderer.GetImage', function (drawing, paletteId, frameOverride) {
 
 	// flag the next draw as needing to be made transparent
 	p[frameIndex] = source;
-	makeTransparent = hackOptions.isTransparent(drawing);
+	makeTransparent = hackOptions$1.isTransparent(drawing);
 });
 
 before('drawTile', function (canvas) {
@@ -312,14 +312,14 @@ before('drawTile', function (canvas) {
 
 
 // pass through transparent sprites option
-hackOptions.isTransparent = function (drawing) {
-	return hackOptions$1.isTransparent(drawing);
+hackOptions$1.isTransparent = function (drawing) {
+	return hackOptions.isTransparent(drawing);
 };
 
-inject$1(/ctx.fillRect(\(0,0,canvas.width,canvas.height\);)/g, 'ctx.clearRect$1');
-inject$1(/context.fillRect(\(0,0,canvas.width,canvas.height\);)/g, 'context.clearRect$1');
+inject(/ctx.fillRect(\(0,0,canvas.width,canvas.height\);)/g, 'ctx.clearRect$1');
+inject(/context.fillRect(\(0,0,canvas.width,canvas.height\);)/g, 'context.clearRect$1');
 
-exports.hackOptions = hackOptions$1;
+exports.hackOptions = hackOptions;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 

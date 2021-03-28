@@ -3,7 +3,7 @@
 @file end-from-dialog
 @summary trigger an ending from dialog, including narration text
 @license WTFPL (do WTF you want)
-@version 15.4.2
+@version 15.4.3
 @requires Bitsy Version: 7.0
 @author @mildmojo
 
@@ -69,7 +69,7 @@ Helper used to replace code in a script tag based on a search regex
 To inject code without erasing original string, using capturing groups; e.g.
 	inject(/(some string)/,'injected before $1 injected after')
 */
-function inject(searchRegex, replaceString) {
+function inject$1(searchRegex, replaceString) {
 	// find the relevant script tag
 	var scriptTags = document.getElementsByTagName('script');
 	var scriptTag;
@@ -133,7 +133,7 @@ HOW TO USE:
 */
 
 // Ex: inject(/(names.sprite.set\( name, id \);)/, '$1console.dir(names)');
-function inject$1(searchRegex, replaceString) {
+function inject(searchRegex, replaceString) {
 	var kitsy = kitsyInit();
 	if (
 		!kitsy.queuedInjectScripts.some(function (script) {
@@ -196,7 +196,7 @@ function kitsyInit() {
 
 function doInjects() {
 	bitsy.kitsy.queuedInjectScripts.forEach(function (injectScript) {
-		inject(injectScript.searchRegex, injectScript.replaceString);
+		inject$1(injectScript.searchRegex, injectScript.replaceString);
 	});
 	reinitEngine();
 }
@@ -299,7 +299,7 @@ function addDialogFunction(tag, fn) {
 }
 
 function injectDialogTag(tag, code) {
-	inject$1(
+	inject(
 		/(var functionMap = new Map\(\);[^]*?)(this.HasFunction)/m,
 		'$1\nfunctionMap.set("' + tag + '", ' + code + ');\n$2',
 	);

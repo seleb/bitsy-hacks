@@ -3,7 +3,7 @@
 @file transitions
 @summary customizable WebGL transitions
 @license MIT
-@version 15.4.2
+@version 15.4.3
 @author Sean S. LeBlanc
 
 @description
@@ -57,7 +57,7 @@ NOTES:
 this.hacks = this.hacks || {};
 (function (exports, bitsy) {
 'use strict';
-var hackOptions$1 = {
+var hackOptions = {
 	// transition duration
 	duration: 1000,
 	// whether to transition title screen
@@ -313,7 +313,7 @@ void main(){
 };
 */
 
-var hackOptions = {
+var hackOptions$1 = {
 	glazyOptions: {
 		background: 'black',
 		scaleMode: 'MULTIPLES', // use "FIT" if you prefer size to pixel accuracy
@@ -332,15 +332,15 @@ var hackOptions = {
 
 var glazy;
 after('startExportedGame', function () {
-	glazy = new r(hackOptions.glazyOptions);
-	if (hackOptions.init) {
-		hackOptions.init(glazy);
+	glazy = new r(hackOptions$1.glazyOptions);
+	if (hackOptions$1.init) {
+		hackOptions$1.init(glazy);
 	}
 });
 
 after('update', function () {
-	if (hackOptions.update) {
-		hackOptions.update(glazy);
+	if (hackOptions$1.update) {
+		hackOptions$1.update(glazy);
 	}
 });
 
@@ -348,12 +348,12 @@ after('update', function () {
 
 
 
-Object.assign(hackOptions.glazyOptions, hackOptions$1.glazyOptions);
-hackOptions.glazyOptions.disableFeedbackTexture = false;
-hackOptions.init = function (glazy) {
+Object.assign(hackOptions$1.glazyOptions, hackOptions.glazyOptions);
+hackOptions$1.glazyOptions.disableFeedbackTexture = false;
+hackOptions$1.init = function (glazy) {
 	glazy.glLocations.transitionTime = glazy.gl.getUniformLocation(glazy.shader.program, 'transitionTime');
-	if (!hackOptions$1.includeTitle) {
-		glazy.gl.uniform1f(glazy.glLocations.transitionTime, glazy.curTime - hackOptions$1.duration);
+	if (!hackOptions.includeTitle) {
+		glazy.gl.uniform1f(glazy.glLocations.transitionTime, glazy.curTime - hackOptions.duration);
 	}
 
 	// hack textureFeedback update
@@ -361,15 +361,15 @@ hackOptions.init = function (glazy) {
 	glazy.textureFeedback.oldUpdate = glazy.textureFeedback.update;
 	glazy.textureFeedback.update = function () {};
 };
-hackOptions.update = function (glazy) {
-	if (hackOptions$1.checkTransition()) {
+hackOptions$1.update = function (glazy) {
+	if (hackOptions.checkTransition()) {
 		// transition occurred; update feedback texture to capture frame
 		glazy.gl.uniform1f(glazy.glLocations.transitionTime, glazy.curTime);
 		glazy.textureFeedback.oldUpdate();
 	}
 };
 
-hackOptions.glazyOptions.fragment = `
+hackOptions$1.glazyOptions.fragment = `
 	precision mediump float;
 	uniform sampler2D tex0;
 	uniform sampler2D tex1;
@@ -388,13 +388,13 @@ hackOptions.glazyOptions.fragment = `
 		vec3 end = texture2D(tex0,uv).rgb;
 		vec3 start = texture2D(tex1,uv).rgb;
 		vec3 result;
-		float t = clamp((time-transitionTime)/float(${hackOptions$1.duration}), 0.0, 1.0);
-		${hackOptions$1.transition}
+		float t = clamp((time-transitionTime)/float(${hackOptions.duration}), 0.0, 1.0);
+		${hackOptions.transition}
 		gl_FragColor = vec4(result, 1.0);
 	}
 `;
 
-exports.hackOptions = hackOptions$1;
+exports.hackOptions = hackOptions;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 

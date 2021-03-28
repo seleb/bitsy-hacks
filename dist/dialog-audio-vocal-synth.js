@@ -3,7 +3,7 @@
 @file dialog audio vocal synth
 @summary animal crossing-style audio powered by the pink trombone vocal synth
 @license MIT
-@version 15.4.2
+@version 15.4.3
 @author Sean S. LeBlanc
 
 @description
@@ -39,7 +39,7 @@ HOW TO USE:
 this.hacks = this.hacks || {};
 (function (exports, bitsy) {
 'use strict';
-var hackOptions$1 = {
+var hackOptions = {
 	autoReset: true, // if true, automatically resets the voice to default when dialog is exited
 	// list of voices that can be used with the provided dialog command
 	// the values use for voice parameters are [base, range] pairs for RNG;
@@ -281,7 +281,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-function clamp(number, min, max) {
+function clamp$1(number, min, max) {
 	if (number < min) return min;
 	else if (number > max) return max;
 	else return number;
@@ -451,7 +451,7 @@ var Glottis = {
 
 		if (this.isTouched || alwaysVoice) this.intensity += 0.13;
 		else this.intensity -= 0.05;
-		this.intensity = clamp(this.intensity, 0, 1);
+		this.intensity = clamp$1(this.intensity, 0, 1);
 	},
 
 	setupWaveform: function (lambda) {
@@ -758,7 +758,7 @@ Helper used to replace code in a script tag based on a search regex
 To inject code without erasing original string, using capturing groups; e.g.
 	inject(/(some string)/,'injected before $1 injected after')
 */
-function inject(searchRegex, replaceString) {
+function inject$1(searchRegex, replaceString) {
 	// find the relevant script tag
 	var scriptTags = document.getElementsByTagName('script');
 	var scriptTag;
@@ -805,7 +805,7 @@ function unique(array) {
  * @param {number} max maximum
  * @return min if value < min, max if value > max, value otherwise
  */
-function clamp$1(value, min, max) {
+function clamp(value, min, max) {
 	return Math.max(min, Math.min(max, value));
 }
 
@@ -832,7 +832,7 @@ HOW TO USE:
 */
 
 // Ex: inject(/(names.sprite.set\( name, id \);)/, '$1console.dir(names)');
-function inject$1(searchRegex, replaceString) {
+function inject(searchRegex, replaceString) {
 	var kitsy = kitsyInit();
 	if (
 		!kitsy.queuedInjectScripts.some(function (script) {
@@ -895,7 +895,7 @@ function kitsyInit() {
 
 function doInjects() {
 	bitsy.kitsy.queuedInjectScripts.forEach(function (injectScript) {
-		inject(injectScript.searchRegex, injectScript.replaceString);
+		inject$1(injectScript.searchRegex, injectScript.replaceString);
 	});
 	reinitEngine();
 }
@@ -998,7 +998,7 @@ function addDialogFunction(tag, fn) {
 }
 
 function injectDialogTag(tag, code) {
-	inject$1(
+	inject(
 		/(var functionMap = new Map\(\);[^]*?)(this.HasFunction)/m,
 		'$1\nfunctionMap.set("' + tag + '", ' + code + ');\n$2',
 	);
@@ -1039,7 +1039,7 @@ HOW TO USE:
 2. Edit `onLetter` below as needed
 */
 
-var hackOptions = {
+var hackOptions$1 = {
 	// function called for each character printed to the dialog box
 	// the single parameter is the character with the following properties:
 	// 	offset: offset from actual position in pixels. starts at {x:0, y:0}
@@ -1072,11 +1072,11 @@ var hackOptions = {
 };
 
 // save the character on dialog font characters so we can read it back post-render
-inject$1(/(function DialogFontChar\(font, char, effectList\) {)/, '$1\nthis.char = char;');
+inject(/(function DialogFontChar\(font, char, effectList\) {)/, '$1\nthis.char = char;');
 
 // hook up letter function
 before('dialogBuffer.DoNextChar', function () {
-	hackOptions.onLetter(bitsy.dialogBuffer.CurChar());
+	hackOptions$1.onLetter(bitsy.dialogBuffer.CurChar());
 });
 
 
@@ -1303,7 +1303,7 @@ function resetTract() {
 	Tract.targetDiameter = Tract.restDiameter.slice();
 }
 
-hackOptions.onLetter = function (character) {
+hackOptions$1.onLetter = function (character) {
 	var first = !Glottis.isTouched;
 	resetTract();
 	Glottis.isTouched = false;
@@ -1336,7 +1336,7 @@ hackOptions.onLetter = function (character) {
 	Tract.targetDiameter = Tract.targetDiameter.map((v, i) => {
 		var pointInTract = i / l;
 		var distanceFromAdjust = Math.abs(adjustPoint - pointInTract);
-		var adjustAmount = 1.0 - clamp$1(distanceFromAdjust / adjustSize, 0, 1);
+		var adjustAmount = 1.0 - clamp(distanceFromAdjust / adjustSize, 0, 1);
 		return lerp(v, v * adjustAmp, adjustAmount);
 	});
 
@@ -1346,7 +1346,7 @@ hackOptions.onLetter = function (character) {
 	Tract.targetDiameter = Tract.targetDiameter.map((v, i) => {
 		var pointInTract = i / l;
 		var distanceFromAdjust = Math.abs(adjustPoint - pointInTract);
-		var adjustAmount = 1.0 - clamp$1(distanceFromAdjust / adjustSize, 0, 1);
+		var adjustAmount = 1.0 - clamp(distanceFromAdjust / adjustSize, 0, 1);
 		return lerp(v, v * adjustAmp, adjustAmount);
 	});
 
@@ -1376,7 +1376,7 @@ after('dialogRenderer.DrawNextArrow', () => {
 });
 
 after('onExitDialog', function () {
-	if (hackOptions$1.autoReset) {
+	if (hackOptions.autoReset) {
 		voice = defaultVoice;
 		resetTract();
 		applyVoice();
@@ -1384,16 +1384,16 @@ after('onExitDialog', function () {
 });
 
 addDialogTag('voice', function (environment, parameters, onReturn) {
-	voice = hackOptions$1.voices[parameters[0]] || defaultVoice;
+	voice = hackOptions.voices[parameters[0]] || defaultVoice;
 	onReturn(null);
 });
 
 after('onready', function () {
-	defaultVoice = hackOptions$1.voices.default;
+	defaultVoice = hackOptions.voices.default;
 	voice = defaultVoice;
 });
 
-exports.hackOptions = hackOptions$1;
+exports.hackOptions = hackOptions;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 

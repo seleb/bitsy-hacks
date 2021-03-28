@@ -1,3 +1,10 @@
+## [15.4.3](https://github.com/seleb/bitsy-hacks/compare/v15.4.2...v15.4.3) (2021-03-28)
+
+
+### Bug Fixes
+
+* `npm upgrade` ([10131f9](https://github.com/seleb/bitsy-hacks/commit/10131f933905c1ca515ed2328e769a2dad4af4a0))
+
 ## [15.4.2](https://github.com/seleb/bitsy-hacks/compare/v15.4.1...v15.4.2) (2021-02-12)
 
 

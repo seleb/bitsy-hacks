@@ -3,7 +3,7 @@
 @file basic sfx
 @summary "walk" and "talk" sound effect support
 @license MIT
-@version 15.4.2
+@version 15.4.3
 @author Sean S. LeBlanc
 
 @description

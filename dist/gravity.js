@@ -3,7 +3,7 @@
 @file gravity
 @summary Pseudo-platforming/gravity/physics
 @license MIT
-@version 15.4.2
+@version 15.4.3
 @requires 6.3
 @author Cole Sea
 
@@ -128,7 +128,7 @@ Helper used to replace code in a script tag based on a search regex
 To inject code without erasing original string, using capturing groups; e.g.
 	inject(/(some string)/,'injected before $1 injected after')
 */
-function inject(searchRegex, replaceString) {
+function inject$1(searchRegex, replaceString) {
 	// find the relevant script tag
 	var scriptTags = document.getElementsByTagName('script');
 	var scriptTag;
@@ -208,7 +208,7 @@ HOW TO USE:
 */
 
 // Ex: inject(/(names.sprite.set\( name, id \);)/, '$1console.dir(names)');
-function inject$1(searchRegex, replaceString) {
+function inject(searchRegex, replaceString) {
 	var kitsy = kitsyInit();
 	if (
 		!kitsy.queuedInjectScripts.some(function (script) {
@@ -271,7 +271,7 @@ function kitsyInit() {
 
 function doInjects() {
 	bitsy.kitsy.queuedInjectScripts.forEach(function (injectScript) {
-		inject(injectScript.searchRegex, injectScript.replaceString);
+		inject$1(injectScript.searchRegex, injectScript.replaceString);
 	});
 	reinitEngine();
 }
@@ -374,7 +374,7 @@ function addDialogFunction(tag, fn) {
 }
 
 function injectDialogTag(tag, code) {
-	inject$1(
+	inject(
 		/(var functionMap = new Map\(\);[^]*?)(this.HasFunction)/m,
 		'$1\nfunctionMap.set("' + tag + '", ' + code + ');\n$2',
 	);
@@ -747,17 +747,17 @@ window.movePlayerWithGravity = function (dir, axis, amt) {
 };
 
 // Replace the default bitsy movement code inside `movePlayer` with our custom gravity
-inject$1(/player\(\)\.x -= 1;/, "movePlayerWithGravity('left', 'x', -1);");
-inject$1(/player\(\)\.x \+= 1;/, "movePlayerWithGravity('right', 'x', 1);");
-inject$1(/player\(\)\.y -= 1;/, "movePlayerWithGravity('up', 'y', -1);");
-inject$1(/player\(\)\.y \+= 1;/, "movePlayerWithGravity('down', 'y', 1);");
+inject(/player\(\)\.x -= 1;/, "movePlayerWithGravity('left', 'x', -1);");
+inject(/player\(\)\.x \+= 1;/, "movePlayerWithGravity('right', 'x', 1);");
+inject(/player\(\)\.y -= 1;/, "movePlayerWithGravity('up', 'y', -1);");
+inject(/player\(\)\.y \+= 1;/, "movePlayerWithGravity('down', 'y', 1);");
 
 // This adds an `else` clause to the default bitsy `movePlayer` logic
 // so that when the player presses a direction that they cannot move in
 // they are instead forced in the direction of gravity.
 // i.e, if they are standing to the left of a wall tile and press right,
 // the player will fall downward if there is an empty tile beneath them
-inject$1(/(var ext = getExit\( player\(\)\.room, player\(\)\.x, player\(\)\.y \);)/, 'else { advanceGravity(); didPlayerMoveThisFrame = true; } $1 ');
+inject(/(var ext = getExit\( player\(\)\.room, player\(\)\.x, player\(\)\.y \);)/, 'else { advanceGravity(); didPlayerMoveThisFrame = true; } $1 ');
 
 function mapDir(dir) {
 	return gravityMap[gravityDir][dir];

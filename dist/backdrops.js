@@ -3,7 +3,7 @@
 @file backdrops
 @summary makes the game have a backdrop
 @license MIT
-@version 15.4.2
+@version 15.4.3
 @requires Bitsy Version: 7.2
 @author Cephalopodunk & Sean S. LeBlanc
 
@@ -20,7 +20,7 @@ HOW TO USE:
 this.hacks = this.hacks || {};
 (function (exports, bitsy) {
 'use strict';
-var hackOptions$2 = {
+var hackOptions = {
 	// If true, backdrop changes will persist across rooms without a backdrop defined
 	permanent: false,
 	// Backdrops shown by room
@@ -56,7 +56,7 @@ Helper used to replace code in a script tag based on a search regex
 To inject code without erasing original string, using capturing groups; e.g.
 	inject(/(some string)/,'injected before $1 injected after')
 */
-function inject(searchRegex, replaceString) {
+function inject$1(searchRegex, replaceString) {
 	// find the relevant script tag
 	var scriptTags = document.getElementsByTagName('script');
 	var scriptTag;
@@ -120,7 +120,7 @@ HOW TO USE:
 */
 
 // Ex: inject(/(names.sprite.set\( name, id \);)/, '$1console.dir(names)');
-function inject$1(searchRegex, replaceString) {
+function inject(searchRegex, replaceString) {
 	var kitsy = kitsyInit();
 	if (
 		!kitsy.queuedInjectScripts.some(function (script) {
@@ -183,7 +183,7 @@ function kitsyInit() {
 
 function doInjects() {
 	bitsy.kitsy.queuedInjectScripts.forEach(function (injectScript) {
-		inject(injectScript.searchRegex, injectScript.replaceString);
+		inject$1(injectScript.searchRegex, injectScript.replaceString);
 	});
 	reinitEngine();
 }
@@ -275,7 +275,7 @@ HOW TO USE:
 2. Edit hackOptions below as needed
 */
 
-var hackOptions = {
+var hackOptions$2 = {
 	isTransparent: function (drawing) {
 		// return drawing.name == 'tea'; // specific transparent drawing
 		// return ['tea', 'flower', 'hat'].indexOf(drawing.name) !== -1; // specific transparent drawing list
@@ -303,7 +303,7 @@ before('renderer.GetImage', function (drawing, paletteId, frameOverride) {
 
 	// flag the next draw as needing to be made transparent
 	p[frameIndex] = source;
-	makeTransparent = hackOptions.isTransparent(drawing);
+	makeTransparent = hackOptions$2.isTransparent(drawing);
 });
 
 before('drawTile', function (canvas) {
@@ -356,12 +356,12 @@ var hackOptions$1 = {
 };
 
 // pass through transparent sprites option
-hackOptions.isTransparent = function (drawing) {
+hackOptions$2.isTransparent = function (drawing) {
 	return hackOptions$1.isTransparent(drawing);
 };
 
-inject$1(/ctx.fillRect(\(0,0,canvas.width,canvas.height\);)/g, 'ctx.clearRect$1');
-inject$1(/context.fillRect(\(0,0,canvas.width,canvas.height\);)/g, 'context.clearRect$1');
+inject(/ctx.fillRect(\(0,0,canvas.width,canvas.height\);)/g, 'ctx.clearRect$1');
+inject(/context.fillRect(\(0,0,canvas.width,canvas.height\);)/g, 'context.clearRect$1');
 
 
 
@@ -369,7 +369,7 @@ inject$1(/context.fillRect(\(0,0,canvas.width,canvas.height\);)/g, 'context.clea
 
 // pass through transparent sprites option
 hackOptions$1.isTransparent = function (drawing) {
-	return hackOptions$2.isTransparent(drawing);
+	return hackOptions.isTransparent(drawing);
 };
 
 var imgCache = [];
@@ -378,8 +378,8 @@ after('onload', function () {
 	var game = document.getElementById('game');
 	game.style.backgroundSize = 'cover';
 	// preload images
-	Object.values(hackOptions$2.imagesByRoom)
-		.concat([hackOptions$2.imageTitle, hackOptions$2.imageDefault])
+	Object.values(hackOptions.imagesByRoom)
+		.concat([hackOptions.imageTitle, hackOptions.imageDefault])
 		.filter(function (src) {
 			return src;
 		})
@@ -407,20 +407,20 @@ function setBackdrop(src) {
 }
 
 before('drawRoom', function () {
-	var backdrop = hackOptions$2.backdropsByRoom[bitsy.player().room];
+	var backdrop = hackOptions.backdropsByRoom[bitsy.player().room];
 	// if no backdrop defined + not permanent, reset
-	if (backdrop !== undefined || !hackOptions$2.permanent) {
+	if (backdrop !== undefined || !hackOptions.permanent) {
 		setBackdrop(backdrop);
 	}
 });
 
 after('startNarrating', function (dialogStr, end) {
 	if (!end) {
-		setBackdrop(hackOptions$2.backdropTitle);
+		setBackdrop(hackOptions.backdropTitle);
 	}
 });
 
-exports.hackOptions = hackOptions$2;
+exports.hackOptions = hackOptions;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 

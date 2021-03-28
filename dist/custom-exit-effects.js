@@ -3,7 +3,7 @@
 @file custom-exit-effects
 @summary make custom exit transition effects
 @license MIT
-@version 15.4.2
+@version 15.4.3
 @requires 6.0
 @author Sean S. LeBlanc
 
@@ -85,7 +85,7 @@ Helper used to replace code in a script tag based on a search regex
 To inject code without erasing original string, using capturing groups; e.g.
 	inject(/(some string)/,'injected before $1 injected after')
 */
-function inject(searchRegex, replaceString) {
+function inject$1(searchRegex, replaceString) {
 	// find the relevant script tag
 	var scriptTags = document.getElementsByTagName('script');
 	var scriptTag;
@@ -149,7 +149,7 @@ HOW TO USE:
 */
 
 // Ex: inject(/(names.sprite.set\( name, id \);)/, '$1console.dir(names)');
-function inject$1(searchRegex, replaceString) {
+function inject(searchRegex, replaceString) {
 	var kitsy = kitsyInit();
 	if (
 		!kitsy.queuedInjectScripts.some(function (script) {
@@ -205,7 +205,7 @@ function kitsyInit() {
 
 function doInjects() {
 	bitsy.kitsy.queuedInjectScripts.forEach(function (injectScript) {
-		inject(injectScript.searchRegex, injectScript.replaceString);
+		inject$1(injectScript.searchRegex, injectScript.replaceString);
 	});
 	reinitEngine();
 }
@@ -284,7 +284,7 @@ function reinitEngine() {
 
 
 // allow customizable frameRate
-inject$1(/(var maxStep = Math\.floor\()(frameRate \* \(transitionEffects\[curEffect\]\.duration \/ 1000\)\);)/, '$1transitionEffects[curEffect].frameRate || $2');
+inject(/(var maxStep = Math\.floor\()(frameRate \* \(transitionEffects\[curEffect\]\.duration \/ 1000\)\);)/, '$1transitionEffects[curEffect].frameRate || $2');
 
 before('startExportedGame', function () {
 	// recreate the transition manager so the injected code is used

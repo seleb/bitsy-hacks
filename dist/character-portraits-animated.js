@@ -3,7 +3,7 @@
 @file character portraits animated
 @summary high quality anime gifs
 @license MIT
-@version 15.4.2
+@version 15.4.3
 @requires Bitsy Version: 5.3
 @author Sean S. LeBlanc
 
@@ -31,7 +31,7 @@ HOW TO USE:
 this.hacks = this.hacks || {};
 (function (exports, bitsy) {
 'use strict';
-var hackOptions$1 = {
+var hackOptions = {
 	// overrides for the base hack
 	scale: bitsy.scale,
 	autoReset: true,
@@ -846,7 +846,7 @@ Helper used to replace code in a script tag based on a search regex
 To inject code without erasing original string, using capturing groups; e.g.
 	inject(/(some string)/,'injected before $1 injected after')
 */
-function inject(searchRegex, replaceString) {
+function inject$1(searchRegex, replaceString) {
 	// find the relevant script tag
 	var scriptTags = document.getElementsByTagName('script');
 	var scriptTag;
@@ -910,7 +910,7 @@ HOW TO USE:
 */
 
 // Ex: inject(/(names.sprite.set\( name, id \);)/, '$1console.dir(names)');
-function inject$1(searchRegex, replaceString) {
+function inject(searchRegex, replaceString) {
 	var kitsy = kitsyInit();
 	if (
 		!kitsy.queuedInjectScripts.some(function (script) {
@@ -973,7 +973,7 @@ function kitsyInit() {
 
 function doInjects() {
 	bitsy.kitsy.queuedInjectScripts.forEach(function (injectScript) {
-		inject(injectScript.searchRegex, injectScript.replaceString);
+		inject$1(injectScript.searchRegex, injectScript.replaceString);
 	});
 	reinitEngine();
 }
@@ -1076,7 +1076,7 @@ function addDialogFunction(tag, fn) {
 }
 
 function injectDialogTag(tag, code) {
-	inject$1(
+	inject(
 		/(var functionMap = new Map\(\);[^]*?)(this.HasFunction)/m,
 		'$1\nfunctionMap.set("' + tag + '", ' + code + ');\n$2',
 	);
@@ -1141,7 +1141,7 @@ HOW TO USE:
 2. Edit the hackOptions object as needed
 */
 
-var hackOptions = {
+var hackOptions$1 = {
 	// influences the resolution of the drawn image
 	// `bitsy.scale` (4 by default) is the max and will match bitsy's internal scale (i.e. 512x512)
 	// 1 will match bitsy's in-game virtual scale (i.e. 128x128)
@@ -1167,9 +1167,9 @@ var state = {
 
 // preload images into a cache
 after('startExportedGame', function () {
-	Object.keys(hackOptions.portraits).forEach(function (i) {
+	Object.keys(hackOptions$1.portraits).forEach(function (i) {
 		state.portraits[i] = new Image();
-		state.portraits[i].src = hackOptions.portraits[i];
+		state.portraits[i].src = hackOptions$1.portraits[i];
 	});
 });
 
@@ -1188,7 +1188,7 @@ addDialogTag('portrait', function (environment, parameters, onReturn) {
 // hook up drawing
 var context;
 after('drawRoom', function () {
-	if ((hackOptions.dialogOnly && !bitsy.isDialogMode && !bitsy.isNarrating) || !state.portrait) {
+	if ((hackOptions$1.dialogOnly && !bitsy.isDialogMode && !bitsy.isNarrating) || !state.portrait) {
 		return;
 	}
 	if (!context) {
@@ -1196,7 +1196,7 @@ after('drawRoom', function () {
 		context.imageSmoothingEnabled = false;
 	}
 	try {
-		context.drawImage(state.portrait, 0, 0, bitsy.width * hackOptions.scale, bitsy.height * hackOptions.scale, 0, 0, bitsy.width * bitsy.scale, bitsy.height * bitsy.scale);
+		context.drawImage(state.portrait, 0, 0, bitsy.width * hackOptions$1.scale, bitsy.height * hackOptions$1.scale, 0, 0, bitsy.width * bitsy.scale, bitsy.height * bitsy.scale);
 	} catch (error) {
 		// log and ignore errors
 		// so broken images don't break the game
@@ -1205,7 +1205,7 @@ after('drawRoom', function () {
 });
 
 after('onExitDialog', function () {
-	if (hackOptions.autoReset) {
+	if (hackOptions$1.autoReset) {
 		state.portrait = '';
 	}
 });
@@ -1215,10 +1215,10 @@ after('onExitDialog', function () {
 
 
 before('startExportedGame', function () {
-	hackOptions.portraits = hackOptions$1.portraits;
-	hackOptions.scale = hackOptions$1.scale;
-	hackOptions.autoReset = hackOptions$1.autoReset;
-	hackOptions.dialogOnly = hackOptions$1.dialogOnly;
+	hackOptions$1.portraits = hackOptions.portraits;
+	hackOptions$1.scale = hackOptions.scale;
+	hackOptions$1.autoReset = hackOptions.autoReset;
+	hackOptions$1.dialogOnly = hackOptions.dialogOnly;
 });
 
 // convert portrait state to new format supporting multiple frames
@@ -1321,7 +1321,7 @@ after('drawRoom', function () {
 	state.portrait = animation;
 });
 
-exports.hackOptions = hackOptions$1;
+exports.hackOptions = hackOptions;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
