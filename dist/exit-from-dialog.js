@@ -3,7 +3,7 @@
 @file exit-from-dialog
 @summary exit to another room from dialog, including conditionals
 @license WTFPL (do WTF you want)
-@version 15.4.3
+@version 15.4.4
 @requires Bitsy Version: 7.0
 @author @mildmojo
 

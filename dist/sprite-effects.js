@@ -3,7 +3,7 @@
 @file sprite effects
 @summary like text effects, but for sprites
 @license MIT
-@version 15.4.3
+@version 15.4.4
 @requires 7.1
 @author Sean S. LeBlanc
 

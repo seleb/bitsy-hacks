@@ -1,3 +1,10 @@
+## [15.4.4](https://github.com/seleb/bitsy-hacks/compare/v15.4.3...v15.4.4) (2021-05-16)
+
+
+### Bug Fixes
+
+* update `webglazy` ([dbd9c5c](https://github.com/seleb/bitsy-hacks/commit/dbd9c5c6957f7850a17677da4871e68b179eafa4))
+
 ## [15.4.3](https://github.com/seleb/bitsy-hacks/compare/v15.4.2...v15.4.3) (2021-03-28)
 
 
