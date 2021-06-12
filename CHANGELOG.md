@@ -1,3 +1,10 @@
+## [15.4.6](https://github.com/seleb/bitsy-hacks/compare/v15.4.5...v15.4.6) (2021-06-12)
+
+
+### Bug Fixes
+
+* **external-game-data:** more lenient `IMPORT` check ([69494cc](https://github.com/seleb/bitsy-hacks/commit/69494ccc5b410dbb56fff0b6135d0819d0883db5))
+
 ## [15.4.5](https://github.com/seleb/bitsy-hacks/compare/v15.4.4...v15.4.5) (2021-06-12)
 
 

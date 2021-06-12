@@ -3,7 +3,7 @@
 @file direction in dialog
 @summary provides a variable with player direction
 @license MIT
-@version 15.4.5
+@version 15.4.6
 @requires 5.3
 @author Sean S. LeBlanc
 

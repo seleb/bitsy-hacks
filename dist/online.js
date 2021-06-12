@@ -3,7 +3,7 @@
 @file online
 @summary multiplayer bitsy
 @license MIT
-@version 15.4.5
+@version 15.4.6
 @requires 7.0
 @author Sean S. LeBlanc
 @description

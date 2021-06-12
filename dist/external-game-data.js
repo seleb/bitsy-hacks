@@ -3,7 +3,7 @@
 @file external-game-data
 @summary separate Bitsy game data from your (modded) HTML for easier development
 @license WTFPL (do WTF you want)
-@version 15.4.5
+@version 15.4.6
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
@@ -267,7 +267,7 @@ function tryImportGameData(gameData, done) {
 		return line.trim();
 	};
 	var isImport = function (line) {
-		return bitsy.getType(line) === 'IMPORT';
+		return line.indexOf('IMPORT') === 0;
 	};
 	var importCmd = gameData
 		.split('\n')
