@@ -9,6 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - id: package-version
+        uses: martinbeentjes/npm-get-version-action@v1.1.0
       - uses: josephbmanley/butler-publish-itchio-action@v1.0.2
         env:
           BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
@@ -16,3 +18,4 @@ jobs:
           ITCH_GAME: bitsy-hacks
           ITCH_USER: seansleblanc
           PACKAGE: dist
+          VERSION: ${{ steps.package-version.outputs.current-version}}
