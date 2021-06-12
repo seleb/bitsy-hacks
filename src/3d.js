@@ -13,7 +13,7 @@ Re-renders games in 3D instead of 2D.
 The 3D rendering is done through babylonjs, a 3D WebGL rendering engine.
 
 Notes:
-- Check out https://aloelazoe.itch.io/bitsy-3d for a full editor version of this hack
+- Check out https://aloelazoe.itch.io/bitsy-3d for a full editor version of this hack with more features/fixes
 - The smooth moves hack is included to avoid jerky camera motion when the player moves
 - The transparent sprites hack is included with this since most 3D games would need it
   if wanted, you can prevent it from making things transparent by making the isTransparent
