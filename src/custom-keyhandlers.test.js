@@ -1,6 +1,7 @@
 import {
 	start,
 	end,
+	evaluate,
 	waitForFrame,
 	page,
 } from './test/bitsy';
@@ -9,6 +10,7 @@ test('custom-keyhandlers', async () => {
 	await start({
 		hacks: ['custom-keyhandlers'],
 	});
+	await evaluate(() => { console.log = console.warn; });
 	const logs = [];
 	page.on('console', (message) => logs.push(message.text()));
 	await page.keyboard.down('z');

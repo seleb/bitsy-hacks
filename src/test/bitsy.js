@@ -96,6 +96,9 @@ export async function start({
 		}$2`);
 	}
 
+	// disable console logs since they slow things down
+	game = game.replace(/(<\/script>)(?![^]*?<\/script>)[^]*?(<\/head>)/, '$1<script>console.log = () => {};</script>$2');
+
 	// convert to url
 	game = `data:text/html;base64,${Buffer.from(game).toString('base64')}`;
 
