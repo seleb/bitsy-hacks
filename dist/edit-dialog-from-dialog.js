@@ -3,7 +3,7 @@
 @file edit dialog from dialog
 @summary edit dialog from dialog (yes really)
 @license MIT
-@version 15.4.4
+@version 15.4.5
 @requires 7.0
 @author Sean S. LeBlanc
 

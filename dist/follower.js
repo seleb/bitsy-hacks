@@ -3,7 +3,7 @@
 @file follower
 @summary make sprites follow the player
 @license MIT
-@version 15.4.4
+@version 15.4.5
 @requires 7.0
 @author Sean S. LeBlanc
 

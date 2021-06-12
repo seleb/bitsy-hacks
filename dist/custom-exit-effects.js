@@ -3,7 +3,7 @@
 @file custom-exit-effects
 @summary make custom exit transition effects
 @license MIT
-@version 15.4.4
+@version 15.4.5
 @requires 6.0
 @author Sean S. LeBlanc
 

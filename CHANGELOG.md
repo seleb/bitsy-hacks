@@ -1,3 +1,12 @@
+## [15.4.5](https://github.com/seleb/bitsy-hacks/compare/v15.4.4...v15.4.5) (2021-06-12)
+
+
+### Bug Fixes
+
+* add clearer note about bitsy 3d editor to 3d hack ([df0961f](https://github.com/seleb/bitsy-hacks/commit/df0961fbaa699a94b06597454e6989e29c07a37d))
+* add note about simpler bitsy audio tool to bitsymuse ([0af7bce](https://github.com/seleb/bitsy-hacks/commit/0af7bce35c418011e104bdcaff7a833c7696756e))
+* update readme ([b67b4d4](https://github.com/seleb/bitsy-hacks/commit/b67b4d4e8c23ae09e67672131647bd4f255c5ab5))
+
 ## [15.4.4](https://github.com/seleb/bitsy-hacks/compare/v15.4.3...v15.4.4) (2021-05-16)
 
 

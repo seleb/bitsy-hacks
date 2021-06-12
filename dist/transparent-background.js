@@ -3,7 +3,7 @@
 @file transparent background
 @summary makes the game have a transparent background
 @license MIT
-@version 15.4.4
+@version 15.4.5
 @requires Bitsy Version: 7.2
 @author Cephalopodunk & Sean S. LeBlanc
 
