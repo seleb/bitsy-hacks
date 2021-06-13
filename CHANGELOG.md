@@ -1,3 +1,15 @@
+# [16.0.0](https://github.com/seleb/bitsy-hacks/compare/v15.4.6...v16.0.0) (2021-06-13)
+
+
+### Features
+
+* refactor out `kitsy` for external reuse ([35c1fb4](https://github.com/seleb/bitsy-hacks/commit/35c1fb4179e2d0207d48e1eb8bdf87f5d3f6b014))
+
+
+### BREAKING CHANGES
+
+* The core of `kitsy-script-toolkit` has been refactored out to a separate module (available [here](https://github.com/seleb/kitsy)), leaving only the bitsy/bitsy-hacks specific code in this project. This shouldn't affect the behaviour of any individual hacks, but may affect dependent projects due to the change in structure.
+
 ## [15.4.6](https://github.com/seleb/bitsy-hacks/compare/v15.4.5...v15.4.6) (2021-06-12)
 
 
