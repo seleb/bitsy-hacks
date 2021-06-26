@@ -3,7 +3,7 @@
 @file dialog prompt
 @summary prompt the user for text input in dialog
 @license MIT
-@version 16.0.0
+@version 16.0.1
 @requires 6.4
 @author Sean S. LeBlanc
 
@@ -140,13 +140,13 @@ function applyInjects() {
         inject$1(injectScript.searcher, injectScript.replacer);
     });
 }
-function applyHooks() {
+function applyHooks(root) {
     var allHooks = unique(Object.keys(kitsy.queuedBeforeScripts).concat(Object.keys(kitsy.queuedAfterScripts)));
-    allHooks.forEach(applyHook);
+    allHooks.forEach(applyHook.bind(this, root || window));
 }
-function applyHook(functionName) {
+function applyHook(root, functionName) {
     var functionNameSegments = functionName.split('.');
-    var obj = window;
+    var obj = root;
     while (functionNameSegments.length > 1) {
         obj = obj[functionNameSegments.shift()];
     }

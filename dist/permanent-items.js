@@ -3,7 +3,7 @@
 @file permanent items
 @summary prevent some items from being picked up
 @license MIT
-@version 16.0.0
+@version 16.0.1
 @requires 7.0
 @author Sean S. LeBlanc
 
@@ -109,13 +109,13 @@ function applyInjects() {
         inject(injectScript.searcher, injectScript.replacer);
     });
 }
-function applyHooks() {
+function applyHooks(root) {
     var allHooks = unique(Object.keys(kitsy.queuedBeforeScripts).concat(Object.keys(kitsy.queuedAfterScripts)));
-    allHooks.forEach(applyHook);
+    allHooks.forEach(applyHook.bind(this, root || window));
 }
-function applyHook(functionName) {
+function applyHook(root, functionName) {
     var functionNameSegments = functionName.split('.');
-    var obj = window;
+    var obj = root;
     while (functionNameSegments.length > 1) {
         obj = obj[functionNameSegments.shift()];
     }

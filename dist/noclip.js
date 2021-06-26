@@ -3,7 +3,8 @@
 @file noclip
 @summary walk through wall tiles, sprites, items, exits, and endings
 @license MIT
-@version 16.0.0
+@version 16.0.1
+@requires 7.0
 @author Sean S. LeBlanc
 
 @description
@@ -17,6 +18,29 @@ HOW TO USE:
 */
 (function (bitsy) {
 'use strict';
+var hackOptions = {
+	// each object below is a map of key -> handler
+	// ondown is called when key is first pressed
+	ondown: {
+		z: function () {
+			console.log('pressed z');
+		},
+	},
+	// onheld is called every frame key is held
+	// it includes a single parameter,
+	// which is the number of frames the key has been held
+	onheld: {
+		z: function (f) {
+			console.log('held z for ' + f + ' frames');
+		},
+	},
+	// onup is called when key is released
+	onup: {
+		z: function () {
+			console.log('released z');
+		},
+	},
+};
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
@@ -101,13 +125,13 @@ function applyInjects() {
         inject(injectScript.searcher, injectScript.replacer);
     });
 }
-function applyHooks() {
+function applyHooks(root) {
     var allHooks = unique(Object.keys(kitsy.queuedBeforeScripts).concat(Object.keys(kitsy.queuedAfterScripts)));
-    allHooks.forEach(applyHook);
+    allHooks.forEach(applyHook.bind(this, root || window));
 }
-function applyHook(functionName) {
+function applyHook(root, functionName) {
     var functionNameSegments = functionName.split('.');
-    var obj = window;
+    var obj = root;
     while (functionNameSegments.length > 1) {
         obj = obj[functionNameSegments.shift()];
     }
@@ -211,6 +235,62 @@ kitsy.before;
 /** @see kitsy.after */
 var after = kitsy.after;
 
+/**
+⌨
+@file custom-keyhandlers
+@summary run custom code on key inputs
+@license MIT
+@version auto
+@requires Bitsy Version: 7.0
+@author Sean S. LeBlanc
+
+@description
+Adds an extra layer of key handlers to bitsy's input handling
+that allow custom functions to be run when a key is pressed, held, or released.
+
+Some simple example functions:
+	bitsy.scriptInterpreter.SetVariable('myvar', 10); // sets a variable that can be accessed in bitsy scripts
+	bitsy.startDialog('a dialog string'); // starts a bitsy dialog script
+	bitsy.startDialog(bitsy.dialog['script-id'], 'script-id'); // starts a bitsy dialog script by id
+	bitsy.room[bitsy.curRoom].items.push({ id: 0, x: bitsy.player().x, y: bitsy.player().y }); // adds an item at the player's current position
+
+HOW TO USE:
+1. Copy-paste this script into a script tag after the bitsy source
+2. Edit the hackOptions object as needed
+*/
+
+
+
+var allHandlers = [];
+var held = {};
+
+after('onready', function () {
+	held = {};
+	allHandlers = Object.keys(hackOptions.ondown).concat(Object.keys(hackOptions.onheld), Object.keys(hackOptions.onup));
+});
+
+after('updateInput', function () {
+	allHandlers.forEach(function (key) {
+		var ondown = hackOptions.ondown[key];
+		var onheld = hackOptions.onheld[key];
+		var onup = hackOptions.onup[key];
+		if (bitsy.input.isKeyDown(key.toUpperCase().codePointAt(0))) {
+			var f = held[key] = (held[key] || 0) + 1;
+			if (f === 1 && ondown) {
+				ondown();
+			}
+			if (onheld) {
+				onheld(f);
+			}
+		} else {
+			if (held[key] > 0 && onup) {
+				onup();
+			}
+			held[key] = 0;
+		}
+	});
+});
+
 
 
 var noClip = false;
@@ -250,22 +330,12 @@ var toggleNoClip = function () {
 	}
 };
 
-after('onready', function () {
-	bitsy.isPlayerEmbeddedInEditor = true; // HACK: prevent keydown from consuming all key events
-
-	// add key handler
-	document.addEventListener('keypress', function (e) {
-		if (e.keyCode === 114 && noClip) {
-			// cycle to next room on 'r' if no-clipping
-			e.preventDefault();
-			var k = Object.keys(bitsy.room);
-			bitsy.curRoom = bitsy.player().room = k[(k.indexOf(bitsy.player().room) + 1) % k.length];
-		} else if (e.keyCode === bitsy.key.space) {
-			// toggle noclip on 'space'
-			e.preventDefault();
-			toggleNoClip();
-		}
-	});
-});
+hackOptions.ondown = {
+	r: function () {
+		var k = Object.keys(bitsy.room);
+		bitsy.curRoom = bitsy.player().room = k[(k.indexOf(bitsy.player().room) + 1) % k.length];
+	},
+	' ': toggleNoClip,
+};
 
 }(window));

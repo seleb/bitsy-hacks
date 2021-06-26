@@ -1,3 +1,12 @@
+## [16.0.1](https://github.com/seleb/bitsy-hacks/compare/v16.0.0...v16.0.1) (2021-06-26)
+
+
+### Bug Fixes
+
+* update `kitsy` version ([98c303c](https://github.com/seleb/bitsy-hacks/commit/98c303c84847d8e3745831132ea3e7b75a35c213))
+* update `noclip` hack to work in bitsy 7 ([5c715fa](https://github.com/seleb/bitsy-hacks/commit/5c715fadfb3c780a2669f1834137f960bd37dbc6))
+* update `webglazy` version ([fc62774](https://github.com/seleb/bitsy-hacks/commit/fc62774f8bf4d8ed6a3d822742eec8a44bc5d2cb))
+
 # [16.0.0](https://github.com/seleb/bitsy-hacks/compare/v15.4.6...v16.0.0) (2021-06-13)
 
 
