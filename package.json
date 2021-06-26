@@ -24,7 +24,7 @@
 		"array-flat-polyfill": "^1.0.1",
 		"babylonjs": "^4.2.0",
 		"input-gamepads.js": "^3.0.4",
-		"kitsy": "^1.0.1",
+		"kitsy": "^1.1.0",
 		"omggif": "^1.0.10",
 		"rollup": "^2.51.2",
 		"rollup-plugin-commonjs": "^10.1.0",
