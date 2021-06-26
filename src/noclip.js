@@ -4,6 +4,7 @@
 @summary walk through wall tiles, sprites, items, exits, and endings
 @license MIT
 @version auto
+@requires 7.0
 @author Sean S. LeBlanc
 
 @description
@@ -16,9 +17,7 @@ HOW TO USE:
 3. Press 'r' while noclip is enabled to cycle rooms
 */
 import bitsy from 'bitsy';
-import {
-	after,
-} from './helpers/kitsy-script-toolkit';
+import { hackOptions as customKeyhandlers } from './custom-keyhandlers';
 
 var noClip = false;
 
@@ -57,20 +56,10 @@ var toggleNoClip = function () {
 	}
 };
 
-after('onready', function () {
-	bitsy.isPlayerEmbeddedInEditor = true; // HACK: prevent keydown from consuming all key events
-
-	// add key handler
-	document.addEventListener('keypress', function (e) {
-		if (e.keyCode === 114 && noClip) {
-			// cycle to next room on 'r' if no-clipping
-			e.preventDefault();
-			var k = Object.keys(bitsy.room);
-			bitsy.curRoom = bitsy.player().room = k[(k.indexOf(bitsy.player().room) + 1) % k.length];
-		} else if (e.keyCode === bitsy.key.space) {
-			// toggle noclip on 'space'
-			e.preventDefault();
-			toggleNoClip();
-		}
-	});
-});
+customKeyhandlers.ondown = {
+	r: function () {
+		var k = Object.keys(bitsy.room);
+		bitsy.curRoom = bitsy.player().room = k[(k.indexOf(bitsy.player().room) + 1) % k.length];
+	},
+	' ': toggleNoClip,
+};
