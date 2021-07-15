@@ -3,7 +3,7 @@
 @file transparent dialog
 @summary makes the dialog box have a transparent background
 @license MIT
-@version 16.0.1
+@version 16.0.2
 @author Sean S. LeBlanc
 
 @description

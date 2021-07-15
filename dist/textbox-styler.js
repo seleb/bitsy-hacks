@@ -3,7 +3,7 @@
 @file textbox styler
 @summary customize the style and properties of the textbox
 @license MIT
-@version 16.0.1
+@version 16.0.2
 @requires Bitsy Version: 6.1
 @author Dana Holdampf & Sean S. LeBlanc
 

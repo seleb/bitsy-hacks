@@ -3,7 +3,7 @@
 @file basic sfx
 @summary "walk" and "talk" sound effect support
 @license MIT
-@version 16.0.1
+@version 16.0.2
 @author Sean S. LeBlanc
 
 @description
@@ -281,16 +281,16 @@ before('update', function () {
 after('update', function () {
 	var player = bitsy.player();
 	if (px !== player.x || py !== player.y || pr !== player.room) {
-		sounds.walk();
+		if (sounds.walk) sounds.walk();
 	}
 });
 
 // talk hooks
 after('startDialog', function () {
-	sounds.talk();
+	if (sounds.talk) sounds.talk();
 });
 after('dialogBuffer.FlipPage', function () {
-	sounds.talk();
+	if (sounds.talk) sounds.talk();
 });
 
 exports.hackOptions = hackOptions;
