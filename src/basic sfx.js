@@ -72,14 +72,14 @@ before('update', function () {
 after('update', function () {
 	var player = bitsy.player();
 	if (px !== player.x || py !== player.y || pr !== player.room) {
-		sounds.walk();
+		if (sounds.walk) sounds.walk();
 	}
 });
 
 // talk hooks
 after('startDialog', function () {
-	sounds.talk();
+	if (sounds.talk) sounds.talk();
 });
 after('dialogBuffer.FlipPage', function () {
-	sounds.talk();
+	if (sounds.talk) sounds.talk();
 });
