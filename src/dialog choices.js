@@ -227,7 +227,9 @@ var ChoiceNode = function(options) {
 			}
 			else {
 				done();
-				window.dialogChoices.choicesActive = true;
+				setTimeout(() => {
+					window.dialogChoices.choicesActive = true;
+				});
 			}
 		}
 		window.dialogChoices.choices = this.options.map(function(option){
