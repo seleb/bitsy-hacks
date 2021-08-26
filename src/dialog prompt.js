@@ -159,6 +159,9 @@ addDialogTag('prompt', function (environment, parameters, onReturn) {
 		bitsy.input.anyKeyPressed = anyKeyPressed;
 		bitsy.input.isTapReleased = isTapReleased;
 		environment.GetDialogBuffer().CanContinue = CanContinue;
+		setTimeout(() => {
+			environment.GetDialogBuffer().Continue();
+		}, 0);
 
 		onReturn(null);
 	};
