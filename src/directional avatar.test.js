@@ -86,8 +86,8 @@ test('directional avatar', async () => {
 		gamedata,
 		hacks: ['directional avatar'],
 	});
-	await press('Enter'); // complete title dialog
-	await press('Enter'); // end dialog
+	await press('ArrowRight'); // complete title dialog
+	await press('ArrowRight'); // end dialog
 	await snapshot();
 	await press('ArrowLeft'); // move
 	await snapshot();
@@ -101,8 +101,8 @@ test('compatible with transparency', async () => {
 		gamedata,
 		hacks: ['directional avatar', 'transparent sprites'],
 	});
-	await press('Enter'); // complete title dialog
-	await press('Enter'); // end dialog
+	await press('ArrowRight'); // complete title dialog
+	await press('ArrowRight'); // end dialog
 	await press('ArrowLeft');
 	await press('ArrowLeft');
 	await press('ArrowLeft'); // walk on top of tile border

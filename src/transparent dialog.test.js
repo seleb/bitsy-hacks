@@ -13,7 +13,7 @@ test('transparent dialog', async () => {
 	await walkToCat();
 	await snapshot();
 	await press('ArrowRight'); // talk to cat
-	await press('Enter'); // complete dialog page
+	await press('ArrowRight'); // complete dialog page
 	await snapshot();
 	await end();
 });

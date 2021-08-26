@@ -13,9 +13,9 @@ test('image', async () => {
 	});
 	await walkToCat();
 	await press('ArrowRight'); // talk to cat
-	await press('Enter'); // complete dialog page
+	await press('ArrowRight'); // complete dialog page
 	await snapshot();
-	await press('Enter'); // end dialog
+	await press('ArrowRight'); // end dialog
 	await snapshot();
 	await end();
 });
@@ -28,7 +28,7 @@ test('imageNow', async () => {
 	await walkToCat();
 	await snapshot();
 	await press('ArrowRight'); // talk to cat
-	await press('Enter'); // complete dialog page
+	await press('ArrowRight'); // complete dialog page
 	await snapshot();
 	await end();
 });
@@ -40,8 +40,8 @@ test('compatible with transparency', async () => {
 	});
 	await walkToCat();
 	await press('ArrowRight'); // talk to cat
-	await press('Enter'); // complete dialog page
-	await press('Enter'); // close dialog
+	await press('ArrowRight'); // complete dialog page
+	await press('ArrowRight'); // close dialog
 	await press('ArrowDown');
 	await press('ArrowDown'); // walk on top of tile border
 	await snapshot();

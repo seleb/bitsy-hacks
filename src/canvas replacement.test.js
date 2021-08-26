@@ -29,8 +29,8 @@ void main(){
 			],
 		],
 	});
-	await press('Enter'); // complete title page
-	await press('Enter'); // end title page
+	await press('ArrowRight'); // complete title page
+	await press('ArrowRight'); // end title page
 	await snapshot();
 	await end();
 });

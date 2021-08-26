@@ -172,8 +172,8 @@ export async function snapshot() {
 // to walk from the default starting position
 // to the space to the left of the cat
 export async function walkToCat() {
-	await press('Enter');
-	await press('Enter');
+	await press('ArrowRight');
+	await press('ArrowRight');
 	await press('ArrowDown');
 	await press('ArrowDown');
 	await press('ArrowDown');

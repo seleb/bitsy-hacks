@@ -26,28 +26,28 @@ test('direction in dialog', async () => {
 	});
 	await walkToCat();
 	await press('ArrowRight'); // talk to cat from the right
-	await press('Enter'); // complete dialog page
+	await press('ArrowRight'); // complete dialog page
 	await snapshot();
-	await press('Enter'); // close dialog page
+	await press('ArrowRight'); // close dialog page
 
 	await press('ArrowUp');
 	await press('ArrowRight');
 	await press('ArrowDown'); // talk to cat from above
-	await press('Enter'); // complete dialog page
+	await press('ArrowRight'); // complete dialog page
 	await snapshot();
-	await press('Enter'); // close dialog page
+	await press('ArrowRight'); // close dialog page
 
 	await press('ArrowRight');
 	await press('ArrowDown');
 	await press('ArrowLeft'); // talk to cat from the left
-	await press('Enter'); // complete dialog page
+	await press('ArrowRight'); // complete dialog page
 	await snapshot();
-	await press('Enter'); // close dialog page
+	await press('ArrowRight'); // close dialog page
 
 	await press('ArrowDown');
 	await press('ArrowLeft');
 	await press('ArrowUp'); // talk to cat from below
-	await press('Enter'); // complete dialog page
+	await press('ArrowRight'); // complete dialog page
 	await snapshot();
 	await end();
 });

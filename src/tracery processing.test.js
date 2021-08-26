@@ -26,14 +26,14 @@ test('tracery processing', async () => {
 		Math.random = () => 0;
 	});
 	await press('ArrowRight'); // talk to cat
-	await press('Enter'); // complete dialog page
+	await press('ArrowRight'); // complete dialog page
 	await snapshot();
-	await press('Enter');
+	await press('ArrowRight');
 	await evaluate(() => {
 		Math.random = () => 0.99;
 	});
 	await press('ArrowRight'); // talk to cat
-	await press('Enter'); // complete dialog page
+	await press('ArrowRight'); // complete dialog page
 	await snapshot();
 	await end();
 });

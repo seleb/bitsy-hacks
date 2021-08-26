@@ -19,17 +19,17 @@ test('dialog choices', async () => {
 	});
 	await walkToCat();
 	await press('ArrowRight'); // talk to cat
-	await press('Enter'); // complete dialog page
+	await press('ArrowRight'); // complete dialog page
 	await snapshot();
-	await press('Enter'); // select first choice
-	await press('Enter'); // complete dialog page
+	await press('ArrowRight'); // select first choice
+	await press('ArrowRight'); // complete dialog page
 	await snapshot();
-	await press('Enter'); // end dialog
+	await press('ArrowRight'); // end dialog
 	await press('ArrowRight'); // talk to cat again
-	await press('Enter'); // complete dialog page
+	await press('ArrowRight'); // complete dialog page
 	await press('ArrowDown'); // highlight second choice
 	await snapshot();
-	await press('Enter'); // select second choice
+	await press('ArrowRight'); // select second choice
 	await snapshot();
 	await end();
 });
@@ -47,12 +47,12 @@ I'm a cat{choice
 	});
 	await walkToCat();
 	await press('ArrowRight'); // talk to cat
-	await press('Enter'); // complete dialog page
-	await press('Enter'); // next page
-	await press('Enter'); // complete dialog page
+	await press('ArrowRight'); // complete dialog page
+	await press('ArrowRight'); // next page
+	await press('ArrowRight'); // complete dialog page
 	await snapshot();
-	await press('Enter'); // select first choice
-	await press('Enter'); // complete dialog page
+	await press('ArrowRight'); // select first choice
+	await press('ArrowRight'); // complete dialog page
 	await snapshot();
 	await end();
 });
@@ -72,12 +72,12 @@ test('with long dialog', async () => {
 	});
 	await walkToCat();
 	await press('ArrowRight'); // talk to cat
-	await press('Enter'); // complete dialog page
+	await press('ArrowRight'); // complete dialog page
 	await press('ArrowDown'); // highlight second choice
 	await press('ArrowDown'); // highlight third choice
 	await snapshot();
-	await press('Enter'); // select third choice
-	await press('Enter'); // complete dialog page
+	await press('ArrowRight'); // select third choice
+	await press('ArrowRight'); // complete dialog page
 	await snapshot();
 	await end();
 });

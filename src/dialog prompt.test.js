@@ -13,7 +13,7 @@ test('dialog prompt', async () => {
 	});
 	await walkToCat();
 	await press('ArrowRight'); // talk to cat
-	await press('Enter'); // complete dialog
+	await press('ArrowRight'); // complete dialog
 	await snapshot();
 	await press('Backspace');
 	await press('Backspace');
@@ -25,8 +25,8 @@ test('dialog prompt', async () => {
 	await press('a');
 	await press('t');
 	await snapshot();
-	await press('Enter'); // submit
-	await press('Enter'); // complete dialog
+	await press('ArrowRight'); // submit
+	await press('ArrowRight'); // complete dialog
 	await snapshot();
 	await end();
 });

@@ -37,8 +37,8 @@ if (t < 0.01 || t > 0.99) {
 			],
 		],
 	});
-	await press('Enter'); // complete title page
-	await press('Enter'); // end title page
+	await press('ArrowRight'); // complete title page
+	await press('ArrowRight'); // end title page
 	await delay(2000);
 	await snapshot();
 	await press('ArrowRight');

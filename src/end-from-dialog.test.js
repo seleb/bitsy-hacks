@@ -13,10 +13,10 @@ test('end', async () => {
 	});
 	await walkToCat();
 	await press('ArrowRight'); // talk to cat
-	await press('Enter'); // complete dialog page
+	await press('ArrowRight'); // complete dialog page
 	await snapshot();
-	await press('Enter'); // end dialog
-	await press('Enter'); // complete ending page
+	await press('ArrowRight'); // end dialog
+	await press('ArrowRight'); // complete ending page
 	await snapshot();
 	await end();
 });
@@ -29,7 +29,7 @@ test('endNow', async () => {
 	await walkToCat();
 	await snapshot();
 	await press('ArrowRight'); // talk to cat
-	await press('Enter'); // complete dialog page (also completes ending page due to hack quirk)
+	await press('ArrowRight'); // complete dialog page (also completes ending page due to hack quirk)
 	await snapshot();
 	await end();
 });

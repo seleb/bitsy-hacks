@@ -132,8 +132,8 @@ VAR a
 `,
 		hacks: ['multi-sprite avatar'],
 	});
-	await press('Enter'); // complete title dialog
-	await press('Enter'); // end dialog
+	await press('ArrowRight'); // complete title dialog
+	await press('ArrowRight'); // end dialog
 	await snapshot();
 	await press('ArrowRight'); // move
 	await snapshot();

@@ -99,11 +99,11 @@ test('gravity: jump', async () => {
 		gamedata: gamedata,
 		catDialog: 'meow (setJumpPower 1)',
 	});
-	await press('Enter'); // complete title dialog
-	await press('Enter'); // end dialog
+	await press('ArrowRight'); // complete title dialog
+	await press('ArrowRight'); // end dialog
 	await press('ArrowRight'); // talk to cat
-	await press('Enter'); // complete dialog
-	await press('Enter'); // end dialog
+	await press('ArrowRight'); // complete dialog
+	await press('ArrowRight'); // end dialog
 	await press('ArrowUp'); // jump up
 	await press('ArrowLeft'); // move left, succeed
 	await press('ArrowRight'); // try to move right, dall instead
@@ -117,11 +117,11 @@ test('gravity: jetpack', async () => {
 		gamedata: gamedata,
 		catDialog: 'meow (toggleJetpack) (setJumpPower "2")',
 	});
-	await press('Enter'); // complete title dialog
-	await press('Enter'); // end dialog
+	await press('ArrowRight'); // complete title dialog
+	await press('ArrowRight'); // end dialog
 	await press('ArrowRight'); // talk to cat
-	await press('Enter'); // complete dialog
-	await press('Enter'); // end dialog
+	await press('ArrowRight'); // complete dialog
+	await press('ArrowRight'); // end dialog
 	await press('ArrowUp'); // jetpack up
 	await press('ArrowLeft'); // move left
 	await press('ArrowUp'); // jetpack up
@@ -136,11 +136,11 @@ test('gravity: force', async () => {
 		gamedata: gamedata,
 		catDialog: 'meow (forceGravity "up")',
 	});
-	await press('Enter'); // complete title dialog
-	await press('Enter'); // end dialog
+	await press('ArrowRight'); // complete title dialog
+	await press('ArrowRight'); // end dialog
 	await press('ArrowRight'); // talk to cat
-	await press('Enter'); // complete dialog
-	await press('Enter'); // end dialog
+	await press('ArrowRight'); // complete dialog
+	await press('ArrowRight'); // end dialog
 	await press('ArrowLeft'); // attempt to move left, forced up instead
 	await press('ArrowLeft'); // attempt to move left, forced up instead
 	await press('ArrowLeft'); // attempt to move left, forced up instead
@@ -163,11 +163,11 @@ test('gravity: invert', async () => {
 		gamedata: gamedata,
 		catDialog: 'meow (setGravityDirection "left")',
 	});
-	await press('Enter'); // complete title dialog
-	await press('Enter'); // end dialog
+	await press('ArrowRight'); // complete title dialog
+	await press('ArrowRight'); // end dialog
 	await press('ArrowRight'); // talk to cat
-	await press('Enter'); // complete dialog
-	await press('Enter'); // end dialog
+	await press('ArrowRight'); // complete dialog
+	await press('ArrowRight'); // end dialog
 	await press('ArrowUp'); // move "up"
 	await press('ArrowUp'); // move "up"
 	await press('ArrowUp'); // move "up"

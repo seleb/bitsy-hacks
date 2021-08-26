@@ -27,7 +27,7 @@ test('by room', async () => {
 	await walkToCat();
 	await snapshot();
 	await press('ArrowRight'); // talk to cat
-	await press('Enter'); // complete dialog page
+	await press('ArrowRight'); // complete dialog page
 	await snapshot();
 	await end();
 });
@@ -48,9 +48,9 @@ test('title', async () => {
 			],
 		],
 	});
-	await press('Enter'); // complete dialog page
+	await press('ArrowRight'); // complete dialog page
 	await snapshot();
-	await press('Enter'); // close dialog
+	await press('ArrowRight'); // close dialog
 	await snapshot();
 	await end();
 });
@@ -71,9 +71,9 @@ test('permanent', async () => {
 			],
 		],
 	});
-	await press('Enter'); // complete dialog page
+	await press('ArrowRight'); // complete dialog page
 	await snapshot();
-	await press('Enter'); // close dialog
+	await press('ArrowRight'); // close dialog
 	await snapshot();
 	await end();
 });

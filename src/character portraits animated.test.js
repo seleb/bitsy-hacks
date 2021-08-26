@@ -22,11 +22,11 @@ test('autoreset, dialog only', async () => {
 	});
 	await walkToCat();
 	await press('ArrowRight'); // talk to cat
-	await press('Enter'); // complete dialog page
+	await press('ArrowRight'); // complete dialog page
 	await snapshot();
 	await delay(2000);
 	await snapshot();
-	await press('Enter'); // end dialog page
+	await press('ArrowRight'); // end dialog page
 	await snapshot();
 	await end();
 });
@@ -50,16 +50,16 @@ test('no reset, persist', async () => {
 	});
 	await walkToCat();
 	await press('ArrowRight'); // talk to cat
-	await press('Enter'); // complete dialog page
+	await press('ArrowRight'); // complete dialog page
 	await snapshot();
 	await delay(2000);
 	await snapshot();
-	await press('Enter'); // end dialog page
+	await press('ArrowRight'); // end dialog page
 	await snapshot();
 	await press('ArrowRight'); // talk to cat
-	await press('Enter'); // complete dialog page
+	await press('ArrowRight'); // complete dialog page
 	await snapshot();
-	await press('Enter'); // end dialog page
+	await press('ArrowRight'); // end dialog page
 	await snapshot();
 	await end();
 });

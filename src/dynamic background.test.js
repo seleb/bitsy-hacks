@@ -119,8 +119,8 @@ test('dynamic background', async () => {
 		hacks: ['dynamic background'],
 	});
 	await evaluate('document.getElementById("game").style.transform = "scale(0.5)";');
-	await press('Enter');
-	await press('Enter'); // complete title dialog
+	await press('ArrowRight');
+	await press('ArrowRight'); // complete title dialog
 	await press('ArrowUp');
 	await press('ArrowUp');
 	await press('ArrowUp');
@@ -144,8 +144,8 @@ describe('hackOptions', () => {
 			}]],
 		});
 		await evaluate('document.getElementById("game").style.transform = "scale(0.5)";');
-		await press('Enter');
-		await press('Enter'); // complete title dialog
+		await press('ArrowRight');
+		await press('ArrowRight'); // complete title dialog
 		await press('ArrowUp');
 		await press('ArrowUp');
 		await press('ArrowUp');
@@ -170,8 +170,8 @@ describe('hackOptions', () => {
 			}]],
 		});
 		await evaluate('document.getElementById("game").style.transform = "scale(0.5)";');
-		await press('Enter');
-		await press('Enter'); // complete title dialog
+		await press('ArrowRight');
+		await press('ArrowRight'); // complete title dialog
 		await press('ArrowUp');
 		await press('ArrowUp');
 		await press('ArrowUp');

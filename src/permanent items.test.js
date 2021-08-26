@@ -83,8 +83,8 @@ VAR a
 		hacks: ['permanent items'],
 	});
 	await press('ArrowRight'); // walk onto item
-	await press('Enter'); // complete dialog
-	await press('Enter'); // end dialog
+	await press('ArrowRight'); // complete dialog
+	await press('ArrowRight'); // end dialog
 	await press('ArrowRight'); // walk off item
 	await snapshot();
 	await end();

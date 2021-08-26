@@ -11,12 +11,12 @@ test('sprite effects', async () => {
 	});
 	await walkToCat();
 	await press('ArrowRight'); // talk to cat
-	await press('Enter'); // complete dialog page
-	await press('Enter'); // end dialog
+	await press('ArrowRight'); // complete dialog page
+	await press('ArrowRight'); // end dialog
 	await snapshot();
 	await press('ArrowRight'); // talk to cat
-	await press('Enter'); // complete dialog page
-	await press('Enter'); // end dialog
+	await press('ArrowRight'); // complete dialog page
+	await press('ArrowRight'); // end dialog
 	await snapshot();
 	await end();
 });
@@ -31,12 +31,12 @@ test('compatible with transparency', async () => {
 	});
 	await walkToCat();
 	await press('ArrowRight'); // talk to cat
-	await press('Enter'); // complete dialog page
-	await press('Enter'); // end dialog
+	await press('ArrowRight'); // complete dialog page
+	await press('ArrowRight'); // end dialog
 	await snapshot();
 	await press('ArrowRight'); // talk to cat
-	await press('Enter'); // complete dialog page
-	await press('Enter'); // end dialog
+	await press('ArrowRight'); // complete dialog page
+	await press('ArrowRight'); // end dialog
 	await snapshot();
 	await end();
 });
