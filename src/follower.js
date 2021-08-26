@@ -262,8 +262,3 @@ addDualDialogTag('followerSync', function () {
 		paths[follower.id].length = 0;
 	});
 });
-
-before('moveSprites', function () {
-	bitsy.moveCounter -= bitsy.deltaTime; // cancel out default movement delay
-	bitsy.moveCounter += bitsy.deltaTime * (200 / hackOptions.delay); // apply movement delay from options
-});
