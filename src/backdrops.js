@@ -53,7 +53,7 @@ after('loadGame', function () {
 	var game = document.getElementById('game');
 	game.style.backgroundSize = 'cover';
 	// preload images
-	Object.values(hackOptions.imagesByRoom)
+	Object.values(hackOptions.backdropsByRoom)
 		.concat([hackOptions.imageTitle, hackOptions.imageDefault])
 		.filter(function (src) {
 			return src;
