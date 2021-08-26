@@ -47,7 +47,7 @@ function updateBg() {
 }
 
 // expand the map to include ids of rooms listed by name
-after('load_game', function () {
+after('loadGame', function () {
 	var room;
 	Object.keys(hackOptions.byRoom).forEach(function (i) {
 		room = getRoom(i);

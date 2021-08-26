@@ -120,7 +120,7 @@ function stopWatch(environment, parameters) {
 }
 
 // clear timers on game-load
-before('load_game', function () {
+before('loadGame', function () {
 	timers = {};
 });
 

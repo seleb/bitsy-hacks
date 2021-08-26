@@ -37,7 +37,7 @@ import {
 
 // map of maps
 var maps;
-after('load_game', function () {
+after('loadGame', function () {
 	maps = {
 		spr: bitsy.sprite,
 		sprite: bitsy.sprite,
