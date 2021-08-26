@@ -48,7 +48,7 @@ transparentBackground.isTransparent = function (drawing) {
 };
 
 var imgCache = [];
-after('onload', function () {
+after('loadGame', function () {
 	// set base style
 	var game = document.getElementById('game');
 	game.style.backgroundSize = 'cover';
