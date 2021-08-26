@@ -73,7 +73,7 @@ var currentMusic;
 var roomMusicFlag = null;
 
 // cleanup old audio tags if any are present (e.g. on restart)
-before('loadGame', function () {
+before('load_game', function () {
 	Object.entries(hackOptions.audio).forEach(function (entry) {
 		var el = document.getElementById(entry[0]);
 		if (el) {
@@ -83,7 +83,7 @@ before('loadGame', function () {
 	});
 });
 
-after('loadGame', function () {
+after('load_game', function () {
 	var room;
 	// expand the map to include ids of rooms listed by name
 	Object.entries(hackOptions.musicByRoom).forEach(function (entry) {

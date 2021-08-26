@@ -45,7 +45,7 @@ export var hackOptions = {
 // and store the original player sprite
 var originalDrw;
 var originalAnimation;
-after('loadGame', function () {
+after('load_game', function () {
 	var room;
 	Object.keys(hackOptions.avatarByRoom).forEach(function (i) {
 		room = getRoom(i);

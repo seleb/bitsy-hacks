@@ -49,7 +49,7 @@ var faviconLinkElem;
 var faviconFrameURLs = [];
 var isStarted = false;
 
-after('loadGame', function () {
+after('load_game', function () {
 	if (isStarted) {
 		return;
 	}

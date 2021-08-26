@@ -70,7 +70,7 @@ import {
 
 // map of maps
 var maps;
-after('loadGame', function () {
+after('load_game', function () {
 	maps = {
 		spr: bitsy.sprite,
 		sprite: bitsy.sprite,
