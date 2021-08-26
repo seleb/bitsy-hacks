@@ -52,6 +52,7 @@ after('loadGame', function () {
 	// set base style
 	var game = document.getElementById('game');
 	game.style.backgroundSize = 'cover';
+	game.style.backgroundColor = 'transparent';
 	// preload images
 	Object.values(hackOptions.backdropsByRoom)
 		.concat([hackOptions.imageTitle, hackOptions.imageDefault])
