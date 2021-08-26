@@ -3,7 +3,6 @@ import {
 	press,
 	snapshot,
 	start,
-	walkToCat,
 } from './test/bitsy';
 
 test('deferred', async () => {
@@ -57,7 +56,7 @@ SPR A
 10111101
 00100100
 00100100
-POS 0 4,4
+POS 0 7,12
 
 SPR a
 00000000
@@ -83,7 +82,6 @@ VAR a
 `,
 		hacks: ['dialog jump'],
 	});
-	await walkToCat();
 	await press('ArrowRight');
 	await press('ArrowRight');
 	await snapshot();
@@ -144,7 +142,7 @@ SPR A
 10111101
 00100100
 00100100
-POS 0 4,4
+POS 0 7,12
 
 SPR a
 00000000
@@ -170,7 +168,6 @@ VAR a
 `,
 		hacks: ['dialog jump'],
 	});
-	await walkToCat();
 	await press('ArrowRight');
 	await press('ArrowRight');
 	await snapshot();
