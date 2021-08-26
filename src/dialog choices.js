@@ -282,7 +282,7 @@ $1`);
 
 // interaction
 // (overrides the dialog skip/page flip)
-inject(/(if\( dialogBuffer\.IsActive\(\) \) {)/, `$1
+inject(/(if\(\s*dialogBuffer\.IsActive\(\)\s*\) {)/, `$1
 if(window.dialogChoices.handleInput(dialogBuffer)) {
 	return;
 } else `);
