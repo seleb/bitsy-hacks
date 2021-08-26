@@ -3,7 +3,7 @@
 @file paragraph-break
 @summary Adds paragraph breaks to the dialogue parser
 @license WTFPL (do WTF you want)
-@version 16.0.2
+@version 17.0.0
 @requires Bitsy Version: 5.0, 5.1
 @author Sean S. LeBlanc, David Mowatt
 
@@ -216,6 +216,11 @@ if (!hooked) {
 
 		// Hook everything
 		kitsy.applyHooks();
+
+		// reset callbacks using hacked functions
+		bitsy.bitsyOnUpdate(bitsy.update);
+		bitsy.bitsyOnQuit(bitsy.stopGame);
+		bitsy.bitsyOnLoad(bitsy.load_game);
 
 		// Start the game
 		bitsy.startExportedGame.apply(this, arguments);

@@ -3,7 +3,7 @@
 @file dialog prompt
 @summary prompt the user for text input in dialog
 @license MIT
-@version 16.0.2
+@version 17.0.0
 @requires 6.4
 @author Sean S. LeBlanc
 
@@ -238,6 +238,11 @@ if (!hooked) {
 		// Hook everything
 		kitsy.applyHooks();
 
+		// reset callbacks using hacked functions
+		bitsy.bitsyOnUpdate(bitsy.update);
+		bitsy.bitsyOnQuit(bitsy.stopGame);
+		bitsy.bitsyOnLoad(bitsy.load_game);
+
 		// Start the game
 		bitsy.startExportedGame.apply(this, arguments);
 	};
@@ -452,6 +457,9 @@ addDialogTag('prompt', function (environment, parameters, onReturn) {
 		bitsy.input.anyKeyPressed = anyKeyPressed;
 		bitsy.input.isTapReleased = isTapReleased;
 		environment.GetDialogBuffer().CanContinue = CanContinue;
+		setTimeout(() => {
+			environment.GetDialogBuffer().Continue();
+		}, 0);
 
 		onReturn(null);
 	};
@@ -459,6 +467,7 @@ addDialogTag('prompt', function (environment, parameters, onReturn) {
 	cachedBuffer = bufferCopy(environment.GetDialogBuffer().GetBuffer());
 	// add a caret character immediately (otherwise it won't show up till a key is pressed)
 	environment.GetDialogBuffer().AddText(hackOptions.caret);
+	updateInputDisplay();
 });
 
 // expose a setter/getter for private buffer in DialogBuffer class

@@ -3,7 +3,7 @@
 @file transparent background
 @summary makes the game have a transparent background
 @license MIT
-@version 16.0.2
+@version 17.0.0
 @requires Bitsy Version: 7.2
 @author Cephalopodunk & Sean S. LeBlanc
 
@@ -209,6 +209,11 @@ if (!hooked) {
 
 		// Hook everything
 		kitsy.applyHooks();
+
+		// reset callbacks using hacked functions
+		bitsy.bitsyOnUpdate(bitsy.update);
+		bitsy.bitsyOnQuit(bitsy.stopGame);
+		bitsy.bitsyOnLoad(bitsy.load_game);
 
 		// Start the game
 		bitsy.startExportedGame.apply(this, arguments);

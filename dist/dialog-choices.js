@@ -3,7 +3,7 @@
 @file dialog choices
 @summary binary dialog choices
 @license MIT
-@version 16.0.2
+@version 17.0.0
 @requires 7.0
 @author Sean S. LeBlanc
 
@@ -280,6 +280,11 @@ if (!hooked) {
 		// Hook everything
 		kitsy.applyHooks();
 
+		// reset callbacks using hacked functions
+		bitsy.bitsyOnUpdate(bitsy.update);
+		bitsy.bitsyOnQuit(bitsy.stopGame);
+		bitsy.bitsyOnLoad(bitsy.load_game);
+
 		// Start the game
 		bitsy.startExportedGame.apply(this, arguments);
 	};
@@ -428,7 +433,9 @@ var ChoiceNode = function(options) {
 			}
 			else {
 				done();
-				window.dialogChoices.choicesActive = true;
+				setTimeout(() => {
+					window.dialogChoices.choicesActive = true;
+				});
 			}
 		}
 		window.dialogChoices.choices = this.options.map(function(option){
@@ -483,7 +490,7 @@ $1`);
 
 // interaction
 // (overrides the dialog skip/page flip)
-inject(/(if\( dialogBuffer\.IsActive\(\) \) {)/, `$1
+inject(/(if\(\s*dialogBuffer\.IsActive\(\)\s*\) {)/, `$1
 if(window.dialogChoices.handleInput(dialogBuffer)) {
 	return;
 } else `);

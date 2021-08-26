@@ -3,7 +3,7 @@
 @file favicon-from-sprite
 @summary generate a browser favicon (tab icon) from a Bitsy sprite, including animation!
 @license WTFPL (do WTF you want)
-@version 16.0.2
+@version 17.0.0
 @requires Bitsy Version: 5.5
 @author @mildmojo
 
@@ -210,6 +210,11 @@ if (!hooked) {
 
 		// Hook everything
 		kitsy.applyHooks();
+
+		// reset callbacks using hacked functions
+		bitsy.bitsyOnUpdate(bitsy.update);
+		bitsy.bitsyOnQuit(bitsy.stopGame);
+		bitsy.bitsyOnLoad(bitsy.load_game);
 
 		// Start the game
 		bitsy.startExportedGame.apply(this, arguments);

@@ -3,7 +3,7 @@
 @file follower
 @summary make sprites follow the player
 @license MIT
-@version 16.0.2
+@version 17.0.0
 @requires 7.0
 @author Sean S. LeBlanc
 
@@ -255,6 +255,11 @@ if (!hooked) {
 
 		// Hook everything
 		kitsy.applyHooks();
+
+		// reset callbacks using hacked functions
+		bitsy.bitsyOnUpdate(bitsy.update);
+		bitsy.bitsyOnQuit(bitsy.stopGame);
+		bitsy.bitsyOnLoad(bitsy.load_game);
 
 		// Start the game
 		bitsy.startExportedGame.apply(this, arguments);
@@ -572,11 +577,6 @@ addDualDialogTag('followerSync', function () {
 		follower.y = player.y;
 		paths[follower.id].length = 0;
 	});
-});
-
-before('moveSprites', function () {
-	bitsy.moveCounter -= bitsy.deltaTime; // cancel out default movement delay
-	bitsy.moveCounter += bitsy.deltaTime * (200 / hackOptions.delay); // apply movement delay from options
 });
 
 exports.followers = followers;

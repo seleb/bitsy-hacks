@@ -3,7 +3,7 @@
 @file external-game-data
 @summary separate Bitsy game data from your (modded) HTML for easier development
 @license WTFPL (do WTF you want)
-@version 16.0.2
+@version 17.0.0
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
@@ -222,6 +222,11 @@ if (!hooked) {
 
 		// Hook everything
 		kitsy.applyHooks();
+
+		// reset callbacks using hacked functions
+		bitsy.bitsyOnUpdate(bitsy.update);
+		bitsy.bitsyOnQuit(bitsy.stopGame);
+		bitsy.bitsyOnLoad(bitsy.load_game);
 
 		// Start the game
 		bitsy.startExportedGame.apply(this, arguments);

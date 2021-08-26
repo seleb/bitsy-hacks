@@ -3,7 +3,7 @@
 @file backdrops
 @summary makes the game have a backdrop
 @license MIT
-@version 16.0.2
+@version 17.0.0
 @requires Bitsy Version: 7.2
 @author Cephalopodunk & Sean S. LeBlanc
 
@@ -222,6 +222,11 @@ if (!hooked) {
 		// Hook everything
 		kitsy.applyHooks();
 
+		// reset callbacks using hacked functions
+		bitsy.bitsyOnUpdate(bitsy.update);
+		bitsy.bitsyOnQuit(bitsy.stopGame);
+		bitsy.bitsyOnLoad(bitsy.load_game);
+
 		// Start the game
 		bitsy.startExportedGame.apply(this, arguments);
 	};
@@ -350,12 +355,13 @@ hackOptions$1.isTransparent = function (drawing) {
 };
 
 var imgCache = [];
-after('onload', function () {
+after('loadGame', function () {
 	// set base style
 	var game = document.getElementById('game');
 	game.style.backgroundSize = 'cover';
+	game.style.backgroundColor = 'transparent';
 	// preload images
-	Object.values(hackOptions.imagesByRoom)
+	Object.values(hackOptions.backdropsByRoom)
 		.concat([hackOptions.imageTitle, hackOptions.imageDefault])
 		.filter(function (src) {
 			return src;

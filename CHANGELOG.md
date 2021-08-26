@@ -1,3 +1,25 @@
+# [17.0.0](https://github.com/seleb/bitsy-hacks/compare/v16.0.2...v17.0.0) (2021-08-26)
+
+
+### Bug Fixes
+
+* support bitsy 7.8 ([e1d88de](https://github.com/seleb/bitsy-hacks/commit/e1d88deee8a78f033da722dfc2be2619b3aa3006))
+* **dialog choices:** choice selected early when skipping dialog ([d0c123c](https://github.com/seleb/bitsy-hacks/commit/d0c123cf152411b8abc23b1f76c61be8f078f649))
+* **dialog choices:** hook not applying due to whitespace change ([c6391a7](https://github.com/seleb/bitsy-hacks/commit/c6391a79ea9d07496d617d1bb77d67e54665b0fc))
+* remove `moveSprites` hook ([f110b0b](https://github.com/seleb/bitsy-hacks/commit/f110b0b954e0a09c83084695cd8a9ca42be39f3e))
+* reset callbacks after hooks ([7cbcb8d](https://github.com/seleb/bitsy-hacks/commit/7cbcb8d04aa010bd94a7f2101ca166b5426cb9b5))
+* **backdrops:** incorrect option name ([8b0b15d](https://github.com/seleb/bitsy-hacks/commit/8b0b15d2266828a125f3932ce3a92c7bf3f77de0))
+* **backdrops:** make canvas transparent ([dc7d0c1](https://github.com/seleb/bitsy-hacks/commit/dc7d0c1d7ebccfe5fe09d70e42c553261c950fc0))
+* **backdrops:** preload not called ([86ec258](https://github.com/seleb/bitsy-hacks/commit/86ec258b602aecdeb22c127beac5cd6a4d1a7774))
+* **dialog prompt:** default value not showing up until keypress ([fdc3fc0](https://github.com/seleb/bitsy-hacks/commit/fdc3fc0a11479a0a3a2737eb05ca050fc0ae20a0))
+* **dialog prompt:** dialog not automatically continuing after prompt ([d50b5dd](https://github.com/seleb/bitsy-hacks/commit/d50b5dd1aea3a6c687234a0b7047435b3191b5e4))
+* outdated method of clearing render cache ([663bc2e](https://github.com/seleb/bitsy-hacks/commit/663bc2e539e06cf66e7f0a41fb3c92d360787ea0))
+
+
+### BREAKING CHANGES
+
+* support changed from bitsy 7.2 to 7.8
+
 ## [16.0.2](https://github.com/seleb/bitsy-hacks/compare/v16.0.1...v16.0.2) (2021-07-15)
 
 

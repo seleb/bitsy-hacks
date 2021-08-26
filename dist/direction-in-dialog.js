@@ -3,7 +3,7 @@
 @file direction in dialog
 @summary provides a variable with player direction
 @license MIT
-@version 16.0.2
+@version 17.0.0
 @requires 5.3
 @author Sean S. LeBlanc
 
@@ -206,6 +206,11 @@ if (!hooked) {
 
 		// Hook everything
 		kitsy.applyHooks();
+
+		// reset callbacks using hacked functions
+		bitsy.bitsyOnUpdate(bitsy.update);
+		bitsy.bitsyOnQuit(bitsy.stopGame);
+		bitsy.bitsyOnLoad(bitsy.load_game);
 
 		// Start the game
 		bitsy.startExportedGame.apply(this, arguments);
