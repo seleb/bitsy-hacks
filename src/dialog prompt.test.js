@@ -25,7 +25,7 @@ test('dialog prompt', async () => {
 	await press('a');
 	await press('t');
 	await snapshot();
-	await press('ArrowRight'); // submit
+	await press('Enter'); // submit
 	await press('ArrowRight'); // complete dialog
 	await snapshot();
 	await end();
