@@ -169,6 +169,7 @@ addDialogTag('prompt', function (environment, parameters, onReturn) {
 	cachedBuffer = bufferCopy(environment.GetDialogBuffer().GetBuffer());
 	// add a caret character immediately (otherwise it won't show up till a key is pressed)
 	environment.GetDialogBuffer().AddText(hackOptions.caret);
+	updateInputDisplay();
 });
 
 // expose a setter/getter for private buffer in DialogBuffer class
