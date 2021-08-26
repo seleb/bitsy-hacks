@@ -20,7 +20,7 @@ Examples:
 	move a sprite:
 	(js "sprite['a'].x = 10;")
 	edit palette colour:
-	(js "getPal(curPal())[0] = [255,0,0];renderImages();")
+	(js "getPal(curPal())[0] = [255,0,0];renderer.SetPalettes(palette);")
 	place an item next to player:
 	(js "room[curRoom].items.push({id:'0',x:player().x+1,y:player().y});")
 	verbose facsimile of exit-from-dialog:

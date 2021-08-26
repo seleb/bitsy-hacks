@@ -171,7 +171,7 @@ function corrupt() {
 		c[i] = Math.round((c[i] + (Math.random() * 2 - 1) * hackOptions.paletteAmplitude) % 256);
 	});
 	if (hackOptions.paletteImmediate) {
-		bitsy.renderImages();
+		bitsy.renderer.SetPalettes(bitsy.palette);
 	}
 
 	// corrupt pixels of font data
