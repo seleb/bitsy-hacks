@@ -40,7 +40,7 @@ before('renderGame', function () {
 });
 
 after('renderClearInstruction', function (bufferId, buffer, paletteIndex) {
-	if (bufferId !== 0 || paletteIndex !== bitsy.tileColorStartIndex) return;
+	if (bufferId !== bitsy.screenBufferId || paletteIndex !== bitsy.tileColorStartIndex) return;
 	var bufferContext = buffer.canvas.getContext('2d');
 	bufferContext.clearRect(0, 0, buffer.canvas.width, buffer.canvas.height);
 });
