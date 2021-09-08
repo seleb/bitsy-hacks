@@ -42,10 +42,10 @@ function expression(operator) {
 }`;
 }
 
-inject(/(operatorMap\.set\("-", subExp\);)/, `
+inject(/(operatorMap\["-"\] = subExp;)/, `
 	$1
 	${operators.map(function (operator) {
-		return `operatorMap.set("${operator}", ${expression(operator)});`;
+		return `operatorMap["${operator}"] = ${expression(operator)};`;
 	}).join('\n')}
 `);
 inject(
