@@ -15,10 +15,7 @@ HOW TO USE:
 1. Copy-paste this script into a script tag after the bitsy source
 2. Edit hackOptions below as needed
 */
-import bitsy from 'bitsy';
-import {
-	before,
-} from './helpers/kitsy-script-toolkit';
+import { after, before, inject } from './helpers/kitsy-script-toolkit';
 
 export var hackOptions = {
 	isTransparent: function (drawing) {
@@ -29,44 +26,26 @@ export var hackOptions = {
 	},
 };
 
-var madeTransparent;
-var makeTransparent;
-before('onready', function () {
-	madeTransparent = {};
-	makeTransparent = false;
+window.makeTransparent = false;
+// flag what should be transparent
+before('renderer.GetDrawingFrame', function (drawing, frameIndex) {
+	window.makeTransparent = hackOptions.isTransparent(drawing);
 });
-before('renderer.GetImage', function (drawing, paletteId, frameOverride) {
-	// check cache first
-	var cache = madeTransparent[drawing.drw] = madeTransparent[drawing.drw] || {};
-	var p = cache[paletteId] = cache[paletteId] || {};
-	var frameIndex = frameOverride || drawing.animation.frameIndex;
-	var source = bitsy.renderer.GetImageSource(drawing.drw);
-	if (p[frameIndex] === source) {
-		// already made this transparent
-		return;
-	}
+// send -1 instead of background colour index if transparent
+inject(/bitsyDrawPixel\(backgroundColor, x, y\)/, 'bitsyDrawPixel(window.makeTransparent ? -1 : backgroundColor, x, y)');
+// overwrite transparent pixel
+after('renderPixelInstruction', function (bufferId, buffer, paletteIndex, x, y) {
+	if (paletteIndex !== -1) return;
 
-	// flag the next draw as needing to be made transparent
-	p[frameIndex] = source;
-	makeTransparent = hackOptions.isTransparent(drawing);
-});
-
-before('drawTile', function (canvas) {
-	if (makeTransparent) {
-		// redraw with all bg pixels transparent
-		var ctx = canvas.getContext('2d');
-		var data = ctx.getImageData(0, 0, canvas.width, canvas.height);
-		var bg = bitsy.getPal(bitsy.getRoomPal(bitsy.player().room))[0];
-		for (let i = 0; i < data.data.length; i += 4) {
-			var r = data.data[i];
-			var g = data.data[i + 1];
-			var b = data.data[i + 2];
-			if (r === bg[0] && g === bg[1] && b === bg[2]) {
-				data.data[i + 3] = 0;
+	if (buffer.imageData) {
+		for (var sy = 0; sy < buffer.scale; sy++) {
+			for (var sx = 0; sx < buffer.scale; sx++) {
+				var pixelIndex = (((y * buffer.scale) + sy) * buffer.width * buffer.scale * 4) + (((x * buffer.scale) + sx) * 4);
+				buffer.imageData.data[pixelIndex + 3] = 0;
 			}
 		}
-		ctx.putImageData(data, 0, 0);
-		// clear the flag
-		makeTransparent = false;
+	} else {
+		var bufferContext = buffer.canvas.getContext('2d');
+		bufferContext.clearRect(x * buffer.scale, y * buffer.scale, buffer.scale, buffer.scale);
 	}
 });
