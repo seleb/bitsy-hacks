@@ -26,9 +26,8 @@ HOW TO USE:
 	1. Copy-paste this script into a new script tag after the Bitsy source code.
 	2. edit hackOptions below as needed
 */
-import {
-	inject,
-} from './helpers/kitsy-script-toolkit';
+import bitsy from 'bitsy';
+import { before, inject } from './helpers/kitsy-script-toolkit';
 import './paragraph-break';
 
 export var hackOptions = {
@@ -41,8 +40,12 @@ inject(/textboxInfo\.height = .+;/,
 	`Object.defineProperty(textboxInfo, 'height', {
 	get() { return textboxInfo.padding_vert + (textboxInfo.padding_vert + relativeFontHeight()) * Math.max(${hackOptions.minRows}, dialogBuffer.CurPage().indexOf(dialogBuffer.CurRow())+Math.sign(dialogBuffer.CurCharCount())) + textboxInfo.arrow_height; }
 })`);
-// prevent textbox from caching
-inject(/(if\(textboxInfo\.img == null\))/, '// $1');
+// export textbox info
+inject(/(var font = null;)/, 'this.textboxInfo = textboxInfo;$1');
+before('renderDrawingBuffer', function (bufferId, buffer) {
+	if (bufferId !== bitsy.textboxBufferId) return;
+	buffer.height = bitsy.dialogRenderer.textboxInfo.height / bitsy.dialogRenderer.textboxInfo.font_scale;
+});
 // rewrite hard-coded row limit
 inject(/(else if \(curRowIndex )== 0/g, '$1< ' + hackOptions.maxRows + ' - 1');
 inject(/(if \(lastPage\.length) <= 1/, '$1 < ' + hackOptions.maxRows);
