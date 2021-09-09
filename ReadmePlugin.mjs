@@ -40,6 +40,7 @@ A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamled
 - [Contents](#contents)
 - [How to use](#how-to-use)
 - [FAQ](#FAQ)
+- [Old Versions](#old-versions)
 - [Further reading](#further-reading)
 
 ## Contents
@@ -119,6 +120,16 @@ then edit it to look like this:
 If your question isn't covered here, it may be in the general [Bitsy FAQ](https://docs.google.com/document/d/1jRz3wgkQU3kZN_LGChw4UlMWhVoc145J-euBtkr7NeE).
 
 For other issues, feel free to ping me, [open an issue](https://github.com/seleb/bitsy-hacks/issues/new), or ask for help on the [Bitsy discord](https://discordapp.com/invite/9rAjhtr)!
+
+## Old Versions
+
+Bitsy and the hacks are generally not backwards-compatible: when Bitsy updates, it often breaks individual hacks. If you're having issues with hacks after a Bitsy update, it's possible they are out of date. Feel free to reach out for help or open an issue if you suspect this is the case.
+
+If you are using an older version of Bitsy (or a fork based on an older version), you may require old versions of the hacks. Support is not guaranteed across versions, and old versions are not maintained, but some helpful points in history are listed below.
+
+- [Bitsy 7.8](https://github.com/seleb/bitsy-hacks/tree/3d1e88273f85c7aeeaa4d87bbf8309c05cb0ee28/dist)
+- [Bitsy 7.2](https://github.com/seleb/bitsy-hacks/tree/95f4bbe97c203a872cfe58f43ceee8eb366c3596/dist)
+- [Bitsy 5.1](https://github.com/seleb/bitsy-hacks/tree/d419cf6b84822a6419a78ad82336333771b27bf0/dist)
 
 ## Further reading
 
