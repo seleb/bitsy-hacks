@@ -99,7 +99,7 @@ var dialogChoices = {
 	choice: 0,
 	choices: [],
 	choicesActive: false,
-	swiped: false,
+	moved: true,
 	handleInput: function (dialogBuffer) {
 		if (!this.choicesActive) {
 			return false;
