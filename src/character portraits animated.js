@@ -156,6 +156,6 @@ before('drawRoom', function () {
 		state.portrait = animation.frames[frame].img;
 	}
 });
-after('drawRoom', function () {
+after('renderGame', function () {
 	state.portrait = animation;
 });
