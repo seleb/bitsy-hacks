@@ -80,10 +80,8 @@ HOW TO USE:
 2. Edit hackOptions below as needed
 */
 import bitsy from 'bitsy';
-import {
-	inject,
-} from './helpers/kitsy-script-toolkit';
 import './helpers/addParagraphBreak';
+import { inject } from './helpers/kitsy-script-toolkit';
 
 export var hackOptions = {
 	// if defined, the cursor is drawn as the sprite with the given id
@@ -104,21 +102,15 @@ var dialogChoices = {
 	swiped: false,
 	handleInput: function (dialogBuffer) {
 		if (!this.choicesActive) {
-			this.swiped = false;
 			return false;
 		}
-		var pswiped = this.swiped;
-		var swiped = !pswiped && (bitsy.input.swipeUp() || bitsy.input.swipeDown() || bitsy.input.swipeRight());
-		if (swiped) {
-			this.swiped = true;
-		} else if (!bitsy.input.swipeUp() && !bitsy.input.swipeDown() && !bitsy.input.swipeRight()) {
-			this.swiped = false;
-		}
+		var pmoved = this.moved;
+		this.moved = bitsy.input.anyKeyDown() || bitsy.input.swipeUp() || bitsy.input.swipeDown() || bitsy.input.swipeRight();
 		var l = Math.max(this.choices.length, 1);
 		// navigate
 		if (
-			(bitsy.input.anyKeyPressed() && (bitsy.input.isKeyDown(bitsy.key.up) || bitsy.input.isKeyDown(bitsy.key.w)))
-			|| (swiped && bitsy.input.swipeUp())
+			!pmoved && ((bitsy.input.anyKeyDown() && (bitsy.input.isKeyDown(bitsy.key.up) || bitsy.input.isKeyDown(bitsy.key.w)))
+			|| (bitsy.input.swipeUp()))
 		) {
 			this.choice -= 1;
 			if (this.choice < 0) {
@@ -127,21 +119,21 @@ var dialogChoices = {
 			return false;
 		}
 		if (
-			(bitsy.input.anyKeyPressed() && (bitsy.input.isKeyDown(bitsy.key.down) || bitsy.input.isKeyDown(bitsy.key.s)))
-			|| (swiped && bitsy.input.swipeDown())
+			!pmoved && ((bitsy.input.anyKeyDown() && (bitsy.input.isKeyDown(bitsy.key.down) || bitsy.input.isKeyDown(bitsy.key.s)))
+			|| (bitsy.input.swipeDown()))
 		) {
 			this.choice = (this.choice + 1) % l;
 			return false;
 		}
 		// select
 		if (
-			((bitsy.input.anyKeyPressed() && (
+			!pmoved && ((bitsy.input.anyKeyDown() && (
 				bitsy.input.isKeyDown(bitsy.key.right)
 					|| bitsy.input.isKeyDown(bitsy.key.d)
 					|| bitsy.input.isKeyDown(bitsy.key.enter)
 					|| bitsy.input.isKeyDown(bitsy.key.space)
 			))
-				|| (swiped && bitsy.input.swipeRight()))
+				|| (bitsy.input.swipeRight()))
 		) {
 			// evaluate choice
 			this.choices[this.choice]();
