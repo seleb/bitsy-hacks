@@ -57,4 +57,4 @@ after('drawRoom', function () {
 });
 
 // draw player underneath opaque tile
-inject(/(\/\/draw tiles)/, 'drawTile(getSpriteImage(player(), getRoomPal(room.id), frameIndex), player().x, player().y, context);\n$1');
+inject(/^(\t\/\/draw tiles)/m, 'drawTile(getSpriteFrame(player(), frameIndex), player().x, player().y);\n$1');
