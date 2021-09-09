@@ -90,13 +90,8 @@ export var hackOptions = {
 	// e.g. replace with `getCursorSprite('A')` to use the player's avatar as a cursor
 	// if not defined, uses an arrow graphic similar to the continue arrow
 	cursor: getCursorSprite(),
-	// modifies the scale/position of the cursor
-	// recommended combinations:
-	// 	- scale: 4, y: 1, x: 0
-	// 	- scale: 2, y: 3, x: 1
-	// 	- scale: 2, y: 4, x: 0 + custom cursor
+	// modifies the position of the cursor
 	transform: {
-		scale: bitsy.scale,
 		y: 1,
 		x: 0,
 	},
@@ -254,26 +249,24 @@ $1`);
 // but draws rotated to point at text)
 inject(/(this\.DrawNextArrow = )/, `
 this.DrawChoiceArrow = function() {
+	bitsyDrawBegin(1);
 	var rows = ${hackOptions.cursor};
-	var top = (${hackOptions.transform.y} + window.dialogChoices.choice * (textboxInfo.padding_vert + relativeFontHeight())) * scale;
-	var left = ${hackOptions.transform.x}*scale;
+	var top = (${hackOptions.transform.y} + window.dialogChoices.choice * (textboxInfo.padding_vert + relativeFontHeight())) * text_scale;
+	var left = ${hackOptions.transform.x}*text_scale;
 	for (var y = 0; y < rows.length; y++) {
 		var cols = rows[y];
 		for (var x = 0; x < cols.length; x++) {
 			if (cols[x]) {
 				//scaling nonsense
-				for (var sy = 0; sy < ${hackOptions.transform.scale}; sy++) {
-					for (var sx = 0; sx < ${hackOptions.transform.scale}; sx++) {
-						var pxl = 4 * ( ((top+(y*${hackOptions.transform.scale})+sy) * (textboxInfo.width*scale)) + (left+(x*${hackOptions.transform.scale})+sx) );
-						textboxInfo.img.data[pxl+0] = 255;
-						textboxInfo.img.data[pxl+1] = 255;
-						textboxInfo.img.data[pxl+2] = 255;
-						textboxInfo.img.data[pxl+3] = 255;
+				for (var sy = 0; sy < text_scale; sy++) {
+					for (var sx = 0; sx < text_scale; sx++) {
+						bitsyDrawPixel(textArrowIndex, left + (x * text_scale) + sx, top + (y * text_scale) + sy);
 					}
 				}
 			}
 		}
 	}
+	bitsyDrawEnd();
 };
 $1`);
 inject(/(this\.DrawTextbox\(\);)/, `
