@@ -7,7 +7,7 @@ import {
 	walkToCat,
 } from './test/bitsy';
 
-test('strike', async () => {
+test('custom-exit-effect', async () => {
 	await start({
 		catDialog: '{exit "0" 0 0 "test"}',
 		hacks: [
