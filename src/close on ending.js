@@ -20,13 +20,13 @@ HOW TO USE:
 Copy-paste this script into a script tag after the bitsy source
 */
 import bitsy from 'bitsy';
-import {
-	inject,
-	after,
-} from './helpers/kitsy-script-toolkit';
+import { after, before } from './helpers/kitsy-script-toolkit';
 
 // prevent ctrl+r restart prompt
-inject(/(function tryRestartGame\(e\) {)/, '$1return;');
+before('bitsyGetButton', function (button) {
+	if (button === 5) return [-1];
+	return [button];
+});
 
 after('onExitDialog', function () {
 	if (bitsy.isEnding) {
