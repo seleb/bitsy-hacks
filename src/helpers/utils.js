@@ -63,7 +63,7 @@ export function getImage(name, map) {
  * @return {string} room, or undefined if it doesn't exist
  */
 export function getRoom(name) {
-	var id = Object.prototype.hasOwnProperty.call(bitsy.room, name) ? name : bitsy.names.room.get(name);
+	var id = Object.prototype.hasOwnProperty.call(bitsy.room, name) ? name : bitsy.names.room[name];
 	return bitsy.room[id];
 }
 
