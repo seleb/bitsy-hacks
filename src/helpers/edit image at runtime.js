@@ -19,13 +19,17 @@ e.g. the default player is:
 ]
 */
 import bitsy from 'bitsy';
-import {
-	getImage,
-} from './utils';
+import { getImage, inject } from './utils';
 
-export {
-	getImage,
-};
+export { getImage };
+
+// force cache to clear if edit image fns are used
+inject(/\/\/ TODO : reset render cache for this image/, `
+// TODO: clear extended palettes
+drawingCache.render[drawingId+"_0"] = undefined;
+drawingCache.render[drawingId+"_1"] = undefined;
+drawingCache.render[drawingId+"_2"] = undefined;
+`);
 
 /*
 Args:
