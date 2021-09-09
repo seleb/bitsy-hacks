@@ -17,15 +17,15 @@ test('strike', async () => {
 					test: {
 						showPlayerStart: true,
 						showPlayerEnd: true,
-						duration: 2000,
-						frameRate: 8,
-						pixelEffectFunc: function (_start, _end, _pixelX, _pixelY, delta) {
-							return delta < 0.5
-								? {
-									r: 255, g: 0, b: 0, a: 255,
-								} : {
-									r: 0, g: 255, b: 0, a: 255,
-								};
+						stepCount: 16,
+						pixelEffectFunc: function (_start, _end, _pixelX, _pixelY, _delta) {
+							return 16;
+						},
+						paletteEffectFunc: function (_start, _end, delta) {
+							if (delta > 1 - 2 / 16) {
+								return _end.Palette;
+							}
+							return [(delta < 0.5 ? [255, 0, 0] : [0, 255, 0]), _end.Palette[1], _end.Palette[2]];
 						},
 					},
 				},
@@ -35,10 +35,11 @@ test('strike', async () => {
 	await walkToCat();
 	await snapshot();
 	await press('ArrowRight'); // talk to cat
+	await delay(125 * 16 * 0.25);
 	await snapshot();
-	await delay(1000);
+	await delay(125 * 16 * 0.25);
 	await snapshot();
-	await delay(1000);
+	await delay(125 * 16 * 0.5);
 	await snapshot();
 	await end();
 });
