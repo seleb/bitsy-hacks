@@ -172,7 +172,7 @@ var dialogChoices = {
 bitsy.dialogChoices = dialogChoices;
 
 function getCursorSprite(cursor) {
-	return cursor ? `renderer.GetImageSource(sprite['${cursor}'].drw)[sprite['${cursor}'].animation.frameIndex]` : `[
+	return cursor ? `renderer.GetDrawingSource(sprite['${cursor}'].drw)[sprite['${cursor}'].animation.frameIndex]` : `[
 		[0, 0, 0, 0, 0, 0, 0, 0],
 		[0, 0, 0, 0, 0, 0, 0, 0],
 		[0, 1, 0, 0, 0, 0, 0, 0],

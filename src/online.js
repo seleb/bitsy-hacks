@@ -107,7 +107,7 @@ function onData(event) {
 			room: data.room,
 		};
 		bitsy.dialog[longname] = data.dlg;
-		bitsy.renderer.SetImageSource(longname, data.data);
+		bitsy.renderer.SetDrawingSource(longname, data.data);
 
 		for (var frame = 0; frame < data.data.length; ++frame) {
 			setSpriteData(event.from, frame, data.data[frame]);
@@ -177,7 +177,7 @@ function getSpriteUpdate() {
 	var p = bitsy.player();
 	return {
 		e: 'sprite',
-		data: bitsy.renderer.GetImageSource(p.drw),
+		data: bitsy.renderer.GetDrawingSource(p.drw),
 		x: p.x,
 		y: p.y,
 		room: p.room,

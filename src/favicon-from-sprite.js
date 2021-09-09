@@ -122,7 +122,7 @@ function updateBrowserFavicon(dataURL) {
 }
 
 function getFrames(spriteName) {
-	var frames = bitsy.renderer.GetImageSource(getImage(spriteName || bitsy.playerId, bitsy.sprite).drw);
+	var frames = bitsy.renderer.GetDrawingSource(getImage(spriteName || bitsy.playerId, bitsy.sprite).drw);
 	return frames;
 }
 
