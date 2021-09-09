@@ -251,10 +251,10 @@ window.customTextEffects = {
 var functionMapCode = '';
 var textEffectCode = '';
 Object.entries(hackOptions).forEach(function (entry) {
-	functionMapCode += 'functionMap.set("' + entry[0] + '", function (environment, parameters, onReturn) {addOrRemoveTextEffect(environment, "' + entry[0] + '");onReturn(null);});';
+	functionMapCode += 'functionMap["' + entry[0] + '"] = function (environment, parameters, onReturn) {addOrRemoveTextEffect(environment, "' + entry[0] + '");onReturn(null);};';
 	textEffectCode += 'TextEffects["' + entry[0] + '"] = new (' + entry[1].toString() + ')();';
 });
 
 // inject custom text effect code
-inject(/(var functionMap = new Map\(\);)/, '$1' + functionMapCode);
-inject(/(var TextEffects = new Map\(\);)/, '$1' + textEffectCode);
+inject(/(var functionMap = \{\};)/, '$1' + functionMapCode);
+inject(/(var TextEffects = \{\};)/, '$1' + textEffectCode);
