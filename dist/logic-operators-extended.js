@@ -2,7 +2,7 @@
 🔀
 @file logic-operators-extended
 @summary adds conditional logic operators
-@version 17.0.0
+@version 18.0.0
 @requires 7.2
 @author @mildmojo
 
@@ -205,6 +205,7 @@ if (!hooked) {
 		bitsy.dialogModule = new bitsy.Dialog();
 		bitsy.dialogRenderer = bitsy.dialogModule.CreateRenderer();
 		bitsy.dialogBuffer = bitsy.dialogModule.CreateBuffer();
+		bitsy.renderer = new bitsy.TileRenderer(bitsy.tilesize);
 
 		// Hook everything
 		kitsy.applyHooks();
@@ -240,10 +241,10 @@ function expression(operator) {
 }`;
 }
 
-inject(/(operatorMap\.set\("-", subExp\);)/, `
+inject(/(operatorMap\["-"\] = subExp;)/, `
 	$1
 	${operators.map(function (operator) {
-		return `operatorMap.set("${operator}", ${expression(operator)});`;
+		return `operatorMap["${operator}"] = ${expression(operator)};`;
 	}).join('\n')}
 `);
 inject(

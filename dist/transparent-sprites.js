@@ -3,7 +3,7 @@
 @file transparent sprites
 @summary makes all sprites have transparent backgrounds
 @license MIT
-@version 17.0.0
+@version 18.0.0
 @requires Bitsy Version: 6.1
 @author Sean S. LeBlanc
 
@@ -40,7 +40,7 @@ bitsy = bitsy || /*#__PURE__*/_interopDefaultLegacy(bitsy);
  * @param searcher Regex to search and replace
  * @param replacer Replacer string/fn
  */
-function inject(searcher, replacer) {
+function inject$1(searcher, replacer) {
     // find the relevant script tag
     var scriptTags = document.getElementsByTagName('script');
     var scriptTag;
@@ -101,13 +101,13 @@ function before$1(targetFuncName, beforeFn) {
     kitsy.queuedBeforeScripts[targetFuncName].push(beforeFn);
 }
 // Ex: after('load_game', function run() { alert('Loaded!'); });
-function after(targetFuncName, afterFn) {
+function after$1(targetFuncName, afterFn) {
     kitsy.queuedAfterScripts[targetFuncName] = kitsy.queuedAfterScripts[targetFuncName] || [];
     kitsy.queuedAfterScripts[targetFuncName].push(afterFn);
 }
 function applyInjects() {
     kitsy.queuedInjectScripts.forEach(function (injectScript) {
-        inject(injectScript.searcher, injectScript.replacer);
+        inject$1(injectScript.searcher, injectScript.replacer);
     });
 }
 function applyHooks(root) {
@@ -173,7 +173,7 @@ var kitsy = (window.kitsy = window.kitsy || {
     queuedAfterScripts: {},
     inject: kitsyInject,
     before: before$1,
-    after,
+    after: after$1,
     /**
      * Applies all queued `inject` calls.
      *
@@ -204,6 +204,7 @@ if (!hooked) {
 		bitsy.dialogModule = new bitsy.Dialog();
 		bitsy.dialogRenderer = bitsy.dialogModule.CreateRenderer();
 		bitsy.dialogBuffer = bitsy.dialogModule.CreateBuffer();
+		bitsy.renderer = new bitsy.TileRenderer(bitsy.tilesize);
 
 		// Hook everything
 		kitsy.applyHooks();
@@ -219,55 +220,37 @@ if (!hooked) {
 }
 
 /** @see kitsy.inject */
-kitsy.inject;
+var inject = kitsy.inject;
 /** @see kitsy.before */
 var before = kitsy.before;
 /** @see kitsy.after */
-kitsy.after;
+var after = kitsy.after;
 
 
 
 
 
-var madeTransparent;
-var makeTransparent;
-before('onready', function () {
-	madeTransparent = {};
-	makeTransparent = false;
+window.makeTransparent = false;
+// flag what should be transparent
+before('renderer.GetDrawingFrame', function (drawing, frameIndex) {
+	window.makeTransparent = hackOptions.isTransparent(drawing);
 });
-before('renderer.GetImage', function (drawing, paletteId, frameOverride) {
-	// check cache first
-	var cache = madeTransparent[drawing.drw] = madeTransparent[drawing.drw] || {};
-	var p = cache[paletteId] = cache[paletteId] || {};
-	var frameIndex = frameOverride || drawing.animation.frameIndex;
-	var source = bitsy.renderer.GetImageSource(drawing.drw);
-	if (p[frameIndex] === source) {
-		// already made this transparent
-		return;
-	}
+// send -1 instead of background colour index if transparent
+inject(/bitsyDrawPixel\(backgroundColor, x, y\)/, 'bitsyDrawPixel(window.makeTransparent ? -1 : backgroundColor, x, y)');
+// overwrite transparent pixel
+after('renderPixelInstruction', function (bufferId, buffer, paletteIndex, x, y) {
+	if (paletteIndex !== -1) return;
 
-	// flag the next draw as needing to be made transparent
-	p[frameIndex] = source;
-	makeTransparent = hackOptions.isTransparent(drawing);
-});
-
-before('drawTile', function (canvas) {
-	if (makeTransparent) {
-		// redraw with all bg pixels transparent
-		var ctx = canvas.getContext('2d');
-		var data = ctx.getImageData(0, 0, canvas.width, canvas.height);
-		var bg = bitsy.getPal(bitsy.getRoomPal(bitsy.player().room))[0];
-		for (let i = 0; i < data.data.length; i += 4) {
-			var r = data.data[i];
-			var g = data.data[i + 1];
-			var b = data.data[i + 2];
-			if (r === bg[0] && g === bg[1] && b === bg[2]) {
-				data.data[i + 3] = 0;
+	if (buffer.imageData) {
+		for (var sy = 0; sy < buffer.scale; sy++) {
+			for (var sx = 0; sx < buffer.scale; sx++) {
+				var pixelIndex = (((y * buffer.scale) + sy) * buffer.width * buffer.scale * 4) + (((x * buffer.scale) + sx) * 4);
+				buffer.imageData.data[pixelIndex + 3] = 0;
 			}
 		}
-		ctx.putImageData(data, 0, 0);
-		// clear the flag
-		makeTransparent = false;
+	} else {
+		var bufferContext = buffer.canvas.getContext('2d');
+		bufferContext.clearRect(x * buffer.scale, y * buffer.scale, buffer.scale, buffer.scale);
 	}
 });
 

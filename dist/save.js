@@ -3,7 +3,7 @@
 @file save
 @summary save/load your game
 @license MIT
-@version 17.0.0
+@version 18.0.0
 @requires 5.4
 @author Sean S. LeBlanc
 
@@ -232,6 +232,7 @@ if (!hooked) {
 		bitsy.dialogModule = new bitsy.Dialog();
 		bitsy.dialogRenderer = bitsy.dialogModule.CreateRenderer();
 		bitsy.dialogBuffer = bitsy.dialogModule.CreateBuffer();
+		bitsy.renderer = new bitsy.TileRenderer(bitsy.tilesize);
 
 		// Hook everything
 		kitsy.applyHooks();
@@ -282,8 +283,8 @@ function addDialogFunction(tag, fn) {
 
 function injectDialogTag(tag, code) {
 	inject$1(
-		/(var functionMap = new Map\(\);[^]*?)(this.HasFunction)/m,
-		'$1\nfunctionMap.set("' + tag + '", ' + code + ');\n$2',
+		/(var functionMap = \{\};[^]*?)(this.HasFunction)/m,
+		'$1\nfunctionMap["' + tag + '"] = ' + code + ';\n$2',
 	);
 }
 

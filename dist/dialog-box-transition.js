@@ -3,7 +3,7 @@
 @file dialog box transition
 @summary adds an easing transition animation to display the dialog box text
 @license MIT
-@version 17.0.0
+@version 18.0.0
 @requires 4.8, 4.9
 @author Delacannon
 
@@ -197,6 +197,7 @@ if (!hooked) {
 		bitsy.dialogModule = new bitsy.Dialog();
 		bitsy.dialogRenderer = bitsy.dialogModule.CreateRenderer();
 		bitsy.dialogBuffer = bitsy.dialogModule.CreateBuffer();
+		bitsy.renderer = new bitsy.TileRenderer(bitsy.tilesize);
 
 		// Hook everything
 		kitsy.applyHooks();

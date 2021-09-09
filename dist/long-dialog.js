@@ -3,7 +3,7 @@
 @file long dialog
 @summary put more words onscreen
 @license MIT
-@version 17.0.0
+@version 18.0.0
 @requires 7.0
 @author Sean S. LeBlanc
 
@@ -211,6 +211,7 @@ if (!hooked) {
 		bitsy.dialogModule = new bitsy.Dialog();
 		bitsy.dialogRenderer = bitsy.dialogModule.CreateRenderer();
 		bitsy.dialogBuffer = bitsy.dialogModule.CreateBuffer();
+		bitsy.renderer = new bitsy.TileRenderer(bitsy.tilesize);
 
 		// Hook everything
 		kitsy.applyHooks();
@@ -261,8 +262,8 @@ function addDialogFunction(tag, fn) {
 
 function injectDialogTag(tag, code) {
 	inject(
-		/(var functionMap = new Map\(\);[^]*?)(this.HasFunction)/m,
-		'$1\nfunctionMap.set("' + tag + '", ' + code + ');\n$2',
+		/(var functionMap = \{\};[^]*?)(this.HasFunction)/m,
+		'$1\nfunctionMap["' + tag + '"] = ' + code + ';\n$2',
 	);
 }
 
@@ -343,8 +344,12 @@ inject(/textboxInfo\.height = .+;/,
 	`Object.defineProperty(textboxInfo, 'height', {
 	get() { return textboxInfo.padding_vert + (textboxInfo.padding_vert + relativeFontHeight()) * Math.max(${hackOptions.minRows}, dialogBuffer.CurPage().indexOf(dialogBuffer.CurRow())+Math.sign(dialogBuffer.CurCharCount())) + textboxInfo.arrow_height; }
 })`);
-// prevent textbox from caching
-inject(/(if\(textboxInfo\.img == null\))/, '// $1');
+// export textbox info
+inject(/(var font = null;)/, 'this.textboxInfo = textboxInfo;$1');
+before('renderDrawingBuffer', function (bufferId, buffer) {
+	if (bufferId !== bitsy.textboxBufferId) return;
+	buffer.height = bitsy.dialogRenderer.textboxInfo.height / bitsy.dialogRenderer.textboxInfo.font_scale;
+});
 // rewrite hard-coded row limit
 inject(/(else if \(curRowIndex )== 0/g, '$1< ' + hackOptions.maxRows + ' - 1');
 inject(/(if \(lastPage\.length) <= 1/, '$1 < ' + hackOptions.maxRows);

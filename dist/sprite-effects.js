@@ -3,7 +3,7 @@
 @file sprite effects
 @summary like text effects, but for sprites
 @license MIT
-@version 17.0.0
+@version 18.0.0
 @requires 7.1
 @author Sean S. LeBlanc
 
@@ -70,7 +70,7 @@ var hackOptions = {
 	},
 	// reset function called after drawing a tile
 	// this can be used to undo any modifications to the canvas or context
-	reset: function (img, context) {
+	reset: function (context) {
 		context.filter = 'none';
 	},
 };
@@ -252,6 +252,7 @@ if (!hooked) {
 		bitsy.dialogModule = new bitsy.Dialog();
 		bitsy.dialogRenderer = bitsy.dialogModule.CreateRenderer();
 		bitsy.dialogBuffer = bitsy.dialogModule.CreateBuffer();
+		bitsy.renderer = new bitsy.TileRenderer(bitsy.tilesize);
 
 		// Hook everything
 		kitsy.applyHooks();
@@ -302,8 +303,8 @@ function addDialogFunction(tag, fn) {
 
 function injectDialogTag(tag, code) {
 	inject(
-		/(var functionMap = new Map\(\);[^]*?)(this.HasFunction)/m,
-		'$1\nfunctionMap.set("' + tag + '", ' + code + ');\n$2',
+		/(var functionMap = \{\};[^]*?)(this.HasFunction)/m,
+		'$1\nfunctionMap["' + tag + '"] = ' + code + ';\n$2',
 	);
 }
 
@@ -425,7 +426,7 @@ function buildMap(map, room) {
 		var t = (m[id] = m[id] || {});
 		var p = (t[room.pal] = t[room.pal] || {});
 		new Array(tile.animation.frameCount).fill(0).forEach(function (_, frame) {
-			p[frame] = bitsy.getTileImage(tile, room.pal, frame);
+			p[frame] = bitsy.getTileFrame(tile, frame);
 		});
 	});
 }
@@ -436,7 +437,7 @@ after('drawRoom', function (room) {
 });
 
 // apply effects before rendering tiles
-function preprocess(map, img, x, y, context) {
+function preprocess(map, img, x, y) {
 	var m = tileMap[map];
 	var foundEffects = Object.entries(activeEffects[map]).find(function (entry) {
 		var t = m && m[entry[0]];
@@ -450,27 +451,38 @@ function preprocess(map, img, x, y, context) {
 	});
 	var effects = foundEffects ? foundEffects[1] : [];
 
+	if (effects.length === 0) return [img, x, y];
+
+	return [{ img, effects }, x, y];
+}
+before('drawTile', function (img, x, y) {
+	return preprocess('tile', img, x, y);
+});
+before('drawSprite', function (img, x, y) {
+	return preprocess('sprite', img, x, y);
+});
+before('drawItem', function (img, x, y) {
+	return preprocess('item', img, x, y);
+});
+
+before('renderTileInstruction', function (bufferId, buffer, tileId, x, y) {
+	if (typeof tileId === 'string' || typeof tileId === 'number') return [bufferId, buffer, tileId, x, y];
+
+	var bufferContext = buffer.canvas.getContext('2d');
 	var totalPos = { x: Number(x), y: Number(y) };
-	Object.keys(effects).forEach(function (effect) {
+	Object.keys(tileId.effects).forEach(function (effect) {
 		var pos = { x: totalPos.x, y: totalPos.y };
-		hackOptions.effects[effect](pos, Date.now(), context);
+		hackOptions.effects[effect](pos, Date.now(), bufferContext);
 		totalPos = pos;
 	});
-	return [img, totalPos.x.toString(), totalPos.y.toString(), context];
-}
-before('drawTile', function (img, x, y, context) {
-	return preprocess('tile', img, x, y, context);
+	return [bufferId, buffer, tileId.img, x, y];
 });
-before('drawSprite', function (img, x, y, context) {
-	return preprocess('sprite', img, x, y, context);
-});
-before('drawItem', function (img, x, y, context) {
-	return preprocess('item', img, x, y, context);
+after('renderTileInstruction', function (bufferId, buffer, tileId, x, y) {
+	hackOptions.reset(buffer.canvas.getContext('2d'));
 });
 
 // reset after having drawn a tile
-after('drawTile', function (img, x, y, context) {
-	hackOptions.reset(img, context);
+after('drawTile', function (img, x, y) {
 });
 
 // setup dialog commands

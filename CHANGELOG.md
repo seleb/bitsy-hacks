@@ -1,3 +1,47 @@
+# [18.0.0](https://github.com/seleb/bitsy-hacks/compare/v17.0.0...v18.0.0) (2021-09-09)
+
+
+### Bug Fixes
+
+* get room by name failing ([27f4397](https://github.com/seleb/bitsy-hacks/commit/27f439753797dfb1210e72963af7c5ed61929f49))
+* remove lesser used + render-heavy hacks ([2251d6a](https://github.com/seleb/bitsy-hacks/commit/2251d6a9f245123e69afba56ea4ea3ee65dc208f))
+* **character portraits:** portraits not drawn ([86b2412](https://github.com/seleb/bitsy-hacks/commit/86b2412f0f6325264cd9e2bfbb04dce2f40909ac))
+* **character portraits animated:** portraits clearing state before render ([4db45c2](https://github.com/seleb/bitsy-hacks/commit/4db45c2cb6e383ae926f95f96ff2071052372b72))
+* **close on ending:** restart input not ignored ([bdcc8b1](https://github.com/seleb/bitsy-hacks/commit/bdcc8b1246f622c16197c98ddd66507b7623a460))
+* **custom text effect:** custom text effects not injected ([2c55cee](https://github.com/seleb/bitsy-hacks/commit/2c55cee9d71237d42cefe820ac8405b2e250f544))
+* **custom-exit-effects:** outdated effect definitions ([9aab3fe](https://github.com/seleb/bitsy-hacks/commit/9aab3fe82886a8c823fd5a16f2473cb2df693601))
+* **dialog choices:** cursor not rendered ([6cab156](https://github.com/seleb/bitsy-hacks/commit/6cab156ef46ca85d51312b87b5046606025533b8))
+* **dialog choices:** inputs updating every frame key is held ([a59b0bf](https://github.com/seleb/bitsy-hacks/commit/a59b0bfdbeacb6977a573d390281f9432f49ae57))
+* **dialog choices:** skipping on first dialog skips choice ([c46f7c8](https://github.com/seleb/bitsy-hacks/commit/c46f7c89c0efd0277afae3945d1e77fa109619ca))
+* **dialog prompt:** remove outdated hack to continue dialog ([d85b458](https://github.com/seleb/bitsy-hacks/commit/d85b4582442c11a9f861d63f17da7b9e8cb04832))
+* **itsy-bitsy:** text rendered at double scale ([a3597d9](https://github.com/seleb/bitsy-hacks/commit/a3597d9f301a1921d180f9c53c78a926b91791eb))
+* **long dialog:** buffer cropping dialog box to two lines ([93f015e](https://github.com/seleb/bitsy-hacks/commit/93f015e4d299f893833d6eb4ac368c659b8e1ba5))
+* **opaque tiles:** transparent sprites compatibility ([e558619](https://github.com/seleb/bitsy-hacks/commit/e558619749b25891fb04935d2028b4c78964c6cb))
+* **sprite effects:** effects not applied ([c5a9363](https://github.com/seleb/bitsy-hacks/commit/c5a9363666a8fc772c392c4e4c6ce7001063b061))
+* dialog tags not being injected ([e02a9c7](https://github.com/seleb/bitsy-hacks/commit/e02a9c7b521541b655ae5a757945553cbc89c7a4))
+* render cache not clearing when editing images ([c2b88b3](https://github.com/seleb/bitsy-hacks/commit/c2b88b3429f5622a2599c1ef248f5a638da1fd7b))
+* renderer functions renamed ([b1c9f4b](https://github.com/seleb/bitsy-hacks/commit/b1c9f4b7cde9a40b37dcce5b57de3ca143250eec))
+* **logic-operators-extended:** operators not being injected ([b3bca09](https://github.com/seleb/bitsy-hacks/commit/b3bca09991b9560ae55c8fd7eb71b846dd5cf554))
+* **transparent background:** background not cleared ([d29b629](https://github.com/seleb/bitsy-hacks/commit/d29b629b662acaa733553bb34b4d3c7de7caabf8))
+* **transparent dialog:** dialog background not cleared ([29a3726](https://github.com/seleb/bitsy-hacks/commit/29a372670f351cf94918d7e9c55f481cf3ccb831))
+* **transparent sprites:** pixels not being rewritten as transparent ([6759e94](https://github.com/seleb/bitsy-hacks/commit/6759e94cf097cc08b369e477a38e672ba4da8db5))
+
+
+### Features
+
+* support bitsy 7.9 ([c1bf133](https://github.com/seleb/bitsy-hacks/commit/c1bf13360bdad81b65a806775cae425d9adfc766))
+
+
+### BREAKING CHANGES
+
+* support changed from bitsy 7.8 to 7.9
+* removed 3d hack
+* removed palette maps hack
+* removed textbox style hack
+* **dialog choices:** dialog choices cursor not scalable
+* **itsy-bitsy:** itsy-bitsy text box is 1px taller to avoid anti-aliasing issue on text
+* **custom-exit-effects:** exit effect format changed: `frameRate` and `duration` removed (replaced with `stepCount`), `pixelEffectFunc` now only handles colour index, and actual colour is handled by added `paletteEffectFunc`
+
 # [17.0.0](https://github.com/seleb/bitsy-hacks/compare/v16.0.2...v17.0.0) (2021-08-26)
 
 

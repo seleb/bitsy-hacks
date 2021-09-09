@@ -3,7 +3,7 @@
 @file character portraits animated
 @summary high quality anime gifs
 @license MIT
-@version 17.0.0
+@version 18.0.0
 @requires Bitsy Version: 5.3
 @author Sean S. LeBlanc
 
@@ -1008,6 +1008,7 @@ if (!hooked) {
 		bitsy.dialogModule = new bitsy.Dialog();
 		bitsy.dialogRenderer = bitsy.dialogModule.CreateRenderer();
 		bitsy.dialogBuffer = bitsy.dialogModule.CreateBuffer();
+		bitsy.renderer = new bitsy.TileRenderer(bitsy.tilesize);
 
 		// Hook everything
 		kitsy.applyHooks();
@@ -1058,8 +1059,8 @@ function addDialogFunction(tag, fn) {
 
 function injectDialogTag(tag, code) {
 	inject(
-		/(var functionMap = new Map\(\);[^]*?)(this.HasFunction)/m,
-		'$1\nfunctionMap.set("' + tag + '", ' + code + ');\n$2',
+		/(var functionMap = \{\};[^]*?)(this.HasFunction)/m,
+		'$1\nfunctionMap["' + tag + '"] = ' + code + ';\n$2',
 	);
 }
 
@@ -1166,18 +1167,20 @@ addDialogTag('portrait', function (environment, parameters, onReturn) {
 	onReturn(null);
 });
 
-// hook up drawing
-var context;
-after('drawRoom', function () {
-	if ((hackOptions$1.dialogOnly && !bitsy.isDialogMode && !bitsy.isNarrating) || !state.portrait) {
-		return;
-	}
-	if (!context) {
-		context = bitsy.canvas.getContext('2d');
-		context.imageSmoothingEnabled = false;
-	}
+// draw portrait on top of screen
+after('renderDrawingBuffer', function (bufferId, buffer) {
+	if (bufferId !== bitsy.screenBufferId || (hackOptions$1.dialogOnly && !bitsy.isDialogMode && !bitsy.isNarrating) || !state.portrait) return;
+
+	var context = buffer.canvas.getContext('2d');
+	context.imageSmoothingEnabled = false;
 	try {
 		context.drawImage(state.portrait, 0, 0, bitsy.width * hackOptions$1.scale, bitsy.height * hackOptions$1.scale, 0, 0, bitsy.width * bitsy.scale, bitsy.height * bitsy.scale);
+
+		// if text is present, redraw it on top of the portrait
+		var lastInstruction = buffer.instructions[buffer.instructions.length - 1];
+		if (lastInstruction.type === bitsy.DrawingInstruction.Textbox) {
+			bitsy.renderTextboxInstruction(bufferId, buffer, lastInstruction.x, lastInstruction.y);
+		}
 	} catch (error) {
 		// log and ignore errors
 		// so broken images don't break the game
@@ -1298,7 +1301,7 @@ before('drawRoom', function () {
 		state.portrait = animation.frames[frame].img;
 	}
 });
-after('drawRoom', function () {
+after('renderGame', function () {
 	state.portrait = animation;
 });
 

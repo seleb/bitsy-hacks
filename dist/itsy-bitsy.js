@@ -3,7 +3,7 @@
 @file itsy-bitsy
 @summary for when bitsy's not small enough
 @license MIT
-@version 17.0.0
+@version 18.0.0
 @requires Bitsy Version: 5.1
 @author Sean S. LeBlanc
 
@@ -208,6 +208,7 @@ if (!hooked) {
 		bitsy.dialogModule = new bitsy.Dialog();
 		bitsy.dialogRenderer = bitsy.dialogModule.CreateRenderer();
 		bitsy.dialogBuffer = bitsy.dialogModule.CreateBuffer();
+		bitsy.renderer = new bitsy.TileRenderer(bitsy.tilesize);
 
 		// Hook everything
 		kitsy.applyHooks();
@@ -241,6 +242,8 @@ inject(/4(; \/\/this is stupid but necessary)/, '1$1'); // rewrite canvas scale
 inject(/(mapsize =) 16/, '$1 8'); // rewrite mapsize
 inject(/(\+ 1 >=) 16/g, '$1 8'); // rewrite right/down wall checks
 
+// rewrite text scale
+inject(/(var textScale =) 2/, '$1 1');
 inject(/2(; \/\/using a different scaling factor for text feels like cheating\.\.\. but it looks better)/, '1$1'); // rewrite text scale
 
 // rewrite textbox info
@@ -253,7 +256,7 @@ inject(/(var textboxInfo = {)[^]*?(};)/, '$1' + [
 	'bottom : 1,',
 	'font_scale : 1,',
 	'padding_vert : 2,',
-	'arrow_height : 5',
+	'arrow_height : 6',
 ].join('\n') + '$2');
 inject(/(top = \()4/, '$1 1');
 inject(/(left = \()4/, '$1 1');

@@ -3,7 +3,7 @@
 @file close on ending
 @summary Prevents from playing past an ending
 @license MIT
-@version 17.0.0
+@version 18.0.0
 @author Sean S. LeBlanc
 
 @description
@@ -35,7 +35,7 @@ bitsy = bitsy || /*#__PURE__*/_interopDefaultLegacy(bitsy);
  * @param searcher Regex to search and replace
  * @param replacer Replacer string/fn
  */
-function inject$1(searcher, replacer) {
+function inject(searcher, replacer) {
     // find the relevant script tag
     var scriptTags = document.getElementsByTagName('script');
     var scriptTag;
@@ -91,7 +91,7 @@ function kitsyInject(searcher, replacer) {
 // Ex: before('load_game', function run() { alert('Loading!'); });
 //     before('show_text', function run(text) { return text.toUpperCase(); });
 //     before('show_text', function run(text, done) { done(text.toUpperCase()); });
-function before(targetFuncName, beforeFn) {
+function before$1(targetFuncName, beforeFn) {
     kitsy.queuedBeforeScripts[targetFuncName] = kitsy.queuedBeforeScripts[targetFuncName] || [];
     kitsy.queuedBeforeScripts[targetFuncName].push(beforeFn);
 }
@@ -102,7 +102,7 @@ function after$1(targetFuncName, afterFn) {
 }
 function applyInjects() {
     kitsy.queuedInjectScripts.forEach(function (injectScript) {
-        inject$1(injectScript.searcher, injectScript.replacer);
+        inject(injectScript.searcher, injectScript.replacer);
     });
 }
 function applyHooks(root) {
@@ -167,7 +167,7 @@ var kitsy = (window.kitsy = window.kitsy || {
     queuedBeforeScripts: {},
     queuedAfterScripts: {},
     inject: kitsyInject,
-    before,
+    before: before$1,
     after: after$1,
     /**
      * Applies all queued `inject` calls.
@@ -199,6 +199,7 @@ if (!hooked) {
 		bitsy.dialogModule = new bitsy.Dialog();
 		bitsy.dialogRenderer = bitsy.dialogModule.CreateRenderer();
 		bitsy.dialogBuffer = bitsy.dialogModule.CreateBuffer();
+		bitsy.renderer = new bitsy.TileRenderer(bitsy.tilesize);
 
 		// Hook everything
 		kitsy.applyHooks();
@@ -214,16 +215,19 @@ if (!hooked) {
 }
 
 /** @see kitsy.inject */
-var inject = kitsy.inject;
+kitsy.inject;
 /** @see kitsy.before */
-kitsy.before;
+var before = kitsy.before;
 /** @see kitsy.after */
 var after = kitsy.after;
 
 
 
 // prevent ctrl+r restart prompt
-inject(/(function tryRestartGame\(e\) {)/, '$1return;');
+before('bitsyGetButton', function (button) {
+	if (button === 5) return [-1];
+	return [button];
+});
 
 after('onExitDialog', function () {
 	if (bitsy.isEnding) {

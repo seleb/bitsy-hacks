@@ -9,11 +9,11 @@ A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamled
 - [Contents](#contents)
 - [How to use](#how-to-use)
 - [FAQ](#FAQ)
+- [Old Versions](#old-versions)
 - [Further reading](#further-reading)
 
 ## Contents
 
-- 📦 [3d](/dist/3d.js): bitsy in three dee
 - 👥 [avatar by room](/dist/avatar-by-room.js): change the avatar in certain rooms
 - 🖼 [backdrops](/dist/backdrops.js): makes the game have a backdrop
 - 🔈 [basic sfx](/dist/basic-sfx.js): "walk" and "talk" sound effect support
@@ -55,7 +55,6 @@ A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamled
 - 📎 [noclip](/dist/noclip.js): walk through wall tiles, sprites, items, exits, and endings
 - 🔄 [online](/dist/online.js): multiplayer bitsy
 - ⬛ [opaque tiles](/dist/opaque-tiles.js): tiles which hide the player
-- 🎨 [palette maps](/dist/palette-maps.js): allows color pallettes to be defined on a tile-by-tile basis
 - 📃 [paragraph-break](/dist/paragraph-break.js): Adds paragraph breaks to the dialogue parser
 - ⏳ [permanent items](/dist/permanent-items.js): prevent some items from being picked up
 - ➡ [push sprites](/dist/push-sprites.js): sokoban-style sprite pushing
@@ -66,7 +65,6 @@ A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamled
 - 💃 [sprite effects](/dist/sprite-effects.js): like text effects, but for sprites
 - ⏱️ [stopwatch](/dist/stopwatch.js): time player actions
 - 🗣 [text-to-speech](/dist/text-to-speech.js): text-to-speech for bitsy dialog
-- 📐 [textbox styler](/dist/textbox-styler.js): customize the style and properties of the textbox
 - 🏰 [tracery processing](/dist/tracery-processing.js): process all dialog text with a tracery grammar
 - 🎞 [transitions](/dist/transitions.js): customizable WebGL transitions
 - 🔳 [transparent background](/dist/transparent-background.js): makes the game have a transparent background
@@ -146,6 +144,16 @@ then edit it to look like this:
 If your question isn't covered here, it may be in the general [Bitsy FAQ](https://docs.google.com/document/d/1jRz3wgkQU3kZN_LGChw4UlMWhVoc145J-euBtkr7NeE).
 
 For other issues, feel free to ping me, [open an issue](https://github.com/seleb/bitsy-hacks/issues/new), or ask for help on the [Bitsy discord](https://discordapp.com/invite/9rAjhtr)!
+
+## Old Versions
+
+Bitsy and the hacks are generally not backwards-compatible: when Bitsy updates, it often breaks individual hacks. If you're having issues with hacks after a Bitsy update, it's possible they are out of date. Feel free to reach out for help or open an issue if you suspect this is the case.
+
+If you are using an older version of Bitsy (or a fork based on an older version), you may require old versions of the hacks. Support is not guaranteed across versions, and old versions are not maintained, but some helpful points in history are listed below.
+
+- [Bitsy 7.8](https://github.com/seleb/bitsy-hacks/tree/3d1e88273f85c7aeeaa4d87bbf8309c05cb0ee28/dist)
+- [Bitsy 7.2](https://github.com/seleb/bitsy-hacks/tree/95f4bbe97c203a872cfe58f43ceee8eb366c3596/dist)
+- [Bitsy 5.1](https://github.com/seleb/bitsy-hacks/tree/d419cf6b84822a6419a78ad82336333771b27bf0/dist)
 
 ## Further reading
 

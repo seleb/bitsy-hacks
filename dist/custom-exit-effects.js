@@ -3,7 +3,7 @@
 @file custom-exit-effects
 @summary make custom exit transition effects
 @license MIT
-@version 17.0.0
+@version 18.0.0
 @requires 6.0
 @author Sean S. LeBlanc
 
@@ -12,9 +12,8 @@ Adds support for custom exit transition effects.
 Multiple effects can be added this way.
 This can be combined with exit-from-dialog for custom dialog transitions too.
 
-Effects are limited to a relatively low framerate by default.
-You can increase the framerate to make it smoother,
-but note that the way bitsy renders transitions is fairly inefficient;
+Effects are limited to a relatively low framerate,
+and note that the way bitsy renders transitions is fairly inefficient;
 for fancier effects it may be better to try the GL transitions hack.
 
 EFFECT NOTES:
@@ -22,29 +21,19 @@ Each effect looks like:
 	key: {
 		showPlayerStart: <true or false>,
 		showPlayerEnd: <true or false>,
-		duration: <duration in ms>,
-		frameRate: <1-60 (default is 8)>
+		stepCount: <number (how long/granular the transition is; built-in effects are all 6, 8, or 12)>
 		pixelEffectFunc: function(start, end, pixelX, pixelY, delta) {
 			...
-		}
+		},
+		paletteEffectFunc: function(start, end, delta) {
+			...
+		},
 	}
 
 To use the custom effects, you'll need to modify your exit in the gamedata, e.g.
 	EXT 1,1 0 13,13
 would become
 	EXT 1,1 0 13,13 FX key
-
-Manipulating pixel data inside the pixel effect function directly is relatively complex,
-but bitsy provides a number of helpers that are used to simplify its own effects.
-A quick reference guide:
-	- start.Image.GetPixel(x,y)
-		returns the pixel for a given position at the start of the transition
-	- end.Image.GetPixel(x,y)
-		returns the pixel for a given position at the end of the transition
-	- bitsy.PostProcessUtilities.GetCorrespondingColorFromPal(color,start.Palette,end.Palette)
-		converts a pixel from one palette to the other
-	- bitsy.PostProcessUtilities.LerpColor(colorA, colorB, delta)
-		returns an interpolated pixel
 
 A single example effect is included, but more can be found in the original effect source by looking for `RegisterTransitionEffect`.
 
@@ -60,12 +49,12 @@ var hackOptions = {
 	'my-effect': {
 		showPlayerStart: true,
 		showPlayerEnd: true,
-		duration: 500,
-		frameRate: 8,
+		stepCount: 8,
 		pixelEffectFunc: function (start, end, pixelX, pixelY, delta) {
-			var a = start.Image.GetPixel(pixelX, pixelY);
-			var b = end.Image.GetPixel(pixelX, pixelY);
-			return bitsy.PostProcessUtilities.LerpColor(a, b, delta);
+			return (delta > 0.5 ? end : start).GetPixel(pixelX, pixelY);
+		},
+		paletteEffectFunc: function (start, end, delta) {
+			return lerpPalettes(start.Palette, end.Palette, delta);
 		},
 	},
 };
@@ -83,7 +72,7 @@ bitsy = bitsy || /*#__PURE__*/_interopDefaultLegacy(bitsy);
  * @param searcher Regex to search and replace
  * @param replacer Replacer string/fn
  */
-function inject$1(searcher, replacer) {
+function inject(searcher, replacer) {
     // find the relevant script tag
     var scriptTags = document.getElementsByTagName('script');
     var scriptTag;
@@ -150,7 +139,7 @@ function after(targetFuncName, afterFn) {
 }
 function applyInjects() {
     kitsy.queuedInjectScripts.forEach(function (injectScript) {
-        inject$1(injectScript.searcher, injectScript.replacer);
+        inject(injectScript.searcher, injectScript.replacer);
     });
 }
 function applyHooks(root) {
@@ -247,6 +236,7 @@ if (!hooked) {
 		bitsy.dialogModule = new bitsy.Dialog();
 		bitsy.dialogRenderer = bitsy.dialogModule.CreateRenderer();
 		bitsy.dialogBuffer = bitsy.dialogModule.CreateBuffer();
+		bitsy.renderer = new bitsy.TileRenderer(bitsy.tilesize);
 
 		// Hook everything
 		kitsy.applyHooks();
@@ -262,7 +252,7 @@ if (!hooked) {
 }
 
 /** @see kitsy.inject */
-var inject = kitsy.inject;
+kitsy.inject;
 /** @see kitsy.before */
 var before = kitsy.before;
 /** @see kitsy.after */
@@ -272,8 +262,39 @@ kitsy.after;
 
 
 
-// allow customizable frameRate
-inject(/(var maxStep = Math\.floor\()(frameRate \* \(transitionEffects\[curEffect\]\.duration \/ 1000\)\);)/, '$1transitionEffects[curEffect].frameRate || $2');
+function lerpColor(colorA, colorB, t) {
+	return [
+		colorA[0] + ((colorB[0] - colorA[0]) * t),
+		colorA[1] + ((colorB[1] - colorA[1]) * t),
+		colorA[2] + ((colorB[2] - colorA[2]) * t),
+	];
+}
+function lerpPalettes(start, end, delta) {
+	var colors = [];
+
+	var maxLength = (start.Palette.length > end.Palette.length)
+		? start.Palette.length : end.Palette.length;
+
+	for (var i = 0; i < maxLength; i++) {
+		if (i < start.Palette.length && i < end.Palette.length) {
+			colors.push(lerpColor(start.Palette[i], end.Palette[i], delta));
+		} else if (i < start.Palette.length) {
+			colors.push(lerpColor(
+				start.Palette[i],
+				end.Palette[end.Palette.length - 1],
+				delta,
+			));
+		} else if (i < end.Palette.length) {
+			colors.push(lerpColor(
+				start.Palette[start.Palette.length - 1],
+				end.Palette[i],
+				delta,
+			));
+		}
+	}
+
+	return colors;
+}
 
 before('startExportedGame', function () {
 	// recreate the transition manager so the injected code is used

@@ -3,13 +3,11 @@
 @file transparent dialog
 @summary makes the dialog box have a transparent background
 @license MIT
-@version 17.0.0
+@version 18.0.0
 @author Sean S. LeBlanc
 
 @description
 Makes the dialog box have a transparent background.
-
-Note: this one's ~pretty hacky~.
 
 HOW TO USE:
 Copy-paste into a script tag after the bitsy source
@@ -30,7 +28,7 @@ bitsy = bitsy || /*#__PURE__*/_interopDefaultLegacy(bitsy);
  * @param searcher Regex to search and replace
  * @param replacer Replacer string/fn
  */
-function inject$1(searcher, replacer) {
+function inject(searcher, replacer) {
     // find the relevant script tag
     var scriptTags = document.getElementsByTagName('script');
     var scriptTag;
@@ -91,13 +89,13 @@ function before(targetFuncName, beforeFn) {
     kitsy.queuedBeforeScripts[targetFuncName].push(beforeFn);
 }
 // Ex: after('load_game', function run() { alert('Loaded!'); });
-function after(targetFuncName, afterFn) {
+function after$1(targetFuncName, afterFn) {
     kitsy.queuedAfterScripts[targetFuncName] = kitsy.queuedAfterScripts[targetFuncName] || [];
     kitsy.queuedAfterScripts[targetFuncName].push(afterFn);
 }
 function applyInjects() {
     kitsy.queuedInjectScripts.forEach(function (injectScript) {
-        inject$1(injectScript.searcher, injectScript.replacer);
+        inject(injectScript.searcher, injectScript.replacer);
     });
 }
 function applyHooks(root) {
@@ -163,7 +161,7 @@ var kitsy = (window.kitsy = window.kitsy || {
     queuedAfterScripts: {},
     inject: kitsyInject,
     before,
-    after,
+    after: after$1,
     /**
      * Applies all queued `inject` calls.
      *
@@ -194,6 +192,7 @@ if (!hooked) {
 		bitsy.dialogModule = new bitsy.Dialog();
 		bitsy.dialogRenderer = bitsy.dialogModule.CreateRenderer();
 		bitsy.dialogBuffer = bitsy.dialogModule.CreateBuffer();
+		bitsy.renderer = new bitsy.TileRenderer(bitsy.tilesize);
 
 		// Hook everything
 		kitsy.applyHooks();
@@ -209,37 +208,18 @@ if (!hooked) {
 }
 
 /** @see kitsy.inject */
-var inject = kitsy.inject;
+kitsy.inject;
 /** @see kitsy.before */
 kitsy.before;
 /** @see kitsy.after */
-kitsy.after;
+var after = kitsy.after;
 
 
 
-bitsy.transparentDialog = {
-	canvas: document.createElement('canvas'),
-};
-bitsy.transparentDialog.context = bitsy.transparentDialog.canvas.getContext('2d');
-var drawOverride = `
-if(context == null) return;
-transparentDialog.canvas.width = textboxInfo.width*scale;
-transparentDialog.canvas.height = textboxInfo.height*scale;
-transparentDialog.context.putImageData(textboxInfo.img, 0, 0);
-if (isCentered) {
-	context.drawImage(transparentDialog.canvas, textboxInfo.left*scale, ((height/2)-(textboxInfo.height/2))*scale);
-} else if (player().y < mapsize/2) {
-	context.drawImage(transparentDialog.canvas, textboxInfo.left*scale, (height-textboxInfo.bottom-textboxInfo.height)*scale);
-}
-else {
-	context.drawImage(transparentDialog.canvas, textboxInfo.left*scale, textboxInfo.top*scale);
-}
-return;`;
-
-// override textbox drawing to use draw image version from above
-inject(/(this\.DrawTextbox = function\(\) {)/, '$1' + drawOverride);
-
-// override textbox clearing pixels to be fully transparent
-inject(/(textboxInfo\.img\.data\[i\+3\]=)255/, '$10');
+after('renderClearInstruction', function (bufferId, buffer, paletteIndex) {
+	if (bufferId !== bitsy.textboxBufferId || paletteIndex !== bitsy.textBackgroundIndex) return;
+	var bufferContext = buffer.canvas.getContext('2d');
+	bufferContext.clearRect(0, 0, buffer.canvas.width, buffer.canvas.height);
+});
 
 }(window));

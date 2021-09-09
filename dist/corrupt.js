@@ -3,7 +3,7 @@
 @file corrupt
 @summary corrupts gamedata at runtime
 @license MIT
-@version 17.0.0
+@version 18.0.0
 @requires 5.5
 @author Sean S. LeBlanc
 
@@ -62,6 +62,41 @@ bitsy = bitsy || /*#__PURE__*/_interopDefaultLegacy(bitsy);
 */
 
 /*
+Helper used to replace code in a script tag based on a search regex
+To inject code without erasing original string, using capturing groups; e.g.
+	inject(/(some string)/,'injected before $1 injected after')
+*/
+function inject$1(searchRegex, replaceString) {
+	// find the relevant script tag
+	var scriptTags = document.getElementsByTagName('script');
+	var scriptTag;
+	var code;
+	for (var i = 0; i < scriptTags.length; ++i) {
+		scriptTag = scriptTags[i];
+		var matchesSearch = scriptTag.textContent.search(searchRegex) !== -1;
+		var isCurrentScript = scriptTag === document.currentScript;
+		if (matchesSearch && !isCurrentScript) {
+			code = scriptTag.textContent;
+			break;
+		}
+	}
+
+	// error-handling
+	if (!code) {
+		throw new Error('Couldn\'t find "' + searchRegex + '" in script tags');
+	}
+
+	// modify the content
+	code = code.replace(searchRegex, replaceString);
+
+	// replace the old script tag with a new one using our modified code
+	var newScriptTag = document.createElement('script');
+	newScriptTag.textContent = code;
+	scriptTag.insertAdjacentElement('afterend', newScriptTag);
+	scriptTag.remove();
+}
+
+/*
 Helper for getting image by name or id
 
 Args:
@@ -98,6 +133,14 @@ e.g. the default player is:
 ]
 */
 
+// force cache to clear if edit image fns are used
+inject$1(/\/\/ TODO : reset render cache for this image/, `
+// TODO: clear extended palettes
+drawingCache.render[drawingId+"_0"] = undefined;
+drawingCache.render[drawingId+"_1"] = undefined;
+drawingCache.render[drawingId+"_2"] = undefined;
+`);
+
 /*
 Args:
 	   id: string id or name
@@ -107,7 +150,7 @@ Args:
 Returns: a single frame of a image data
 */
 function getImageData(id, frame, map) {
-	return bitsy.renderer.GetImageSource(getImage(id, map).drw)[frame];
+	return bitsy.renderer.GetDrawingSource(getImage(id, map).drw)[frame];
 }
 
 function getSpriteData(id, frame) {
@@ -134,9 +177,9 @@ Args:
 function setImageData(id, frame, map, newData) {
 	var drawing = getImage(id, map);
 	var drw = drawing.drw;
-	var img = bitsy.renderer.GetImageSource(drw).slice();
+	var img = bitsy.renderer.GetDrawingSource(drw).slice();
 	img[frame] = newData;
-	bitsy.renderer.SetImageSource(drw, img);
+	bitsy.renderer.SetDrawingSource(drw, img);
 }
 
 function setSpriteData(id, frame, newData) {
@@ -324,6 +367,7 @@ if (!hooked) {
 		bitsy.dialogModule = new bitsy.Dialog();
 		bitsy.dialogRenderer = bitsy.dialogModule.CreateRenderer();
 		bitsy.dialogBuffer = bitsy.dialogModule.CreateBuffer();
+		bitsy.renderer = new bitsy.TileRenderer(bitsy.tilesize);
 
 		// Hook everything
 		kitsy.applyHooks();
