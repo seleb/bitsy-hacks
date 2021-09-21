@@ -1,9 +1,6 @@
-import puppeteer from 'puppeteer';
-import {
-	resolve,
-} from 'path';
-
 import fs from 'fs';
+import { resolve } from 'path';
+import puppeteer from 'puppeteer';
 import util from 'util';
 
 const readdir = util.promisify(fs.readdir);
@@ -103,9 +100,6 @@ export async function start({
 	game = `data:text/html;base64,${Buffer.from(game).toString('base64')}`;
 
 	// setup puppeteer
-	browser = await puppeteer.launch({
-		headless: true,
-	});
 	page = await browser.newPage();
 	await page.goto(game);
 	await page.setViewport({
@@ -114,11 +108,26 @@ export async function start({
 	});
 }
 
+export async function bitsyBeforeAll() {
+	browser = await puppeteer.launch({
+		headless: false,
+	});
+}
+
 // cleanup
 export async function end() {
+	// TODO: remove
+}
+
+export async function bitsyAfterEach() {
+	if (!page) return;
+	await page.close();
+	page = undefined;
+}
+
+export async function bitsyAfterAll() {
 	await browser.close();
 	browser = undefined;
-	page = undefined;
 }
 
 export async function startRecording() {
@@ -159,13 +168,8 @@ export async function press(key) {
 // take a screenshot of the current frame
 // and perform a snapshot test on it
 export async function snapshot() {
-	try {
-		const screenshot = await page.screenshot();
-		expect(screenshot).toMatchImageSnapshot();
-	} catch (err) {
-		await end();
-		throw err;
-	}
+	const screenshot = await page.screenshot();
+	expect(screenshot).toMatchImageSnapshot();
 }
 
 // perform the sequence of key presses
