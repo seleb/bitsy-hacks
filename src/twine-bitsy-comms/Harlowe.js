@@ -19,34 +19,34 @@ function handleBitsyMessage(event) {
 	var type = event.data.type;
 	var data = event.data.data;
 	switch (type) {
-	case 'start':
-		var variables = {};
-		Object.entries(State.variables).forEach(function (entry) {
-			if (!entry[0].startsWith('TwineScript_')) {
-				variables[entry[0]] = entry[1];
-			}
-		});
-		sendMessage({
-			type: 'variables',
-			data: variables,
-		});
-		break;
-	case 'play':
-		Engine.goToPassage(data);
-		break;
-	case 'back':
-		Engine.goBack();
-		break;
-	case 'variable':
-		State.variables[data.name] = data.value;
-		break;
-	case 'eval':
-		console.warn('The "eval" command is commented out by default since it\'s easy to abuse. Uncomment it in your javascript if you want to use it.');
-		// eval(data);
-		break;
-	default:
-		console.warn('Unhandled message from Bitsy:', type, data);
-		break;
+		case 'start':
+			var variables = {};
+			Object.entries(State.variables).forEach(function (entry) {
+				if (!entry[0].startsWith('TwineScript_')) {
+					variables[entry[0]] = entry[1];
+				}
+			});
+			sendMessage({
+				type: 'variables',
+				data: variables,
+			});
+			break;
+		case 'play':
+			Engine.goToPassage(data);
+			break;
+		case 'back':
+			Engine.goBack();
+			break;
+		case 'variable':
+			State.variables[data.name] = data.value;
+			break;
+		case 'eval':
+			console.warn('The "eval" command is commented out by default since it\'s easy to abuse. Uncomment it in your javascript if you want to use it.');
+			// eval(data);
+			break;
+		default:
+			console.warn('Unhandled message from Bitsy:', type, data);
+			break;
 	}
 }
 window.addEventListener('message', handleBitsyMessage, false);

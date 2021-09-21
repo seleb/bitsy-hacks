@@ -27,13 +27,8 @@ TIPS:
 	- You can use the full names or shorthand of image types (e.g. "SPR" and "sprite" will both work)
 */
 import bitsy from 'bitsy';
-import {
-	addDeferredDialogTag,
-	after,
-} from './helpers/kitsy-script-toolkit';
-import {
-	getImage,
-} from './helpers/utils';
+import { addDeferredDialogTag, after } from './helpers/kitsy-script-toolkit';
+import { getImage } from './helpers/utils';
 
 // map of maps
 var maps;

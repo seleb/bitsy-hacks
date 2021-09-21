@@ -26,9 +26,7 @@ NOTE: The combining operators (&&, ||) have lower precedence than
       the way you want.
 */
 
-import {
-	inject,
-} from './helpers/kitsy-script-toolkit';
+import { inject } from './helpers/kitsy-script-toolkit';
 
 var operators = ['!==', '&&', '||', '%'];
 
@@ -42,15 +40,22 @@ function expression(operator) {
 }`;
 }
 
-inject(/(operatorMap\["-"\] = subExp;)/, `
+inject(
+	/(operatorMap\["-"\] = subExp;)/,
+	`
 	$1
-	${operators.map(function (operator) {
-		return `operatorMap["${operator}"] = ${expression(operator)};`;
-	}).join('\n')}
-`);
+	${operators
+		.map(function (operator) {
+			return `operatorMap["${operator}"] = ${expression(operator)};`;
+		})
+		.join('\n')}
+`
+);
 inject(
 	/(Operators : \[)(.+\],)/,
-	`$1 ${operators.map(function (operator) {
-		return `"${operator}", `;
-	}).join('')} $2`,
+	`$1 ${operators
+		.map(function (operator) {
+			return `"${operator}", `;
+		})
+		.join('')} $2`
 );

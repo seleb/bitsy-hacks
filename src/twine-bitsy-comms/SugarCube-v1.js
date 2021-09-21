@@ -19,28 +19,28 @@ function handleBitsyMessage(event) {
 	var type = event.data.type;
 	var data = event.data.data;
 	switch (type) {
-	case 'start':
-		sendMessage({
-			type: 'variables',
-			data: state.active.variables,
-		});
-		break;
-	case 'play':
-		state.display(data);
-		break;
-	case 'back':
-		Engine.goBack();
-		break;
-	case 'variable':
-		state.active.variables[data.name] = data.value;
-		break;
-	case 'eval':
-		console.warn('The "eval" command is commented out by default since it\'s easy to abuse. Uncomment it in your javascript if you want to use it.');
-		// eval(data);
-		break;
-	default:
-		console.warn('Unhandled message from Bitsy:', type, data);
-		break;
+		case 'start':
+			sendMessage({
+				type: 'variables',
+				data: state.active.variables,
+			});
+			break;
+		case 'play':
+			state.display(data);
+			break;
+		case 'back':
+			Engine.goBack();
+			break;
+		case 'variable':
+			state.active.variables[data.name] = data.value;
+			break;
+		case 'eval':
+			console.warn('The "eval" command is commented out by default since it\'s easy to abuse. Uncomment it in your javascript if you want to use it.');
+			// eval(data);
+			break;
+		default:
+			console.warn('Unhandled message from Bitsy:', type, data);
+			break;
 	}
 }
 window.addEventListener('message', handleBitsyMessage, false);

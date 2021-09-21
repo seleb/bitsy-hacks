@@ -37,18 +37,8 @@ e.g.
 	3.5 = will corrupt thrice, and corrupt a fourth time with a probability of one in two
 */
 import bitsy from 'bitsy';
-import {
-	getSpriteData,
-	getTileData,
-	getItemData,
-	setSpriteData,
-	setTileData,
-	setItemData,
-} from './helpers/edit image at runtime';
-import {
-	after,
-	before,
-} from './helpers/kitsy-script-toolkit';
+import { getItemData, getSpriteData, getTileData, setItemData, setSpriteData, setTileData } from './helpers/edit image at runtime';
+import { after, before } from './helpers/kitsy-script-toolkit';
 
 // /////////
 // setup //

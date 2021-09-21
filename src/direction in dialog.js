@@ -24,9 +24,7 @@ HOW TO USE:
 Copy-paste into a script tag after the bitsy source
 */
 import bitsy from 'bitsy';
-import {
-	before,
-} from './helpers/kitsy-script-toolkit';
+import { before } from './helpers/kitsy-script-toolkit';
 
 var keys = {};
 keys[bitsy.Direction.Up] = 'up';

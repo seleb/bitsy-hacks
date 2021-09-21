@@ -40,9 +40,7 @@ NOTE: Chrome can only fetch external files when they're served from a
       external files.
 */
 
-import {
-	before,
-} from './helpers/kitsy-script-toolkit';
+import { before } from './helpers/kitsy-script-toolkit';
 
 var ERR_MISSING_IMPORT = 1;
 
@@ -65,10 +63,13 @@ before('startExportedGame', function (done) {
 function tryImportGameData(gameData, done) {
 	// Make sure this game data even uses the word "IMPORT".
 	if (gameData.indexOf('IMPORT') === -1) {
-		return done({
-			error: ERR_MISSING_IMPORT,
-			message: 'No IMPORT found in Bitsy data. See instructions for external game data mod.',
-		}, gameData);
+		return done(
+			{
+				error: ERR_MISSING_IMPORT,
+				message: 'No IMPORT found in Bitsy data. See instructions for external game data mod.',
+			},
+			gameData
+		);
 	}
 
 	var trim = function (line) {
@@ -77,10 +78,7 @@ function tryImportGameData(gameData, done) {
 	var isImport = function (line) {
 		return line.indexOf('IMPORT') === 0;
 	};
-	var importCmd = gameData
-		.split('\n')
-		.map(trim)
-		.find(isImport);
+	var importCmd = gameData.split('\n').map(trim).find(isImport);
 
 	// Make sure we found an actual IMPORT command.
 	if (!importCmd) {

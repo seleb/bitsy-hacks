@@ -29,12 +29,8 @@ NOTE:
   dialog variables on your items that increment when picked up
 */
 import bitsy from 'bitsy';
-import {
-	addDualDialogTag,
-} from './helpers/kitsy-script-toolkit';
-import {
-	getImage,
-} from './helpers/utils';
+import { addDualDialogTag } from './helpers/kitsy-script-toolkit';
+import { getImage } from './helpers/utils';
 
 addDualDialogTag('player', function (environment, parameters) {
 	var targetId = parameters[0];

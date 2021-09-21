@@ -149,13 +149,8 @@ Parameters:
 * */
 
 import bitsy from 'bitsy';
-import {
-	addDualDialogTag,
-} from './helpers/kitsy-script-toolkit';
-import {
-	getRelativeNumber,
-	clamp,
-} from './helpers/utils';
+import { addDualDialogTag } from './helpers/kitsy-script-toolkit';
+import { clamp, getRelativeNumber } from './helpers/utils';
 
 // Draws an Item, Sprite, or Tile at a location in a room
 // {draw "mapId, sourceId, xPos, yPos, roomID"}
@@ -291,34 +286,34 @@ function drawAt(mapId, sourceId, xPos, yPos, roomId) {
 	}
 
 	switch (mapId) {
-	case 'TIL':
-		if (bitsy.tile[sourceId]) {
-			bitsy.room[roomId].tilemap[yPos][xPos] = sourceId;
-		}
-		break;
-	case 'ITM':
-		if (bitsy.item[sourceId]) {
-			var newItem = {
-				id: sourceId,
-				x: xPos,
-				y: yPos,
-			};
-			bitsy.room[roomId].items.push(newItem);
-		}
-		break;
-	case 'SPR':
-		if (bitsy.sprite[sourceId]) {
-			if (bitsy.sprite[sourceId].id === bitsy.playerId) {
-				console.log("CAN'T TARGET AVATAR. SKIPPING.");
-			} else if (bitsy.room[roomId]) {
-				bitsy.sprite[sourceId].room = roomId;
-				bitsy.sprite[sourceId].x = xPos;
-				bitsy.sprite[sourceId].y = yPos;
+		case 'TIL':
+			if (bitsy.tile[sourceId]) {
+				bitsy.room[roomId].tilemap[yPos][xPos] = sourceId;
 			}
-		}
-		break;
-	default:
-		break;
+			break;
+		case 'ITM':
+			if (bitsy.item[sourceId]) {
+				var newItem = {
+					id: sourceId,
+					x: xPos,
+					y: yPos,
+				};
+				bitsy.room[roomId].items.push(newItem);
+			}
+			break;
+		case 'SPR':
+			if (bitsy.sprite[sourceId]) {
+				if (bitsy.sprite[sourceId].id === bitsy.playerId) {
+					console.log("CAN'T TARGET AVATAR. SKIPPING.");
+				} else if (bitsy.room[roomId]) {
+					bitsy.sprite[sourceId].room = roomId;
+					bitsy.sprite[sourceId].x = xPos;
+					bitsy.sprite[sourceId].y = yPos;
+				}
+			}
+			break;
+		default:
+			break;
 	}
 }
 
@@ -368,10 +363,7 @@ function eraseAt(mapId, targetId, xPos, yPos, roomId) {
 	}
 
 	// tiles
-	if (
-		(mapId === 'TIL' || mapId === 'ANY')
-		&& (targetId.toUpperCase() === 'ANY' || bitsy.room[roomId].tilemap[yPos][xPos] === targetId)
-	) {
+	if ((mapId === 'TIL' || mapId === 'ANY') && (targetId.toUpperCase() === 'ANY' || bitsy.room[roomId].tilemap[yPos][xPos] === targetId)) {
 		bitsy.room[roomId].tilemap[yPos][xPos] = '0';
 	}
 

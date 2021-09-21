@@ -15,16 +15,9 @@ HOW TO USE:
 2. Edit `horizontalFlipAllowed` and `verticalFlipAllowed` below as needed
 */
 import bitsy from 'bitsy';
-import {
-	after,
-} from './helpers/kitsy-script-toolkit';
-import {
-	transformSpriteData,
-} from './helpers/transform-sprite-data';
-import {
-	getSpriteData,
-	setSpriteData,
-} from './helpers/edit image at runtime';
+import { getSpriteData, setSpriteData } from './helpers/edit image at runtime';
+import { after } from './helpers/kitsy-script-toolkit';
+import { transformSpriteData } from './helpers/transform-sprite-data';
 
 export var hackOptions = {
 	allowed: function () {
@@ -60,20 +53,20 @@ after('updateInput', function () {
 	// determine which directions need flipping
 	var allowed = hackOptions.allowed();
 	switch (bitsy.curPlayerDirection) {
-	case bitsy.Direction.Up:
-		vflip = false;
-		break;
-	case bitsy.Direction.Down:
-		vflip = allowed.verticalFlipAllowed;
-		break;
-	case bitsy.Direction.Left:
-		hflip = allowed.horizontalFlipAllowed;
-		break;
-	case bitsy.Direction.Right:
-		hflip = false;
-		break;
-	default:
-		break;
+		case bitsy.Direction.Up:
+			vflip = false;
+			break;
+		case bitsy.Direction.Down:
+			vflip = allowed.verticalFlipAllowed;
+			break;
+		case bitsy.Direction.Left:
+			hflip = allowed.horizontalFlipAllowed;
+			break;
+		case bitsy.Direction.Right:
+			hflip = false;
+			break;
+		default:
+			break;
 	}
 
 	// update sprite with flipped frames

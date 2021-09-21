@@ -48,10 +48,7 @@ HOW TO USE:
 4. Edit the variable naming functions below as needed
 */
 import bitsy from 'bitsy';
-import {
-	after,
-	addDualDialogTag,
-} from './helpers/kitsy-script-toolkit';
+import { addDualDialogTag, after } from './helpers/kitsy-script-toolkit';
 
 export var hackOptions = {
 	// how dialog variables will be named when they are sent out
@@ -78,19 +75,26 @@ export var hackOptions = {
 	// how info will be posted to external process
 	// default implementation is for iframe postMessage-ing to parent page
 	send: function (type, data) {
-		window.parent.postMessage({
-			type: type,
-			data: data,
-		}, '*');
+		window.parent.postMessage(
+			{
+				type: type,
+				data: data,
+			},
+			'*'
+		);
 	},
 	// how info will be received from external process
 	// default implementation is for parent page postMessage-ing into iframe
 	receive: function () {
-		window.addEventListener('message', function (event) {
-			var type = event.data.type;
-			var data = event.data.data;
-			receiveMessage(type, data);
-		}, false);
+		window.addEventListener(
+			'message',
+			function (event) {
+				var type = event.data.type;
+				var data = event.data.data;
+				receiveMessage(type, data);
+			},
+			false
+		);
 	},
 };
 
@@ -101,19 +105,19 @@ hackOptions.receive();
 
 function receiveMessage(type, data) {
 	switch (type) {
-	case 'variables':
-		var state = sending;
-		sending = false;
-		Object.entries(data).forEach(function (entry) {
-			var name = entry[0];
-			var value = entry[1];
-			bitsy.scriptInterpreter.SetVariable(hackOptions.variableNameIn(name), value);
-		});
-		sending = state;
-		break;
-	default:
-		console.warn('Unhandled message from outside Bitsy:', type, data);
-		break;
+		case 'variables':
+			var state = sending;
+			sending = false;
+			Object.entries(data).forEach(function (entry) {
+				var name = entry[0];
+				var value = entry[1];
+				bitsy.scriptInterpreter.SetVariable(hackOptions.variableNameIn(name), value);
+			});
+			sending = state;
+			break;
+		default:
+			console.warn('Unhandled message from outside Bitsy:', type, data);
+			break;
 	}
 }
 
@@ -148,11 +152,7 @@ after('startExportedGame', function () {
 });
 
 // hook up dialog commands
-[
-	'eval',
-	'play',
-	'back',
-].forEach(function (command) {
+['eval', 'play', 'back'].forEach(function (command) {
 	function doCommand(environment, parameters) {
 		hackOptions.send(command, parameters[0]);
 	}

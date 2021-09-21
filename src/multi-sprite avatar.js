@@ -24,32 +24,32 @@ HOW TO USE:
 	Pieces must have an x,y offset and a sprite id
 */
 import bitsy from 'bitsy';
-import {
-	before,
-	after,
-} from './helpers/kitsy-script-toolkit';
-import {
-	getImage,
-} from './helpers/utils';
+import { after, before } from './helpers/kitsy-script-toolkit';
+import { getImage } from './helpers/utils';
 
 export var hackOptions = {
-	pieces: [{
-		x: 0,
-		y: 0,
-		spr: 'c',
-	}, {
-		x: 1,
-		y: 0,
-		spr: 'd',
-	}, {
-		x: 0,
-		y: 1,
-		spr: 'e',
-	}, {
-		x: 1,
-		y: 1,
-		spr: 'f',
-	}],
+	pieces: [
+		{
+			x: 0,
+			y: 0,
+			spr: 'c',
+		},
+		{
+			x: 1,
+			y: 0,
+			spr: 'd',
+		},
+		{
+			x: 0,
+			y: 1,
+			spr: 'e',
+		},
+		{
+			x: 1,
+			y: 1,
+			spr: 'f',
+		},
+	],
 	enabledOnStart: true,
 };
 
@@ -152,16 +152,7 @@ function repeat(fn) {
 	p.y = y;
 	return r;
 }
-var repeats = [
-	'getSpriteLeft',
-	'getSpriteRight',
-	'getSpriteUp',
-	'getSpriteDown',
-	'isWallLeft',
-	'isWallRight',
-	'isWallUp',
-	'isWallDown',
-];
+var repeats = ['getSpriteLeft', 'getSpriteRight', 'getSpriteUp', 'getSpriteDown', 'isWallLeft', 'isWallRight', 'isWallUp', 'isWallDown'];
 
 // prevent player from colliding with their own pieces
 function filterPieces(id) {

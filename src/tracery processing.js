@@ -45,10 +45,7 @@ can create
 See http://www.crystalcodepalace.com/traceryTut.html for more on how to use tracery
 */
 import tracery from 'tracery-grammar';
-import {
-	before,
-	inject,
-} from './helpers/kitsy-script-toolkit';
+import { before, inject } from './helpers/kitsy-script-toolkit';
 
 export var hackOptions = {
 	grammar: {

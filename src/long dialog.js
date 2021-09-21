@@ -36,10 +36,12 @@ export var hackOptions = {
 };
 
 // override textbox height
-inject(/textboxInfo\.height = .+;/,
+inject(
+	/textboxInfo\.height = .+;/,
 	`Object.defineProperty(textboxInfo, 'height', {
 	get() { return textboxInfo.padding_vert + (textboxInfo.padding_vert + relativeFontHeight()) * Math.max(${hackOptions.minRows}, dialogBuffer.CurPage().indexOf(dialogBuffer.CurRow())+Math.sign(dialogBuffer.CurCharCount())) + textboxInfo.arrow_height; }
-})`);
+})`
+);
 // export textbox info
 inject(/(var font = null;)/, 'this.textboxInfo = textboxInfo;$1');
 before('renderDrawingBuffer', function (bufferId, buffer) {

@@ -1,13 +1,6 @@
 // baseline test to make sure that bitsy helpers
 // function as expected
-import {
-	start,
-	walkToCat,
-	snapshot,
-	startRecording,
-	stopRecording,
-	end,
-} from './bitsy';
+import { end, snapshot, start, startRecording, stopRecording, walkToCat } from './bitsy';
 
 test('walkToCat moves the player to the left of the cat in the default game', async () => {
 	await start();

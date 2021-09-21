@@ -28,18 +28,10 @@ HOW TO USE:
 1. Copy-paste this script into a script tag after the bitsy source
 2. Edit the hackOptions object as needed
 */
-import {
-	GifReader,
-} from 'omggif';
 import bitsy from 'bitsy';
-import {
-	hackOptions as portraitHackOptions,
-	state,
-} from './character portraits';
-import {
-	after,
-	before,
-} from './helpers/kitsy-script-toolkit';
+import { GifReader } from 'omggif';
+import { hackOptions as portraitHackOptions, state } from './character portraits';
+import { after, before } from './helpers/kitsy-script-toolkit';
 
 export var hackOptions = {
 	// overrides for the base hack
@@ -70,10 +62,12 @@ after('startExportedGame', function () {
 			state.portraits[portrait] = {
 				loop: false,
 				duration: 0,
-				frames: [{
-					delay: 0,
-					img: state.portraits[portrait],
-				}],
+				frames: [
+					{
+						delay: 0,
+						img: state.portraits[portrait],
+					},
+				],
 			};
 			return;
 		}
@@ -82,44 +76,47 @@ after('startExportedGame', function () {
 			.then(function (response) {
 				return response.arrayBuffer();
 			})
-			.then(function (arrayBuffer) {
-				var data = new window.Uint8Array(arrayBuffer);
-				var reader = new GifReader(data);
-				var numFrames = reader.numFrames();
-				var width = reader.width;
-				var height = reader.height;
-				var prev = document.createElement('canvas');
-				prev.width = width;
-				prev.height = height;
-				var prevCtx = prev.getContext('2d');
-				var frames = [];
-				var duration = 0;
-				for (var i = 0; i < numFrames; ++i) {
-					var canvas = document.createElement('canvas');
-					canvas.width = width;
-					canvas.height = height;
-					var ctx = canvas.getContext('2d');
-					var imgData = ctx.createImageData(width, height);
-					reader.decodeAndBlitFrameRGBA(i, imgData.data);
-					ctx.putImageData(imgData, 0, 0);
-					if (reader.frameInfo(i).disposal === 2) { // handle bg dispose
-						prevCtx.clearRect(0, 0, prev.width, prev.height);
+			.then(
+				function (arrayBuffer) {
+					var data = new window.Uint8Array(arrayBuffer);
+					var reader = new GifReader(data);
+					var numFrames = reader.numFrames();
+					var width = reader.width;
+					var height = reader.height;
+					var prev = document.createElement('canvas');
+					prev.width = width;
+					prev.height = height;
+					var prevCtx = prev.getContext('2d');
+					var frames = [];
+					var duration = 0;
+					for (var i = 0; i < numFrames; ++i) {
+						var canvas = document.createElement('canvas');
+						canvas.width = width;
+						canvas.height = height;
+						var ctx = canvas.getContext('2d');
+						var imgData = ctx.createImageData(width, height);
+						reader.decodeAndBlitFrameRGBA(i, imgData.data);
+						ctx.putImageData(imgData, 0, 0);
+						if (reader.frameInfo(i).disposal === 2) {
+							// handle bg dispose
+							prevCtx.clearRect(0, 0, prev.width, prev.height);
+						}
+						prevCtx.drawImage(canvas, 0, 0);
+						ctx.drawImage(prev, 0, 0);
+						var delay = Math.max((1 / 60) * 1000, reader.frameInfo(i).delay * 10); // maximum speed of 60fps
+						duration += delay;
+						frames.push({
+							img: canvas,
+							delay,
+						});
 					}
-					prevCtx.drawImage(canvas, 0, 0);
-					ctx.drawImage(prev, 0, 0);
-					var delay = Math.max((1 / 60) * 1000, reader.frameInfo(i).delay * 10); // maximum speed of 60fps
-					duration += delay;
-					frames.push({
-						img: canvas,
-						delay,
-					});
-				}
-				state.portraits[this] = {
-					loop: reader.loopCount() !== null, // either loop infinitely or only place once; ignores other loop counts for now
-					duration,
-					frames,
-				};
-			}.bind(portrait))
+					state.portraits[this] = {
+						loop: reader.loopCount() !== null, // either loop infinitely or only place once; ignores other loop counts for now
+						duration,
+						frames,
+					};
+				}.bind(portrait)
+			)
 			.catch(function (err) {
 				console.error('Could not fetch portrait "' + src + '"');
 				throw err;

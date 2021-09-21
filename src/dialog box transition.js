@@ -14,9 +14,7 @@ HOW TO USE:
 1. Copy-paste this script into a script tag after the bitsy source.
 */
 
-import {
-	inject,
-} from './helpers/kitsy-script-toolkit';
+import { inject } from './helpers/kitsy-script-toolkit';
 
 export var hackOptions = {
 	easing: 0.025, //  easing speed
@@ -36,9 +34,7 @@ if(context == null) return;
 			this.onExit = this.onClose && textboxInfo.y >= (height+textboxInfo.height)*scale
 		}
 		else {
-			easingDialog(textboxInfo, ${
-	hackOptions.easing
-}, !this.onClose ? textboxInfo.top*scale : 
+			easingDialog(textboxInfo, ${hackOptions.easing}, !this.onClose ? textboxInfo.top*scale : 
 				-textboxInfo.top-textboxInfo.height*scale) 
 			 this.onExit = this.onClose && textboxInfo.y <= -textboxInfo.height*scale
 		}
@@ -54,10 +50,7 @@ var functionEasing = `
 	this.onExit = false;
 `;
 
-inject(
-	/(this\.DrawTextbox\(\))/,
-	'$1\nif(this.onExit && this.onClose){dialogBuffer.EndDialog()}',
-);
+inject(/(this\.DrawTextbox\(\))/, '$1\nif(this.onExit && this.onClose){dialogBuffer.EndDialog()}');
 inject(/(this\.EndDialog\(\))/, 'dialogRenderer.onClose=true');
 inject(/(var DialogRenderer = function\(\) {)/, `$1${functionEasing}`);
 inject(/(var textboxInfo = {)/, '$1y:0,');
@@ -65,7 +58,7 @@ inject(
 	/(this\.Reset = function\(\) {)/,
 	`$1 this.onClose=false;
 		this.onExit=false;
-		textboxInfo.y = player().y < mapsize/2 ? (height+textboxInfo.bottom+textboxInfo.height)*scale : -(textboxInfo.height) * scale;`,
+		textboxInfo.y = player().y < mapsize/2 ? (height+textboxInfo.bottom+textboxInfo.height)*scale : -(textboxInfo.height) * scale;`
 );
 
 inject(/(this\.DrawTextbox = function\(\) {)/, `$1${drawOverride}`);

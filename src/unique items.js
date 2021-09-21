@@ -15,9 +15,7 @@ HOW TO USE:
 2. Update the `itemIsUnique` function to match your needs
 */
 import bitsy from 'bitsy';
-import {
-	after,
-} from './helpers/kitsy-script-toolkit';
+import { after } from './helpers/kitsy-script-toolkit';
 
 export var hackOptions = {
 	itemIsUnique: function (item) {

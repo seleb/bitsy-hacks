@@ -51,9 +51,11 @@ Args:
 Returns: the image in the given map with the given name/id
  */
 export function getImage(name, map) {
-	var id = Object.prototype.hasOwnProperty.call(map, name) ? name : Object.keys(map).find(function (e) {
-		return map[e].name === name;
-	});
+	var id = Object.prototype.hasOwnProperty.call(map, name)
+		? name
+		: Object.keys(map).find(function (e) {
+				return map[e].name === name;
+		  });
 	return map[id];
 }
 
@@ -107,7 +109,7 @@ export function printDialog(environment, text, onReturn) {
  * @return {number} resulting absolute or relative number
  */
 export function getRelativeNumber(value, relativeTo) {
-	var v = (value || value === 0 ? value : relativeTo);
+	var v = value || value === 0 ? value : relativeTo;
 	if (typeof v === 'string' && (v.startsWith('+') || v.startsWith('-'))) {
 		return relativeTo + Number(v);
 	}

@@ -1,18 +1,14 @@
-import {
-	start,
-	end,
-	evaluate,
-	waitForFrame,
-	page,
-} from './test/bitsy';
+import { end, evaluate, page, start, waitForFrame } from './test/bitsy';
 
 test('custom-keyhandlers', async () => {
 	await start({
 		hacks: ['custom-keyhandlers'],
 	});
-	await evaluate(() => { console.log = console.warn; });
+	await evaluate(() => {
+		console.log = console.warn;
+	});
 	const logs = [];
-	page.on('console', (message) => logs.push(message.text()));
+	page.on('console', message => logs.push(message.text()));
 	await page.keyboard.down('z');
 	await waitForFrame();
 	expect(logs).toContain('pressed z');

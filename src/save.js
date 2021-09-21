@@ -39,14 +39,8 @@ HOW TO USE:
 2. Edit hackOptions below as needed
 */
 import bitsy from 'bitsy';
-import {
-	after,
-	addDualDialogTag,
-	before,
-} from './helpers/kitsy-script-toolkit';
-import {
-	inject,
-} from './helpers/utils';
+import { addDualDialogTag, after, before } from './helpers/kitsy-script-toolkit';
+import { inject } from './helpers/utils';
 
 export var hackOptions = {
 	// when to save/load
@@ -128,9 +122,13 @@ function clear() {
 }
 
 function nodeKey(node) {
-	var key = node.key = node.key || node.options.map(function (option) {
-		return option.Serialize();
-	}).join('\n');
+	var key = (node.key =
+		node.key ||
+		node.options
+			.map(function (option) {
+				return option.Serialize();
+			})
+			.join('\n'));
 	return key;
 }
 // setup global needed for saving/loading dialog progress

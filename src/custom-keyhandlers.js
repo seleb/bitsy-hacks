@@ -23,9 +23,7 @@ HOW TO USE:
 */
 
 import bitsy from 'bitsy';
-import {
-	after,
-} from './helpers/kitsy-script-toolkit';
+import { after } from './helpers/kitsy-script-toolkit';
 
 export var hackOptions = {
 	// each object below is a map of key -> handler
@@ -65,7 +63,7 @@ after('updateInput', function () {
 		var onheld = hackOptions.onheld[key];
 		var onup = hackOptions.onup[key];
 		if (bitsy.input.isKeyDown(key.toUpperCase().codePointAt(0))) {
-			var f = held[key] = (held[key] || 0) + 1;
+			var f = (held[key] = (held[key] || 0) + 1);
 			if (f === 1 && ondown) {
 				ondown();
 			}

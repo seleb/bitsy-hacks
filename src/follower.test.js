@@ -1,10 +1,4 @@
-import {
-	start,
-	press,
-	end,
-	snapshot,
-	delay,
-} from './test/bitsy';
+import { delay, end, press, snapshot, start } from './test/bitsy';
 
 const multiple = `
 
@@ -96,11 +90,16 @@ test('follower', async () => {
 
 test('multiple followers (chain)', async () => {
 	await start({
-		hacks: [['follower', {
-			allowFollowerCollision: false,
-			followers: ['a', 'b'],
-			delay: 1,
-		}]],
+		hacks: [
+			[
+				'follower',
+				{
+					allowFollowerCollision: false,
+					followers: ['a', 'b'],
+					delay: 1,
+				},
+			],
+		],
 		gamedata: multiple,
 	});
 	await press('ArrowLeft');
@@ -112,12 +111,17 @@ test('multiple followers (chain)', async () => {
 
 test('multiple followers (stack)', async () => {
 	await start({
-		hacks: [['follower', {
-			allowFollowerCollision: false,
-			followers: ['a', 'b'],
-			delay: 1,
-			stack: true,
-		}]],
+		hacks: [
+			[
+				'follower',
+				{
+					allowFollowerCollision: false,
+					followers: ['a', 'b'],
+					delay: 1,
+					stack: true,
+				},
+			],
+		],
 		gamedata: multiple,
 	});
 	await press('ArrowLeft');
@@ -223,11 +227,16 @@ DLG 0
 NAME cat dialog
 
 `,
-		hacks: [['follower', {
-			allowFollowerCollision: true,
-			followers: ['a'],
-			delay: 0,
-		}]],
+		hacks: [
+			[
+				'follower',
+				{
+					allowFollowerCollision: true,
+					followers: ['a'],
+					delay: 0,
+				},
+			],
+		],
 	});
 	await press('ArrowLeft'); // next to exit
 	await snapshot();

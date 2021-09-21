@@ -1,9 +1,4 @@
-import {
-	start,
-	press,
-	end,
-	snapshot,
-} from './test/bitsy';
+import { end, press, snapshot, start } from './test/bitsy';
 
 const gamedata = `
 Write your game's title here

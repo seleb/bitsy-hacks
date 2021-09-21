@@ -1,9 +1,4 @@
-import {
-	start,
-	press,
-	end,
-	snapshot,
-} from './test/bitsy';
+import { end, press, snapshot, start } from './test/bitsy';
 
 test('transparent sprites', async () => {
 	await start({

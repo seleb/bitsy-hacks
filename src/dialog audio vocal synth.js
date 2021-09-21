@@ -36,18 +36,9 @@ HOW TO USE:
 2. Edit `hackOptions` below as needed
 3. Add (voice "<voice name>") commands to your dialog as needed
 */
-import {
-	Glottis,
-	Tract,
-} from '@seansleblanc/pink-trombone';
-import {
-	hackOptions as dialogAudioOptions,
-} from './dialog audio';
-import {
-	after,
-	before,
-	addDialogTag,
-} from './helpers/kitsy-script-toolkit';
+import { Glottis, Tract } from '@seansleblanc/pink-trombone';
+import { hackOptions as dialogAudioOptions } from './dialog audio';
+import { addDialogTag, after, before } from './helpers/kitsy-script-toolkit';
 import { clamp } from './helpers/utils';
 
 export var hackOptions = {
@@ -275,19 +266,19 @@ var phonemes = {
 
 function getPhoneme(letter) {
 	switch (letter) {
-	case 'e':
-	case 'i':
-		return 'ee';
-	case 'r':
-	case 'y':
-		return 'yr';
-	case 'c':
-	case 'k':
-	case 'q':
-	case 'x':
-		return 'k';
-	default:
-		return letter;
+		case 'e':
+		case 'i':
+			return 'ee';
+		case 'r':
+		case 'y':
+			return 'yr';
+		case 'c':
+		case 'k':
+		case 'q':
+		case 'x':
+			return 'k';
+		default:
+			return letter;
 	}
 }
 

@@ -1,9 +1,4 @@
-import {
-	start,
-	press,
-	end,
-	snapshot,
-} from './test/bitsy';
+import { end, press, snapshot, start } from './test/bitsy';
 
 test('strike', async () => {
 	await start({
@@ -82,11 +77,16 @@ SPR a
 VAR a
 42
 `,
-		hacks: [['avatar by room', {
-			avatarByRoom: {
-				1: 'a',
-			},
-		}]],
+		hacks: [
+			[
+				'avatar by room',
+				{
+					avatarByRoom: {
+						1: 'a',
+					},
+				},
+			],
+		],
 	});
 	await snapshot();
 	await press('ArrowRight'); // walk through exit

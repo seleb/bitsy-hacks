@@ -33,15 +33,11 @@ HOW TO USE:
 3. Edit other hackOptions as needed
 */
 import bitsy from 'bitsy';
-import {
-	after,
-} from './helpers/kitsy-script-toolkit';
-import './javascript dialog';
-import {
-	setSpriteData,
-} from './helpers/edit image at runtime';
-import './edit image from dialog';
 import './edit dialog from dialog';
+import './edit image from dialog';
+import { setSpriteData } from './helpers/edit image at runtime';
+import { after } from './helpers/kitsy-script-toolkit';
+import './javascript dialog';
 
 export var hackOptions = {
 	host: 'wss://your signalling server',
@@ -69,52 +65,52 @@ function onData(event) {
 	var spr;
 	var data = event.data;
 	switch (data.e) {
-	case 'move':
-		spr = bitsy.sprite[event.from];
-		if (spr) {
-			// move sprite
-			spr.x = data.x;
-			spr.y = data.y;
-			spr.room = data.room;
-		} else {
-			// got a move from an unknown player,
-			// so ask them who they are
-			client.send(event.from, {
-				e: 'gimmeSprite',
-			});
-		}
-		break;
-	case 'gimmeSprite':
-		// send a sprite update to specific peer
-		client.send(event.from, getSpriteUpdate());
-		break;
-	case 'sprite':
-		// update a sprite
-		var longname = 'SPR_' + event.from;
-		spr = bitsy.sprite[event.from] = {
-			animation: {
-				frameCount: data.data.length,
-				frameIndex: 0,
-				isAnimated: data.data.length > 1,
-			},
-			col: data.col,
-			dlg: longname,
-			drw: longname,
-			inventory: {},
-			name: event.from,
-			x: data.x,
-			y: data.y,
-			room: data.room,
-		};
-		bitsy.dialog[longname] = data.dlg;
-		bitsy.renderer.SetDrawingSource(longname, data.data);
+		case 'move':
+			spr = bitsy.sprite[event.from];
+			if (spr) {
+				// move sprite
+				spr.x = data.x;
+				spr.y = data.y;
+				spr.room = data.room;
+			} else {
+				// got a move from an unknown player,
+				// so ask them who they are
+				client.send(event.from, {
+					e: 'gimmeSprite',
+				});
+			}
+			break;
+		case 'gimmeSprite':
+			// send a sprite update to specific peer
+			client.send(event.from, getSpriteUpdate());
+			break;
+		case 'sprite':
+			// update a sprite
+			var longname = 'SPR_' + event.from;
+			spr = bitsy.sprite[event.from] = {
+				animation: {
+					frameCount: data.data.length,
+					frameIndex: 0,
+					isAnimated: data.data.length > 1,
+				},
+				col: data.col,
+				dlg: longname,
+				drw: longname,
+				inventory: {},
+				name: event.from,
+				x: data.x,
+				y: data.y,
+				room: data.room,
+			};
+			bitsy.dialog[longname] = data.dlg;
+			bitsy.renderer.SetDrawingSource(longname, data.data);
 
-		for (var frame = 0; frame < data.data.length; ++frame) {
-			setSpriteData(event.from, frame, data.data[frame]);
-		}
-		break;
-	default:
-		break;
+			for (var frame = 0; frame < data.data.length; ++frame) {
+				setSpriteData(event.from, frame, data.data[frame]);
+			}
+			break;
+		default:
+			break;
 	}
 }
 
@@ -187,13 +183,7 @@ function getSpriteUpdate() {
 }
 
 // trigger sprite updates after these dialog functions
-[
-	'image',
-	'imageNow',
-	'imagePal',
-	'imagePalNow',
-	'dialog',
-].forEach(function (tag) {
+['image', 'imageNow', 'imagePal', 'imagePalNow', 'dialog'].forEach(function (tag) {
 	var original = bitsy.kitsy.dialogFunctions[tag];
 	bitsy.kitsy.dialogFunctions[tag] = function () {
 		original.apply(this, arguments);

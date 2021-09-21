@@ -1,10 +1,4 @@
-import {
-	delay,
-	end,
-	press,
-	snapshot,
-	start,
-} from './test/bitsy';
+import { delay, end, press, snapshot, start } from './test/bitsy';
 
 test('transitions', async () => {
 	await start({

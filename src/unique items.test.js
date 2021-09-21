@@ -1,9 +1,4 @@
-import {
-	end,
-	press,
-	snapshot,
-	start,
-} from './test/bitsy';
+import { end, press, snapshot, start } from './test/bitsy';
 
 test('unique items', async () => {
 	await start({

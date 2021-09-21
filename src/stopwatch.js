@@ -40,14 +40,8 @@ NOTE: This uses parentheses "()" instead of curly braces "{}" around function
       code at the end of the editor's `bitsy.js` file. Untested.
 */
 
-import {
-	addDialogTag,
-	addDualDialogTag,
-	before,
-} from './helpers/kitsy-script-toolkit';
-import {
-	printDialog,
-} from './helpers/utils';
+import { addDialogTag, addDualDialogTag, before } from './helpers/kitsy-script-toolkit';
+import { printDialog } from './helpers/utils';
 
 export var hackOptions = {
 	// function which returns the string which bitsy will print

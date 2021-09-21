@@ -117,8 +117,8 @@ function preprocess(map, img, x, y) {
 		var t = m && m[entry[0]];
 		var p = t && t[bitsy.room[bitsy.curRoom].pal];
 		return (
-			p
-			&& Object.values(p).some(function (frame) {
+			p &&
+			Object.values(p).some(function (frame) {
 				return frame === img;
 			})
 		);
@@ -156,8 +156,7 @@ after('renderTileInstruction', function (bufferId, buffer, tileId, x, y) {
 });
 
 // reset after having drawn a tile
-after('drawTile', function (img, x, y) {
-});
+after('drawTile', function (img, x, y) {});
 
 // setup dialog commands
 var mapMap = {

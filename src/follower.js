@@ -44,15 +44,8 @@ HOW TO USE:
 3. Use dialog commands as needed
 */
 import bitsy from 'bitsy';
-import {
-	getImage,
-} from './helpers/utils';
-import {
-	after,
-	addDualDialogTag,
-	addDialogTag,
-	before,
-} from './helpers/kitsy-script-toolkit';
+import { addDialogTag, addDualDialogTag, after, before } from './helpers/kitsy-script-toolkit';
+import { getImage } from './helpers/utils';
 
 export var hackOptions = {
 	allowFollowerCollision: false, // if true, the player can walk into followers and talk to them (possible to get stuck this way)
@@ -148,20 +141,20 @@ after('update', function () {
 	};
 	// adjust follower to be one step back
 	switch (bitsy.curPlayerDirection) {
-	case bitsy.Direction.Up:
-		step.y += 1;
-		break;
-	case bitsy.Direction.Down:
-		step.y -= 1;
-		break;
-	case bitsy.Direction.Left:
-		step.x += 1;
-		break;
-	case bitsy.Direction.Right:
-		step.x -= 1;
-		break;
-	default:
-		break;
+		case bitsy.Direction.Up:
+			step.y += 1;
+			break;
+		case bitsy.Direction.Down:
+			step.y -= 1;
+			break;
+		case bitsy.Direction.Left:
+			step.x += 1;
+			break;
+		case bitsy.Direction.Right:
+			step.x -= 1;
+			break;
+		default:
+			break;
 	}
 	followers.forEach(function (follower, idx) {
 		if (idx === 0 || hackOptions.stack) {
@@ -169,11 +162,13 @@ after('update', function () {
 		} else {
 			var prevFollower = followers[idx - 1];
 			var prev = paths[prevFollower.id];
-			paths[follower.id].push(prev[prev.length - 2] || {
-				x: prevFollower.x,
-				y: prevFollower.y,
-				room: prevFollower.room,
-			});
+			paths[follower.id].push(
+				prev[prev.length - 2] || {
+					x: prevFollower.x,
+					y: prevFollower.y,
+					room: prevFollower.room,
+				}
+			);
 		}
 	});
 	takeStep();
@@ -197,7 +192,9 @@ before('movePlayerThroughExit', function (exit) {
 function filterFollowing(id) {
 	return followers.some(function (follower) {
 		return follower.id === id;
-	}) ? null : id;
+	})
+		? null
+		: id;
 }
 
 var originalGetSpriteLeft;

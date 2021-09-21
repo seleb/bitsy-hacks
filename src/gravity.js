@@ -41,19 +41,9 @@ HOW TO USE:
 3. Use the dialog tags in your game to alter settings
 */
 import bitsy from 'bitsy';
-import {
-	after,
-	before,
-	addDualDialogTag,
-	inject,
-} from './helpers/kitsy-script-toolkit';
-import {
-	transformSpriteData,
-} from './helpers/transform-sprite-data';
-import {
-	getSpriteData,
-	setSpriteData,
-} from './helpers/edit image at runtime';
+import { getSpriteData, setSpriteData } from './helpers/edit image at runtime';
+import { addDualDialogTag, after, before, inject } from './helpers/kitsy-script-toolkit';
+import { transformSpriteData } from './helpers/transform-sprite-data';
 
 export var hackOptions = {
 	// Configure whether or not gravity should be active when the game starts.
@@ -355,7 +345,7 @@ function isSolid(dir, x, y) {
 		},
 	};
 	var edgeToCheck = edgeMap[dir];
-	var isWallThere = bitsy[wallCheck]() || (edgeToCheck.coord === edgeToCheck.value);
+	var isWallThere = bitsy[wallCheck]() || edgeToCheck.coord === edgeToCheck.value;
 
 	return isWallThere || isSpriteThere;
 }
@@ -378,7 +368,7 @@ function isOnStandableTile(player) {
 }
 
 function canMoveHorizontallyWhileFalling() {
-	var withinMaxRatio = (horizontalFallingMoves / fallCounter) <= hackOptions.maxHorizontalFallingRatio;
+	var withinMaxRatio = horizontalFallingMoves / fallCounter <= hackOptions.maxHorizontalFallingRatio;
 
 	// if fallCounter is 0 (start of fall/jump) or player last moved down and is within ratio
 	return !fallCounter || (lastMoveMapped === 'down' && withinMaxRatio);
@@ -393,20 +383,20 @@ function reallyMovePlayer(player, dir) {
 
 	// why doesn't isSolid catch the out of bounds? stuff? isWall should as well? weird...
 	switch (dir) {
-	case 'up':
-		if (player.y > 0) player.y -= 1;
-		break;
-	case 'down':
-		if (player.y < bitsy.mapsize - 1) player.y += 1;
-		break;
-	case 'left':
-		if (player.x > 0) player.x -= 1;
-		break;
-	case 'right':
-		if (player.x < bitsy.mapsize - 1) player.x += 1;
-		break;
-	default:
-		console.warn('gravity: invalid move', player.x, player.y, dir);
+		case 'up':
+			if (player.y > 0) player.y -= 1;
+			break;
+		case 'down':
+			if (player.y < bitsy.mapsize - 1) player.y += 1;
+			break;
+		case 'left':
+			if (player.x > 0) player.x -= 1;
+			break;
+		case 'right':
+			if (player.x < bitsy.mapsize - 1) player.x += 1;
+			break;
+		default:
+			console.warn('gravity: invalid move', player.x, player.y, dir);
 	}
 }
 
@@ -427,21 +417,21 @@ function flipAvatar(gravityDirection) {
 
 	// determine which directions need flipping
 	switch (gravityDirection) {
-	case 'up':
-		vflip = true;
-		break;
-	case 'down':
-		vflip = false;
-		break;
-	case 'left':
-		vflip = true;
-		rot = true;
-		break;
-	case 'right':
-		rot = true;
-		break;
-	default:
-		break;
+		case 'up':
+			vflip = true;
+			break;
+		case 'down':
+			vflip = false;
+			break;
+		case 'left':
+			vflip = true;
+			rot = true;
+			break;
+		case 'right':
+			rot = true;
+			break;
+		default:
+			break;
 	}
 
 	// update sprite with transformed frames

@@ -17,11 +17,7 @@ HOW TO USE:
 2. Update the `tileIsOpaque` function below to match your needs
 */
 import bitsy from 'bitsy';
-import {
-	before,
-	after,
-	inject,
-} from './helpers/kitsy-script-toolkit';
+import { after, before, inject } from './helpers/kitsy-script-toolkit';
 
 export var hackOptions = {
 	tileIsOpaque: function (tile) {

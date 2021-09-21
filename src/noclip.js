@@ -35,9 +35,16 @@ var toggleNoClip = function () {
 	noClip = !noClip;
 	if (noClip) {
 		// disable functions
-		bitsy.getSpriteAt = bitsy.isWallLeft = bitsy.isWallRight = bitsy.isWallUp = bitsy.isWallDown = bitsy.getExit = bitsy.getEnding = function () {
-			return null;
-		};
+		bitsy.getSpriteAt =
+			bitsy.isWallLeft =
+			bitsy.isWallRight =
+			bitsy.isWallUp =
+			bitsy.isWallDown =
+			bitsy.getExit =
+			bitsy.getEnding =
+				function () {
+					return null;
+				};
 		bitsy.getItemIndex = function () {
 			return -1;
 		};

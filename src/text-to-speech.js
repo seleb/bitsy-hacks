@@ -46,11 +46,7 @@ HOW TO USE:
 */
 
 import bitsy from 'bitsy';
-import {
-	inject,
-	after,
-	addDualDialogTag,
-} from './helpers/kitsy-script-toolkit';
+import { addDualDialogTag, after, inject } from './helpers/kitsy-script-toolkit';
 
 export var hackOptions = {
 	automatic: true, // disable this to prevent TTS from playing for all dialog (i.e. you only want to use TTS via commands)
@@ -81,9 +77,9 @@ if (!speechSynthesis) {
 
 function queueVoice(params) {
 	params = params || [];
-	var pitch = lastPitch = params[0] || lastPitch;
-	var rate = lastRate = params[1] || lastRate;
-	var voice = lastVoice = params[2] || lastVoice;
+	var pitch = (lastPitch = params[0] || lastPitch);
+	var rate = (lastRate = params[1] || lastRate);
+	var voice = (lastVoice = params[2] || lastVoice);
 	toSpeak.push({
 		pitch: pitch,
 		rate: rate,
@@ -150,7 +146,12 @@ inject(/(function DialogFontChar\(font, char, effectList\) {)/, '$1\nthis.char =
 var spoke = false;
 after('dialogRenderer.DrawNextArrow', function () {
 	if (hackOptions.automatic && !spoke) {
-		queueSpeak(bitsy.dialogBuffer.CurPage().map((a) => a.map((i) => i.char).join('')).join(' '));
+		queueSpeak(
+			bitsy.dialogBuffer
+				.CurPage()
+				.map(a => a.map(i => i.char).join(''))
+				.join(' ')
+		);
 		spoke = true;
 	}
 });

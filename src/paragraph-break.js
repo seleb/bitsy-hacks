@@ -34,10 +34,8 @@ NOTE: This uses parentheses "()" instead of curly braces "{}" around function
       code at the end of the editor's `bitsy.js` file. Untested.
 */
 
-import {
-	addDialogTag,
-} from './helpers/kitsy-script-toolkit';
 import './helpers/addParagraphBreak';
+import { addDialogTag } from './helpers/kitsy-script-toolkit';
 
 // Adds the actual dialogue tag. No deferred version is required.
 addDialogTag('p', function (environment, parameters, onReturn) {

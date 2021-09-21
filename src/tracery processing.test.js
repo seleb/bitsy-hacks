@@ -1,11 +1,4 @@
-import {
-	end,
-	evaluate,
-	press,
-	snapshot,
-	start,
-	walkToCat,
-} from './test/bitsy';
+import { end, evaluate, press, snapshot, start, walkToCat } from './test/bitsy';
 
 test('tracery processing', async () => {
 	await start({

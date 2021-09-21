@@ -43,17 +43,10 @@ inject(/(var textScale =) 2/, '$1 1');
 inject(/2(; \/\/using a different scaling factor for text feels like cheating\.\.\. but it looks better)/, '1$1'); // rewrite text scale
 
 // rewrite textbox info
-inject(/(var textboxInfo = {)[^]*?(};)/, '$1' + [
-	'img : null,',
-	'width : 62,',
-	'height : 64,',
-	'top : 1,',
-	'left : 1,',
-	'bottom : 1,',
-	'font_scale : 1,',
-	'padding_vert : 2,',
-	'arrow_height : 6',
-].join('\n') + '$2');
+inject(
+	/(var textboxInfo = {)[^]*?(};)/,
+	'$1' + ['img : null,', 'width : 62,', 'height : 64,', 'top : 1,', 'left : 1,', 'bottom : 1,', 'font_scale : 1,', 'padding_vert : 2,', 'arrow_height : 6'].join('\n') + '$2'
+);
 inject(/(top = \()4/, '$1 1');
 inject(/(left = \()4/, '$1 1');
 
@@ -63,5 +56,6 @@ inject(/(else if \(curRowIndex )== 0/g, '$1< ' + (hackOptions.rows - 1)); // rew
 
 // inject pixelated rendering style
 var style = document.createElement('style');
-style.innerText = '#game{ -ms-interpolation-mode: nearest-neighbor;image-rendering: -webkit-optimize-contrast;image-rendering: -moz-crisp-edges;image-rendering: -o-pixelated;image-rendering: pixelated; }';
+style.innerText =
+	'#game{ -ms-interpolation-mode: nearest-neighbor;image-rendering: -webkit-optimize-contrast;image-rendering: -moz-crisp-edges;image-rendering: -o-pixelated;image-rendering: pixelated; }';
 document.head.appendChild(style);

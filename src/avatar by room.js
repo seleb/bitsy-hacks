@@ -18,14 +18,8 @@ By default, the avatar will reset to the default if you enter a room without a s
 This can also be changed in the hackOptions below to instead apply avatar changes permanently.
 */
 import bitsy from 'bitsy';
-import {
-	getRoom,
-	getImage,
-} from './helpers/utils';
-import {
-	after,
-	before,
-} from './helpers/kitsy-script-toolkit';
+import { after, before } from './helpers/kitsy-script-toolkit';
+import { getImage, getRoom } from './helpers/utils';
 
 export var hackOptions = {
 	permanent: false, // If true, avatar changes will persist across rooms without sprites defined
@@ -66,8 +60,8 @@ before('drawRoom', function () {
 	currentRoom = player.room;
 	var newAvatarId = hackOptions.avatarByRoom[currentRoom];
 	if (
-		(!newAvatarId && !hackOptions.permanent) // if no sprite defined + not permanent, reset
-		|| (newAvatarId === player.id) // manual reset
+		(!newAvatarId && !hackOptions.permanent) || // if no sprite defined + not permanent, reset
+		newAvatarId === player.id // manual reset
 	) {
 		player.drw = originalDrw;
 		player.animation = originalAnimation;

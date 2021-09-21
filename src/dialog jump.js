@@ -33,9 +33,7 @@ Copy-paste into a script tag after the bitsy source
 */
 
 import bitsy from 'bitsy';
-import {
-	addDualDialogTag,
-} from './helpers/kitsy-script-toolkit';
+import { addDualDialogTag } from './helpers/kitsy-script-toolkit';
 
 // jump function
 function jump(targetDialog) {

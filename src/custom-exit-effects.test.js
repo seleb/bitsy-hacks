@@ -1,11 +1,4 @@
-import {
-	delay,
-	end,
-	press,
-	snapshot,
-	start,
-	walkToCat,
-} from './test/bitsy';
+import { delay, end, press, snapshot, start, walkToCat } from './test/bitsy';
 
 test('custom-exit-effect', async () => {
 	await start({
@@ -25,7 +18,7 @@ test('custom-exit-effect', async () => {
 							if (delta > 1 - 2 / 16) {
 								return _end.Palette;
 							}
-							return [(delta < 0.5 ? [255, 0, 0] : [0, 255, 0]), _end.Palette[1], _end.Palette[2]];
+							return [delta < 0.5 ? [255, 0, 0] : [0, 255, 0], _end.Palette[1], _end.Palette[2]];
 						},
 					},
 				},

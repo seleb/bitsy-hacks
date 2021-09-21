@@ -17,11 +17,8 @@ HOW TO USE:
 Copy-paste this script into a script tag after the bitsy source
 */
 import bitsy from 'bitsy';
-import { Gamepads, Buttons, Axes } from 'input-gamepads.js';
-import {
-	before,
-	after,
-} from './helpers/kitsy-script-toolkit';
+import { Axes, Buttons, Gamepads } from 'input-gamepads.js';
+import { after, before } from './helpers/kitsy-script-toolkit';
 
 var gamepads = new Gamepads();
 var empty = function () {};
@@ -29,17 +26,11 @@ var empty = function () {};
 var move = function (dpad, face, axis, axis2, axispast, axisdir, key) {
 	// keydown
 	if (
-		gamepads.isJustDown(dpad)
-		|| gamepads.isJustDown(face)
-		|| gamepads.axisJustPast(axis, axispast, axisdir)
-		|| gamepads.axisJustPast(axis2, axispast, axisdir)
-		|| (
-			bitsy.playerHoldToMoveTimer <= 0 && (
-				gamepads.isDown(dpad)
-				|| gamepads.isDown(face)
-				|| gamepads.axisPast(axis, axispast, axisdir)
-			)
-		)
+		gamepads.isJustDown(dpad) ||
+		gamepads.isJustDown(face) ||
+		gamepads.axisJustPast(axis, axispast, axisdir) ||
+		gamepads.axisJustPast(axis2, axispast, axisdir) ||
+		(bitsy.playerHoldToMoveTimer <= 0 && (gamepads.isDown(dpad) || gamepads.isDown(face) || gamepads.axisPast(axis, axispast, axisdir)))
 	) {
 		bitsy.curPlayerDirection = bitsy.Direction.None;
 		bitsy.input.onkeydown({
@@ -49,12 +40,7 @@ var move = function (dpad, face, axis, axis2, axispast, axisdir, key) {
 	}
 
 	// keyup
-	if (
-		gamepads.isJustUp(dpad)
-		|| gamepads.isJustUp(face)
-		|| gamepads.axisJustPast(axis, axispast, -axisdir)
-		|| gamepads.axisJustPast(axis2, axispast, -axisdir)
-	) {
+	if (gamepads.isJustUp(dpad) || gamepads.isJustUp(face) || gamepads.axisJustPast(axis, axispast, -axisdir) || gamepads.axisJustPast(axis2, axispast, -axisdir)) {
 		bitsy.input.onkeyup({
 			keyCode: key,
 			preventDefault: empty,

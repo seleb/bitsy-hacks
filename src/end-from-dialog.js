@@ -53,9 +53,7 @@ NOTE: This uses parentheses "()" instead of curly braces "{}" around function
 */
 
 import bitsy from 'bitsy';
-import {
-	addDualDialogTag,
-} from './helpers/kitsy-script-toolkit';
+import { addDualDialogTag } from './helpers/kitsy-script-toolkit';
 
 addDualDialogTag('end', function (environment, parameters) {
 	// cleanup current dialog

@@ -56,17 +56,9 @@ NOTE: This uses parentheses "()" instead of curly braces "{}" around function
       code at the end of the editor's `bitsy.js` file. Untested.
 */
 import bitsy from 'bitsy';
-import {
-	after,
-	addDualDialogTag,
-} from './helpers/kitsy-script-toolkit';
-import {
-	getImage,
-} from './helpers/utils';
-import {
-	getImageData,
-	setImageData,
-} from './helpers/edit image at runtime';
+import { getImageData, setImageData } from './helpers/edit image at runtime';
+import { addDualDialogTag, after } from './helpers/kitsy-script-toolkit';
+import { getImage } from './helpers/utils';
 
 // map of maps
 var maps;

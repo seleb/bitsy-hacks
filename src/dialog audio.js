@@ -15,10 +15,7 @@ HOW TO USE:
 2. Edit `onLetter` below as needed
 */
 import bitsy from 'bitsy';
-import {
-	inject,
-	before,
-} from './helpers/kitsy-script-toolkit';
+import { before, inject } from './helpers/kitsy-script-toolkit';
 
 export var hackOptions = {
 	// function called for each character printed to the dialog box

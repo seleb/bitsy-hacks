@@ -1,10 +1,4 @@
-import {
-	start,
-	walkToCat,
-	press,
-	end,
-	snapshot,
-} from './test/bitsy';
+import { end, press, snapshot, start, walkToCat } from './test/bitsy';
 
 test('with ending text', async () => {
 	await start({

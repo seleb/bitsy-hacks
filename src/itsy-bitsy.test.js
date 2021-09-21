@@ -1,10 +1,4 @@
-import {
-	start,
-	press,
-	end,
-	snapshot,
-	evaluate,
-} from './test/bitsy';
+import { end, evaluate, press, snapshot, start } from './test/bitsy';
 
 test('itsy-bitsy', async () => {
 	await start({

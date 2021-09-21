@@ -1,9 +1,4 @@
-import {
-	getImage,
-	unique,
-	getRelativeNumber,
-	clamp,
-} from './utils';
+import { clamp, getImage, getRelativeNumber, unique } from './utils';
 
 describe('getImage', () => {
 	it('requires a name/id and a map', () => {

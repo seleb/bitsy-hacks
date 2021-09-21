@@ -35,9 +35,7 @@ HOW TO USE:
 2. copy-paste this script into a script tag after the bitsy source
 */
 import bitsy from 'bitsy';
-import {
-	after,
-} from './helpers/kitsy-script-toolkit';
+import { after } from './helpers/kitsy-script-toolkit';
 
 after('parseWorld', function () {
 	[].concat(Object.values(bitsy.item), Object.values(bitsy.tile), Object.values(bitsy.sprite)).forEach(function (drawing) {
@@ -48,17 +46,17 @@ after('parseWorld', function () {
 			var map;
 			// tag[1] is the first capturing group, it can be either TIL, SPR, or ITM
 			switch (tag[1]) {
-			case 'TIL':
-				map = bitsy.tile;
-				break;
-			case 'SPR':
-				map = bitsy.sprite;
-				break;
-			case 'ITM':
-				map = bitsy.item;
-				break;
-			default:
-				break;
+				case 'TIL':
+					map = bitsy.tile;
+					break;
+				case 'SPR':
+					map = bitsy.sprite;
+					break;
+				case 'ITM':
+					map = bitsy.item;
+					break;
+				default:
+					break;
 			}
 			// tag[2] is the second capturing group which returns drawing id
 			var id = tag[2];

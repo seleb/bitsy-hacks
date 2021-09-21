@@ -37,11 +37,7 @@ HOW TO USE:
 */
 
 import bitsy from 'bitsy';
-import {
-	inject,
-	before,
-	addDialogTag,
-} from './helpers/kitsy-script-toolkit';
+import { addDialogTag, before, inject } from './helpers/kitsy-script-toolkit';
 import './paragraph-break';
 
 export var hackOptions = {
@@ -136,7 +132,12 @@ addDialogTag('prompt', function (environment, parameters, onReturn) {
 	var isTapReleased = bitsy.input.isTapReleased;
 	var CanContinue = environment.GetDialogBuffer().CanContinue;
 	bitsy.key = {};
-	bitsy.input.anyKeyPressed = bitsy.input.isTapReleased = environment.GetDialogBuffer().CanContinue = function () { return false; };
+	bitsy.input.anyKeyPressed =
+		bitsy.input.isTapReleased =
+		environment.GetDialogBuffer().CanContinue =
+			function () {
+				return false;
+			};
 	bitsy.isPlayerEmbeddedInEditor = true;
 
 	promptInput.value = defaultValue;

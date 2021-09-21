@@ -1,10 +1,4 @@
-import {
-	start,
-	walkToCat,
-	press,
-	end,
-	snapshot,
-} from './test/bitsy';
+import { end, press, snapshot, start, walkToCat } from './test/bitsy';
 
 test('direction in dialog', async () => {
 	await start({

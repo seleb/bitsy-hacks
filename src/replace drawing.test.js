@@ -1,8 +1,4 @@
-import {
-	start,
-	end,
-	snapshot,
-} from './test/bitsy';
+import { end, snapshot, start } from './test/bitsy';
 
 test('replace drawing', async () => {
 	await start({

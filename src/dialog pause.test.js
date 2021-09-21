@@ -1,15 +1,8 @@
-import {
-	start,
-	walkToCat,
-	press,
-	end,
-	snapshot,
-	delay,
-} from './test/bitsy';
+import { delay, end, press, snapshot, start, walkToCat } from './test/bitsy';
 
 test('dialog pause', async () => {
 	await start({
-		catDialog: 'I\'m a{pause 2000} cat',
+		catDialog: "I'm a{pause 2000} cat",
 		hacks: ['dialog pause'],
 	});
 	await walkToCat();

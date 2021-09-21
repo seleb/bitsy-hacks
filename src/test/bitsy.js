@@ -19,14 +19,21 @@ async function loadResources() {
 async function getHackDist() {
 	const files = await readdir('./dist/');
 
-	const fileContents = await Promise.all(files.map((file) => readFile(`./dist/${file}`, {
-		encoding: 'utf8',
-	})));
+	const fileContents = await Promise.all(
+		files.map(file =>
+			readFile(`./dist/${file}`, {
+				encoding: 'utf8',
+			})
+		)
+	);
 
-	const fileMap = files.reduce((result, file, idx) => ({
-		...result,
-		[file.match(/(.+)\.js$/)[1]]: fileContents[idx],
-	}), {});
+	const fileMap = files.reduce(
+		(result, file, idx) => ({
+			...result,
+			[file.match(/(.+)\.js$/)[1]]: fileContents[idx],
+		}),
+		{}
+	);
 	return fileMap;
 }
 
@@ -42,16 +49,12 @@ let recording = false;
 
 // simple delay helper
 export function delay(ms) {
-	return new Promise((r) => setTimeout(r, ms));
+	return new Promise(r => setTimeout(r, ms));
 }
 
 // start puppeteer
 // and configure it for testing a bitsy game
-export async function start({
-	gamedata = '',
-	catDialog = '',
-	hacks = [],
-} = {}) {
+export async function start({ gamedata = '', catDialog = '', hacks = [] } = {}) {
 	await loadResources();
 	let game = template;
 
@@ -70,27 +73,30 @@ export async function start({
 
 	// add hacks
 	if (hacks.length) {
-		game = game.replace(/(<\/script>)(?![^]*?<\/script>)[^]*?(<\/head>)/, `$1${
-			hacks.map((hack) => {
-				if (typeof hack === 'string') {
-					// make sure not to screw up the regex in the process
-					return `<script>${hackDist[hack.replace(/\s/g, '-')].replace(/\$([0-9]+)/g, '$$$$$1')}</script>`;
-				}
-				const [hackStr, options] = hack;
-				return `<script>${
-					hackDist[hackStr.replace(/\s/g, '-')]
+		game = game.replace(
+			/(<\/script>)(?![^]*?<\/script>)[^]*?(<\/head>)/,
+			`$1${hacks
+				.map(hack => {
+					if (typeof hack === 'string') {
+						// make sure not to screw up the regex in the process
+						return `<script>${hackDist[hack.replace(/\s/g, '-')].replace(/\$([0-9]+)/g, '$$$$$1')}</script>`;
+					}
+					const [hackStr, options] = hack;
+					return `<script>${hackDist[hackStr.replace(/\s/g, '-')]
 						// remove comments (they can interfere with hackOptions regex)
 						.replace(/\/\*\*[^]*?\*\//m)
 						// replace hackOptions
-						.replace(/(var hackOptions.*= ){[^]*?};$/m, `$1 ${
-							JSON.stringify(options, (key, val) => ((typeof val === 'function') ? val.toString() : val), '\t')
-								.replace(/"(function[^]*?})"/g, (_, s) => s.replace(/\\n/g, '\n').replace(/\\t/g, '\t'))
-						};`)
+						.replace(
+							/(var hackOptions.*= ){[^]*?};$/m,
+							`$1 ${JSON.stringify(options, (key, val) => (typeof val === 'function' ? val.toString() : val), '\t').replace(/"(function[^]*?})"/g, (_, s) =>
+								s.replace(/\\n/g, '\n').replace(/\\t/g, '\t')
+							)};`
+						)
 						// make sure not to screw up the regex in the process
-						.replace(/\$([0-9]+)/g, '$$$$$1')
-				}</script>`;
-			}).join('\n')
-		}$2`);
+						.replace(/\$([0-9]+)/g, '$$$$$1')}</script>`;
+				})
+				.join('\n')}$2`
+		);
 	}
 
 	// disable console logs since they slow things down
@@ -144,12 +150,15 @@ export function evaluate(fn, ...args) {
 
 // wait for bitsy to have handled input
 export async function waitForFrame() {
-	await evaluate(() => new Promise((r) => {
-		window.jestUpdate = () => {
-			window.jestUpdate = null;
-			r();
-		};
-	}));
+	await evaluate(
+		() =>
+			new Promise(r => {
+				window.jestUpdate = () => {
+					window.jestUpdate = null;
+					r();
+				};
+			})
+	);
 }
 
 // helper to press a key
@@ -192,5 +201,5 @@ export async function walkToCat() {
 }
 
 export async function startDialog(dialog) {
-	await evaluate((d) => window.startDialog(d), dialog);
+	await evaluate(d => window.startDialog(d), dialog);
 }

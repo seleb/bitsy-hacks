@@ -24,10 +24,7 @@ Additional sounds can be added by by including more <audio> tags with different 
 If you'd like to trigger sounds from dialog, check out the bitsymuse hack!
 */
 import bitsy from 'bitsy';
-import {
-	before,
-	after,
-} from './helpers/kitsy-script-toolkit';
+import { after, before } from './helpers/kitsy-script-toolkit';
 import { clamp } from './helpers/utils';
 
 export var hackOptions = {

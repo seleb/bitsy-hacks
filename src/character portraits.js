@@ -39,10 +39,7 @@ HOW TO USE:
 2. Edit the hackOptions object as needed
 */
 import bitsy from 'bitsy';
-import {
-	addDialogTag,
-	after,
-} from './helpers/kitsy-script-toolkit';
+import { addDialogTag, after } from './helpers/kitsy-script-toolkit';
 
 export var hackOptions = {
 	// influences the resolution of the drawn image

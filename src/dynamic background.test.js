@@ -1,6 +1,4 @@
-import {
-	end, evaluate, press, snapshot, start,
-} from './test/bitsy';
+import { end, evaluate, press, snapshot, start } from './test/bitsy';
 
 const gamedata = `Write your game's title here
 
@@ -138,10 +136,15 @@ describe('hackOptions', () => {
 	test('default', async () => {
 		await start({
 			gamedata,
-			hacks: [['dynamic background', {
-				default: 1,
-				byRoom: {},
-			}]],
+			hacks: [
+				[
+					'dynamic background',
+					{
+						default: 1,
+						byRoom: {},
+					},
+				],
+			],
 		});
 		await evaluate('document.getElementById("game").style.transform = "scale(0.5)";');
 		await press('ArrowRight');
@@ -162,12 +165,17 @@ describe('hackOptions', () => {
 	test('byRoom', async () => {
 		await start({
 			gamedata,
-			hacks: [['dynamic background', {
-				default: 0,
-				byRoom: {
-					1: 2,
-				},
-			}]],
+			hacks: [
+				[
+					'dynamic background',
+					{
+						default: 0,
+						byRoom: {
+							1: 2,
+						},
+					},
+				],
+			],
 		});
 		await evaluate('document.getElementById("game").style.transform = "scale(0.5)";');
 		await press('ArrowRight');

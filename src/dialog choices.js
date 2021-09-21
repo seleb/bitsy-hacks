@@ -108,32 +108,23 @@ var dialogChoices = {
 		this.moved = bitsy.input.anyKeyDown() || bitsy.input.swipeUp() || bitsy.input.swipeDown() || bitsy.input.swipeRight();
 		var l = Math.max(this.choices.length, 1);
 		// navigate
-		if (
-			!pmoved && ((bitsy.input.anyKeyDown() && (bitsy.input.isKeyDown(bitsy.key.up) || bitsy.input.isKeyDown(bitsy.key.w)))
-			|| (bitsy.input.swipeUp()))
-		) {
+		if (!pmoved && ((bitsy.input.anyKeyDown() && (bitsy.input.isKeyDown(bitsy.key.up) || bitsy.input.isKeyDown(bitsy.key.w))) || bitsy.input.swipeUp())) {
 			this.choice -= 1;
 			if (this.choice < 0) {
 				this.choice += l;
 			}
 			return false;
 		}
-		if (
-			!pmoved && ((bitsy.input.anyKeyDown() && (bitsy.input.isKeyDown(bitsy.key.down) || bitsy.input.isKeyDown(bitsy.key.s)))
-			|| (bitsy.input.swipeDown()))
-		) {
+		if (!pmoved && ((bitsy.input.anyKeyDown() && (bitsy.input.isKeyDown(bitsy.key.down) || bitsy.input.isKeyDown(bitsy.key.s))) || bitsy.input.swipeDown())) {
 			this.choice = (this.choice + 1) % l;
 			return false;
 		}
 		// select
 		if (
-			!pmoved && ((bitsy.input.anyKeyDown() && (
-				bitsy.input.isKeyDown(bitsy.key.right)
-					|| bitsy.input.isKeyDown(bitsy.key.d)
-					|| bitsy.input.isKeyDown(bitsy.key.enter)
-					|| bitsy.input.isKeyDown(bitsy.key.space)
-			))
-				|| (bitsy.input.swipeRight()))
+			!pmoved &&
+			((bitsy.input.anyKeyDown() &&
+				(bitsy.input.isKeyDown(bitsy.key.right) || bitsy.input.isKeyDown(bitsy.key.d) || bitsy.input.isKeyDown(bitsy.key.enter) || bitsy.input.isKeyDown(bitsy.key.space))) ||
+				bitsy.input.swipeRight())
 		) {
 			// evaluate choice
 			this.choices[this.choice]();
@@ -159,7 +150,9 @@ var dialogChoices = {
 bitsy.dialogChoices = dialogChoices;
 
 function getCursorSprite(cursor) {
-	return cursor ? `renderer.GetDrawingSource(sprite['${cursor}'].drw)[sprite['${cursor}'].animation.frameIndex]` : `[
+	return cursor
+		? `renderer.GetDrawingSource(sprite['${cursor}'].drw)[sprite['${cursor}'].animation.frameIndex]`
+		: `[
 		[0, 0, 0, 0, 0, 0, 0, 0],
 		[0, 0, 0, 0, 0, 0, 0, 0],
 		[0, 1, 0, 0, 0, 0, 0, 0],
@@ -174,12 +167,17 @@ function getCursorSprite(cursor) {
 // parsing
 // (adds a new sequence node type)
 inject(/(\|\| str === "shuffle")/, '$1 || str === "choice"');
-inject(/(state\.curNode\.AddChild\(new ShuffleNode\(options\)\);\n.*})/, `$1
+inject(
+	/(state\.curNode\.AddChild\(new ShuffleNode\(options\)\);\n.*})/,
+	`$1
 else if(sequenceType === "choice") {
 	state.curNode.AddChild(new ChoiceNode(options));
-}`);
+}`
+);
 
-inject(/(var ShuffleNode = )/, `
+inject(
+	/(var ShuffleNode = )/,
+	`
 var ChoiceNode = function(options) {
 	Object.assign( this, new TreeRelationship() );
 	Object.assign( this, new SequenceBase() );
@@ -234,12 +232,15 @@ var ChoiceNode = function(options) {
 		});
 	}
 }
-$1`);
+$1`
+);
 
 // rendering
 // (re-uses existing arrow image data,
 // but draws rotated to point at text)
-inject(/(this\.DrawNextArrow = )/, `
+inject(
+	/(this\.DrawNextArrow = )/,
+	`
 this.DrawChoiceArrow = function() {
 	bitsyDrawBegin(1);
 	var rows = ${hackOptions.cursor};
@@ -260,21 +261,31 @@ this.DrawChoiceArrow = function() {
 	}
 	bitsyDrawEnd();
 };
-$1`);
-inject(/(this\.DrawTextbox\(\);)/, `
+$1`
+);
+inject(
+	/(this\.DrawTextbox\(\);)/,
+	`
 if (window.dialogChoices.choicesActive) {
 	this.DrawChoiceArrow();
 }
-$1`);
+$1`
+);
 
 // interaction
 // (overrides the dialog skip/page flip)
-inject(/(if\(\s*dialogBuffer\.IsActive\(\)\s*\) {)/, `$1
+inject(
+	/(if\(\s*dialogBuffer\.IsActive\(\)\s*\) {)/,
+	`$1
 if(window.dialogChoices.handleInput(dialogBuffer)) {
 	return;
-} else `);
-inject(/(this\.CanContinue = function\(\) {)/, `$1
+} else `
+);
+inject(
+	/(this\.CanContinue = function\(\) {)/,
+	`$1
 if(window.dialogChoices.choicesActive){
 	return false;
 }
-`);
+`
+);

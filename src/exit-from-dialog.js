@@ -52,13 +52,8 @@ curly-brace functions from dialog text. To keep from losing data, write
 these function calls with parentheses like the examples above.
 */
 import bitsy from 'bitsy';
-import {
-	getRoom,
-	getRelativeNumber,
-} from './helpers/utils';
-import {
-	addDualDialogTag,
-} from './helpers/kitsy-script-toolkit';
+import { addDualDialogTag } from './helpers/kitsy-script-toolkit';
+import { getRelativeNumber, getRoom } from './helpers/utils';
 
 // Implement the dialog functions
 addDualDialogTag('exit', function (environment, parameters) {
