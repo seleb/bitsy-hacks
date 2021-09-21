@@ -1,4 +1,4 @@
-import { end, press, snapshot, start } from './test/bitsy';
+import { press, snapshot, start } from './test/bitsy';
 
 test('transparent sprites', async () => {
 	await start({
@@ -10,5 +10,4 @@ test('transparent sprites', async () => {
 	await press('ArrowLeft');
 	await press('ArrowLeft'); // walk on top of tile border
 	await snapshot();
-	await end();
 });

@@ -1,4 +1,4 @@
-import { end, press, snapshot, start } from './test/bitsy';
+import { press, snapshot, start } from './test/bitsy';
 
 test('unique items', async () => {
 	await start({
@@ -70,5 +70,4 @@ ITM 0
 	});
 	await press('ArrowRight'); // walk onto item
 	await snapshot();
-	await end();
 });

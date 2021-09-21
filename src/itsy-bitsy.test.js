@@ -1,4 +1,4 @@
-import { end, evaluate, press, snapshot, start } from './test/bitsy';
+import { evaluate, press, snapshot, start } from './test/bitsy';
 
 test('itsy-bitsy', async () => {
 	await start({
@@ -24,5 +24,4 @@ test('itsy-bitsy', async () => {
 	await press('ArrowDown'); // talk to cat from above
 	await press('ArrowRight'); // complete dialog page
 	await snapshot();
-	await end();
 });

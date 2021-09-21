@@ -1,4 +1,4 @@
-import { end, press, snapshot, start, walkToCat } from './test/bitsy';
+import { press, snapshot, start, walkToCat } from './test/bitsy';
 
 test('with ending text', async () => {
 	await start({
@@ -12,7 +12,6 @@ test('with ending text', async () => {
 	await press('ArrowRight');
 	await press('ArrowRight');
 	await snapshot();
-	await end();
 });
 
 test('without ending text', async () => {
@@ -24,5 +23,4 @@ test('without ending text', async () => {
 	await press('ArrowRight');
 	await press('ArrowRight');
 	await snapshot();
-	await end();
 });

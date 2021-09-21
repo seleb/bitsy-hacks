@@ -1,4 +1,4 @@
-import { end, press, snapshot, start } from './test/bitsy';
+import { press, snapshot, start } from './test/bitsy';
 
 test('permanent items', async () => {
 	await start({
@@ -82,5 +82,4 @@ VAR a
 	await press('ArrowRight'); // end dialog
 	await press('ArrowRight'); // walk off item
 	await snapshot();
-	await end();
 });

@@ -120,11 +120,6 @@ export async function bitsyBeforeAll() {
 	});
 }
 
-// cleanup
-export async function end() {
-	// TODO: remove
-}
-
 export async function bitsyAfterEach() {
 	if (!page) return;
 	await page.close();

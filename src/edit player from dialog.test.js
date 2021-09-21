@@ -1,4 +1,4 @@
-import { end, press, snapshot, start, walkToCat } from './test/bitsy';
+import { press, snapshot, start, walkToCat } from './test/bitsy';
 
 test('edits player', async () => {
 	await start({
@@ -11,7 +11,6 @@ test('edits player', async () => {
 	await press('ArrowRight'); // end dialog page
 	await press('ArrowRight'); // take a step as the cat
 	await snapshot();
-	await end();
 });
 
 test('edits current room if new player is in another room', async () => {
@@ -127,5 +126,4 @@ VAR a
 	await press('ArrowRight'); // complete dialog page
 	await press('ArrowRight'); // end dialog page
 	await snapshot();
-	await end();
 });

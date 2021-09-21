@@ -1,4 +1,4 @@
-import { end, press, snapshot, start, walkToCat } from './test/bitsy';
+import { press, snapshot, start, walkToCat } from './test/bitsy';
 
 test('by room', async () => {
 	await start({
@@ -23,7 +23,6 @@ test('by room', async () => {
 	await press('ArrowRight'); // talk to cat
 	await press('ArrowRight'); // complete dialog page
 	await snapshot();
-	await end();
 });
 
 test('title', async () => {
@@ -46,7 +45,6 @@ test('title', async () => {
 	await snapshot();
 	await press('ArrowRight'); // close dialog
 	await snapshot();
-	await end();
 });
 
 test('permanent', async () => {
@@ -69,5 +67,4 @@ test('permanent', async () => {
 	await snapshot();
 	await press('ArrowRight'); // close dialog
 	await snapshot();
-	await end();
 });

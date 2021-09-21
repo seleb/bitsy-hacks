@@ -1,4 +1,4 @@
-import { delay, end, press, snapshot, start } from './test/bitsy';
+import { delay, press, snapshot, start } from './test/bitsy';
 
 test('transitions', async () => {
 	await start({
@@ -41,5 +41,4 @@ if (t < 0.01 || t > 0.99) {
 	await snapshot();
 	await delay(1000);
 	await snapshot();
-	await end();
 });

@@ -1,4 +1,4 @@
-import { end, press, snapshot, start, walkToCat } from './test/bitsy';
+import { press, snapshot, start, walkToCat } from './test/bitsy';
 
 test('dialog choices', async () => {
 	await start({
@@ -25,7 +25,6 @@ test('dialog choices', async () => {
 	await snapshot();
 	await press('ArrowRight'); // select second choice
 	await snapshot();
-	await end();
 });
 
 test('dialog in front', async () => {
@@ -48,7 +47,6 @@ I'm a cat{choice
 	await press('ArrowRight'); // select first choice
 	await press('ArrowRight'); // complete dialog page
 	await snapshot();
-	await end();
 });
 
 test('with long dialog', async () => {
@@ -73,5 +71,4 @@ test('with long dialog', async () => {
 	await press('ArrowRight'); // select third choice
 	await press('ArrowRight'); // complete dialog page
 	await snapshot();
-	await end();
 });

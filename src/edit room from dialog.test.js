@@ -1,4 +1,4 @@
-import { end, press, snapshot, start, walkToCat } from './test/bitsy';
+import { press, snapshot, start, walkToCat } from './test/bitsy';
 
 async function testDialog(dlg) {
 	await start({
@@ -8,7 +8,6 @@ async function testDialog(dlg) {
 	await walkToCat();
 	await press('ArrowRight'); // talk to cat
 	await snapshot();
-	await end();
 }
 
 test('draw', async () => testDialog('(drawNow "TIL, a, 4, 4, 0")'));

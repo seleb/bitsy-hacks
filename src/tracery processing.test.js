@@ -1,4 +1,4 @@
-import { end, evaluate, press, snapshot, start, walkToCat } from './test/bitsy';
+import { evaluate, press, snapshot, start, walkToCat } from './test/bitsy';
 
 test('tracery processing', async () => {
 	await start({
@@ -28,5 +28,4 @@ test('tracery processing', async () => {
 	await press('ArrowRight'); // talk to cat
 	await press('ArrowRight'); // complete dialog page
 	await snapshot();
-	await end();
 });

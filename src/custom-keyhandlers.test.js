@@ -1,4 +1,4 @@
-import { end, evaluate, page, start, waitForFrame } from './test/bitsy';
+import { evaluate, page, start, waitForFrame } from './test/bitsy';
 
 test('custom-keyhandlers', async () => {
 	await start({
@@ -18,5 +18,4 @@ test('custom-keyhandlers', async () => {
 	expect(logs).not.toContain('released z');
 	await page.keyboard.up('z');
 	expect(logs).not.toContain('released z');
-	await end();
 });

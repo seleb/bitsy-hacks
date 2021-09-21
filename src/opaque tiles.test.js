@@ -1,4 +1,4 @@
-import { end, press, snapshot, start } from './test/bitsy';
+import { press, snapshot, start } from './test/bitsy';
 
 test('opaque tiles', async () => {
 	await start({
@@ -10,7 +10,6 @@ test('opaque tiles', async () => {
 	await press('ArrowLeft');
 	await press('ArrowLeft'); // walk on top of tile border
 	await snapshot();
-	await end();
 });
 
 test('compatible with transparency', async () => {
@@ -23,5 +22,4 @@ test('compatible with transparency', async () => {
 	await press('ArrowLeft');
 	await press('ArrowLeft'); // walk on top of tile border
 	await snapshot();
-	await end();
 });

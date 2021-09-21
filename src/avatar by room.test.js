@@ -1,4 +1,4 @@
-import { end, press, snapshot, start } from './test/bitsy';
+import { press, snapshot, start } from './test/bitsy';
 
 test('strike', async () => {
 	await start({
@@ -93,5 +93,4 @@ VAR a
 	await snapshot();
 	await press('ArrowRight'); // take an extra step
 	await snapshot();
-	await end();
 });

@@ -1,4 +1,4 @@
-import { end, press, snapshot, start, walkToCat } from './test/bitsy';
+import { press, snapshot, start, walkToCat } from './test/bitsy';
 
 test('sprite effects', async () => {
 	await start({
@@ -14,7 +14,6 @@ test('sprite effects', async () => {
 	await press('ArrowRight'); // complete dialog page
 	await press('ArrowRight'); // end dialog
 	await snapshot();
-	await end();
 });
 
 test('compatible with transparency', async () => {
@@ -31,5 +30,4 @@ test('compatible with transparency', async () => {
 	await press('ArrowRight'); // complete dialog page
 	await press('ArrowRight'); // end dialog
 	await snapshot();
-	await end();
 });

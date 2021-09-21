@@ -1,4 +1,4 @@
-import { delay, end, press, snapshot, start } from './test/bitsy';
+import { delay, press, snapshot, start } from './test/bitsy';
 
 const multiple = `
 
@@ -85,7 +85,6 @@ test('follower', async () => {
 	await press('ArrowLeft'); // walk on top of tile border
 	await delay(500); // wait for follower to catch up
 	await snapshot();
-	await end();
 });
 
 test('multiple followers (chain)', async () => {
@@ -106,7 +105,6 @@ test('multiple followers (chain)', async () => {
 	await snapshot();
 	await press('ArrowLeft');
 	await snapshot();
-	await end();
 });
 
 test('multiple followers (stack)', async () => {
@@ -128,7 +126,6 @@ test('multiple followers (stack)', async () => {
 	await snapshot();
 	await press('ArrowLeft');
 	await snapshot();
-	await end();
 });
 
 test('through exits', async () => {
@@ -251,5 +248,4 @@ NAME cat dialog
 	await press('ArrowUp'); // through exit
 	await press('ArrowRight'); // next to exit
 	await snapshot();
-	await end();
 });

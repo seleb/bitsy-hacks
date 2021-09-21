@@ -1,4 +1,4 @@
-import { end, press, snapshot, start } from './test/bitsy';
+import { press, snapshot, start } from './test/bitsy';
 
 test('deferred', async () => {
 	await start({
@@ -83,7 +83,6 @@ VAR a
 	await press('ArrowRight');
 	await press('ArrowRight');
 	await snapshot();
-	await end();
 });
 
 test('now', async () => {
@@ -166,5 +165,4 @@ VAR a
 	await press('ArrowRight');
 	await press('ArrowRight');
 	await snapshot();
-	await end();
 });

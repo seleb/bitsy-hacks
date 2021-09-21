@@ -1,4 +1,4 @@
-import { delay, end, press, snapshot, start, walkToCat } from './test/bitsy';
+import { delay, press, snapshot, start, walkToCat } from './test/bitsy';
 
 test('dialog pause', async () => {
 	await start({
@@ -11,5 +11,4 @@ test('dialog pause', async () => {
 	await snapshot();
 	await delay(2000);
 	await snapshot();
-	await end();
 });

@@ -1,4 +1,4 @@
-import { end, press, snapshot, start } from './test/bitsy';
+import { press, snapshot, start } from './test/bitsy';
 
 const gamedata = `
 Write your game's title here
@@ -103,7 +103,6 @@ test('gravity: jump', async () => {
 	await press('ArrowLeft'); // move left, succeed
 	await press('ArrowRight'); // try to move right, dall instead
 	await snapshot();
-	await end();
 });
 
 test('gravity: jetpack', async () => {
@@ -122,7 +121,6 @@ test('gravity: jetpack', async () => {
 	await press('ArrowUp'); // jetpack up
 	await press('ArrowUp'); // try to jetpack and fall
 	await snapshot(); // snapshot
-	await end();
 });
 
 test('gravity: force', async () => {
@@ -149,7 +147,6 @@ test('gravity: force', async () => {
 	await press('ArrowLeft'); // attempt to move left, forced up instead
 	await press('ArrowLeft'); // move left because player hit a wall
 	await snapshot(); // snapshot
-	await end();
 });
 
 test('gravity: invert', async () => {
@@ -168,5 +165,4 @@ test('gravity: invert', async () => {
 	await press('ArrowUp'); // move "up"
 	await press('ArrowUp'); // move "up"
 	await snapshot(); // snapshot
-	await end();
 });

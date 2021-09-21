@@ -1,4 +1,4 @@
-import { end, press, snapshot, start } from './test/bitsy';
+import { press, snapshot, start } from './test/bitsy';
 
 test('canvas replacement', async () => {
 	await start({
@@ -30,5 +30,4 @@ void main(){
 	await press('ArrowRight'); // complete title page
 	await press('ArrowRight'); // end title page
 	await snapshot();
-	await end();
 });

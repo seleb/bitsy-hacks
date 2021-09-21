@@ -1,4 +1,4 @@
-import { end, press, snapshot, start, walkToCat } from './test/bitsy';
+import { press, snapshot, start, walkToCat } from './test/bitsy';
 
 test('image', async () => {
 	await start({
@@ -11,7 +11,6 @@ test('image', async () => {
 	await snapshot();
 	await press('ArrowRight'); // end dialog
 	await snapshot();
-	await end();
 });
 
 test('imageNow', async () => {
@@ -24,7 +23,6 @@ test('imageNow', async () => {
 	await press('ArrowRight'); // talk to cat
 	await press('ArrowRight'); // complete dialog page
 	await snapshot();
-	await end();
 });
 
 test('compatible with transparency', async () => {
@@ -39,5 +37,4 @@ test('compatible with transparency', async () => {
 	await press('ArrowDown');
 	await press('ArrowDown'); // walk on top of tile border
 	await snapshot();
-	await end();
 });

@@ -1,4 +1,4 @@
-import { end, snapshot, start } from './test/bitsy';
+import { snapshot, start } from './test/bitsy';
 
 test('replace drawing', async () => {
 	await start({
@@ -80,5 +80,4 @@ ITM 0
 		hacks: ['replace drawing'],
 	});
 	await snapshot();
-	await end();
 });

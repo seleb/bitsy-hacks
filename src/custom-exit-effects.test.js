@@ -1,4 +1,4 @@
-import { delay, end, press, snapshot, start, walkToCat } from './test/bitsy';
+import { delay, press, snapshot, start, walkToCat } from './test/bitsy';
 
 test('custom-exit-effect', async () => {
 	await start({
@@ -34,5 +34,4 @@ test('custom-exit-effect', async () => {
 	await snapshot();
 	await delay(125 * 16 * 0.5);
 	await snapshot();
-	await end();
 });

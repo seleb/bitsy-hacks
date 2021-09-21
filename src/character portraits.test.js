@@ -1,4 +1,4 @@
-import { end, press, snapshot, start, walkToCat } from './test/bitsy';
+import { press, snapshot, start, walkToCat } from './test/bitsy';
 
 test('autoreset, dialog only', async () => {
 	await start({
@@ -23,7 +23,6 @@ test('autoreset, dialog only', async () => {
 	await snapshot();
 	await press('ArrowRight'); // end dialog page
 	await snapshot();
-	await end();
 });
 
 test('no reset, persist', async () => {
@@ -59,5 +58,4 @@ test('no reset, persist', async () => {
 	await snapshot();
 	await press('ArrowRight'); // end dialog page
 	await snapshot();
-	await end();
 });

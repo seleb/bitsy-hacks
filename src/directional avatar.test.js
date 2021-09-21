@@ -1,4 +1,4 @@
-import { end, press, snapshot, start } from './test/bitsy';
+import { press, snapshot, start } from './test/bitsy';
 
 const gamedata = `
 Write your game's title here
@@ -88,7 +88,6 @@ test('directional avatar', async () => {
 	await snapshot();
 	await press('ArrowRight'); // move
 	await snapshot();
-	await end();
 });
 
 test('compatible with transparency', async () => {
@@ -105,5 +104,4 @@ test('compatible with transparency', async () => {
 	await press('ArrowLeft');
 	await press('ArrowRight'); // walk on top of tile border from other side
 	await snapshot();
-	await end();
 });

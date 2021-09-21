@@ -1,4 +1,4 @@
-import { end, press, snapshot, start } from './test/bitsy';
+import { press, snapshot, start } from './test/bitsy';
 
 test('multi-sprite avatar', async () => {
 	await start({
@@ -132,5 +132,4 @@ VAR a
 	await snapshot();
 	await press('ArrowRight'); // move
 	await snapshot();
-	await end();
 });

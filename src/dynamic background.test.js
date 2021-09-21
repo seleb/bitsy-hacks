@@ -1,4 +1,4 @@
-import { end, evaluate, press, snapshot, start } from './test/bitsy';
+import { evaluate, press, snapshot, start } from './test/bitsy';
 
 const gamedata = `Write your game's title here
 
@@ -129,7 +129,6 @@ test('dynamic background', async () => {
 	await snapshot();
 	await press('ArrowLeft'); // walk through exit
 	await snapshot();
-	await end();
 });
 
 describe('hackOptions', () => {
@@ -159,7 +158,6 @@ describe('hackOptions', () => {
 		await snapshot();
 		await press('ArrowLeft'); // walk through exit
 		await snapshot();
-		await end();
 	});
 
 	test('byRoom', async () => {
@@ -190,6 +188,5 @@ describe('hackOptions', () => {
 		await snapshot();
 		await press('ArrowLeft'); // walk through exit
 		await snapshot();
-		await end();
 	});
 });
