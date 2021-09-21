@@ -129,8 +129,8 @@ export async function stopRecording() {
 	recording = false;
 }
 
-export async function evaluate(fn) {
-	await page.evaluate(fn);
+export function evaluate(fn) {
+	return page.evaluate(fn);
 }
 
 // wait for bitsy to have handled input
