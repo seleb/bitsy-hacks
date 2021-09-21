@@ -129,8 +129,8 @@ export async function stopRecording() {
 	recording = false;
 }
 
-export function evaluate(fn) {
-	return page.evaluate(fn);
+export function evaluate(fn, ...args) {
+	return page.evaluate(fn, ...args);
 }
 
 // wait for bitsy to have handled input
@@ -185,4 +185,8 @@ export async function walkToCat() {
 	await press('ArrowRight');
 	await press('ArrowRight');
 	await press('ArrowRight');
+}
+
+export async function startDialog(dialog) {
+	await evaluate((d) => window.startDialog(d), dialog);
 }

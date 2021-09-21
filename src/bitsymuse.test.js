@@ -3,6 +3,7 @@ import {
 	evaluate,
 	press,
 	start,
+	startDialog,
 } from './test/bitsy';
 
 const silencemp3 =	'data:audio/mpeg;base64,//uQxAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAACcQCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA//////////////////////////////////////////////////////////////////8AAABQTEFNRTMuMTAwBLkAAAAAAAAAABUgJAaUQQAB4AAAAnFiVpzoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//sQxAADwAABpAAAACAAADSAAAAETEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/+xDEKYPAAAGkAAAAIAAANIAAAARVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVQ==';
@@ -52,20 +53,20 @@ test('bitsymuse', async () => {
 	expect(await evaluate(() => window.document.querySelector('#music1').dataset.playing)).toBe('true');
 
 	// music from dialog + only one music will play at a time
-	await evaluate(() => window.startDialog('{music "music2"}'));
+	await startDialog('{music "music2"}');
 	expect(await evaluate(() => window.document.querySelector('#music1').dataset.playing)).toBe('false');
 	expect(await evaluate(() => window.document.querySelector('#music2').dataset.playing)).toBe('true');
 
 	// multiple sfx can play and do not affect music
-	await evaluate(() => window.startDialog('{soundeffect "sfx1"}'));
-	await evaluate(() => window.startDialog('{soundeffect "sfx2"}'));
+	await startDialog('{soundeffect "sfx1"}');
+	await startDialog('{soundeffect "sfx2"}');
 	expect(await evaluate(() => window.document.querySelector('#music1').dataset.playing)).toBe('false');
 	expect(await evaluate(() => window.document.querySelector('#music2').dataset.playing)).toBe('true');
 	expect(await evaluate(() => window.document.querySelector('#sfx1').dataset.playing)).toBe('true');
 	expect(await evaluate(() => window.document.querySelector('#sfx2').dataset.playing)).toBe('true');
 
 	// silence
-	await evaluate(() => window.startDialog('{music "S"}'));
+	await startDialog('{music "S"}');
 	expect(await evaluate(() => window.document.querySelector('#music2').dataset.playing)).toBe('false');
 
 	await end();
