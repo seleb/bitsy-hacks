@@ -1,5 +1,5 @@
 {
-	"extends": "airbnb-base",
+	"extends": ["airbnb-base", "plugin:prettier/recommended"],
 	"env": {
 		"browser": true
 	},
@@ -11,6 +11,7 @@
 		}
 	},
 	"rules": {
+		"indent": "off", // prettier handles indentation
 		"max-len": "off", // just apply common-sense
 		"import/no-unresolved": ["error", { "ignore": ["bitsy"] }], // `bitsy` can't be resolved
 		"no-param-reassign": "off", // necessary for most hacks
@@ -26,10 +27,6 @@
 		}],
 		"vars-on-top": "off",
 		"no-use-before-define": "off",
-
-		// tabs instead of spaces
-		"no-tabs": "off",
-		"indent": ["error", "tab"],
 
 		// don't prefer fancy stuff to account for lack of babel
 		"import/prefer-default-export": "off",
