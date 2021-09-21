@@ -3,7 +3,7 @@
 @file gamepad input
 @summary HTML5 gamepad support
 @license MIT
-@version 18.0.0
+@version 18.0.1
 @requires Bitsy Version: 5.1
 @author Sean S. LeBlanc
 
@@ -556,17 +556,11 @@ var empty = function () {};
 var move = function (dpad, face, axis, axis2, axispast, axisdir, key) {
 	// keydown
 	if (
-		gamepads.isJustDown(dpad)
-		|| gamepads.isJustDown(face)
-		|| gamepads.axisJustPast(axis, axispast, axisdir)
-		|| gamepads.axisJustPast(axis2, axispast, axisdir)
-		|| (
-			bitsy.playerHoldToMoveTimer <= 0 && (
-				gamepads.isDown(dpad)
-				|| gamepads.isDown(face)
-				|| gamepads.axisPast(axis, axispast, axisdir)
-			)
-		)
+		gamepads.isJustDown(dpad) ||
+		gamepads.isJustDown(face) ||
+		gamepads.axisJustPast(axis, axispast, axisdir) ||
+		gamepads.axisJustPast(axis2, axispast, axisdir) ||
+		(bitsy.playerHoldToMoveTimer <= 0 && (gamepads.isDown(dpad) || gamepads.isDown(face) || gamepads.axisPast(axis, axispast, axisdir)))
 	) {
 		bitsy.curPlayerDirection = bitsy.Direction.None;
 		bitsy.input.onkeydown({
@@ -576,12 +570,7 @@ var move = function (dpad, face, axis, axis2, axispast, axisdir, key) {
 	}
 
 	// keyup
-	if (
-		gamepads.isJustUp(dpad)
-		|| gamepads.isJustUp(face)
-		|| gamepads.axisJustPast(axis, axispast, -axisdir)
-		|| gamepads.axisJustPast(axis2, axispast, -axisdir)
-	) {
+	if (gamepads.isJustUp(dpad) || gamepads.isJustUp(face) || gamepads.axisJustPast(axis, axispast, -axisdir) || gamepads.axisJustPast(axis2, axispast, -axisdir)) {
 		bitsy.input.onkeyup({
 			keyCode: key,
 			preventDefault: empty,

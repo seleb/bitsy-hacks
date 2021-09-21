@@ -3,7 +3,7 @@
 @file exit-from-dialog
 @summary exit to another room from dialog, including conditionals
 @license WTFPL (do WTF you want)
-@version 18.0.0
+@version 18.0.1
 @requires Bitsy Version: 7.0
 @author @mildmojo
 
@@ -57,41 +57,6 @@ these function calls with parentheses like the examples above.
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
 bitsy = bitsy || /*#__PURE__*/_interopDefaultLegacy(bitsy);
-
-/**
-@file utils
-@summary miscellaneous bitsy utilities
-@author Sean S. LeBlanc
-*/
-
-/**
- * Helper for getting room by name or id
- * @param {string} name id or name of room to return
- * @return {string} room, or undefined if it doesn't exist
- */
-function getRoom(name) {
-	var id = Object.prototype.hasOwnProperty.call(bitsy.room, name) ? name : bitsy.names.room[name];
-	return bitsy.room[id];
-}
-
-/**
- * Helper for parsing parameters that may be relative to another value
- * e.g.
- * - getRelativeNumber('1', 5) -> 1
- * - getRelativeNumber('+1', 5) -> 6
- * - getRelativeNumber('-1', 5) -> 4
- * - getRelativeNumber('', 5) -> 5
- * @param {string} value absolute or relative string to parse
- * @param {number} relativeTo value to use as fallback if none is provided, and as base for relative value
- * @return {number} resulting absolute or relative number
- */
-function getRelativeNumber(value, relativeTo) {
-	var v = (value || value === 0 ? value : relativeTo);
-	if (typeof v === 'string' && (v.startsWith('+') || v.startsWith('-'))) {
-		return relativeTo + Number(v);
-	}
-	return Number(v);
-}
 
 /**
  * Helper used to replace code in a script tag based on a search regex.
@@ -291,13 +256,12 @@ var after = kitsy.after;
 // Rewrite custom functions' parentheses to curly braces for Bitsy's
 // interpreter. Unescape escaped parentheticals, too.
 function convertDialogTags(input, tag) {
-	return input
-		.replace(new RegExp('\\\\?\\((' + tag + '(\\s+(".*?"|.+?))?)\\\\?\\)', 'g'), function (match, group) {
-			if (match.substr(0, 1) === '\\') {
-				return '(' + group + ')'; // Rewrite \(tag "..."|...\) to (tag "..."|...)
-			}
-			return '{' + group + '}'; // Rewrite (tag "..."|...) to {tag "..."|...}
-		});
+	return input.replace(new RegExp('\\\\?\\((' + tag + '(\\s+(".*?"|.+?))?)\\\\?\\)', 'g'), function (match, group) {
+		if (match.substr(0, 1) === '\\') {
+			return '(' + group + ')'; // Rewrite \(tag "..."|...\) to (tag "..."|...)
+		}
+		return '{' + group + '}'; // Rewrite (tag "..."|...) to {tag "..."|...}
+	});
 }
 
 function addDialogFunction(tag, fn) {
@@ -316,10 +280,7 @@ function addDialogFunction(tag, fn) {
 }
 
 function injectDialogTag(tag, code) {
-	inject(
-		/(var functionMap = \{\};[^]*?)(this.HasFunction)/m,
-		'$1\nfunctionMap["' + tag + '"] = ' + code + ';\n$2',
-	);
+	inject(/(var functionMap = \{\};[^]*?)(this.HasFunction)/m, '$1\nfunctionMap["' + tag + '"] = ' + code + ';\n$2');
 }
 
 /**
@@ -355,7 +316,7 @@ function addDialogTag(tag, fn) {
 function addDeferredDialogTag(tag, fn) {
 	addDialogFunction(tag, fn);
 	bitsy.kitsy.deferredDialogFunctions = bitsy.kitsy.deferredDialogFunctions || {};
-	var deferred = bitsy.kitsy.deferredDialogFunctions[tag] = [];
+	var deferred = (bitsy.kitsy.deferredDialogFunctions[tag] = []);
 	injectDialogTag(tag, 'function(e, p, o){ kitsy.deferredDialogFunctions["' + tag + '"].push({e:e,p:p}); o(null); }');
 	// Hook into the dialog finish event and execute the actual function
 	after('onExitDialog', function () {
@@ -388,6 +349,41 @@ function addDualDialogTag(tag, fn) {
 		onReturn(null);
 	});
 	addDeferredDialogTag(tag, fn);
+}
+
+/**
+@file utils
+@summary miscellaneous bitsy utilities
+@author Sean S. LeBlanc
+*/
+
+/**
+ * Helper for getting room by name or id
+ * @param {string} name id or name of room to return
+ * @return {string} room, or undefined if it doesn't exist
+ */
+function getRoom(name) {
+	var id = Object.prototype.hasOwnProperty.call(bitsy.room, name) ? name : bitsy.names.room[name];
+	return bitsy.room[id];
+}
+
+/**
+ * Helper for parsing parameters that may be relative to another value
+ * e.g.
+ * - getRelativeNumber('1', 5) -> 1
+ * - getRelativeNumber('+1', 5) -> 6
+ * - getRelativeNumber('-1', 5) -> 4
+ * - getRelativeNumber('', 5) -> 5
+ * @param {string} value absolute or relative string to parse
+ * @param {number} relativeTo value to use as fallback if none is provided, and as base for relative value
+ * @return {number} resulting absolute or relative number
+ */
+function getRelativeNumber(value, relativeTo) {
+	var v = value || value === 0 ? value : relativeTo;
+	if (typeof v === 'string' && (v.startsWith('+') || v.startsWith('-'))) {
+		return relativeTo + Number(v);
+	}
+	return Number(v);
 }
 
 

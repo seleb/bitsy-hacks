@@ -3,7 +3,7 @@
 @file text-to-speech
 @summary text-to-speech for bitsy dialog
 @license MIT
-@version 18.0.0
+@version 18.0.1
 @requires 5.5
 @author Sean S. LeBlanc
 
@@ -254,13 +254,12 @@ var after = kitsy.after;
 // Rewrite custom functions' parentheses to curly braces for Bitsy's
 // interpreter. Unescape escaped parentheticals, too.
 function convertDialogTags(input, tag) {
-	return input
-		.replace(new RegExp('\\\\?\\((' + tag + '(\\s+(".*?"|.+?))?)\\\\?\\)', 'g'), function (match, group) {
-			if (match.substr(0, 1) === '\\') {
-				return '(' + group + ')'; // Rewrite \(tag "..."|...\) to (tag "..."|...)
-			}
-			return '{' + group + '}'; // Rewrite (tag "..."|...) to {tag "..."|...}
-		});
+	return input.replace(new RegExp('\\\\?\\((' + tag + '(\\s+(".*?"|.+?))?)\\\\?\\)', 'g'), function (match, group) {
+		if (match.substr(0, 1) === '\\') {
+			return '(' + group + ')'; // Rewrite \(tag "..."|...\) to (tag "..."|...)
+		}
+		return '{' + group + '}'; // Rewrite (tag "..."|...) to {tag "..."|...}
+	});
 }
 
 function addDialogFunction(tag, fn) {
@@ -279,10 +278,7 @@ function addDialogFunction(tag, fn) {
 }
 
 function injectDialogTag(tag, code) {
-	inject(
-		/(var functionMap = \{\};[^]*?)(this.HasFunction)/m,
-		'$1\nfunctionMap["' + tag + '"] = ' + code + ';\n$2',
-	);
+	inject(/(var functionMap = \{\};[^]*?)(this.HasFunction)/m, '$1\nfunctionMap["' + tag + '"] = ' + code + ';\n$2');
 }
 
 /**
@@ -318,7 +314,7 @@ function addDialogTag(tag, fn) {
 function addDeferredDialogTag(tag, fn) {
 	addDialogFunction(tag, fn);
 	bitsy.kitsy.deferredDialogFunctions = bitsy.kitsy.deferredDialogFunctions || {};
-	var deferred = bitsy.kitsy.deferredDialogFunctions[tag] = [];
+	var deferred = (bitsy.kitsy.deferredDialogFunctions[tag] = []);
 	injectDialogTag(tag, 'function(e, p, o){ kitsy.deferredDialogFunctions["' + tag + '"].push({e:e,p:p}); o(null); }');
 	// Hook into the dialog finish event and execute the actual function
 	after('onExitDialog', function () {
@@ -381,9 +377,9 @@ if (!speechSynthesis) {
 
 function queueVoice(params) {
 	params = params || [];
-	var pitch = lastPitch = params[0] || lastPitch;
-	var rate = lastRate = params[1] || lastRate;
-	var voice = lastVoice = params[2] || lastVoice;
+	var pitch = (lastPitch = params[0] || lastPitch);
+	var rate = (lastRate = params[1] || lastRate);
+	var voice = (lastVoice = params[2] || lastVoice);
 	toSpeak.push({
 		pitch: pitch,
 		rate: rate,
@@ -450,7 +446,12 @@ inject(/(function DialogFontChar\(font, char, effectList\) {)/, '$1\nthis.char =
 var spoke = false;
 after('dialogRenderer.DrawNextArrow', function () {
 	if (hackOptions.automatic && !spoke) {
-		queueSpeak(bitsy.dialogBuffer.CurPage().map((a) => a.map((i) => i.char).join('')).join(' '));
+		queueSpeak(
+			bitsy.dialogBuffer
+				.CurPage()
+				.map(a => a.map(i => i.char).join(''))
+				.join(' ')
+		);
 		spoke = true;
 	}
 });

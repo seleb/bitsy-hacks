@@ -2,7 +2,7 @@
 🔀
 @file logic-operators-extended
 @summary adds conditional logic operators
-@version 18.0.0
+@version 18.0.1
 @requires 7.2
 @author @mildmojo
 
@@ -241,17 +241,24 @@ function expression(operator) {
 }`;
 }
 
-inject(/(operatorMap\["-"\] = subExp;)/, `
+inject(
+	/(operatorMap\["-"\] = subExp;)/,
+	`
 	$1
-	${operators.map(function (operator) {
-		return `operatorMap["${operator}"] = ${expression(operator)};`;
-	}).join('\n')}
-`);
+	${operators
+		.map(function (operator) {
+			return `operatorMap["${operator}"] = ${expression(operator)};`;
+		})
+		.join('\n')}
+`
+);
 inject(
 	/(Operators : \[)(.+\],)/,
-	`$1 ${operators.map(function (operator) {
-		return `"${operator}", `;
-	}).join('')} $2`,
+	`$1 ${operators
+		.map(function (operator) {
+			return `"${operator}", `;
+		})
+		.join('')} $2`
 );
 
 }(window));

@@ -3,7 +3,7 @@
 @file gravity
 @summary Pseudo-platforming/gravity/physics
 @license MIT
-@version 18.0.0
+@version 18.0.1
 @requires 6.3
 @author Cole Sea
 
@@ -118,6 +118,134 @@ function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'defau
 bitsy = bitsy || /*#__PURE__*/_interopDefaultLegacy(bitsy);
 
 /**
+@file utils
+@summary miscellaneous bitsy utilities
+@author Sean S. LeBlanc
+*/
+
+/*
+Helper used to replace code in a script tag based on a search regex
+To inject code without erasing original string, using capturing groups; e.g.
+	inject(/(some string)/,'injected before $1 injected after')
+*/
+function inject$2(searchRegex, replaceString) {
+	// find the relevant script tag
+	var scriptTags = document.getElementsByTagName('script');
+	var scriptTag;
+	var code;
+	for (var i = 0; i < scriptTags.length; ++i) {
+		scriptTag = scriptTags[i];
+		var matchesSearch = scriptTag.textContent.search(searchRegex) !== -1;
+		var isCurrentScript = scriptTag === document.currentScript;
+		if (matchesSearch && !isCurrentScript) {
+			code = scriptTag.textContent;
+			break;
+		}
+	}
+
+	// error-handling
+	if (!code) {
+		throw new Error('Couldn\'t find "' + searchRegex + '" in script tags');
+	}
+
+	// modify the content
+	code = code.replace(searchRegex, replaceString);
+
+	// replace the old script tag with a new one using our modified code
+	var newScriptTag = document.createElement('script');
+	newScriptTag.textContent = code;
+	scriptTag.insertAdjacentElement('afterend', newScriptTag);
+	scriptTag.remove();
+}
+
+/*
+Helper for getting image by name or id
+
+Args:
+	name: id or name of image to return
+	 map: map of images (e.g. `sprite`, `tile`, `item`)
+
+Returns: the image in the given map with the given name/id
+ */
+function getImage(name, map) {
+	var id = Object.prototype.hasOwnProperty.call(map, name)
+		? name
+		: Object.keys(map).find(function (e) {
+				return map[e].name === name;
+		  });
+	return map[id];
+}
+
+/**
+@file edit image at runtime
+@summary API for updating image data at runtime.
+@author Sean S. LeBlanc
+@description
+Adds API for updating sprite, tile, and item data at runtime.
+
+Individual frames of image data in bitsy are 8x8 1-bit 2D arrays in yx order
+e.g. the default player is:
+[
+	[0,0,0,1,1,0,0,0],
+	[0,0,0,1,1,0,0,0],
+	[0,0,0,1,1,0,0,0],
+	[0,0,1,1,1,1,0,0],
+	[0,1,1,1,1,1,1,0],
+	[1,0,1,1,1,1,0,1],
+	[0,0,1,0,0,1,0,0],
+	[0,0,1,0,0,1,0,0]
+]
+*/
+
+// force cache to clear if edit image fns are used
+inject$2(
+	/\/\/ TODO : reset render cache for this image/,
+	`
+// TODO: clear extended palettes
+drawingCache.render[drawingId+"_0"] = undefined;
+drawingCache.render[drawingId+"_1"] = undefined;
+drawingCache.render[drawingId+"_2"] = undefined;
+`
+);
+
+/*
+Args:
+	   id: string id or name
+	frame: animation frame (0 or 1)
+	  map: map of images (e.g. `sprite`, `tile`, `item`)
+
+Returns: a single frame of a image data
+*/
+function getImageData(id, frame, map) {
+	return bitsy.renderer.GetDrawingSource(getImage(id, map).drw)[frame];
+}
+
+function getSpriteData(id, frame) {
+	return getImageData(id, frame, bitsy.sprite);
+}
+
+/*
+Updates a single frame of image data
+
+Args:
+	     id: string id or name
+	  frame: animation frame (0 or 1)
+	    map: map of images (e.g. `sprite`, `tile`, `item`)
+	newData: new data to write to the image data
+*/
+function setImageData(id, frame, map, newData) {
+	var drawing = getImage(id, map);
+	var drw = drawing.drw;
+	var img = bitsy.renderer.GetDrawingSource(drw).slice();
+	img[frame] = newData;
+	bitsy.renderer.SetDrawingSource(drw, img);
+}
+
+function setSpriteData(id, frame, newData) {
+	setImageData(id, frame, bitsy.sprite, newData);
+}
+
+/**
  * Helper used to replace code in a script tag based on a search regex.
  * To inject code without erasing original string, using capturing groups; e.g.
  * ```js
@@ -126,7 +254,7 @@ bitsy = bitsy || /*#__PURE__*/_interopDefaultLegacy(bitsy);
  * @param searcher Regex to search and replace
  * @param replacer Replacer string/fn
  */
-function inject$2(searcher, replacer) {
+function inject$1(searcher, replacer) {
     // find the relevant script tag
     var scriptTags = document.getElementsByTagName('script');
     var scriptTag;
@@ -193,7 +321,7 @@ function after$1(targetFuncName, afterFn) {
 }
 function applyInjects() {
     kitsy.queuedInjectScripts.forEach(function (injectScript) {
-        inject$2(injectScript.searcher, injectScript.replacer);
+        inject$1(injectScript.searcher, injectScript.replacer);
     });
 }
 function applyHooks(root) {
@@ -306,7 +434,7 @@ if (!hooked) {
 }
 
 /** @see kitsy.inject */
-var inject$1 = kitsy.inject;
+var inject = kitsy.inject;
 /** @see kitsy.before */
 var before = kitsy.before;
 /** @see kitsy.after */
@@ -315,13 +443,12 @@ var after = kitsy.after;
 // Rewrite custom functions' parentheses to curly braces for Bitsy's
 // interpreter. Unescape escaped parentheticals, too.
 function convertDialogTags(input, tag) {
-	return input
-		.replace(new RegExp('\\\\?\\((' + tag + '(\\s+(".*?"|.+?))?)\\\\?\\)', 'g'), function (match, group) {
-			if (match.substr(0, 1) === '\\') {
-				return '(' + group + ')'; // Rewrite \(tag "..."|...\) to (tag "..."|...)
-			}
-			return '{' + group + '}'; // Rewrite (tag "..."|...) to {tag "..."|...}
-		});
+	return input.replace(new RegExp('\\\\?\\((' + tag + '(\\s+(".*?"|.+?))?)\\\\?\\)', 'g'), function (match, group) {
+		if (match.substr(0, 1) === '\\') {
+			return '(' + group + ')'; // Rewrite \(tag "..."|...\) to (tag "..."|...)
+		}
+		return '{' + group + '}'; // Rewrite (tag "..."|...) to {tag "..."|...}
+	});
 }
 
 function addDialogFunction(tag, fn) {
@@ -340,10 +467,7 @@ function addDialogFunction(tag, fn) {
 }
 
 function injectDialogTag(tag, code) {
-	inject$1(
-		/(var functionMap = \{\};[^]*?)(this.HasFunction)/m,
-		'$1\nfunctionMap["' + tag + '"] = ' + code + ';\n$2',
-	);
+	inject(/(var functionMap = \{\};[^]*?)(this.HasFunction)/m, '$1\nfunctionMap["' + tag + '"] = ' + code + ';\n$2');
 }
 
 /**
@@ -379,7 +503,7 @@ function addDialogTag(tag, fn) {
 function addDeferredDialogTag(tag, fn) {
 	addDialogFunction(tag, fn);
 	bitsy.kitsy.deferredDialogFunctions = bitsy.kitsy.deferredDialogFunctions || {};
-	var deferred = bitsy.kitsy.deferredDialogFunctions[tag] = [];
+	var deferred = (bitsy.kitsy.deferredDialogFunctions[tag] = []);
 	injectDialogTag(tag, 'function(e, p, o){ kitsy.deferredDialogFunctions["' + tag + '"].push({e:e,p:p}); o(null); }');
 	// Hook into the dialog finish event and execute the actual function
 	after('onExitDialog', function () {
@@ -467,129 +591,6 @@ function transformSpriteData(spriteData, v, h, rot) {
 		s = transpose(s);
 	}
 	return s;
-}
-
-/**
-@file utils
-@summary miscellaneous bitsy utilities
-@author Sean S. LeBlanc
-*/
-
-/*
-Helper used to replace code in a script tag based on a search regex
-To inject code without erasing original string, using capturing groups; e.g.
-	inject(/(some string)/,'injected before $1 injected after')
-*/
-function inject(searchRegex, replaceString) {
-	// find the relevant script tag
-	var scriptTags = document.getElementsByTagName('script');
-	var scriptTag;
-	var code;
-	for (var i = 0; i < scriptTags.length; ++i) {
-		scriptTag = scriptTags[i];
-		var matchesSearch = scriptTag.textContent.search(searchRegex) !== -1;
-		var isCurrentScript = scriptTag === document.currentScript;
-		if (matchesSearch && !isCurrentScript) {
-			code = scriptTag.textContent;
-			break;
-		}
-	}
-
-	// error-handling
-	if (!code) {
-		throw new Error('Couldn\'t find "' + searchRegex + '" in script tags');
-	}
-
-	// modify the content
-	code = code.replace(searchRegex, replaceString);
-
-	// replace the old script tag with a new one using our modified code
-	var newScriptTag = document.createElement('script');
-	newScriptTag.textContent = code;
-	scriptTag.insertAdjacentElement('afterend', newScriptTag);
-	scriptTag.remove();
-}
-
-/*
-Helper for getting image by name or id
-
-Args:
-	name: id or name of image to return
-	 map: map of images (e.g. `sprite`, `tile`, `item`)
-
-Returns: the image in the given map with the given name/id
- */
-function getImage(name, map) {
-	var id = Object.prototype.hasOwnProperty.call(map, name) ? name : Object.keys(map).find(function (e) {
-		return map[e].name === name;
-	});
-	return map[id];
-}
-
-/**
-@file edit image at runtime
-@summary API for updating image data at runtime.
-@author Sean S. LeBlanc
-@description
-Adds API for updating sprite, tile, and item data at runtime.
-
-Individual frames of image data in bitsy are 8x8 1-bit 2D arrays in yx order
-e.g. the default player is:
-[
-	[0,0,0,1,1,0,0,0],
-	[0,0,0,1,1,0,0,0],
-	[0,0,0,1,1,0,0,0],
-	[0,0,1,1,1,1,0,0],
-	[0,1,1,1,1,1,1,0],
-	[1,0,1,1,1,1,0,1],
-	[0,0,1,0,0,1,0,0],
-	[0,0,1,0,0,1,0,0]
-]
-*/
-
-// force cache to clear if edit image fns are used
-inject(/\/\/ TODO : reset render cache for this image/, `
-// TODO: clear extended palettes
-drawingCache.render[drawingId+"_0"] = undefined;
-drawingCache.render[drawingId+"_1"] = undefined;
-drawingCache.render[drawingId+"_2"] = undefined;
-`);
-
-/*
-Args:
-	   id: string id or name
-	frame: animation frame (0 or 1)
-	  map: map of images (e.g. `sprite`, `tile`, `item`)
-
-Returns: a single frame of a image data
-*/
-function getImageData(id, frame, map) {
-	return bitsy.renderer.GetDrawingSource(getImage(id, map).drw)[frame];
-}
-
-function getSpriteData(id, frame) {
-	return getImageData(id, frame, bitsy.sprite);
-}
-
-/*
-Updates a single frame of image data
-
-Args:
-	     id: string id or name
-	  frame: animation frame (0 or 1)
-	    map: map of images (e.g. `sprite`, `tile`, `item`)
-	newData: new data to write to the image data
-*/
-function setImageData(id, frame, map, newData) {
-	var drawing = getImage(id, map);
-	var drw = drawing.drw;
-	var img = bitsy.renderer.GetDrawingSource(drw).slice();
-	img[frame] = newData;
-	bitsy.renderer.SetDrawingSource(drw, img);
-}
-
-function setSpriteData(id, frame, newData) {
-	setImageData(id, frame, bitsy.sprite, newData);
 }
 
 
@@ -778,17 +779,17 @@ window.movePlayerWithGravity = function (dir, axis, amt) {
 };
 
 // Replace the default bitsy movement code inside `movePlayer` with our custom gravity
-inject$1(/player\(\)\.x -= 1;/, "movePlayerWithGravity('left', 'x', -1);");
-inject$1(/player\(\)\.x \+= 1;/, "movePlayerWithGravity('right', 'x', 1);");
-inject$1(/player\(\)\.y -= 1;/, "movePlayerWithGravity('up', 'y', -1);");
-inject$1(/player\(\)\.y \+= 1;/, "movePlayerWithGravity('down', 'y', 1);");
+inject(/player\(\)\.x -= 1;/, "movePlayerWithGravity('left', 'x', -1);");
+inject(/player\(\)\.x \+= 1;/, "movePlayerWithGravity('right', 'x', 1);");
+inject(/player\(\)\.y -= 1;/, "movePlayerWithGravity('up', 'y', -1);");
+inject(/player\(\)\.y \+= 1;/, "movePlayerWithGravity('down', 'y', 1);");
 
 // This adds an `else` clause to the default bitsy `movePlayer` logic
 // so that when the player presses a direction that they cannot move in
 // they are instead forced in the direction of gravity.
 // i.e, if they are standing to the left of a wall tile and press right,
 // the player will fall downward if there is an empty tile beneath them
-inject$1(/(var ext = getExit\( player\(\)\.room, player\(\)\.x, player\(\)\.y \);)/, 'else { advanceGravity(); didPlayerMoveThisFrame = true; } $1 ');
+inject(/(var ext = getExit\( player\(\)\.room, player\(\)\.x, player\(\)\.y \);)/, 'else { advanceGravity(); didPlayerMoveThisFrame = true; } $1 ');
 
 function mapDir(dir) {
 	return gravityMap[gravityDir][dir];
@@ -826,7 +827,7 @@ function isSolid(dir, x, y) {
 		},
 	};
 	var edgeToCheck = edgeMap[dir];
-	var isWallThere = bitsy[wallCheck]() || (edgeToCheck.coord === edgeToCheck.value);
+	var isWallThere = bitsy[wallCheck]() || edgeToCheck.coord === edgeToCheck.value;
 
 	return isWallThere || isSpriteThere;
 }
@@ -849,7 +850,7 @@ function isOnStandableTile(player) {
 }
 
 function canMoveHorizontallyWhileFalling() {
-	var withinMaxRatio = (horizontalFallingMoves / fallCounter) <= hackOptions.maxHorizontalFallingRatio;
+	var withinMaxRatio = horizontalFallingMoves / fallCounter <= hackOptions.maxHorizontalFallingRatio;
 
 	// if fallCounter is 0 (start of fall/jump) or player last moved down and is within ratio
 	return !fallCounter || (lastMoveMapped === 'down' && withinMaxRatio);
@@ -864,20 +865,20 @@ function reallyMovePlayer(player, dir) {
 
 	// why doesn't isSolid catch the out of bounds? stuff? isWall should as well? weird...
 	switch (dir) {
-	case 'up':
-		if (player.y > 0) player.y -= 1;
-		break;
-	case 'down':
-		if (player.y < bitsy.mapsize - 1) player.y += 1;
-		break;
-	case 'left':
-		if (player.x > 0) player.x -= 1;
-		break;
-	case 'right':
-		if (player.x < bitsy.mapsize - 1) player.x += 1;
-		break;
-	default:
-		console.warn('gravity: invalid move', player.x, player.y, dir);
+		case 'up':
+			if (player.y > 0) player.y -= 1;
+			break;
+		case 'down':
+			if (player.y < bitsy.mapsize - 1) player.y += 1;
+			break;
+		case 'left':
+			if (player.x > 0) player.x -= 1;
+			break;
+		case 'right':
+			if (player.x < bitsy.mapsize - 1) player.x += 1;
+			break;
+		default:
+			console.warn('gravity: invalid move', player.x, player.y, dir);
 	}
 }
 
@@ -898,19 +899,19 @@ function flipAvatar(gravityDirection) {
 
 	// determine which directions need flipping
 	switch (gravityDirection) {
-	case 'up':
-		vflip = true;
-		break;
-	case 'down':
-		vflip = false;
-		break;
-	case 'left':
-		vflip = true;
-		rot = true;
-		break;
-	case 'right':
-		rot = true;
-		break;
+		case 'up':
+			vflip = true;
+			break;
+		case 'down':
+			vflip = false;
+			break;
+		case 'left':
+			vflip = true;
+			rot = true;
+			break;
+		case 'right':
+			rot = true;
+			break;
 	}
 
 	// update sprite with transformed frames

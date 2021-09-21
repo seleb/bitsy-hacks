@@ -3,7 +3,7 @@
 @file follower
 @summary make sprites follow the player
 @license MIT
-@version 18.0.0
+@version 18.0.1
 @requires 7.0
 @author Sean S. LeBlanc
 
@@ -56,28 +56,6 @@ var hackOptions = {
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
 bitsy = bitsy || /*#__PURE__*/_interopDefaultLegacy(bitsy);
-
-/**
-@file utils
-@summary miscellaneous bitsy utilities
-@author Sean S. LeBlanc
-*/
-
-/*
-Helper for getting image by name or id
-
-Args:
-	name: id or name of image to return
-	 map: map of images (e.g. `sprite`, `tile`, `item`)
-
-Returns: the image in the given map with the given name/id
- */
-function getImage(name, map) {
-	var id = Object.prototype.hasOwnProperty.call(map, name) ? name : Object.keys(map).find(function (e) {
-		return map[e].name === name;
-	});
-	return map[id];
-}
 
 /**
  * Helper used to replace code in a script tag based on a search regex.
@@ -277,13 +255,12 @@ var after = kitsy.after;
 // Rewrite custom functions' parentheses to curly braces for Bitsy's
 // interpreter. Unescape escaped parentheticals, too.
 function convertDialogTags(input, tag) {
-	return input
-		.replace(new RegExp('\\\\?\\((' + tag + '(\\s+(".*?"|.+?))?)\\\\?\\)', 'g'), function (match, group) {
-			if (match.substr(0, 1) === '\\') {
-				return '(' + group + ')'; // Rewrite \(tag "..."|...\) to (tag "..."|...)
-			}
-			return '{' + group + '}'; // Rewrite (tag "..."|...) to {tag "..."|...}
-		});
+	return input.replace(new RegExp('\\\\?\\((' + tag + '(\\s+(".*?"|.+?))?)\\\\?\\)', 'g'), function (match, group) {
+		if (match.substr(0, 1) === '\\') {
+			return '(' + group + ')'; // Rewrite \(tag "..."|...\) to (tag "..."|...)
+		}
+		return '{' + group + '}'; // Rewrite (tag "..."|...) to {tag "..."|...}
+	});
 }
 
 function addDialogFunction(tag, fn) {
@@ -302,10 +279,7 @@ function addDialogFunction(tag, fn) {
 }
 
 function injectDialogTag(tag, code) {
-	inject(
-		/(var functionMap = \{\};[^]*?)(this.HasFunction)/m,
-		'$1\nfunctionMap["' + tag + '"] = ' + code + ';\n$2',
-	);
+	inject(/(var functionMap = \{\};[^]*?)(this.HasFunction)/m, '$1\nfunctionMap["' + tag + '"] = ' + code + ';\n$2');
 }
 
 /**
@@ -341,7 +315,7 @@ function addDialogTag(tag, fn) {
 function addDeferredDialogTag(tag, fn) {
 	addDialogFunction(tag, fn);
 	bitsy.kitsy.deferredDialogFunctions = bitsy.kitsy.deferredDialogFunctions || {};
-	var deferred = bitsy.kitsy.deferredDialogFunctions[tag] = [];
+	var deferred = (bitsy.kitsy.deferredDialogFunctions[tag] = []);
 	injectDialogTag(tag, 'function(e, p, o){ kitsy.deferredDialogFunctions["' + tag + '"].push({e:e,p:p}); o(null); }');
 	// Hook into the dialog finish event and execute the actual function
 	after('onExitDialog', function () {
@@ -374,6 +348,30 @@ function addDualDialogTag(tag, fn) {
 		onReturn(null);
 	});
 	addDeferredDialogTag(tag, fn);
+}
+
+/**
+@file utils
+@summary miscellaneous bitsy utilities
+@author Sean S. LeBlanc
+*/
+
+/*
+Helper for getting image by name or id
+
+Args:
+	name: id or name of image to return
+	 map: map of images (e.g. `sprite`, `tile`, `item`)
+
+Returns: the image in the given map with the given name/id
+ */
+function getImage(name, map) {
+	var id = Object.prototype.hasOwnProperty.call(map, name)
+		? name
+		: Object.keys(map).find(function (e) {
+				return map[e].name === name;
+		  });
+	return map[id];
 }
 
 
@@ -467,18 +465,18 @@ after('update', function () {
 	};
 	// adjust follower to be one step back
 	switch (bitsy.curPlayerDirection) {
-	case bitsy.Direction.Up:
-		step.y += 1;
-		break;
-	case bitsy.Direction.Down:
-		step.y -= 1;
-		break;
-	case bitsy.Direction.Left:
-		step.x += 1;
-		break;
-	case bitsy.Direction.Right:
-		step.x -= 1;
-		break;
+		case bitsy.Direction.Up:
+			step.y += 1;
+			break;
+		case bitsy.Direction.Down:
+			step.y -= 1;
+			break;
+		case bitsy.Direction.Left:
+			step.x += 1;
+			break;
+		case bitsy.Direction.Right:
+			step.x -= 1;
+			break;
 	}
 	followers.forEach(function (follower, idx) {
 		if (idx === 0 || hackOptions.stack) {
@@ -486,11 +484,13 @@ after('update', function () {
 		} else {
 			var prevFollower = followers[idx - 1];
 			var prev = paths[prevFollower.id];
-			paths[follower.id].push(prev[prev.length - 2] || {
-				x: prevFollower.x,
-				y: prevFollower.y,
-				room: prevFollower.room,
-			});
+			paths[follower.id].push(
+				prev[prev.length - 2] || {
+					x: prevFollower.x,
+					y: prevFollower.y,
+					room: prevFollower.room,
+				}
+			);
 		}
 	});
 	takeStep();
@@ -514,7 +514,9 @@ before('movePlayerThroughExit', function (exit) {
 function filterFollowing(id) {
 	return followers.some(function (follower) {
 		return follower.id === id;
-	}) ? null : id;
+	})
+		? null
+		: id;
 }
 
 var originalGetSpriteLeft;

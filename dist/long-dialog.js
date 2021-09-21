@@ -3,7 +3,7 @@
 @file long dialog
 @summary put more words onscreen
 @license MIT
-@version 18.0.0
+@version 18.0.1
 @requires 7.0
 @author Sean S. LeBlanc
 
@@ -236,13 +236,12 @@ kitsy.after;
 // Rewrite custom functions' parentheses to curly braces for Bitsy's
 // interpreter. Unescape escaped parentheticals, too.
 function convertDialogTags(input, tag) {
-	return input
-		.replace(new RegExp('\\\\?\\((' + tag + '(\\s+(".*?"|.+?))?)\\\\?\\)', 'g'), function (match, group) {
-			if (match.substr(0, 1) === '\\') {
-				return '(' + group + ')'; // Rewrite \(tag "..."|...\) to (tag "..."|...)
-			}
-			return '{' + group + '}'; // Rewrite (tag "..."|...) to {tag "..."|...}
-		});
+	return input.replace(new RegExp('\\\\?\\((' + tag + '(\\s+(".*?"|.+?))?)\\\\?\\)', 'g'), function (match, group) {
+		if (match.substr(0, 1) === '\\') {
+			return '(' + group + ')'; // Rewrite \(tag "..."|...\) to (tag "..."|...)
+		}
+		return '{' + group + '}'; // Rewrite (tag "..."|...) to {tag "..."|...}
+	});
 }
 
 function addDialogFunction(tag, fn) {
@@ -261,10 +260,7 @@ function addDialogFunction(tag, fn) {
 }
 
 function injectDialogTag(tag, code) {
-	inject(
-		/(var functionMap = \{\};[^]*?)(this.HasFunction)/m,
-		'$1\nfunctionMap["' + tag + '"] = ' + code + ';\n$2',
-	);
+	inject(/(var functionMap = \{\};[^]*?)(this.HasFunction)/m, '$1\nfunctionMap["' + tag + '"] = ' + code + ';\n$2');
 }
 
 /**
@@ -340,10 +336,12 @@ addDialogTag('p', function (environment, parameters, onReturn) {
 
 
 // override textbox height
-inject(/textboxInfo\.height = .+;/,
+inject(
+	/textboxInfo\.height = .+;/,
 	`Object.defineProperty(textboxInfo, 'height', {
 	get() { return textboxInfo.padding_vert + (textboxInfo.padding_vert + relativeFontHeight()) * Math.max(${hackOptions.minRows}, dialogBuffer.CurPage().indexOf(dialogBuffer.CurRow())+Math.sign(dialogBuffer.CurCharCount())) + textboxInfo.arrow_height; }
-})`);
+})`
+);
 // export textbox info
 inject(/(var font = null;)/, 'this.textboxInfo = textboxInfo;$1');
 before('renderDrawingBuffer', function (bufferId, buffer) {

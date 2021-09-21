@@ -3,7 +3,7 @@
 @file backdrops
 @summary makes the game have a backdrop
 @license MIT
-@version 18.0.0
+@version 18.0.1
 @requires Bitsy Version: 7.2
 @author Cephalopodunk & Sean S. LeBlanc
 
@@ -281,7 +281,7 @@ after('renderPixelInstruction', function (bufferId, buffer, paletteIndex, x, y) 
 	if (buffer.imageData) {
 		for (var sy = 0; sy < buffer.scale; sy++) {
 			for (var sx = 0; sx < buffer.scale; sx++) {
-				var pixelIndex = (((y * buffer.scale) + sy) * buffer.width * buffer.scale * 4) + (((x * buffer.scale) + sx) * 4);
+				var pixelIndex = (y * buffer.scale + sy) * buffer.width * buffer.scale * 4 + (x * buffer.scale + sx) * 4;
 				buffer.imageData.data[pixelIndex + 3] = 0;
 			}
 		}

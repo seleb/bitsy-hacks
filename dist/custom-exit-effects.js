@@ -3,7 +3,7 @@
 @file custom-exit-effects
 @summary make custom exit transition effects
 @license MIT
-@version 18.0.0
+@version 18.0.1
 @requires 6.0
 @author Sean S. LeBlanc
 
@@ -263,33 +263,20 @@ kitsy.after;
 
 
 function lerpColor(colorA, colorB, t) {
-	return [
-		colorA[0] + ((colorB[0] - colorA[0]) * t),
-		colorA[1] + ((colorB[1] - colorA[1]) * t),
-		colorA[2] + ((colorB[2] - colorA[2]) * t),
-	];
+	return [colorA[0] + (colorB[0] - colorA[0]) * t, colorA[1] + (colorB[1] - colorA[1]) * t, colorA[2] + (colorB[2] - colorA[2]) * t];
 }
 function lerpPalettes(start, end, delta) {
 	var colors = [];
 
-	var maxLength = (start.Palette.length > end.Palette.length)
-		? start.Palette.length : end.Palette.length;
+	var maxLength = start.Palette.length > end.Palette.length ? start.Palette.length : end.Palette.length;
 
 	for (var i = 0; i < maxLength; i++) {
 		if (i < start.Palette.length && i < end.Palette.length) {
 			colors.push(lerpColor(start.Palette[i], end.Palette[i], delta));
 		} else if (i < start.Palette.length) {
-			colors.push(lerpColor(
-				start.Palette[i],
-				end.Palette[end.Palette.length - 1],
-				delta,
-			));
+			colors.push(lerpColor(start.Palette[i], end.Palette[end.Palette.length - 1], delta));
 		} else if (i < end.Palette.length) {
-			colors.push(lerpColor(
-				start.Palette[start.Palette.length - 1],
-				end.Palette[i],
-				delta,
-			));
+			colors.push(lerpColor(start.Palette[start.Palette.length - 1], end.Palette[i], delta));
 		}
 	}
 

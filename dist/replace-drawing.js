@@ -3,7 +3,7 @@
 @file replace drawing
 @summary add name-tags to replace drawings when the game is loading
 @license MIT
-@version 18.0.0
+@version 18.0.1
 @requires 6.3
 @author Elkie Nova
 
@@ -247,15 +247,15 @@ after('parseWorld', function () {
 			var map;
 			// tag[1] is the first capturing group, it can be either TIL, SPR, or ITM
 			switch (tag[1]) {
-			case 'TIL':
-				map = bitsy.tile;
-				break;
-			case 'SPR':
-				map = bitsy.sprite;
-				break;
-			case 'ITM':
-				map = bitsy.item;
-				break;
+				case 'TIL':
+					map = bitsy.tile;
+					break;
+				case 'SPR':
+					map = bitsy.sprite;
+					break;
+				case 'ITM':
+					map = bitsy.item;
+					break;
 			}
 			// tag[2] is the second capturing group which returns drawing id
 			var id = tag[2];

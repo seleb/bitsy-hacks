@@ -3,7 +3,7 @@
 @file favicon-from-sprite
 @summary generate a browser favicon (tab icon) from a Bitsy sprite, including animation!
 @license WTFPL (do WTF you want)
-@version 18.0.0
+@version 18.0.1
 @requires Bitsy Version: 5.5
 @author @mildmojo
 
@@ -245,9 +245,11 @@ Args:
 Returns: the image in the given map with the given name/id
  */
 function getImage(name, map) {
-	var id = Object.prototype.hasOwnProperty.call(map, name) ? name : Object.keys(map).find(function (e) {
-		return map[e].name === name;
-	});
+	var id = Object.prototype.hasOwnProperty.call(map, name)
+		? name
+		: Object.keys(map).find(function (e) {
+				return map[e].name === name;
+		  });
 	return map[id];
 }
 
@@ -302,24 +304,15 @@ function drawFrame(frameData) {
 	var longSide = FAVICON_SIZE + 2 * hackOptions.PIXEL_PADDING;
 	var shortSide = longSide - roundingOffset * ONE_PIXEL_SCALED;
 	ctx.fillStyle = rgb(bgColor);
-	ctx.fillRect(roundingOffset,
-		0,
-		shortSide,
-		longSide);
-	ctx.fillRect(0,
-		roundingOffset,
-		longSide,
-		shortSide);
+	ctx.fillRect(roundingOffset, 0, shortSide, longSide);
+	ctx.fillRect(0, roundingOffset, longSide, shortSide);
 
 	// Draw sprite foreground.
 	ctx.fillStyle = rgb(spriteColor);
 	Object.keys(frameData).forEach(function (y) {
 		Object.keys(frameData).forEach(function (x) {
 			if (frameData[y][x] === 1) {
-				ctx.fillRect(x * ONE_PIXEL_SCALED + hackOptions.PIXEL_PADDING,
-					y * ONE_PIXEL_SCALED + hackOptions.PIXEL_PADDING,
-					ONE_PIXEL_SCALED,
-					ONE_PIXEL_SCALED);
+				ctx.fillRect(x * ONE_PIXEL_SCALED + hackOptions.PIXEL_PADDING, y * ONE_PIXEL_SCALED + hackOptions.PIXEL_PADDING, ONE_PIXEL_SCALED, ONE_PIXEL_SCALED);
 			}
 		});
 	});

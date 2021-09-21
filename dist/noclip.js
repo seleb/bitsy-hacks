@@ -3,7 +3,7 @@
 @file noclip
 @summary walk through wall tiles, sprites, items, exits, and endings
 @license MIT
-@version 18.0.0
+@version 18.0.1
 @requires 7.0
 @author Sean S. LeBlanc
 
@@ -281,7 +281,7 @@ after('updateInput', function () {
 		var onheld = hackOptions.onheld[key];
 		var onup = hackOptions.onup[key];
 		if (bitsy.input.isKeyDown(key.toUpperCase().codePointAt(0))) {
-			var f = held[key] = (held[key] || 0) + 1;
+			var f = (held[key] = (held[key] || 0) + 1);
 			if (f === 1 && ondown) {
 				ondown();
 			}
@@ -315,9 +315,16 @@ var toggleNoClip = function () {
 	noClip = !noClip;
 	if (noClip) {
 		// disable functions
-		bitsy.getSpriteAt = bitsy.isWallLeft = bitsy.isWallRight = bitsy.isWallUp = bitsy.isWallDown = bitsy.getExit = bitsy.getEnding = function () {
-			return null;
-		};
+		bitsy.getSpriteAt =
+			bitsy.isWallLeft =
+			bitsy.isWallRight =
+			bitsy.isWallUp =
+			bitsy.isWallDown =
+			bitsy.getExit =
+			bitsy.getEnding =
+				function () {
+					return null;
+				};
 		bitsy.getItemIndex = function () {
 			return -1;
 		};

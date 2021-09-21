@@ -1,3 +1,10 @@
+## [18.0.1](https://github.com/seleb/bitsy-hacks/compare/v18.0.0...v18.0.1) (2021-09-21)
+
+
+### Bug Fixes
+
+* autoformat + organize imports ([64037c5](https://github.com/seleb/bitsy-hacks/commit/64037c517b6d4537316cfb6943b180de3dad6b90))
+
 # [18.0.0](https://github.com/seleb/bitsy-hacks/compare/v17.0.0...v18.0.0) (2021-09-09)
 
 

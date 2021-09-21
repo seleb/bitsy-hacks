@@ -3,7 +3,7 @@
 @file solid items
 @summary treat some items like sprites that can be placed multiple times
 @license MIT
-@version 18.0.0
+@version 18.0.1
 @requires 7.0
 @author Sean S. LeBlanc
 
@@ -248,39 +248,38 @@ before('startItemDialog', function (itemId, dialogCallback) {
 	// get back there!
 	bitsy.player().x = x;
 	bitsy.player().y = y;
-	return [itemId, function () {
-		var newItems = room.items;
-		if (newItems.length === oldItems.length) {
-			return; // nothing changed
-		}
+	return [
+		itemId,
+		function () {
+			var newItems = room.items;
+			if (newItems.length === oldItems.length) {
+				return; // nothing changed
+			}
 
-		// check for changes
-		for (var i = 0; i < oldItems.length; ++i) {
-			if (!newItems[i]
-				|| oldItems[i].x !== newItems[i].x
-				|| oldItems[i].y !== newItems[i].y
-				|| oldItems[i].id !== newItems[i].id
-			) {
-				// something changed
-				if (hackOptions.itemIsSolid(bitsy.item[oldItems[i].id])) {
-					// put that back!
-					newItems.splice(i, 0, oldItems[i]);
-				} else {
-					// add an empty entry for now to keep the arrays aligned
-					newItems.splice(i, 0, null);
+			// check for changes
+			for (var i = 0; i < oldItems.length; ++i) {
+				if (!newItems[i] || oldItems[i].x !== newItems[i].x || oldItems[i].y !== newItems[i].y || oldItems[i].id !== newItems[i].id) {
+					// something changed
+					if (hackOptions.itemIsSolid(bitsy.item[oldItems[i].id])) {
+						// put that back!
+						newItems.splice(i, 0, oldItems[i]);
+					} else {
+						// add an empty entry for now to keep the arrays aligned
+						newItems.splice(i, 0, null);
+					}
 				}
 			}
-		}
-		// clear out those empty entries
-		room.items = newItems.filter(function (item) {
-			return !!item;
-		});
+			// clear out those empty entries
+			room.items = newItems.filter(function (item) {
+				return !!item;
+			});
 
-		// run the actual callback
-		if (dialogCallback) {
-			dialogCallback();
-		}
-	}];
+			// run the actual callback
+			if (dialogCallback) {
+				dialogCallback();
+			}
+		},
+	];
 });
 
 exports.hackOptions = hackOptions;

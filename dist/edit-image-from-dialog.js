@@ -3,7 +3,7 @@
 @file edit image from dialog
 @summary edit sprites, items, and tiles from dialog
 @license MIT
-@version 18.0.0
+@version 18.0.1
 @requires 5.3
 @author Sean S. LeBlanc
 
@@ -63,6 +63,126 @@ function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'defau
 bitsy = bitsy || /*#__PURE__*/_interopDefaultLegacy(bitsy);
 
 /**
+@file utils
+@summary miscellaneous bitsy utilities
+@author Sean S. LeBlanc
+*/
+
+/*
+Helper used to replace code in a script tag based on a search regex
+To inject code without erasing original string, using capturing groups; e.g.
+	inject(/(some string)/,'injected before $1 injected after')
+*/
+function inject$2(searchRegex, replaceString) {
+	// find the relevant script tag
+	var scriptTags = document.getElementsByTagName('script');
+	var scriptTag;
+	var code;
+	for (var i = 0; i < scriptTags.length; ++i) {
+		scriptTag = scriptTags[i];
+		var matchesSearch = scriptTag.textContent.search(searchRegex) !== -1;
+		var isCurrentScript = scriptTag === document.currentScript;
+		if (matchesSearch && !isCurrentScript) {
+			code = scriptTag.textContent;
+			break;
+		}
+	}
+
+	// error-handling
+	if (!code) {
+		throw new Error('Couldn\'t find "' + searchRegex + '" in script tags');
+	}
+
+	// modify the content
+	code = code.replace(searchRegex, replaceString);
+
+	// replace the old script tag with a new one using our modified code
+	var newScriptTag = document.createElement('script');
+	newScriptTag.textContent = code;
+	scriptTag.insertAdjacentElement('afterend', newScriptTag);
+	scriptTag.remove();
+}
+
+/*
+Helper for getting image by name or id
+
+Args:
+	name: id or name of image to return
+	 map: map of images (e.g. `sprite`, `tile`, `item`)
+
+Returns: the image in the given map with the given name/id
+ */
+function getImage(name, map) {
+	var id = Object.prototype.hasOwnProperty.call(map, name)
+		? name
+		: Object.keys(map).find(function (e) {
+				return map[e].name === name;
+		  });
+	return map[id];
+}
+
+/**
+@file edit image at runtime
+@summary API for updating image data at runtime.
+@author Sean S. LeBlanc
+@description
+Adds API for updating sprite, tile, and item data at runtime.
+
+Individual frames of image data in bitsy are 8x8 1-bit 2D arrays in yx order
+e.g. the default player is:
+[
+	[0,0,0,1,1,0,0,0],
+	[0,0,0,1,1,0,0,0],
+	[0,0,0,1,1,0,0,0],
+	[0,0,1,1,1,1,0,0],
+	[0,1,1,1,1,1,1,0],
+	[1,0,1,1,1,1,0,1],
+	[0,0,1,0,0,1,0,0],
+	[0,0,1,0,0,1,0,0]
+]
+*/
+
+// force cache to clear if edit image fns are used
+inject$2(
+	/\/\/ TODO : reset render cache for this image/,
+	`
+// TODO: clear extended palettes
+drawingCache.render[drawingId+"_0"] = undefined;
+drawingCache.render[drawingId+"_1"] = undefined;
+drawingCache.render[drawingId+"_2"] = undefined;
+`
+);
+
+/*
+Args:
+	   id: string id or name
+	frame: animation frame (0 or 1)
+	  map: map of images (e.g. `sprite`, `tile`, `item`)
+
+Returns: a single frame of a image data
+*/
+function getImageData(id, frame, map) {
+	return bitsy.renderer.GetDrawingSource(getImage(id, map).drw)[frame];
+}
+
+/*
+Updates a single frame of image data
+
+Args:
+	     id: string id or name
+	  frame: animation frame (0 or 1)
+	    map: map of images (e.g. `sprite`, `tile`, `item`)
+	newData: new data to write to the image data
+*/
+function setImageData(id, frame, map, newData) {
+	var drawing = getImage(id, map);
+	var drw = drawing.drw;
+	var img = bitsy.renderer.GetDrawingSource(drw).slice();
+	img[frame] = newData;
+	bitsy.renderer.SetDrawingSource(drw, img);
+}
+
+/**
  * Helper used to replace code in a script tag based on a search regex.
  * To inject code without erasing original string, using capturing groups; e.g.
  * ```js
@@ -71,7 +191,7 @@ bitsy = bitsy || /*#__PURE__*/_interopDefaultLegacy(bitsy);
  * @param searcher Regex to search and replace
  * @param replacer Replacer string/fn
  */
-function inject$2(searcher, replacer) {
+function inject$1(searcher, replacer) {
     // find the relevant script tag
     var scriptTags = document.getElementsByTagName('script');
     var scriptTag;
@@ -138,7 +258,7 @@ function after$1(targetFuncName, afterFn) {
 }
 function applyInjects() {
     kitsy.queuedInjectScripts.forEach(function (injectScript) {
-        inject$2(injectScript.searcher, injectScript.replacer);
+        inject$1(injectScript.searcher, injectScript.replacer);
     });
 }
 function applyHooks(root) {
@@ -251,7 +371,7 @@ if (!hooked) {
 }
 
 /** @see kitsy.inject */
-var inject$1 = kitsy.inject;
+var inject = kitsy.inject;
 /** @see kitsy.before */
 var before = kitsy.before;
 /** @see kitsy.after */
@@ -260,13 +380,12 @@ var after = kitsy.after;
 // Rewrite custom functions' parentheses to curly braces for Bitsy's
 // interpreter. Unescape escaped parentheticals, too.
 function convertDialogTags(input, tag) {
-	return input
-		.replace(new RegExp('\\\\?\\((' + tag + '(\\s+(".*?"|.+?))?)\\\\?\\)', 'g'), function (match, group) {
-			if (match.substr(0, 1) === '\\') {
-				return '(' + group + ')'; // Rewrite \(tag "..."|...\) to (tag "..."|...)
-			}
-			return '{' + group + '}'; // Rewrite (tag "..."|...) to {tag "..."|...}
-		});
+	return input.replace(new RegExp('\\\\?\\((' + tag + '(\\s+(".*?"|.+?))?)\\\\?\\)', 'g'), function (match, group) {
+		if (match.substr(0, 1) === '\\') {
+			return '(' + group + ')'; // Rewrite \(tag "..."|...\) to (tag "..."|...)
+		}
+		return '{' + group + '}'; // Rewrite (tag "..."|...) to {tag "..."|...}
+	});
 }
 
 function addDialogFunction(tag, fn) {
@@ -285,10 +404,7 @@ function addDialogFunction(tag, fn) {
 }
 
 function injectDialogTag(tag, code) {
-	inject$1(
-		/(var functionMap = \{\};[^]*?)(this.HasFunction)/m,
-		'$1\nfunctionMap["' + tag + '"] = ' + code + ';\n$2',
-	);
+	inject(/(var functionMap = \{\};[^]*?)(this.HasFunction)/m, '$1\nfunctionMap["' + tag + '"] = ' + code + ';\n$2');
 }
 
 /**
@@ -324,7 +440,7 @@ function addDialogTag(tag, fn) {
 function addDeferredDialogTag(tag, fn) {
 	addDialogFunction(tag, fn);
 	bitsy.kitsy.deferredDialogFunctions = bitsy.kitsy.deferredDialogFunctions || {};
-	var deferred = bitsy.kitsy.deferredDialogFunctions[tag] = [];
+	var deferred = (bitsy.kitsy.deferredDialogFunctions[tag] = []);
 	injectDialogTag(tag, 'function(e, p, o){ kitsy.deferredDialogFunctions["' + tag + '"].push({e:e,p:p}); o(null); }');
 	// Hook into the dialog finish event and execute the actual function
 	after('onExitDialog', function () {
@@ -357,121 +473,6 @@ function addDualDialogTag(tag, fn) {
 		onReturn(null);
 	});
 	addDeferredDialogTag(tag, fn);
-}
-
-/**
-@file utils
-@summary miscellaneous bitsy utilities
-@author Sean S. LeBlanc
-*/
-
-/*
-Helper used to replace code in a script tag based on a search regex
-To inject code without erasing original string, using capturing groups; e.g.
-	inject(/(some string)/,'injected before $1 injected after')
-*/
-function inject(searchRegex, replaceString) {
-	// find the relevant script tag
-	var scriptTags = document.getElementsByTagName('script');
-	var scriptTag;
-	var code;
-	for (var i = 0; i < scriptTags.length; ++i) {
-		scriptTag = scriptTags[i];
-		var matchesSearch = scriptTag.textContent.search(searchRegex) !== -1;
-		var isCurrentScript = scriptTag === document.currentScript;
-		if (matchesSearch && !isCurrentScript) {
-			code = scriptTag.textContent;
-			break;
-		}
-	}
-
-	// error-handling
-	if (!code) {
-		throw new Error('Couldn\'t find "' + searchRegex + '" in script tags');
-	}
-
-	// modify the content
-	code = code.replace(searchRegex, replaceString);
-
-	// replace the old script tag with a new one using our modified code
-	var newScriptTag = document.createElement('script');
-	newScriptTag.textContent = code;
-	scriptTag.insertAdjacentElement('afterend', newScriptTag);
-	scriptTag.remove();
-}
-
-/*
-Helper for getting image by name or id
-
-Args:
-	name: id or name of image to return
-	 map: map of images (e.g. `sprite`, `tile`, `item`)
-
-Returns: the image in the given map with the given name/id
- */
-function getImage(name, map) {
-	var id = Object.prototype.hasOwnProperty.call(map, name) ? name : Object.keys(map).find(function (e) {
-		return map[e].name === name;
-	});
-	return map[id];
-}
-
-/**
-@file edit image at runtime
-@summary API for updating image data at runtime.
-@author Sean S. LeBlanc
-@description
-Adds API for updating sprite, tile, and item data at runtime.
-
-Individual frames of image data in bitsy are 8x8 1-bit 2D arrays in yx order
-e.g. the default player is:
-[
-	[0,0,0,1,1,0,0,0],
-	[0,0,0,1,1,0,0,0],
-	[0,0,0,1,1,0,0,0],
-	[0,0,1,1,1,1,0,0],
-	[0,1,1,1,1,1,1,0],
-	[1,0,1,1,1,1,0,1],
-	[0,0,1,0,0,1,0,0],
-	[0,0,1,0,0,1,0,0]
-]
-*/
-
-// force cache to clear if edit image fns are used
-inject(/\/\/ TODO : reset render cache for this image/, `
-// TODO: clear extended palettes
-drawingCache.render[drawingId+"_0"] = undefined;
-drawingCache.render[drawingId+"_1"] = undefined;
-drawingCache.render[drawingId+"_2"] = undefined;
-`);
-
-/*
-Args:
-	   id: string id or name
-	frame: animation frame (0 or 1)
-	  map: map of images (e.g. `sprite`, `tile`, `item`)
-
-Returns: a single frame of a image data
-*/
-function getImageData(id, frame, map) {
-	return bitsy.renderer.GetDrawingSource(getImage(id, map).drw)[frame];
-}
-
-/*
-Updates a single frame of image data
-
-Args:
-	     id: string id or name
-	  frame: animation frame (0 or 1)
-	    map: map of images (e.g. `sprite`, `tile`, `item`)
-	newData: new data to write to the image data
-*/
-function setImageData(id, frame, map, newData) {
-	var drawing = getImage(id, map);
-	var drw = drawing.drw;
-	var img = bitsy.renderer.GetDrawingSource(drw).slice();
-	img[frame] = newData;
-	bitsy.renderer.SetDrawingSource(drw, img);
 }
 
 

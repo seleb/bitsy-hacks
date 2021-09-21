@@ -3,7 +3,7 @@
 @file unique items
 @summary items which, when picked up, remove all other instances of that item from the game
 @license MIT
-@version 18.0.0
+@version 18.0.1
 @author Sean S. LeBlanc
 
 @description

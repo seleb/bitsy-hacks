@@ -3,7 +3,7 @@
 @file twine bitsy comms
 @summary interprocess communication for twine and bitsy
 @license MIT
-@version 18.0.0
+@version 18.0.1
 @requires 5.4
 @author Sean S. LeBlanc
 
@@ -75,19 +75,26 @@ var hackOptions = {
 	// how info will be posted to external process
 	// default implementation is for iframe postMessage-ing to parent page
 	send: function (type, data) {
-		window.parent.postMessage({
-			type: type,
-			data: data,
-		}, '*');
+		window.parent.postMessage(
+			{
+				type: type,
+				data: data,
+			},
+			'*'
+		);
 	},
 	// how info will be received from external process
 	// default implementation is for parent page postMessage-ing into iframe
 	receive: function () {
-		window.addEventListener('message', function (event) {
-			var type = event.data.type;
-			var data = event.data.data;
-			receiveMessage(type, data);
-		}, false);
+		window.addEventListener(
+			'message',
+			function (event) {
+				var type = event.data.type;
+				var data = event.data.data;
+				receiveMessage(type, data);
+			},
+			false
+		);
 	},
 };
 
@@ -293,13 +300,12 @@ var after = kitsy.after;
 // Rewrite custom functions' parentheses to curly braces for Bitsy's
 // interpreter. Unescape escaped parentheticals, too.
 function convertDialogTags(input, tag) {
-	return input
-		.replace(new RegExp('\\\\?\\((' + tag + '(\\s+(".*?"|.+?))?)\\\\?\\)', 'g'), function (match, group) {
-			if (match.substr(0, 1) === '\\') {
-				return '(' + group + ')'; // Rewrite \(tag "..."|...\) to (tag "..."|...)
-			}
-			return '{' + group + '}'; // Rewrite (tag "..."|...) to {tag "..."|...}
-		});
+	return input.replace(new RegExp('\\\\?\\((' + tag + '(\\s+(".*?"|.+?))?)\\\\?\\)', 'g'), function (match, group) {
+		if (match.substr(0, 1) === '\\') {
+			return '(' + group + ')'; // Rewrite \(tag "..."|...\) to (tag "..."|...)
+		}
+		return '{' + group + '}'; // Rewrite (tag "..."|...) to {tag "..."|...}
+	});
 }
 
 function addDialogFunction(tag, fn) {
@@ -318,10 +324,7 @@ function addDialogFunction(tag, fn) {
 }
 
 function injectDialogTag(tag, code) {
-	inject(
-		/(var functionMap = \{\};[^]*?)(this.HasFunction)/m,
-		'$1\nfunctionMap["' + tag + '"] = ' + code + ';\n$2',
-	);
+	inject(/(var functionMap = \{\};[^]*?)(this.HasFunction)/m, '$1\nfunctionMap["' + tag + '"] = ' + code + ';\n$2');
 }
 
 /**
@@ -357,7 +360,7 @@ function addDialogTag(tag, fn) {
 function addDeferredDialogTag(tag, fn) {
 	addDialogFunction(tag, fn);
 	bitsy.kitsy.deferredDialogFunctions = bitsy.kitsy.deferredDialogFunctions || {};
-	var deferred = bitsy.kitsy.deferredDialogFunctions[tag] = [];
+	var deferred = (bitsy.kitsy.deferredDialogFunctions[tag] = []);
 	injectDialogTag(tag, 'function(e, p, o){ kitsy.deferredDialogFunctions["' + tag + '"].push({e:e,p:p}); o(null); }');
 	// Hook into the dialog finish event and execute the actual function
 	after('onExitDialog', function () {
@@ -403,19 +406,19 @@ hackOptions.receive();
 
 function receiveMessage(type, data) {
 	switch (type) {
-	case 'variables':
-		var state = sending;
-		sending = false;
-		Object.entries(data).forEach(function (entry) {
-			var name = entry[0];
-			var value = entry[1];
-			bitsy.scriptInterpreter.SetVariable(hackOptions.variableNameIn(name), value);
-		});
-		sending = state;
-		break;
-	default:
-		console.warn('Unhandled message from outside Bitsy:', type, data);
-		break;
+		case 'variables':
+			var state = sending;
+			sending = false;
+			Object.entries(data).forEach(function (entry) {
+				var name = entry[0];
+				var value = entry[1];
+				bitsy.scriptInterpreter.SetVariable(hackOptions.variableNameIn(name), value);
+			});
+			sending = state;
+			break;
+		default:
+			console.warn('Unhandled message from outside Bitsy:', type, data);
+			break;
 	}
 }
 
@@ -450,11 +453,7 @@ after('startExportedGame', function () {
 });
 
 // hook up dialog commands
-[
-	'eval',
-	'play',
-	'back',
-].forEach(function (command) {
+['eval', 'play', 'back'].forEach(function (command) {
 	function doCommand(environment, parameters) {
 		hackOptions.send(command, parameters[0]);
 	}

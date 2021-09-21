@@ -3,7 +3,7 @@
 @file edit room from dialog
 @summary modify the content of a room from dialog
 @license MIT
-@version 18.0.0
+@version 18.0.1
 @requires Bitsy Version: 6.1
 @author Dana Holdampf
 
@@ -352,13 +352,12 @@ var after = kitsy.after;
 // Rewrite custom functions' parentheses to curly braces for Bitsy's
 // interpreter. Unescape escaped parentheticals, too.
 function convertDialogTags(input, tag) {
-	return input
-		.replace(new RegExp('\\\\?\\((' + tag + '(\\s+(".*?"|.+?))?)\\\\?\\)', 'g'), function (match, group) {
-			if (match.substr(0, 1) === '\\') {
-				return '(' + group + ')'; // Rewrite \(tag "..."|...\) to (tag "..."|...)
-			}
-			return '{' + group + '}'; // Rewrite (tag "..."|...) to {tag "..."|...}
-		});
+	return input.replace(new RegExp('\\\\?\\((' + tag + '(\\s+(".*?"|.+?))?)\\\\?\\)', 'g'), function (match, group) {
+		if (match.substr(0, 1) === '\\') {
+			return '(' + group + ')'; // Rewrite \(tag "..."|...\) to (tag "..."|...)
+		}
+		return '{' + group + '}'; // Rewrite (tag "..."|...) to {tag "..."|...}
+	});
 }
 
 function addDialogFunction(tag, fn) {
@@ -377,10 +376,7 @@ function addDialogFunction(tag, fn) {
 }
 
 function injectDialogTag(tag, code) {
-	inject(
-		/(var functionMap = \{\};[^]*?)(this.HasFunction)/m,
-		'$1\nfunctionMap["' + tag + '"] = ' + code + ';\n$2',
-	);
+	inject(/(var functionMap = \{\};[^]*?)(this.HasFunction)/m, '$1\nfunctionMap["' + tag + '"] = ' + code + ';\n$2');
 }
 
 /**
@@ -416,7 +412,7 @@ function addDialogTag(tag, fn) {
 function addDeferredDialogTag(tag, fn) {
 	addDialogFunction(tag, fn);
 	bitsy.kitsy.deferredDialogFunctions = bitsy.kitsy.deferredDialogFunctions || {};
-	var deferred = bitsy.kitsy.deferredDialogFunctions[tag] = [];
+	var deferred = (bitsy.kitsy.deferredDialogFunctions[tag] = []);
 	injectDialogTag(tag, 'function(e, p, o){ kitsy.deferredDialogFunctions["' + tag + '"].push({e:e,p:p}); o(null); }');
 	// Hook into the dialog finish event and execute the actual function
 	after('onExitDialog', function () {
@@ -469,7 +465,7 @@ function addDualDialogTag(tag, fn) {
  * @return {number} resulting absolute or relative number
  */
 function getRelativeNumber(value, relativeTo) {
-	var v = (value || value === 0 ? value : relativeTo);
+	var v = value || value === 0 ? value : relativeTo;
 	if (typeof v === 'string' && (v.startsWith('+') || v.startsWith('-'))) {
 		return relativeTo + Number(v);
 	}
@@ -622,32 +618,32 @@ function drawAt(mapId, sourceId, xPos, yPos, roomId) {
 	}
 
 	switch (mapId) {
-	case 'TIL':
-		if (bitsy.tile[sourceId]) {
-			bitsy.room[roomId].tilemap[yPos][xPos] = sourceId;
-		}
-		break;
-	case 'ITM':
-		if (bitsy.item[sourceId]) {
-			var newItem = {
-				id: sourceId,
-				x: xPos,
-				y: yPos,
-			};
-			bitsy.room[roomId].items.push(newItem);
-		}
-		break;
-	case 'SPR':
-		if (bitsy.sprite[sourceId]) {
-			if (bitsy.sprite[sourceId].id === bitsy.playerId) {
-				console.log("CAN'T TARGET AVATAR. SKIPPING.");
-			} else if (bitsy.room[roomId]) {
-				bitsy.sprite[sourceId].room = roomId;
-				bitsy.sprite[sourceId].x = xPos;
-				bitsy.sprite[sourceId].y = yPos;
+		case 'TIL':
+			if (bitsy.tile[sourceId]) {
+				bitsy.room[roomId].tilemap[yPos][xPos] = sourceId;
 			}
-		}
-		break;
+			break;
+		case 'ITM':
+			if (bitsy.item[sourceId]) {
+				var newItem = {
+					id: sourceId,
+					x: xPos,
+					y: yPos,
+				};
+				bitsy.room[roomId].items.push(newItem);
+			}
+			break;
+		case 'SPR':
+			if (bitsy.sprite[sourceId]) {
+				if (bitsy.sprite[sourceId].id === bitsy.playerId) {
+					console.log("CAN'T TARGET AVATAR. SKIPPING.");
+				} else if (bitsy.room[roomId]) {
+					bitsy.sprite[sourceId].room = roomId;
+					bitsy.sprite[sourceId].x = xPos;
+					bitsy.sprite[sourceId].y = yPos;
+				}
+			}
+			break;
 	}
 }
 
@@ -697,10 +693,7 @@ function eraseAt(mapId, targetId, xPos, yPos, roomId) {
 	}
 
 	// tiles
-	if (
-		(mapId === 'TIL' || mapId === 'ANY')
-		&& (targetId.toUpperCase() === 'ANY' || bitsy.room[roomId].tilemap[yPos][xPos] === targetId)
-	) {
+	if ((mapId === 'TIL' || mapId === 'ANY') && (targetId.toUpperCase() === 'ANY' || bitsy.room[roomId].tilemap[yPos][xPos] === targetId)) {
 		bitsy.room[roomId].tilemap[yPos][xPos] = '0';
 	}
 

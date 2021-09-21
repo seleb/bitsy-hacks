@@ -3,7 +3,7 @@
 @file multi-sprite avatar
 @summary make the player big
 @license MIT
-@version 18.0.0
+@version 18.0.1
 @author Sean S. LeBlanc
 
 @description
@@ -27,23 +27,28 @@ this.hacks = this.hacks || {};
 (function (exports, bitsy) {
 'use strict';
 var hackOptions = {
-	pieces: [{
-		x: 0,
-		y: 0,
-		spr: 'c',
-	}, {
-		x: 1,
-		y: 0,
-		spr: 'd',
-	}, {
-		x: 0,
-		y: 1,
-		spr: 'e',
-	}, {
-		x: 1,
-		y: 1,
-		spr: 'f',
-	}],
+	pieces: [
+		{
+			x: 0,
+			y: 0,
+			spr: 'c',
+		},
+		{
+			x: 1,
+			y: 0,
+			spr: 'd',
+		},
+		{
+			x: 0,
+			y: 1,
+			spr: 'e',
+		},
+		{
+			x: 1,
+			y: 1,
+			spr: 'f',
+		},
+	],
 	enabledOnStart: true,
 };
 
@@ -262,9 +267,11 @@ Args:
 Returns: the image in the given map with the given name/id
  */
 function getImage(name, map) {
-	var id = Object.prototype.hasOwnProperty.call(map, name) ? name : Object.keys(map).find(function (e) {
-		return map[e].name === name;
-	});
+	var id = Object.prototype.hasOwnProperty.call(map, name)
+		? name
+		: Object.keys(map).find(function (e) {
+				return map[e].name === name;
+		  });
 	return map[id];
 }
 
@@ -371,16 +378,7 @@ function repeat(fn) {
 	p.y = y;
 	return r;
 }
-var repeats = [
-	'getSpriteLeft',
-	'getSpriteRight',
-	'getSpriteUp',
-	'getSpriteDown',
-	'isWallLeft',
-	'isWallRight',
-	'isWallUp',
-	'isWallDown',
-];
+var repeats = ['getSpriteLeft', 'getSpriteRight', 'getSpriteUp', 'getSpriteDown', 'isWallLeft', 'isWallRight', 'isWallUp', 'isWallDown'];
 
 // prevent player from colliding with their own pieces
 function filterPieces(id) {

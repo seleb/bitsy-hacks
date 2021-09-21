@@ -3,7 +3,7 @@
 @file push sprites
 @summary sokoban-style sprite pushing
 @license MIT
-@version 18.0.0
+@version 18.0.1
 @requires 6.4
 @author jan0sc
 
@@ -35,7 +35,6 @@ this.hacks = this.hacks || {};
 (function (exports, bitsy) {
 'use strict';
 var hackOptions = {
-
 	// PUSH LOGIC
 
 	playerPushesSprite: function (spr) {
@@ -130,7 +129,13 @@ var hackOptions = {
 		// In room 0, dialog cover_bases_true is triggered when positions (5,10), (7,10) and (9,10)
 		// are covered by a sprite of any kind; otherwise cover_bases_false is triggered.
 		cover_bases: {
-			anything: [[[0, 5, 10], [0, 7, 10], [0, 9, 10]]],
+			anything: [
+				[
+					[0, 5, 10],
+					[0, 7, 10],
+					[0, 9, 10],
+				],
+			],
 		},
 		//
 		// In room 1, dialog perfect_match_true is triggered when (9,5) has a BELL, (9,7) has
@@ -144,7 +149,13 @@ var hackOptions = {
 		// In room 2, dialog floor_empty_true is triggered when no sprite is located at
 		// (3,6), (3,7) or (3,8); otherwise floor_empty_false is triggered.
 		floor_empty: {
-			nothing: [[[2, 3, 6], [2, 3, 7], [2, 3, 8]]],
+			nothing: [
+				[
+					[2, 3, 6],
+					[2, 3, 7],
+					[2, 3, 8],
+				],
+			],
 		},
 		//
 		// In room 3, dialog diagonal_true is triggered when there are ROCKs at
@@ -152,7 +163,16 @@ var hackOptions = {
 		// otherwise diagonal_false is triggered. Note that no other positions are checked
 		// for these two cases, so e.g. (7,9),(7,10),(8,9),(8,10) will still evaluate to TRUE.
 		diagonal: {
-			ROCK: [[[3, 7, 9], [3, 8, 10]], [[3, 7, 10], [3, 8, 9]]],
+			ROCK: [
+				[
+					[3, 7, 9],
+					[3, 8, 10],
+				],
+				[
+					[3, 7, 10],
+					[3, 8, 9],
+				],
+			],
 		},
 	},
 
@@ -167,12 +187,139 @@ var hackOptions = {
 	// 	pushing down will make a sprite upside-down
 	// 	pushing up will make a sprite right-side up
 	verticalFlipsAllowed: false,
-
 };
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
 bitsy = bitsy || /*#__PURE__*/_interopDefaultLegacy(bitsy);
+
+/**
+@file utils
+@summary miscellaneous bitsy utilities
+@author Sean S. LeBlanc
+*/
+
+/*
+Helper used to replace code in a script tag based on a search regex
+To inject code without erasing original string, using capturing groups; e.g.
+	inject(/(some string)/,'injected before $1 injected after')
+*/
+function inject$1(searchRegex, replaceString) {
+	// find the relevant script tag
+	var scriptTags = document.getElementsByTagName('script');
+	var scriptTag;
+	var code;
+	for (var i = 0; i < scriptTags.length; ++i) {
+		scriptTag = scriptTags[i];
+		var matchesSearch = scriptTag.textContent.search(searchRegex) !== -1;
+		var isCurrentScript = scriptTag === document.currentScript;
+		if (matchesSearch && !isCurrentScript) {
+			code = scriptTag.textContent;
+			break;
+		}
+	}
+
+	// error-handling
+	if (!code) {
+		throw new Error('Couldn\'t find "' + searchRegex + '" in script tags');
+	}
+
+	// modify the content
+	code = code.replace(searchRegex, replaceString);
+
+	// replace the old script tag with a new one using our modified code
+	var newScriptTag = document.createElement('script');
+	newScriptTag.textContent = code;
+	scriptTag.insertAdjacentElement('afterend', newScriptTag);
+	scriptTag.remove();
+}
+
+/*
+Helper for getting image by name or id
+
+Args:
+	name: id or name of image to return
+	 map: map of images (e.g. `sprite`, `tile`, `item`)
+
+Returns: the image in the given map with the given name/id
+ */
+function getImage(name, map) {
+	var id = Object.prototype.hasOwnProperty.call(map, name)
+		? name
+		: Object.keys(map).find(function (e) {
+				return map[e].name === name;
+		  });
+	return map[id];
+}
+
+/**
+@file edit image at runtime
+@summary API for updating image data at runtime.
+@author Sean S. LeBlanc
+@description
+Adds API for updating sprite, tile, and item data at runtime.
+
+Individual frames of image data in bitsy are 8x8 1-bit 2D arrays in yx order
+e.g. the default player is:
+[
+	[0,0,0,1,1,0,0,0],
+	[0,0,0,1,1,0,0,0],
+	[0,0,0,1,1,0,0,0],
+	[0,0,1,1,1,1,0,0],
+	[0,1,1,1,1,1,1,0],
+	[1,0,1,1,1,1,0,1],
+	[0,0,1,0,0,1,0,0],
+	[0,0,1,0,0,1,0,0]
+]
+*/
+
+// force cache to clear if edit image fns are used
+inject$1(
+	/\/\/ TODO : reset render cache for this image/,
+	`
+// TODO: clear extended palettes
+drawingCache.render[drawingId+"_0"] = undefined;
+drawingCache.render[drawingId+"_1"] = undefined;
+drawingCache.render[drawingId+"_2"] = undefined;
+`
+);
+
+/*
+Args:
+	   id: string id or name
+	frame: animation frame (0 or 1)
+	  map: map of images (e.g. `sprite`, `tile`, `item`)
+
+Returns: a single frame of a image data
+*/
+function getImageData(id, frame, map) {
+	return bitsy.renderer.GetDrawingSource(getImage(id, map).drw)[frame];
+}
+
+function getSpriteData(id, frame) {
+	return getImageData(id, frame, bitsy.sprite);
+}
+
+/*
+Updates a single frame of image data
+
+Args:
+	     id: string id or name
+	  frame: animation frame (0 or 1)
+	    map: map of images (e.g. `sprite`, `tile`, `item`)
+	newData: new data to write to the image data
+*/
+function setImageData(id, frame, map, newData) {
+	var drawing = getImage(id, map);
+	var drw = drawing.drw;
+	var img = bitsy.renderer.GetDrawingSource(drw).slice();
+	img[frame] = newData;
+	bitsy.renderer.SetDrawingSource(drw, img);
+}
+
+function setSpriteData(id, frame, newData) {
+	setImageData(id, frame, bitsy.sprite, newData);
+}
 
 /**
  * Helper used to replace code in a script tag based on a search regex.
@@ -183,7 +330,7 @@ bitsy = bitsy || /*#__PURE__*/_interopDefaultLegacy(bitsy);
  * @param searcher Regex to search and replace
  * @param replacer Replacer string/fn
  */
-function inject$1(searcher, replacer) {
+function inject(searcher, replacer) {
     // find the relevant script tag
     var scriptTags = document.getElementsByTagName('script');
     var scriptTag;
@@ -250,7 +397,7 @@ function after$1(targetFuncName, afterFn) {
 }
 function applyInjects() {
     kitsy.queuedInjectScripts.forEach(function (injectScript) {
-        inject$1(injectScript.searcher, injectScript.replacer);
+        inject(injectScript.searcher, injectScript.replacer);
     });
 }
 function applyHooks(root) {
@@ -424,129 +571,6 @@ function transformSpriteData(spriteData, v, h, rot) {
 	return s;
 }
 
-/**
-@file utils
-@summary miscellaneous bitsy utilities
-@author Sean S. LeBlanc
-*/
-
-/*
-Helper used to replace code in a script tag based on a search regex
-To inject code without erasing original string, using capturing groups; e.g.
-	inject(/(some string)/,'injected before $1 injected after')
-*/
-function inject(searchRegex, replaceString) {
-	// find the relevant script tag
-	var scriptTags = document.getElementsByTagName('script');
-	var scriptTag;
-	var code;
-	for (var i = 0; i < scriptTags.length; ++i) {
-		scriptTag = scriptTags[i];
-		var matchesSearch = scriptTag.textContent.search(searchRegex) !== -1;
-		var isCurrentScript = scriptTag === document.currentScript;
-		if (matchesSearch && !isCurrentScript) {
-			code = scriptTag.textContent;
-			break;
-		}
-	}
-
-	// error-handling
-	if (!code) {
-		throw new Error('Couldn\'t find "' + searchRegex + '" in script tags');
-	}
-
-	// modify the content
-	code = code.replace(searchRegex, replaceString);
-
-	// replace the old script tag with a new one using our modified code
-	var newScriptTag = document.createElement('script');
-	newScriptTag.textContent = code;
-	scriptTag.insertAdjacentElement('afterend', newScriptTag);
-	scriptTag.remove();
-}
-
-/*
-Helper for getting image by name or id
-
-Args:
-	name: id or name of image to return
-	 map: map of images (e.g. `sprite`, `tile`, `item`)
-
-Returns: the image in the given map with the given name/id
- */
-function getImage(name, map) {
-	var id = Object.prototype.hasOwnProperty.call(map, name) ? name : Object.keys(map).find(function (e) {
-		return map[e].name === name;
-	});
-	return map[id];
-}
-
-/**
-@file edit image at runtime
-@summary API for updating image data at runtime.
-@author Sean S. LeBlanc
-@description
-Adds API for updating sprite, tile, and item data at runtime.
-
-Individual frames of image data in bitsy are 8x8 1-bit 2D arrays in yx order
-e.g. the default player is:
-[
-	[0,0,0,1,1,0,0,0],
-	[0,0,0,1,1,0,0,0],
-	[0,0,0,1,1,0,0,0],
-	[0,0,1,1,1,1,0,0],
-	[0,1,1,1,1,1,1,0],
-	[1,0,1,1,1,1,0,1],
-	[0,0,1,0,0,1,0,0],
-	[0,0,1,0,0,1,0,0]
-]
-*/
-
-// force cache to clear if edit image fns are used
-inject(/\/\/ TODO : reset render cache for this image/, `
-// TODO: clear extended palettes
-drawingCache.render[drawingId+"_0"] = undefined;
-drawingCache.render[drawingId+"_1"] = undefined;
-drawingCache.render[drawingId+"_2"] = undefined;
-`);
-
-/*
-Args:
-	   id: string id or name
-	frame: animation frame (0 or 1)
-	  map: map of images (e.g. `sprite`, `tile`, `item`)
-
-Returns: a single frame of a image data
-*/
-function getImageData(id, frame, map) {
-	return bitsy.renderer.GetDrawingSource(getImage(id, map).drw)[frame];
-}
-
-function getSpriteData(id, frame) {
-	return getImageData(id, frame, bitsy.sprite);
-}
-
-/*
-Updates a single frame of image data
-
-Args:
-	     id: string id or name
-	  frame: animation frame (0 or 1)
-	    map: map of images (e.g. `sprite`, `tile`, `item`)
-	newData: new data to write to the image data
-*/
-function setImageData(id, frame, map, newData) {
-	var drawing = getImage(id, map);
-	var drw = drawing.drw;
-	var img = bitsy.renderer.GetDrawingSource(drw).slice();
-	img[frame] = newData;
-	bitsy.renderer.SetDrawingSource(drw, img);
-}
-
-function setSpriteData(id, frame, newData) {
-	setImageData(id, frame, bitsy.sprite, newData);
-}
-
 
 
 
@@ -555,18 +579,18 @@ before('movePlayer', function (direction) {
 	var spriteId = null;
 
 	switch (direction) {
-	case bitsy.Direction.Up:
-		spriteId = bitsy.getSpriteUp();
-		break;
-	case bitsy.Direction.Down:
-		spriteId = bitsy.getSpriteDown();
-		break;
-	case bitsy.Direction.Left:
-		spriteId = bitsy.getSpriteLeft();
-		break;
-	case bitsy.Direction.Right:
-		spriteId = bitsy.getSpriteRight();
-		break;
+		case bitsy.Direction.Up:
+			spriteId = bitsy.getSpriteUp();
+			break;
+		case bitsy.Direction.Down:
+			spriteId = bitsy.getSpriteDown();
+			break;
+		case bitsy.Direction.Left:
+			spriteId = bitsy.getSpriteLeft();
+			break;
+		case bitsy.Direction.Right:
+			spriteId = bitsy.getSpriteRight();
+			break;
 	}
 
 	if (spriteId && hackOptions.playerPushesSprite(bitsy.sprite[spriteId])) {
@@ -588,22 +612,22 @@ function pushSprite(spr, direction) {
 	var newy;
 
 	switch (direction) {
-	case bitsy.Direction.Up:
-		newx = spr.x;
-		newy = spr.y - 1;
-		break;
-	case bitsy.Direction.Down:
-		newx = spr.x;
-		newy = spr.y + 1;
-		break;
-	case bitsy.Direction.Left:
-		newx = spr.x - 1;
-		newy = spr.y;
-		break;
-	case bitsy.Direction.Right:
-		newx = spr.x + 1;
-		newy = spr.y;
-		break;
+		case bitsy.Direction.Up:
+			newx = spr.x;
+			newy = spr.y - 1;
+			break;
+		case bitsy.Direction.Down:
+			newx = spr.x;
+			newy = spr.y + 1;
+			break;
+		case bitsy.Direction.Left:
+			newx = spr.x - 1;
+			newy = spr.y;
+			break;
+		case bitsy.Direction.Right:
+			newx = spr.x + 1;
+			newy = spr.y;
+			break;
 	}
 
 	if (moveOK(spr, newx, newy, direction)) {
@@ -622,8 +646,7 @@ function pushSprite(spr, direction) {
 function moveOK(spr, newx, newy, direction) {
 	var next = getFirstSpriteAt(spr.room, newx, newy);
 	// either there is a space or the next sprite moves
-	return (!next && itemOK(spr, newx, newy) && tileOK(spr, newx, newy))
-		|| (next && spriteOK(spr, next) && pushSprite(next, direction));
+	return (!next && itemOK(spr, newx, newy) && tileOK(spr, newx, newy)) || (next && spriteOK(spr, next) && pushSprite(next, direction));
 }
 
 function spriteOK(spr1, spr2) {
@@ -634,17 +657,25 @@ function itemOK(spr, x, y) {
 	var items = bitsy.room[spr.room].items;
 	if (items.length > 0) {
 		for (var itm of items) {
-			if (hackOptions.itemStopsSprite(bitsy.item[itm.id], spr) && itm.x === x && itm.y === y) { return false; }
+			if (hackOptions.itemStopsSprite(bitsy.item[itm.id], spr) && itm.x === x && itm.y === y) {
+				return false;
+			}
 		}
 	}
 	return true;
 }
 
 function tileOK(spr, x, y) {
-	if (x < 0 || y < 0 || x >= bitsy.mapsize || y >= bitsy.mapsize) { return false; } // can't push sprite off the edge
+	if (x < 0 || y < 0 || x >= bitsy.mapsize || y >= bitsy.mapsize) {
+		return false;
+	} // can't push sprite off the edge
 	var tileid = bitsy.room[spr.room].tilemap[y][x];
-	if (tileid === '0') { return true; } // no tile => no problem
-	if (hackOptions.tileStopsSprite(bitsy.tile[tileid], spr)) { return false; }
+	if (tileid === '0') {
+		return true;
+	} // no tile => no problem
+	if (hackOptions.tileStopsSprite(bitsy.tile[tileid], spr)) {
+		return false;
+	}
 	return true;
 }
 
@@ -750,35 +781,38 @@ after('movePlayer', function (direction) {
 
 function check(s, xyz) {
 	if (s === 'nothing') {
-		return targetsLookup[xyz[0]] === undefined
-			|| targetsLookup[xyz[0]][xyz[1]] === undefined
-			|| targetsLookup[xyz[0]][xyz[1]][xyz[2]] === undefined;
+		return targetsLookup[xyz[0]] === undefined || targetsLookup[xyz[0]][xyz[1]] === undefined || targetsLookup[xyz[0]][xyz[1]][xyz[2]] === undefined;
 	}
-	return targetsLookup[xyz[0]]
-		&& targetsLookup[xyz[0]][xyz[1]]
-		&& targetsLookup[xyz[0]][xyz[1]][xyz[2]]
-		&& isCompatible(s, targetsLookup[xyz[0]][xyz[1]][xyz[2]]);
+	return targetsLookup[xyz[0]] && targetsLookup[xyz[0]][xyz[1]] && targetsLookup[xyz[0]][xyz[1]][xyz[2]] && isCompatible(s, targetsLookup[xyz[0]][xyz[1]][xyz[2]]);
 }
 
 function checkAND(s, xyzs) {
 	var result = true;
 	for (var xyz of xyzs) {
 		result = result && check(s, xyz);
-		if (!result) { return false; }
+		if (!result) {
+			return false;
+		}
 	}
 	return true;
 }
 
 function checkOR(s, xyzss) {
 	for (var xyzs of xyzss) {
-		if (checkAND(s, xyzs)) { return true; }
+		if (checkAND(s, xyzs)) {
+			return true;
+		}
 	}
 	return false;
 }
 
 function isCompatible(p, q) {
-	if (p === 'anything') { return true; }
-	if (p === bitsy.playerId) { return (q === bitsy.playerId); }
+	if (p === 'anything') {
+		return true;
+	}
+	if (p === bitsy.playerId) {
+		return q === bitsy.playerId;
+	}
 	return q.includes(p);
 }
 
@@ -812,18 +846,26 @@ before('onready', function () {
 function updateImage(spr) {
 	// determine which directions need flipping
 	switch (bitsy.curPlayerDirection) {
-	case bitsy.Direction.Up:
-		if (hackOptions.verticalFlipsAllowed) { vflips[spr.id] = false; }
-		break;
-	case bitsy.Direction.Down:
-		if (hackOptions.verticalFlipsAllowed) { vflips[spr.id] = true; }
-		break;
-	case bitsy.Direction.Left:
-		if (hackOptions.horizontalFlipsAllowed) { hflips[spr.id] = true; }
-		break;
-	case bitsy.Direction.Right:
-		if (hackOptions.horizontalFlipsAllowed) { hflips[spr.id] = false; }
-		break;
+		case bitsy.Direction.Up:
+			if (hackOptions.verticalFlipsAllowed) {
+				vflips[spr.id] = false;
+			}
+			break;
+		case bitsy.Direction.Down:
+			if (hackOptions.verticalFlipsAllowed) {
+				vflips[spr.id] = true;
+			}
+			break;
+		case bitsy.Direction.Left:
+			if (hackOptions.horizontalFlipsAllowed) {
+				hflips[spr.id] = true;
+			}
+			break;
+		case bitsy.Direction.Right:
+			if (hackOptions.horizontalFlipsAllowed) {
+				hflips[spr.id] = false;
+			}
+			break;
 	}
 
 	// update sprite with flipped frames

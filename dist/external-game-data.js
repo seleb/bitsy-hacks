@@ -3,7 +3,7 @@
 @file external-game-data
 @summary separate Bitsy game data from your (modded) HTML for easier development
 @license WTFPL (do WTF you want)
-@version 18.0.0
+@version 18.0.1
 @requires Bitsy Version: 4.5, 4.6
 @author @mildmojo
 
@@ -264,10 +264,13 @@ before('startExportedGame', function (done) {
 function tryImportGameData(gameData, done) {
 	// Make sure this game data even uses the word "IMPORT".
 	if (gameData.indexOf('IMPORT') === -1) {
-		return done({
-			error: ERR_MISSING_IMPORT,
-			message: 'No IMPORT found in Bitsy data. See instructions for external game data mod.',
-		}, gameData);
+		return done(
+			{
+				error: ERR_MISSING_IMPORT,
+				message: 'No IMPORT found in Bitsy data. See instructions for external game data mod.',
+			},
+			gameData
+		);
 	}
 
 	var trim = function (line) {
@@ -276,10 +279,7 @@ function tryImportGameData(gameData, done) {
 	var isImport = function (line) {
 		return line.indexOf('IMPORT') === 0;
 	};
-	var importCmd = gameData
-		.split('\n')
-		.map(trim)
-		.find(isImport);
+	var importCmd = gameData.split('\n').map(trim).find(isImport);
 
 	// Make sure we found an actual IMPORT command.
 	if (!importCmd) {

@@ -3,7 +3,7 @@
 @file custom-keyhandlers
 @summary run custom code on key inputs
 @license MIT
-@version 18.0.0
+@version 18.0.1
 @requires Bitsy Version: 7.0
 @author Sean S. LeBlanc
 
@@ -265,7 +265,7 @@ after('updateInput', function () {
 		var onheld = hackOptions.onheld[key];
 		var onup = hackOptions.onup[key];
 		if (bitsy.input.isKeyDown(key.toUpperCase().codePointAt(0))) {
-			var f = held[key] = (held[key] || 0) + 1;
+			var f = (held[key] = (held[key] || 0) + 1);
 			if (f === 1 && ondown) {
 				ondown();
 			}

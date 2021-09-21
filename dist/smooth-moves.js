@@ -3,7 +3,7 @@
 @file smooth moves
 @summary ease the player's movement
 @license MIT
-@version 18.0.0
+@version 18.0.1
 @requires Bitsy Version: 6.3
 @author Sean S. LeBlanc
 
@@ -25,7 +25,7 @@ var hackOptions = {
 	delta: 1.5,
 	// easing function
 	ease: function (t) {
-		t = 1 - ((1 - t) ** 2);
+		t = 1 - (1 - t) ** 2;
 		return t;
 	},
 };
@@ -241,7 +241,7 @@ function addTween(spr, fromX, fromY, toX, toY) {
 	if (Math.abs(toX - fromX) + Math.abs(toY - fromY) > hackOptions.delta) {
 		delete tweens[spr];
 	} else {
-		var t = tweens[spr] = tweens[spr] || {};
+		var t = (tweens[spr] = tweens[spr] || {});
 		t.fromX = fromX;
 		t.fromY = fromY;
 		t.toX = toX;
@@ -256,9 +256,9 @@ before('onready', function () {
 
 // listen for changes in sprite positions to add tweens
 before('update', function () {
-	Object.values(bitsy.sprite).forEach((spr) => {
+	Object.values(bitsy.sprite).forEach(spr => {
 		if (spr.room === bitsy.curRoom) {
-			var s = sprites[spr.id] = sprites[spr.id] || {};
+			var s = (sprites[spr.id] = sprites[spr.id] || {});
 			s.x = spr.x;
 			s.y = spr.y;
 		} else {

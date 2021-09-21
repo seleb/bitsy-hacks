@@ -3,7 +3,7 @@
 @file corrupt
 @summary corrupts gamedata at runtime
 @license MIT
-@version 18.0.0
+@version 18.0.1
 @requires 5.5
 @author Sean S. LeBlanc
 
@@ -106,9 +106,11 @@ Args:
 Returns: the image in the given map with the given name/id
  */
 function getImage(name, map) {
-	var id = Object.prototype.hasOwnProperty.call(map, name) ? name : Object.keys(map).find(function (e) {
-		return map[e].name === name;
-	});
+	var id = Object.prototype.hasOwnProperty.call(map, name)
+		? name
+		: Object.keys(map).find(function (e) {
+				return map[e].name === name;
+		  });
 	return map[id];
 }
 
@@ -134,12 +136,15 @@ e.g. the default player is:
 */
 
 // force cache to clear if edit image fns are used
-inject$1(/\/\/ TODO : reset render cache for this image/, `
+inject$1(
+	/\/\/ TODO : reset render cache for this image/,
+	`
 // TODO: clear extended palettes
 drawingCache.render[drawingId+"_0"] = undefined;
 drawingCache.render[drawingId+"_1"] = undefined;
 drawingCache.render[drawingId+"_2"] = undefined;
-`);
+`
+);
 
 /*
 Args:

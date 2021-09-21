@@ -3,7 +3,7 @@
 @file avatar by room
 @summary change the avatar in certain rooms
 @license MIT
-@version 18.0.0
+@version 18.0.1
 @requires 5.3
 @author Sean S. LeBlanc
 
@@ -37,38 +37,6 @@ var hackOptions = {
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
 bitsy = bitsy || /*#__PURE__*/_interopDefaultLegacy(bitsy);
-
-/**
-@file utils
-@summary miscellaneous bitsy utilities
-@author Sean S. LeBlanc
-*/
-
-/*
-Helper for getting image by name or id
-
-Args:
-	name: id or name of image to return
-	 map: map of images (e.g. `sprite`, `tile`, `item`)
-
-Returns: the image in the given map with the given name/id
- */
-function getImage(name, map) {
-	var id = Object.prototype.hasOwnProperty.call(map, name) ? name : Object.keys(map).find(function (e) {
-		return map[e].name === name;
-	});
-	return map[id];
-}
-
-/**
- * Helper for getting room by name or id
- * @param {string} name id or name of room to return
- * @return {string} room, or undefined if it doesn't exist
- */
-function getRoom(name) {
-	var id = Object.prototype.hasOwnProperty.call(bitsy.room, name) ? name : bitsy.names.room[name];
-	return bitsy.room[id];
-}
 
 /**
  * Helper used to replace code in a script tag based on a search regex.
@@ -265,6 +233,40 @@ var before = kitsy.before;
 /** @see kitsy.after */
 var after = kitsy.after;
 
+/**
+@file utils
+@summary miscellaneous bitsy utilities
+@author Sean S. LeBlanc
+*/
+
+/*
+Helper for getting image by name or id
+
+Args:
+	name: id or name of image to return
+	 map: map of images (e.g. `sprite`, `tile`, `item`)
+
+Returns: the image in the given map with the given name/id
+ */
+function getImage(name, map) {
+	var id = Object.prototype.hasOwnProperty.call(map, name)
+		? name
+		: Object.keys(map).find(function (e) {
+				return map[e].name === name;
+		  });
+	return map[id];
+}
+
+/**
+ * Helper for getting room by name or id
+ * @param {string} name id or name of room to return
+ * @return {string} room, or undefined if it doesn't exist
+ */
+function getRoom(name) {
+	var id = Object.prototype.hasOwnProperty.call(bitsy.room, name) ? name : bitsy.names.room[name];
+	return bitsy.room[id];
+}
+
 
 
 
@@ -294,8 +296,8 @@ before('drawRoom', function () {
 	currentRoom = player.room;
 	var newAvatarId = hackOptions.avatarByRoom[currentRoom];
 	if (
-		(!newAvatarId && !hackOptions.permanent) // if no sprite defined + not permanent, reset
-		|| (newAvatarId === player.id) // manual reset
+		(!newAvatarId && !hackOptions.permanent) || // if no sprite defined + not permanent, reset
+		newAvatarId === player.id // manual reset
 	) {
 		player.drw = originalDrw;
 		player.animation = originalAnimation;

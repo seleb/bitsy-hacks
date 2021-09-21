@@ -3,7 +3,7 @@
 @file dialog prompt
 @summary prompt the user for text input in dialog
 @license MIT
-@version 18.0.0
+@version 18.0.1
 @requires 6.4
 @author Sean S. LeBlanc
 
@@ -259,13 +259,12 @@ kitsy.after;
 // Rewrite custom functions' parentheses to curly braces for Bitsy's
 // interpreter. Unescape escaped parentheticals, too.
 function convertDialogTags(input, tag) {
-	return input
-		.replace(new RegExp('\\\\?\\((' + tag + '(\\s+(".*?"|.+?))?)\\\\?\\)', 'g'), function (match, group) {
-			if (match.substr(0, 1) === '\\') {
-				return '(' + group + ')'; // Rewrite \(tag "..."|...\) to (tag "..."|...)
-			}
-			return '{' + group + '}'; // Rewrite (tag "..."|...) to {tag "..."|...}
-		});
+	return input.replace(new RegExp('\\\\?\\((' + tag + '(\\s+(".*?"|.+?))?)\\\\?\\)', 'g'), function (match, group) {
+		if (match.substr(0, 1) === '\\') {
+			return '(' + group + ')'; // Rewrite \(tag "..."|...\) to (tag "..."|...)
+		}
+		return '{' + group + '}'; // Rewrite (tag "..."|...) to {tag "..."|...}
+	});
 }
 
 function addDialogFunction(tag, fn) {
@@ -284,10 +283,7 @@ function addDialogFunction(tag, fn) {
 }
 
 function injectDialogTag(tag, code) {
-	inject(
-		/(var functionMap = \{\};[^]*?)(this.HasFunction)/m,
-		'$1\nfunctionMap["' + tag + '"] = ' + code + ';\n$2',
-	);
+	inject(/(var functionMap = \{\};[^]*?)(this.HasFunction)/m, '$1\nfunctionMap["' + tag + '"] = ' + code + ';\n$2');
 }
 
 /**
@@ -435,7 +431,12 @@ addDialogTag('prompt', function (environment, parameters, onReturn) {
 	var isTapReleased = bitsy.input.isTapReleased;
 	var CanContinue = environment.GetDialogBuffer().CanContinue;
 	bitsy.key = {};
-	bitsy.input.anyKeyPressed = bitsy.input.isTapReleased = environment.GetDialogBuffer().CanContinue = function () { return false; };
+	bitsy.input.anyKeyPressed =
+		bitsy.input.isTapReleased =
+		environment.GetDialogBuffer().CanContinue =
+			function () {
+				return false;
+			};
 	bitsy.isPlayerEmbeddedInEditor = true;
 
 	promptInput.value = defaultValue;

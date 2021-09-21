@@ -3,7 +3,7 @@
 @file custom text effect
 @summary make {custom}text effects{custom}
 @license MIT
-@version 18.0.0
+@version 18.0.1
 @requires 5.3
 @author Sean S. LeBlanc
 
@@ -120,11 +120,13 @@ var hackOptions = {
 		// puts letters through the rot13 cipher (see www.rot13.com)
 		this.DoEffect = function (char) {
 			window.customTextEffects.saveOriginalChar(char);
-			var bitmap = char.original.replace(/[a-z]/, function (c) {
-				return String.fromCharCode(((c.codePointAt(0) - 97 + 13) % 26) + 97);
-			}).replace(/[A-Z]/, function (c) {
-				return String.fromCharCode(((c.codePointAt(0) - 65 + 13) % 26) + 65);
-			});
+			var bitmap = char.original
+				.replace(/[a-z]/, function (c) {
+					return String.fromCharCode(((c.codePointAt(0) - 97 + 13) % 26) + 97);
+				})
+				.replace(/[A-Z]/, function (c) {
+					return String.fromCharCode(((c.codePointAt(0) - 65 + 13) % 26) + 65);
+				});
 			window.customTextEffects.setBitmap(char, bitmap);
 		};
 	},
@@ -155,7 +157,7 @@ var hackOptions = {
 				lastSpace = char.col - 1;
 			}
 			lastCol = char.col;
-			char.offset.y -= ((char.col - lastSpace) ** 1.5) * (Math.sin(time / 120 + char.col / 2));
+			char.offset.y -= (char.col - lastSpace) ** 1.5 * Math.sin(time / 120 + char.col / 2);
 		};
 	},
 	// some common formatting effects for general use
