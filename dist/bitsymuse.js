@@ -3,7 +3,7 @@
 @file bitsymuse
 @summary A variety of Bitsy sound and music handlers
 @license MIT
-@version 18.0.1
+@version 19.0.0
 @requires 4.8, 4.9
 @author David Mowatt
 
@@ -379,6 +379,29 @@ function getRoom(name) {
 	return bitsy.room[id];
 }
 
+function createAudio(id, options) {
+	// delete duplicate
+	var el = document.getElementById(id);
+	if (el) el.remove();
+
+	// create element
+	el = document.createElement('audio');
+	var src = options.src;
+	el.id = id;
+	Object.assign(el, options);
+	if (typeof src !== 'string') {
+		el.src = null;
+		src.forEach(function (s) {
+			var sourceEl = document.createElement('source');
+			sourceEl.src = s;
+			sourceEl.type = 'audio/' + s.split('.').pop();
+			el.appendChild(sourceEl);
+		});
+	}
+	document.body.appendChild(el);
+	return el;
+}
+
 
 
 
@@ -386,17 +409,6 @@ function getRoom(name) {
 var audioElementsById = {};
 var currentMusic;
 var roomMusicFlag = null;
-
-// cleanup old audio tags if any are present (e.g. on restart)
-before('load_game', function () {
-	Object.entries(hackOptions.audio).forEach(function (entry) {
-		var el = document.getElementById(entry[0]);
-		if (el) {
-			el.remove();
-		}
-		delete audioElementsById[entry[0]];
-	});
-});
 
 after('load_game', function () {
 	var room;
@@ -409,21 +421,7 @@ after('load_game', function () {
 	});
 	// add audio tags from options
 	Object.entries(hackOptions.audio).forEach(function (entry) {
-		var el = document.createElement('audio');
-		var src = entry[1].src;
-		el.id = entry[0];
-		Object.assign(el, entry[1]);
-		if (typeof src !== 'string') {
-			el.src = null;
-			src.forEach(function (s) {
-				var sourceEl = document.createElement('source');
-				sourceEl.src = s;
-				sourceEl.type = 'audio/' + s.split('.').pop();
-				el.appendChild(sourceEl);
-			});
-		}
-		document.body.appendChild(el);
-		audioElementsById[el.id] = el;
+		audioElementsById[entry[0]] = createAudio(entry[0], entry[1]);
 	});
 
 	// handle autoplay restrictions by playing then pausing

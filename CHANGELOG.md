@@ -1,3 +1,15 @@
+# [19.0.0](https://github.com/seleb/bitsy-hacks/compare/v18.0.1...v19.0.0) (2021-09-23)
+
+
+### Features
+
+* **basic sfx:** improve options ([ade5226](https://github.com/seleb/bitsy-hacks/commit/ade52262bdd272bf34aeb50dc385eb18d65be928))
+
+
+### BREAKING CHANGES
+
+* **basic sfx:** basic sfx hack no longer expects you to add audio elements to your html file manually, and instead creates elements based on hack options (similar method to bitsymuse)
+
 ## [18.0.1](https://github.com/seleb/bitsy-hacks/compare/v18.0.0...v18.0.1) (2021-09-21)
 
 

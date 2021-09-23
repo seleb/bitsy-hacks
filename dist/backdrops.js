@@ -3,7 +3,7 @@
 @file backdrops
 @summary makes the game have a backdrop
 @license MIT
-@version 18.0.1
+@version 19.0.0
 @requires Bitsy Version: 7.2
 @author Cephalopodunk & Sean S. LeBlanc
 
