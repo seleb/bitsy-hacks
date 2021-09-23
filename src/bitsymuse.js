@@ -38,8 +38,8 @@ This can also be changed in the hackOptions below.
 */
 
 import bitsy from 'bitsy';
-import { addDualDialogTag, after, before } from './helpers/kitsy-script-toolkit';
-import { getRoom } from './helpers/utils';
+import { addDualDialogTag, after } from './helpers/kitsy-script-toolkit';
+import { createAudio, getRoom } from './helpers/utils';
 
 export var hackOptions = {
 	// Put entries in this list for each audio file you want to use
@@ -72,17 +72,6 @@ var audioElementsById = {};
 var currentMusic;
 var roomMusicFlag = null;
 
-// cleanup old audio tags if any are present (e.g. on restart)
-before('load_game', function () {
-	Object.entries(hackOptions.audio).forEach(function (entry) {
-		var el = document.getElementById(entry[0]);
-		if (el) {
-			el.remove();
-		}
-		delete audioElementsById[entry[0]];
-	});
-});
-
 after('load_game', function () {
 	var room;
 	// expand the map to include ids of rooms listed by name
@@ -94,21 +83,7 @@ after('load_game', function () {
 	});
 	// add audio tags from options
 	Object.entries(hackOptions.audio).forEach(function (entry) {
-		var el = document.createElement('audio');
-		var src = entry[1].src;
-		el.id = entry[0];
-		Object.assign(el, entry[1]);
-		if (typeof src !== 'string') {
-			el.src = null;
-			src.forEach(function (s) {
-				var sourceEl = document.createElement('source');
-				sourceEl.src = s;
-				sourceEl.type = 'audio/' + s.split('.').pop();
-				el.appendChild(sourceEl);
-			});
-		}
-		document.body.appendChild(el);
-		audioElementsById[el.id] = el;
+		audioElementsById[entry[0]] = createAudio(entry[0], entry[1]);
 	});
 
 	// handle autoplay restrictions by playing then pausing

@@ -125,3 +125,26 @@ export function getRelativeNumber(value, relativeTo) {
 export function clamp(value, min, max) {
 	return Math.max(min, Math.min(max, value));
 }
+
+export function createAudio(id, options) {
+	// delete duplicate
+	var el = document.getElementById(id);
+	if (el) el.remove();
+
+	// create element
+	el = document.createElement('audio');
+	var src = options.src;
+	el.id = id;
+	Object.assign(el, options);
+	if (typeof src !== 'string') {
+		el.src = null;
+		src.forEach(function (s) {
+			var sourceEl = document.createElement('source');
+			sourceEl.src = s;
+			sourceEl.type = 'audio/' + s.split('.').pop();
+			el.appendChild(sourceEl);
+		});
+	}
+	document.body.appendChild(el);
+	return el;
+}
