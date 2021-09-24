@@ -162,7 +162,7 @@ after('dialogBuffer.Continue', function () {
 // hook up hurried mode
 function hurry() {
 	setTimeout(() => {
-		if (bitsy.dialogBuffer.CurPage()) {
+		if (hackOptions.hurried && bitsy.dialogBuffer.CurPage()) {
 			bitsy.dialogBuffer.Skip();
 		}
 	});
