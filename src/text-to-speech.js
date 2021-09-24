@@ -161,9 +161,11 @@ after('dialogBuffer.Continue', function () {
 
 // hook up hurried mode
 function hurry() {
-	if (hackOptions.hurried) {
-		bitsy.dialogBuffer.Skip();
-	}
+	setTimeout(() => {
+		if (bitsy.dialogBuffer.CurPage()) {
+			bitsy.dialogBuffer.Skip();
+		}
+	});
 }
 after('dialogBuffer.FlipPage', hurry);
 after('startDialog', hurry);
