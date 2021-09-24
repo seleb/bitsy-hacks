@@ -1,3 +1,13 @@
+## [19.0.1](https://github.com/seleb/bitsy-hacks/compare/v19.0.0...v19.0.1) (2021-09-24)
+
+
+### Bug Fixes
+
+* **dialog box transition:** dialog transition hack not working ([b4ddae8](https://github.com/seleb/bitsy-hacks/commit/b4ddae84fec65323a8498e27040ba5cbe734e3a8))
+* **dialog box transition:** transition from bottom taking longer ([70b4a37](https://github.com/seleb/bitsy-hacks/commit/70b4a37c0fef0e3f7385c5cb968c9b4c39d5b584))
+* **text-to-speech:** always running as if `hurried` option was enabled ([2c3f419](https://github.com/seleb/bitsy-hacks/commit/2c3f4193622673059bc65c07ea1b4040f9f6b7f9))
+* **text-to-speech:** hurried mode breaking on second page of dialog ([7673909](https://github.com/seleb/bitsy-hacks/commit/7673909fccf8faa8cbdd4f9e1117f26f3d70d862))
+
 # [19.0.0](https://github.com/seleb/bitsy-hacks/compare/v18.0.1...v19.0.0) (2021-09-23)
 
 
