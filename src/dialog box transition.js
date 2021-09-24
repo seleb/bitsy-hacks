@@ -29,10 +29,10 @@ if (isCentered) {
 }
 else if (player().y < mapsize/2) {
 	easingDialog(textboxInfo, ${hackOptions.easing}, !this.onClose
-		? (height-textboxInfo.bottom-textboxInfo.height)
-		: (height+textboxInfo.bottom+textboxInfo.height)
+		? height-textboxInfo.bottom-textboxInfo.height
+		: height+textboxInfo.height
 	);
-	this.onExit = this.onClose && textboxInfo.y >= height+textboxInfo.height;
+	this.onExit = this.onClose && textboxInfo.y >= height;
 }
 else {
 	easingDialog(textboxInfo, ${hackOptions.easing}, !this.onClose
@@ -63,7 +63,7 @@ inject(
 	/(this\.Reset = function\(\) {)/,
 	`$1 this.onClose=false;
 		this.onExit=false;
-		textboxInfo.y = player().y < mapsize/2 ? (height+textboxInfo.bottom+textboxInfo.height) : -(textboxInfo.height);`
+		textboxInfo.y = player().y < mapsize/2 ? height : -(textboxInfo.height);`
 );
 
 inject(/(this\.DrawTextbox = function\(\) {)/, `$1${drawOverride}`);
