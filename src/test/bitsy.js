@@ -54,7 +54,7 @@ export function delay(ms) {
 
 // start puppeteer
 // and configure it for testing a bitsy game
-export async function start({ gamedata = '', catDialog = '', hacks = [] } = {}) {
+export async function start({ gamedata = '', title, catDialog = '', hacks = [] } = {}) {
 	await loadResources();
 	let game = template;
 
@@ -64,6 +64,11 @@ export async function start({ gamedata = '', catDialog = '', hacks = [] } = {}) 
 	// replace gamedata
 	if (gamedata) {
 		game = game.replace(/(id="exportedGameData">)[^]*?(<\/script>)/, `$1${gamedata}$2`);
+	}
+
+	// replace title dialog
+	if (title !== undefined) {
+		game = game.replace(/Write your game's title here/g, title);
 	}
 
 	// replace cat dialog
