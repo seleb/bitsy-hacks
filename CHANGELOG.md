@@ -1,3 +1,17 @@
+# [19.1.0](https://github.com/seleb/bitsy-hacks/compare/v19.0.1...v19.1.0) (2021-09-25)
+
+
+### Bug Fixes
+
+* **online:** sprite metadata and dialog not sent properly ([619d5e9](https://github.com/seleb/bitsy-hacks/commit/619d5e946a31e282fc3626c93bf5b77c20066101))
+* **save:** cycle/sequence indices not saved/loaded properly ([6306872](https://github.com/seleb/bitsy-hacks/commit/63068729137841231bceb6213d6caa839b5b353f))
+* **save:** shuffled dialog options and indices not saved/load properly ([0a8c018](https://github.com/seleb/bitsy-hacks/commit/0a8c018ef842b9ee3fb63e2a01d05bd50074ce32))
+
+
+### Features
+
+* **dialog audio vocal synth:** export `Glottis` and `Tract` ([489ebd2](https://github.com/seleb/bitsy-hacks/commit/489ebd240e8ae4285a2f66151865a606adb7cec9))
+
 ## [19.0.1](https://github.com/seleb/bitsy-hacks/compare/v19.0.0...v19.0.1) (2021-09-24)
 
 

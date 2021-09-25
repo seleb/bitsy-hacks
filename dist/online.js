@@ -3,7 +3,7 @@
 @file online
 @summary multiplayer bitsy
 @license MIT
-@version 19.0.1
+@version 19.1.0
 @requires 7.0
 @author Sean S. LeBlanc
 @description
@@ -779,13 +779,15 @@ function onData(event) {
 				col: data.col,
 				dlg: longname,
 				drw: longname,
+				id: event.from,
 				inventory: {},
 				name: event.from,
 				x: data.x,
 				y: data.y,
 				room: data.room,
+				type: 'SPR',
 			};
-			bitsy.dialog[longname] = data.dlg;
+			bitsy.dialog[longname] = { src: data.dlg };
 			bitsy.renderer.SetDrawingSource(longname, data.data);
 
 			for (var frame = 0; frame < data.data.length; ++frame) {

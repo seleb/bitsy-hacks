@@ -3,7 +3,7 @@
 @file stopwatch
 @summary time player actions
 @license MIT
-@version 19.0.1
+@version 19.1.0
 @author Lenny Magner
 
 @description
