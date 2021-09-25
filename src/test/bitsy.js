@@ -46,7 +46,9 @@ async function getHackTemplate() {
 	});
 }
 
+/** @type puppeteer.Browser */
 export let browser;
+/** @type puppeteer.Page */
 export let page;
 let recording = false;
 
