@@ -96,13 +96,15 @@ function onData(event) {
 				col: data.col,
 				dlg: longname,
 				drw: longname,
+				id: event.from,
 				inventory: {},
 				name: event.from,
 				x: data.x,
 				y: data.y,
 				room: data.room,
+				type: 'SPR',
 			};
-			bitsy.dialog[longname] = data.dlg;
+			bitsy.dialog[longname] = { src: data.dlg };
 			bitsy.renderer.SetDrawingSource(longname, data.data);
 
 			for (var frame = 0; frame < data.data.length; ++frame) {
