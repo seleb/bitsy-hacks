@@ -3,8 +3,6 @@
 @file long dialog
 @summary put more words onscreen
 @license MIT
-@version auto
-@requires 7.0
 @author Sean S. LeBlanc
 
 @description

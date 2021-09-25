@@ -3,8 +3,6 @@
 @file online
 @summary multiplayer bitsy
 @license MIT
-@version auto
-@requires 7.0
 @author Sean S. LeBlanc
 @description
 Provides the groundwork for running a small online multiplayer bitsy game.

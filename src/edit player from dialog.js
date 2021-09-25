@@ -3,8 +3,6 @@
 @file edit player from dialog
 @summary change which sprite is controlled by the player
 @license MIT
-@version auto
-@requires 7.0
 @author Sean S. LeBlanc
 
 @description

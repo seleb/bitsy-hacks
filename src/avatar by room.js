@@ -3,8 +3,6 @@
 @file avatar by room
 @summary change the avatar in certain rooms
 @license MIT
-@version auto
-@requires 5.3
 @author Sean S. LeBlanc
 
 @description

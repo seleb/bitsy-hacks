@@ -3,8 +3,6 @@
 @file character portraits animated
 @summary high quality anime gifs
 @license MIT
-@version auto
-@requires Bitsy Version: 5.3
 @author Sean S. LeBlanc
 
 @description

@@ -3,8 +3,6 @@
 @file custom-keyhandlers
 @summary run custom code on key inputs
 @license MIT
-@version auto
-@requires Bitsy Version: 7.0
 @author Sean S. LeBlanc
 
 @description

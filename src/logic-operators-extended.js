@@ -2,8 +2,6 @@
 🔀
 @file logic-operators-extended
 @summary adds conditional logic operators
-@version auto
-@requires 7.2
 @author @mildmojo
 
 @description

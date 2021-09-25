@@ -3,8 +3,6 @@
 @file dialog choices
 @summary binary dialog choices
 @license MIT
-@version auto
-@requires 7.0
 @author Sean S. LeBlanc
 
 @description

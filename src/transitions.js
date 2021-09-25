@@ -3,7 +3,6 @@
 @file transitions
 @summary customizable WebGL transitions
 @license MIT
-@version auto
 @author Sean S. LeBlanc
 
 @description

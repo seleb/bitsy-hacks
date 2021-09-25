@@ -3,8 +3,6 @@
 @file edit dialog from dialog
 @summary edit dialog from dialog (yes really)
 @license MIT
-@version auto
-@requires 7.0
 @author Sean S. LeBlanc
 
 @description

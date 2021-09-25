@@ -3,8 +3,6 @@
 @file dialog jump
 @summary jump from one dialog entry to another
 @license MIT
-@version auto
-@requires 7.0
 @author Sean S. LeBlanc
 
 @description

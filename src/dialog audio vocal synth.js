@@ -3,7 +3,6 @@
 @file dialog audio vocal synth
 @summary animal crossing-style audio powered by the pink trombone vocal synth
 @license MIT
-@version auto
 @author Sean S. LeBlanc
 
 @description
