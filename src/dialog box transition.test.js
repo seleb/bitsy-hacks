@@ -5,7 +5,7 @@ test('dialog box transition', async () => {
 		title: '',
 		hacks: ['dialog box transition'],
 	});
-	const fuzzyMatch = { failureThreshold: 0.04, failureThresholdType: 'percent' };
+	const fuzzyMatch = { failureThreshold: 0.1, failureThresholdType: 'percent' };
 	await snapshot();
 	await startDialog('test');
 	await press('ArrowRight'); // complete dialog page
