@@ -1,10 +1,9 @@
 // a Very Bad readme generator
-"use strict";
 
-import doctrine from "doctrine";
-import fs from "fs";
-import pkg from "./package.json";
+import doctrine from 'doctrine';
+import fs from 'fs';
 import getHacks from './getHacks';
+import pkg from './package.json';
 
 const l = getHacks().length;
 const headers = [];
@@ -12,16 +11,18 @@ const headers = [];
 function write() {
 	var contents = headers
 		.filter(h => h)
-		.map(header => doctrine.parse(header, {
-			unwrap: true,
-			recoverable: true
-		}))
+		.map(header =>
+			doctrine.parse(header, {
+				unwrap: true,
+				recoverable: true,
+			})
+		)
 		.map(jsdoc => {
 			var o = {};
 			o.emoji = jsdoc.description;
-			for (var i in jsdoc.tags) {
-				o[jsdoc.tags[i].title] = jsdoc.tags[i].description;
-			}
+			Object.values(jsdoc.tags).forEach(tag => {
+				o[tag.title] = tag.description;
+			});
 			o.file = o.file || '';
 			o.url = `/dist/${encodeURI(o.file.replace(/\s/g, '-'))}.js`;
 			return o;
@@ -29,13 +30,17 @@ function write() {
 		.sort((a, b) => {
 			return a.file < b.file ? -1 : a.file > b.file ? 1 : 0;
 		});
-	fs.writeFileSync("README.md", `# bitsy hacks
+	fs.writeFileSync(
+		'README.md',
+		`# bitsy hacks
 
 \`\`\`sh
 npm i ${pkg.name}
 \`\`\`
 
 A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamledoux)'s [Bitsy Game Maker](https://ledoux.itch.io/bitsy).
+
+Last tested against Bitsy ${pkg.bitsyVersion}
 
 - [Contents](#contents)
 - [How to use](#how-to-use)
@@ -45,9 +50,7 @@ A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamled
 
 ## Contents
 
-${contents.map(hack => 
-`- ${hack.emoji} [${hack.file}](${hack.url}): ${hack.summary}`
-).join('\n')}
+${contents.map(hack => `- ${hack.emoji} [${hack.file}](${hack.url}): ${hack.summary}`).join('\n')}
 
 ![Imgur](https://i.imgur.com/peRLLHn.gif)![Imgur](https://i.imgur.com/yg81aH2.gif)![Imgur](https://i.imgur.com/r7AUHX4.gif)
 
@@ -139,10 +142,12 @@ If you are using an older version of Bitsy (or a fork based on an older version)
 - [AYolland's Borksy](https://ayolland.itch.io/borksy): Hack helper
 - [elkie's bitsy-savior](https://aloelazoe.itch.io/bitsy-savior): Safe saver
 - [ruin's image-to-bitsy](https://ruin.itch.io/image-to-bitsy): Artistic aid
-- [Fontsy](https://seansleblanc.itch.io/Fontsy): Typographic tool`);
+- [Fontsy](https://seansleblanc.itch.io/Fontsy): Typographic tool`
+	);
 }
 
-export default function (options = {}) {
+// eslint-disable-next-line import/no-default-export
+export default function () {
 	return {
 		// grab headers
 		renderChunk(code) {
