@@ -1,4 +1,4 @@
-import { delay, press, snapshot, start } from './test/bitsy';
+import { delay, press, snapshot, start, waitForFrame } from './test/bitsy';
 
 const multiple = `
 
@@ -78,6 +78,7 @@ test('follower', async () => {
 	await start({
 		hacks: ['follower'],
 	});
+	await waitForFrame();
 	await press('ArrowRight'); // complete title page
 	await press('ArrowRight'); // end title page
 	await press('ArrowLeft');
@@ -101,6 +102,7 @@ test('multiple followers (chain)', async () => {
 		],
 		gamedata: multiple,
 	});
+	await waitForFrame();
 	await press('ArrowLeft');
 	await snapshot();
 	await press('ArrowLeft');
@@ -122,6 +124,7 @@ test('multiple followers (stack)', async () => {
 		],
 		gamedata: multiple,
 	});
+	await waitForFrame();
 	await press('ArrowLeft');
 	await snapshot();
 	await press('ArrowLeft');
@@ -235,6 +238,7 @@ NAME cat dialog
 			],
 		],
 	});
+	await waitForFrame();
 	await press('ArrowLeft'); // next to exit
 	await snapshot();
 	await press('ArrowLeft'); // through exit
