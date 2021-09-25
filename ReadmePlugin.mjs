@@ -27,9 +27,7 @@ function write() {
 			o.url = `/dist/${encodeURI(o.file.replace(/\s/g, '-'))}.js`;
 			return o;
 		})
-		.sort((a, b) => {
-			return a.file < b.file ? -1 : a.file > b.file ? 1 : 0;
-		});
+		.sort((a, b) => a.file.localeCompare(b.file, 'en', { sensitivity: 'base', ignorePunctuation: true }));
 	fs.writeFileSync(
 		'README.md',
 		`# bitsy hacks
