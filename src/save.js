@@ -76,6 +76,7 @@ function save() {
 	}
 	if (hackOptions.dialog) {
 		snapshot.sequenceIndices = bitsy.saveHack.sequenceIndices;
+		snapshot.shuffles = bitsy.saveHack.shuffles;
 	}
 	localStorage.setItem(hackOptions.key, JSON.stringify(snapshot));
 }
@@ -114,6 +115,7 @@ function load() {
 	}
 	if (hackOptions.dialog && snapshot.sequenceIndices) {
 		bitsy.saveHack.sequenceIndices = snapshot.sequenceIndices;
+		bitsy.saveHack.shuffles = snapshot.shuffles;
 	}
 }
 
@@ -124,6 +126,7 @@ function clear() {
 // setup global needed for saving/loading dialog progress
 bitsy.saveHack = {
 	sequenceIndices: {},
+	shuffles: {},
 	saveSeqIdx: function (node, index) {
 		var key = node.GetId();
 		bitsy.saveHack.sequenceIndices[key] = index;
@@ -132,14 +135,32 @@ bitsy.saveHack = {
 		var key = node.GetId();
 		return bitsy.saveHack.sequenceIndices[key];
 	},
+	saveShuffle: function (node, options) {
+		var key = node.GetId();
+		bitsy.saveHack.shuffles[key] = options;
+	},
+	loadShuffle: function (node) {
+		var key = node.GetId();
+		return bitsy.saveHack.shuffles[key];
+	},
 };
 
 // use saved index to eval/calc next index if available
-inject(/(ptionsShuffled\[index\].Eval)/g, 'ptionsShuffled[window.saveHack.loadSeqIdx(this) || index].Eval');
+inject(/(optionsShuffled\.push\()optionsUnshuffled\.splice\(i,1\)\[0\](\);)/, '$1 i $2 optionsUnshuffled.splice(i,1);');
+inject(
+	/(optionsShuffled\[index\])/,
+	`
+var i = window.saveHack.loadSeqIdx(this);
+index = i === undefined ? index : i;
+optionsShuffled = window.saveHack.loadShuffle(this) || optionsShuffled;
+window.saveHack.saveShuffle(this, optionsShuffled);
+options[index]`
+);
 inject(/(\/\/ bitsyLog\(".+" \+ index\);)/g, '$1\nvar i = window.saveHack.loadSeqIdx(this);index = i === undefined ? index : i;');
 // save index on changes
 inject(/(index = next;)/g, '$1window.saveHack.saveSeqIdx(this, index);');
 inject(/(\tindex = 0;)/g, '$1window.saveHack.saveSeqIdx(this, index);');
+inject(/(\tindex\+\+;)/g, '$1window.saveHack.saveSeqIdx(this, index);');
 
 // hook up autosave
 var autosaveInterval;
