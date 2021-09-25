@@ -1,4 +1,5 @@
-import fs from 'fs';
+import fs, { existsSync } from 'fs';
+import { rm, writeFile } from 'fs/promises';
 import { resolve } from 'path';
 import puppeteer from 'puppeteer';
 import util from 'util';
@@ -8,6 +9,8 @@ const readFile = util.promisify(fs.readFile);
 
 let template;
 let hackDist;
+
+const testfilepath = resolve(__dirname, './.test.html');
 
 async function loadResources() {
 	if (template && hackDist) {
@@ -108,11 +111,11 @@ export async function start({ gamedata = '', title, catDialog = '', hacks = [] }
 	game = game.replace(/(<\/script>)(?![^]*?<\/script>)[^]*?(<\/head>)/, '$1<script>console.log = () => {};</script>$2');
 
 	// convert to url
-	game = `data:text/html;base64,${Buffer.from(game).toString('base64')}`;
+	await writeFile(testfilepath, game, { encoding: 'utf-8' });
 
 	// setup puppeteer
 	page = await browser.newPage();
-	await page.goto(game);
+	await page.goto(`file://${testfilepath}`);
 	await page.setViewport({
 		width: 256,
 		height: 256,
@@ -132,6 +135,9 @@ export async function bitsyAfterEach() {
 }
 
 export async function bitsyAfterAll() {
+	if (existsSync(testfilepath)) {
+		await rm(testfilepath);
+	}
 	await browser.close();
 	browser = undefined;
 }
