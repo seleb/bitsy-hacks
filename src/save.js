@@ -121,35 +121,25 @@ function clear() {
 	localStorage.removeItem(hackOptions.key);
 }
 
-function nodeKey(node) {
-	var key = (node.key =
-		node.key ||
-		node.options
-			.map(function (option) {
-				return option.Serialize();
-			})
-			.join('\n'));
-	return key;
-}
 // setup global needed for saving/loading dialog progress
 bitsy.saveHack = {
 	sequenceIndices: {},
 	saveSeqIdx: function (node, index) {
-		var key = nodeKey(node);
+		var key = node.GetId();
 		bitsy.saveHack.sequenceIndices[key] = index;
 	},
 	loadSeqIdx: function (node) {
-		var key = nodeKey(node);
+		var key = node.GetId();
 		return bitsy.saveHack.sequenceIndices[key];
 	},
 };
 
 // use saved index to eval/calc next index if available
 inject(/(ptionsShuffled\[index\].Eval)/g, 'ptionsShuffled[window.saveHack.loadSeqIdx(this) || index].Eval');
-inject(/var next = index \+ 1;/g, 'var next = (window.saveHack.loadSeqIdx(this) || index) + 1;');
+inject(/(\/\/ bitsyLog\(".+" \+ index\);)/g, '$1\nvar i = window.saveHack.loadSeqIdx(this);index = i === undefined ? index : i;');
 // save index on changes
-inject(/(index = next);/g, '$1,window.saveHack.saveSeqIdx(this, next);');
-inject(/(\tindex = 0);/g, '$1,window.saveHack.saveSeqIdx(this, 0);');
+inject(/(index = next;)/g, '$1window.saveHack.saveSeqIdx(this, index);');
+inject(/(\tindex = 0;)/g, '$1window.saveHack.saveSeqIdx(this, index);');
 
 // hook up autosave
 var autosaveInterval;
