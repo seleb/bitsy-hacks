@@ -3,6 +3,7 @@ import { rm, writeFile } from 'fs/promises';
 import { resolve } from 'path';
 import puppeteer from 'puppeteer';
 import util from 'util';
+import pkg from '../../package.json';
 
 const readdir = util.promisify(fs.readdir);
 const readFile = util.promisify(fs.readFile);
@@ -41,7 +42,7 @@ async function getHackDist() {
 }
 
 async function getHackTemplate() {
-	return readFile(resolve(__dirname, 'bitsy 7.10.html'), {
+	return readFile(resolve(__dirname, `Bitsy ${pkg.bitsyVersion}.html`), {
 		encoding: 'utf8',
 	});
 }
