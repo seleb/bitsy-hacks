@@ -1,4 +1,4 @@
-import { evaluate, press, snapshot, start, startDialog, walkToCat } from './test/bitsy';
+import { evaluate, press, snapshot, start, startDialog, waitForFrame, walkToCat } from './test/bitsy';
 
 const saveOptions = {
 	autosaveInterval: 99999999999999999, // HACK: Infinity doesn't stringify correctly
@@ -208,5 +208,111 @@ test('shuffle', async () => {
 	await press('ArrowRight'); // talk to cat
 	await press('ArrowRight'); // complete dialog
 	// 3
+	await snapshot();
+});
+
+test('items + variables', async () => {
+	await start({
+		hacks: [['save', { ...saveOptions, clearOnStart: true }]],
+		gamedata: `
+
+# BITSY VERSION 7.10
+
+! ROOM_FORMAT 1
+
+PAL 0
+0,82,204
+128,159,255
+255,255,255
+
+ROOM 0
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+0,a,a,a,a,a,a,a,a,a,a,a,a,a,a,0
+0,a,0,0,0,0,0,0,0,0,0,0,0,0,a,0
+0,a,0,0,0,0,0,0,0,0,0,0,0,0,a,0
+0,a,0,0,0,0,0,0,0,0,0,0,0,0,a,0
+0,a,0,0,0,0,0,0,0,0,0,0,0,0,a,0
+0,a,0,0,0,0,0,0,0,0,0,0,0,0,a,0
+0,a,0,0,0,0,0,0,0,0,0,0,0,0,a,0
+0,a,0,0,0,0,0,0,0,0,0,0,0,0,a,0
+0,a,0,0,0,0,0,0,0,0,0,0,0,0,a,0
+0,a,0,0,0,0,0,0,0,0,0,0,0,0,a,0
+0,a,0,0,0,0,0,0,0,0,0,0,0,0,a,0
+0,a,0,0,0,0,0,0,0,0,0,0,0,0,a,0
+0,a,0,0,0,0,0,0,0,0,0,0,0,0,a,0
+0,a,a,a,a,a,a,a,a,a,a,a,a,a,a,0
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+ITM 0 5,4
+ITM 0 6,4
+ITM 0 7,4
+PAL 0
+
+TIL a
+11111111
+10000001
+10000001
+10011001
+10011001
+10000001
+10000001
+11111111
+NAME block
+
+SPR A
+00011000
+00011000
+00011000
+00111100
+01111110
+10111101
+00100100
+00100100
+POS 0 4,4
+
+SPR a
+00000000
+00000000
+01010001
+01110001
+01110010
+01111100
+00111100
+00100100
+NAME cat
+
+ITM 0
+00000000
+00000000
+00000000
+00111100
+01100100
+00100100
+00011000
+00000000
+
+VAR a
+42
+
+`,
+	});
+
+	await waitForFrame();
+	await press('ArrowRight'); // pick up tea 1
+	await press('ArrowRight'); // pick up tea 2
+	await startDialog('{a = 5}'); // set variable
+	await startDialog('{save}');
+	await startDialog('a: {say a}{br}tea: {say {item 0}}');
+	await press('ArrowRight'); // complete dialog
+	await snapshot();
+	await press('ArrowRight'); // end dialog
+	await press('ArrowRight'); // pick up tea 3
+	await startDialog('{a = a+1}'); // increment variable
+	await startDialog('a: {say a}{br}tea: {say {item 0}}');
+	await press('ArrowRight'); // complete dialog
+	await snapshot();
+	await press('ArrowRight'); // end dialog
+	await startDialog('{load}');
+	await startDialog('a: {say a}{br}tea: {say {item 0}}');
+	await press('ArrowRight'); // complete dialog
 	await snapshot();
 });
