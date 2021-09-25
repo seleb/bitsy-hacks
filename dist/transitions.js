@@ -3,8 +3,10 @@
 @file transitions
 @summary customizable WebGL transitions
 @license MIT
-@version 19.1.0
 @author Sean S. LeBlanc
+@version 19.1.1
+@requires Bitsy 7.10
+
 
 @description
 Adds a simple system for defining fancy transitions.
@@ -221,6 +223,9 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
+@version 19.1.1
+@requires Bitsy 7.10
+
 */
 var kitsy = (window.kitsy = window.kitsy || {
     queuedInjectScripts: [],
@@ -286,8 +291,10 @@ var after = kitsy.after;
 @file canvas replacement
 @summary WebGLazy bitsy integration (this one's mostly just for me)
 @license MIT
-@version auto
 @author Sean S. LeBlanc
+@version 19.1.1
+@requires Bitsy 7.10
+
 
 @description
 Replaces bitsy canvas with a responsive WebGL canvas (this one's mostly just for me)

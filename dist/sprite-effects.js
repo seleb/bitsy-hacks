@@ -3,9 +3,10 @@
 @file sprite effects
 @summary like text effects, but for sprites
 @license MIT
-@version 19.1.0
-@requires 7.1
 @author Sean S. LeBlanc
+@version 19.1.1
+@requires Bitsy 7.10
+
 
 @description
 Adds support for applying effects to sprites, items, and tiles.
@@ -214,6 +215,9 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
+@version 19.1.1
+@requires Bitsy 7.10
+
 */
 var kitsy = (window.kitsy = window.kitsy || {
     queuedInjectScripts: [],
@@ -376,6 +380,9 @@ function addDualDialogTag(tag, fn) {
 @file utils
 @summary miscellaneous bitsy utilities
 @author Sean S. LeBlanc
+@version 19.1.1
+@requires Bitsy 7.10
+
 */
 
 /*

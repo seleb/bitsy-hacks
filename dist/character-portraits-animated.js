@@ -3,9 +3,10 @@
 @file character portraits animated
 @summary high quality anime gifs
 @license MIT
-@version 19.1.0
-@requires Bitsy Version: 5.3
 @author Sean S. LeBlanc
+@version 19.1.1
+@requires Bitsy 7.10
+
 
 @description
 An expanded version of the character portraits hack
@@ -970,6 +971,9 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
+@version 19.1.1
+@requires Bitsy 7.10
+
 */
 var kitsy = (window.kitsy = window.kitsy || {
     queuedInjectScripts: [],
@@ -1083,9 +1087,10 @@ function addDialogTag(tag, fn) {
 @file character portraits
 @summary high quality anime jpegs (or pngs i guess)
 @license MIT
-@version auto
-@requires Bitsy Version: 5.3
 @author Sean S. LeBlanc
+@version 19.1.1
+@requires Bitsy 7.10
+
 
 @description
 Adds a tag (portrait "id") which adds the ability to draw high resolution images during dialog.

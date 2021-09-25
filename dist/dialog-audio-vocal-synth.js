@@ -3,8 +3,10 @@
 @file dialog audio vocal synth
 @summary animal crossing-style audio powered by the pink trombone vocal synth
 @license MIT
-@version 19.1.0
 @author Sean S. LeBlanc
+@version 19.1.1
+@requires Bitsy 7.10
+
 
 @description
 An extension of the dialog audio hack which incorporates
@@ -882,6 +884,9 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
+@version 19.1.1
+@requires Bitsy 7.10
+
 */
 var kitsy = (window.kitsy = window.kitsy || {
     queuedInjectScripts: [],
@@ -995,8 +1000,10 @@ function addDialogTag(tag, fn) {
 @file dialog audio
 @summary animal crossing-style audio
 @license MIT
-@version auto
 @author Sean S. LeBlanc
+@version 19.1.1
+@requires Bitsy 7.10
+
 
 @description
 Executes some logic for every letter of text printed,
@@ -1051,6 +1058,9 @@ before('dialogBuffer.DoNextChar', function () {
 @file utils
 @summary miscellaneous bitsy utilities
 @author Sean S. LeBlanc
+@version 19.1.1
+@requires Bitsy 7.10
+
 */
 
 /**

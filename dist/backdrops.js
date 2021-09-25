@@ -3,9 +3,10 @@
 @file backdrops
 @summary makes the game have a backdrop
 @license MIT
-@version 19.1.0
-@requires Bitsy Version: 7.2
 @author Cephalopodunk & Sean S. LeBlanc
+@version 19.1.1
+@requires Bitsy 7.10
+
 
 @description
 Shows backdrops behind the game
@@ -180,6 +181,9 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
+@version 19.1.1
+@requires Bitsy 7.10
+
 */
 var kitsy = (window.kitsy = window.kitsy || {
     queuedInjectScripts: [],
@@ -245,9 +249,10 @@ var after = kitsy.after;
 @file transparent sprites
 @summary makes all sprites have transparent backgrounds
 @license MIT
-@version auto
-@requires Bitsy Version: 6.1
 @author Sean S. LeBlanc
+@version 19.1.1
+@requires Bitsy 7.10
+
 
 @description
 Makes all sprites have transparent backgrounds.
@@ -296,9 +301,10 @@ after('renderPixelInstruction', function (bufferId, buffer, paletteIndex, x, y) 
 @file transparent background
 @summary makes the game have a transparent background
 @license MIT
-@version auto
-@requires Bitsy Version: 7.2
 @author Cephalopodunk & Sean S. LeBlanc
+@version 19.1.1
+@requires Bitsy 7.10
+
 
 @description
 Makes the game background transparent, showing whatever would be visible behind it in the html document.

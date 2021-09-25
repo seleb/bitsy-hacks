@@ -3,9 +3,10 @@
 @file online
 @summary multiplayer bitsy
 @license MIT
-@version 19.1.0
-@requires 7.0
 @author Sean S. LeBlanc
+@version 19.1.1
+@requires Bitsy 7.10
+
 @description
 Provides the groundwork for running a small online multiplayer bitsy game.
 
@@ -181,6 +182,9 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
+@version 19.1.1
+@requires Bitsy 7.10
+
 */
 var kitsy = (window.kitsy = window.kitsy || {
     queuedInjectScripts: [],
@@ -343,6 +347,9 @@ function addDualDialogTag(tag, fn) {
 @file utils
 @summary miscellaneous bitsy utilities
 @author Sean S. LeBlanc
+@version 19.1.1
+@requires Bitsy 7.10
+
 */
 
 /*
@@ -403,9 +410,10 @@ function getImage(name, map) {
 @file edit dialog from dialog
 @summary edit dialog from dialog (yes really)
 @license MIT
-@version auto
-@requires 7.0
 @author Sean S. LeBlanc
+@version 19.1.1
+@requires Bitsy 7.10
+
 
 @description
 You can use this to edit the dialog of sprites/items through dialog.
@@ -470,6 +478,9 @@ addDeferredDialogTag('dialog', editDialog);
 @file edit image at runtime
 @summary API for updating image data at runtime.
 @author Sean S. LeBlanc
+@version 19.1.1
+@requires Bitsy 7.10
+
 @description
 Adds API for updating sprite, tile, and item data at runtime.
 
@@ -536,9 +547,10 @@ function setSpriteData(id, frame, newData) {
 @file edit image from dialog
 @summary edit sprites, items, and tiles from dialog
 @license MIT
-@version auto
-@requires 5.3
 @author Sean S. LeBlanc
+@version 19.1.1
+@requires Bitsy 7.10
+
 
 @description
 You can use this to edit the image data of sprites (including the player avatar), items, and tiles through dialog.
@@ -680,9 +692,10 @@ addDualDialogTag('imagePal', editPalette);
 @file javascript dialog
 @summary execute arbitrary javascript from dialog
 @license MIT
-@version auto
-@requires Bitsy Version: 4.5, 4.6
 @author Sean S. LeBlanc
+@version 19.1.1
+@requires Bitsy 7.10
+
 
 @description
 Lets you execute arbitrary JavaScript from dialog (including inside conditionals).

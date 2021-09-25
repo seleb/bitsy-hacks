@@ -3,9 +3,10 @@
 @file favicon-from-sprite
 @summary generate a browser favicon (tab icon) from a Bitsy sprite, including animation!
 @license WTFPL (do WTF you want)
-@version 19.1.0
-@requires Bitsy Version: 5.5
 @author @mildmojo
+@version 19.1.1
+@requires Bitsy 7.10
+
 
 @description
 Use one of your game sprites as the page favicon. It'll even animate if the
@@ -169,6 +170,9 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
+@version 19.1.1
+@requires Bitsy 7.10
+
 */
 var kitsy = (window.kitsy = window.kitsy || {
     queuedInjectScripts: [],
@@ -233,6 +237,9 @@ var after = kitsy.after;
 @file utils
 @summary miscellaneous bitsy utilities
 @author Sean S. LeBlanc
+@version 19.1.1
+@requires Bitsy 7.10
+
 */
 
 /*

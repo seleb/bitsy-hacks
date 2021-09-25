@@ -3,9 +3,10 @@
 @file dialog box transition
 @summary adds an easing transition animation to display the dialog box text
 @license MIT
-@version 19.1.0
-@requires 4.8, 4.9
 @author Delacannon
+@version 19.1.1
+@requires Bitsy 7.10
+
 
 @description
 A hack that adds an easing transition animation to display the dialog box text
@@ -159,6 +160,9 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
+@version 19.1.1
+@requires Bitsy 7.10
+
 */
 var kitsy = (window.kitsy = window.kitsy || {
     queuedInjectScripts: [],

@@ -3,9 +3,10 @@
 @file edit room from dialog
 @summary modify the content of a room from dialog
 @license MIT
-@version 19.1.0
-@requires Bitsy Version: 6.1
 @author Dana Holdampf
+@version 19.1.1
+@requires Bitsy 7.10
+
 
 @description
 This hack allows you to add, remove, or reposition tiles, sprites, and items.
@@ -289,6 +290,9 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
+@version 19.1.1
+@requires Bitsy 7.10
+
 */
 var kitsy = (window.kitsy = window.kitsy || {
     queuedInjectScripts: [],
@@ -451,6 +455,9 @@ function addDualDialogTag(tag, fn) {
 @file utils
 @summary miscellaneous bitsy utilities
 @author Sean S. LeBlanc
+@version 19.1.1
+@requires Bitsy 7.10
+
 */
 
 /**

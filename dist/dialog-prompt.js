@@ -3,9 +3,10 @@
 @file dialog prompt
 @summary prompt the user for text input in dialog
 @license MIT
-@version 19.1.0
-@requires 6.4
 @author Sean S. LeBlanc
+@version 19.1.1
+@requires Bitsy 7.10
+
 
 @description
 Adds a dialog command which prompts the user for input,
@@ -196,6 +197,9 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
+@version 19.1.1
+@requires Bitsy 7.10
+
 */
 var kitsy = (window.kitsy = window.kitsy || {
     queuedInjectScripts: [],
@@ -316,9 +320,10 @@ inject(/(this\.AddLinebreak = )/, 'this.AddParagraphBreak = function() { buffer.
 @file paragraph-break
 @summary Adds paragraph breaks to the dialogue parser
 @license WTFPL (do WTF you want)
-@version auto
-@requires Bitsy Version: 5.0, 5.1
 @author Sean S. LeBlanc, David Mowatt
+@version 19.1.1
+@requires Bitsy 7.10
+
 
 @description
 Adds a (p) tag to the dialogue parser that forces the following text to

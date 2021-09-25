@@ -3,9 +3,10 @@
 @file replace drawing
 @summary add name-tags to replace drawings when the game is loading
 @license MIT
-@version 19.1.0
-@requires 6.3
 @author Elkie Nova
+@version 19.1.1
+@requires Bitsy 7.10
+
 
 @description
 add this tag to the name of the drawing you want to replace:
@@ -176,6 +177,9 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
+@version 19.1.1
+@requires Bitsy 7.10
+
 */
 var kitsy = (window.kitsy = window.kitsy || {
     queuedInjectScripts: [],

@@ -3,9 +3,10 @@
 @file long dialog
 @summary put more words onscreen
 @license MIT
-@version 19.1.0
-@requires 7.0
 @author Sean S. LeBlanc
+@version 19.1.1
+@requires Bitsy 7.10
+
 
 @description
 Makes the dialog box variable in height, allowing it to expand as needed.
@@ -173,6 +174,9 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
+@version 19.1.1
+@requires Bitsy 7.10
+
 */
 var kitsy = (window.kitsy = window.kitsy || {
     queuedInjectScripts: [],
@@ -293,9 +297,10 @@ inject(/(this\.AddLinebreak = )/, 'this.AddParagraphBreak = function() { buffer.
 @file paragraph-break
 @summary Adds paragraph breaks to the dialogue parser
 @license WTFPL (do WTF you want)
-@version auto
-@requires Bitsy Version: 5.0, 5.1
 @author Sean S. LeBlanc, David Mowatt
+@version 19.1.1
+@requires Bitsy 7.10
+
 
 @description
 Adds a (p) tag to the dialogue parser that forces the following text to

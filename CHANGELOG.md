@@ -1,3 +1,10 @@
+## [19.1.1](https://github.com/seleb/bitsy-hacks/compare/v19.1.0...v19.1.1) (2021-09-25)
+
+
+### Bug Fixes
+
+* list hack version and bitsy version in `./dist` automatically ([a0f54b3](https://github.com/seleb/bitsy-hacks/commit/a0f54b3d685424228a8028a9d3460ba4d2dce547))
+
 # [19.1.0](https://github.com/seleb/bitsy-hacks/compare/v19.0.1...v19.1.0) (2021-09-25)
 
 

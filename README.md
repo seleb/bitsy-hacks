@@ -6,6 +6,8 @@ npm i @bitsy/hecks
 
 A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamledoux)'s [Bitsy Game Maker](https://ledoux.itch.io/bitsy).
 
+Last tested against Bitsy 7.10
+
 - [Contents](#contents)
 - [How to use](#how-to-use)
 - [FAQ](#FAQ)
@@ -23,9 +25,9 @@ A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamled
 - 🙀 [character portraits animated](/dist/character-portraits-animated.js): high quality anime gifs
 - ⛔️ [close on ending](/dist/close-on-ending.js): Prevents from playing past an ending
 - ➿ [corrupt](/dist/corrupt.js): corrupts gamedata at runtime
-- 🅰 [custom text effect](/dist/custom-text-effect.js): make {custom}text effects{custom}
 - 🎞 [custom-exit-effects](/dist/custom-exit-effects.js): make custom exit transition effects
 - ⌨ [custom-keyhandlers](/dist/custom-keyhandlers.js): run custom code on key inputs
+- 🅰 [custom text effect](/dist/custom-text-effect.js): make {custom}text effects{custom}
 - 💬 [dialog audio](/dist/dialog-audio.js): animal crossing-style audio
 - 🎺 [dialog audio vocal synth](/dist/dialog-audio-vocal-synth.js): animal crossing-style audio powered by the pink trombone vocal synth
 - 🔁 [dialog box transition](/dist/dialog-box-transition.js): adds an easing transition animation to display the dialog box text
@@ -33,8 +35,8 @@ A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamled
 - 🚀 [dialog jump](/dist/dialog-jump.js): jump from one dialog entry to another
 - 💬 [dialog pause](/dist/dialog-pause.js): add pauses in between printing text
 - ⌨ [dialog prompt](/dist/dialog-prompt.js): prompt the user for text input in dialog
-- 🔝 [direction in dialog](/dist/direction-in-dialog.js): provides a variable with player direction
 - ↔ [directional avatar](/dist/directional-avatar.js): flips the player's sprite based on directional movement
+- 🔝 [direction in dialog](/dist/direction-in-dialog.js): provides a variable with player direction
 - 🖼 [dynamic background](/dist/dynamic-background.js): HTML background matching bitsy background
 - 📝 [edit dialog from dialog](/dist/edit-dialog-from-dialog.js): edit dialog from dialog (yes really)
 - 🖌 [edit image from dialog](/dist/edit-image-from-dialog.js): edit sprites, items, and tiles from dialog

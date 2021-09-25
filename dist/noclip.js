@@ -3,9 +3,10 @@
 @file noclip
 @summary walk through wall tiles, sprites, items, exits, and endings
 @license MIT
-@version 19.1.0
-@requires 7.0
 @author Sean S. LeBlanc
+@version 19.1.1
+@requires Bitsy 7.10
+
 
 @description
 Adds a "noclip" command, which allows player to walk through wall tiles, sprites, items, exits, and endings.
@@ -181,6 +182,9 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
+@version 19.1.1
+@requires Bitsy 7.10
+
 */
 var kitsy = (window.kitsy = window.kitsy || {
     queuedInjectScripts: [],
@@ -246,9 +250,10 @@ var after = kitsy.after;
 @file custom-keyhandlers
 @summary run custom code on key inputs
 @license MIT
-@version auto
-@requires Bitsy Version: 7.0
 @author Sean S. LeBlanc
+@version 19.1.1
+@requires Bitsy 7.10
+
 
 @description
 Adds an extra layer of key handlers to bitsy's input handling

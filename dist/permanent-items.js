@@ -3,9 +3,10 @@
 @file permanent items
 @summary prevent some items from being picked up
 @license MIT
-@version 19.1.0
-@requires 7.0
 @author Sean S. LeBlanc
+@version 19.1.1
+@requires Bitsy 7.10
+
 
 @description
 Prevents certain items from being picked up, but allows them to be walked over and triggers their dialog.
@@ -165,6 +166,9 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
+@version 19.1.1
+@requires Bitsy 7.10
+
 */
 var kitsy = (window.kitsy = window.kitsy || {
     queuedInjectScripts: [],
