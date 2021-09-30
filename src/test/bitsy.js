@@ -128,6 +128,7 @@ export async function start({ gamedata = '', title, catDialog = '', hacks = [] }
 export async function bitsyBeforeAll() {
 	browser = await puppeteer.launch({
 		headless: false,
+		args: ['--mute-audio'],
 	});
 }
 
