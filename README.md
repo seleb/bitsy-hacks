@@ -143,6 +143,10 @@ then edit it to look like this:
   
   Bitsy HD in particular is a fairly old fork, and generally needs [older versions of hacks](https://github.com/seleb/bitsy-hacks/tree/d419cf6b84822a6419a78ad82336333771b27bf0/dist).
 
+- > Do the hacks work with emulators like [bitsy boutique](https://candle.itch.io/bitsy-boutique) or [bitsybox](https://ledoux.itch.io/bitsybox)?
+
+  No. Emulators function by re-implementing parts of the engine and/or browser into another environment, but the hacks rely heavily on how the engine is structured and how the browser handles `<script>` tags. However, desktop projects which preserve the original engine/browser context (e.g. [Electron](https://www.electronjs.org/), [NW.js](https://nwjs.io/)) can be used.
+
 If your question isn't covered here, it may be in the general [Bitsy FAQ](https://docs.google.com/document/d/1jRz3wgkQU3kZN_LGChw4UlMWhVoc145J-euBtkr7NeE).
 
 For other issues, feel free to ping me, [open an issue](https://github.com/seleb/bitsy-hacks/issues/new), or ask for help on the [Bitsy discord](https://discordapp.com/invite/9rAjhtr)!
