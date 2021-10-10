@@ -262,4 +262,4 @@ exports.hackOptions = hackOptions;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-}(this.hacks.transparent_sprites = this.hacks.transparent_sprites || {}, window));
+})(this.hacks.transparent_sprites = this.hacks.transparent_sprites || {}, window);

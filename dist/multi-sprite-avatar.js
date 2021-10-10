@@ -417,4 +417,4 @@ exports.hackOptions = hackOptions;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-}(this.hacks['multi-sprite_avatar'] = this.hacks['multi-sprite_avatar'] || {}, window));
+})(this.hacks["multi-sprite_avatar"] = this.hacks["multi-sprite_avatar"] || {}, window);

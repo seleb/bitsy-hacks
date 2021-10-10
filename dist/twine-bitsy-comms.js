@@ -468,4 +468,4 @@ exports.hackOptions = hackOptions;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-}(this.hacks['twine-bitsy-comms'] = this.hacks['twine-bitsy-comms'] || {}, window));
+})(this.hacks["twine-bitsy-comms"] = this.hacks["twine-bitsy-comms"] || {}, window);

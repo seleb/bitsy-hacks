@@ -373,4 +373,4 @@ addDualDialogTag('end', function (environment, parameters) {
 	return undefined;
 });
 
-}(window));
+})(window);

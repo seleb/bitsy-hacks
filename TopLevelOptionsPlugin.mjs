@@ -6,7 +6,7 @@ export default function () {
 		renderChunk(code) {
 			// workaround for issues introduced by https://github.com/rollup/rollup/pull/3710/files
 			code = code
-				.replace(/bitsy__default\['default'\]/g, 'bitsy')
+				.replace(/bitsy__default\["default"\]/g, 'bitsy')
 				.replace(/var bitsy__default = /, 'bitsy = bitsy || ');
 			
 			// move options

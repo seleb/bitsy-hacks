@@ -1118,4 +1118,4 @@ exports.hackOptions = hackOptions;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-}(this.hacks.tracery_processing = this.hacks.tracery_processing || {}, window));
+})(this.hacks.tracery_processing = this.hacks.tracery_processing || {}, window);

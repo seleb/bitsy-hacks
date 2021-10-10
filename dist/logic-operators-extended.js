@@ -265,4 +265,4 @@ inject(
 		.join('')} $2`
 );
 
-}(window));
+})(window);

@@ -594,4 +594,4 @@ exports.hackOptions = hackOptions;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-}(this.hacks.follower = this.hacks.follower || {}, window));
+})(this.hacks.follower = this.hacks.follower || {}, window);

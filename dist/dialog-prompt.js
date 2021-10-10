@@ -481,4 +481,4 @@ exports.hackOptions = hackOptions;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-}(this.hacks.dialog_prompt = this.hacks.dialog_prompt || {}, window));
+})(this.hacks.dialog_prompt = this.hacks.dialog_prompt || {}, window);

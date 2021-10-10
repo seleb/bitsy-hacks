@@ -303,4 +303,4 @@ addDialogTag('p', function (environment, parameters, onReturn) {
 });
 // End of (p) paragraph break mod
 
-}(window));
+})(window);

@@ -1315,4 +1315,4 @@ exports.hackOptions = hackOptions;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-}(this.hacks.character_portraits_animated = this.hacks.character_portraits_animated || {}, window));
+})(this.hacks.character_portraits_animated = this.hacks.character_portraits_animated || {}, window);

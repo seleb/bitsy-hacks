@@ -248,4 +248,4 @@ exports.hackOptions = hackOptions;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-}(this.hacks.unique_items = this.hacks.unique_items || {}, window));
+})(this.hacks.unique_items = this.hacks.unique_items || {}, window);

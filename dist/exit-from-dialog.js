@@ -431,4 +431,4 @@ function getExitParams(parameters) {
 }
 // End of (exit) dialog function mod
 
-}(window));
+})(window);

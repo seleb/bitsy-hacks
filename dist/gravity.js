@@ -973,4 +973,4 @@ exports.hackOptions = hackOptions;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-}(this.hacks.gravity = this.hacks.gravity || {}, window));
+})(this.hacks.gravity = this.hacks.gravity || {}, window);

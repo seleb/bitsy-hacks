@@ -360,4 +360,4 @@ function editDialog(environment, parameters) {
 // hook up the dialog tag
 addDeferredDialogTag('dialog', editDialog);
 
-}(window));
+})(window);

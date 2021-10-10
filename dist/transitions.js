@@ -414,4 +414,4 @@ exports.hackOptions = hackOptions;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-}(this.hacks.transitions = this.hacks.transitions || {}, window));
+})(this.hacks.transitions = this.hacks.transitions || {}, window);

@@ -374,4 +374,4 @@ addDualDialogTag('player', function (environment, parameters) {
 	bitsy.curRoom = target.room;
 });
 
-}(window));
+})(window);

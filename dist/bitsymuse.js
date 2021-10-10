@@ -520,4 +520,4 @@ exports.hackOptions = hackOptions;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-}(this.hacks.bitsymuse = this.hacks.bitsymuse || {}, window));
+})(this.hacks.bitsymuse = this.hacks.bitsymuse || {}, window);

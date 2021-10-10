@@ -552,4 +552,4 @@ exports.hackOptions = hackOptions;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-}(this.hacks.corrupt = this.hacks.corrupt || {}, window));
+})(this.hacks.corrupt = this.hacks.corrupt || {}, window);

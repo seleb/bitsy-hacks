@@ -353,4 +353,4 @@ function executeJs(environment, parameters) {
 
 addDualDialogTag('js', executeJs);
 
-}(window));
+})(window);

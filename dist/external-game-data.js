@@ -324,4 +324,4 @@ function dos2unix(text) {
 	return text.replace(/\r\n/g, '\n');
 }
 
-}(window));
+})(window);

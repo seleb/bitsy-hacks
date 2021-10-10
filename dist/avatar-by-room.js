@@ -322,4 +322,4 @@ exports.hackOptions = hackOptions;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-}(this.hacks.avatar_by_room = this.hacks.avatar_by_room || {}, window));
+})(this.hacks.avatar_by_room = this.hacks.avatar_by_room || {}, window);

@@ -467,4 +467,4 @@ exports.hackOptions = hackOptions;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-}(this.hacks.stopwatch = this.hacks.stopwatch || {}, window));
+})(this.hacks.stopwatch = this.hacks.stopwatch || {}, window);

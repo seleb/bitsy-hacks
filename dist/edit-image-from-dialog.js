@@ -573,4 +573,4 @@ function editPalette(environment, parameters) {
 addDualDialogTag('image', editImage);
 addDualDialogTag('imagePal', editPalette);
 
-}(window));
+})(window);

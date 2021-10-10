@@ -306,4 +306,4 @@ exports.hackOptions = hackOptions;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-}(this.hacks.smooth_moves = this.hacks.smooth_moves || {}, window));
+})(this.hacks.smooth_moves = this.hacks.smooth_moves || {}, window);

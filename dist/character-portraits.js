@@ -372,4 +372,4 @@ exports.state = state;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-}(this.hacks.character_portraits = this.hacks.character_portraits || {}, window));
+})(this.hacks.character_portraits = this.hacks.character_portraits || {}, window);

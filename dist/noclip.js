@@ -356,4 +356,4 @@ hackOptions.ondown = {
 	' ': toggleNoClip,
 };
 
-}(window));
+})(window);

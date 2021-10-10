@@ -592,4 +592,4 @@ after('update', function () {
 	gamepads.update();
 });
 
-}(window));
+})(window);

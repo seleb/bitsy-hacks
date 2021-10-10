@@ -292,4 +292,4 @@ exports.hackOptions = hackOptions;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-}(this.hacks.dynamic_background = this.hacks.dynamic_background || {}, window));
+})(this.hacks.dynamic_background = this.hacks.dynamic_background || {}, window);

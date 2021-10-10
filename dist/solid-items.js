@@ -290,4 +290,4 @@ exports.hackOptions = hackOptions;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-}(this.hacks.solid_items = this.hacks.solid_items || {}, window));
+})(this.hacks.solid_items = this.hacks.solid_items || {}, window);

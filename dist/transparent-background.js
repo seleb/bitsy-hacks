@@ -307,4 +307,4 @@ exports.hackOptions = hackOptions;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-}(this.hacks.transparent_background = this.hacks.transparent_background || {}, window));
+})(this.hacks.transparent_background = this.hacks.transparent_background || {}, window);

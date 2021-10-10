@@ -278,4 +278,4 @@ addDialogTag('pause', function (environment, parameters, onReturn) {
 	onReturn(null);
 });
 
-}(window));
+})(window);

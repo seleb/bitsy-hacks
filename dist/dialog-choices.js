@@ -507,4 +507,4 @@ exports.hackOptions = hackOptions;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-}(this.hacks.dialog_choices = this.hacks.dialog_choices || {}, window));
+})(this.hacks.dialog_choices = this.hacks.dialog_choices || {}, window);

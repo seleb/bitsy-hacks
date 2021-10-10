@@ -279,4 +279,4 @@ exports.hackOptions = hackOptions;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-}(this.hacks.dialog_box_transition = this.hacks.dialog_box_transition || {}, window));
+})(this.hacks.dialog_box_transition = this.hacks.dialog_box_transition || {}, window);

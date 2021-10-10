@@ -361,4 +361,4 @@ exports.hackOptions = hackOptions;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-}(this.hacks.long_dialog = this.hacks.long_dialog || {}, window));
+})(this.hacks.long_dialog = this.hacks.long_dialog || {}, window);

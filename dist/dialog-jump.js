@@ -358,4 +358,4 @@ addDualDialogTag('jump', function (environment, parameters) {
 	jump(parameters[0]);
 });
 
-}(window));
+})(window);

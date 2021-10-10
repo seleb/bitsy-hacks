@@ -471,4 +471,4 @@ exports.hackOptions = hackOptions;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-}(this.hacks.custom_text_effect = this.hacks.custom_text_effect || {}, window));
+})(this.hacks.custom_text_effect = this.hacks.custom_text_effect || {}, window);

@@ -331,4 +331,4 @@ exports.hackOptions = hackOptions;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-}(this.hacks.basic_sfx = this.hacks.basic_sfx || {}, window));
+})(this.hacks.basic_sfx = this.hacks.basic_sfx || {}, window);

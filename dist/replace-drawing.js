@@ -276,4 +276,4 @@ after('parseWorld', function () {
 	});
 });
 
-}(window));
+})(window);

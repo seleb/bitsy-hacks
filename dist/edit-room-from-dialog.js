@@ -1070,4 +1070,4 @@ function copyBoxAt(mapId, targetId, x1, y1, x2, y2, copyRoomId, pasteXPos, paste
 	});
 }
 
-}(window));
+})(window);

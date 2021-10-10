@@ -267,4 +267,4 @@ exports.hackOptions = hackOptions;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-}(this.hacks.opaque_tiles = this.hacks.opaque_tiles || {}, window));
+})(this.hacks.opaque_tiles = this.hacks.opaque_tiles || {}, window);

@@ -227,4 +227,4 @@ after('renderClearInstruction', function (bufferId, buffer, paletteIndex) {
 	bufferContext.clearRect(0, 0, buffer.canvas.width, buffer.canvas.height);
 });
 
-}(window));
+})(window);

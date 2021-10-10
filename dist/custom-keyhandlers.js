@@ -289,4 +289,4 @@ exports.hackOptions = hackOptions;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-}(this.hacks['custom-keyhandlers'] = this.hacks['custom-keyhandlers'] || {}, window));
+})(this.hacks["custom-keyhandlers"] = this.hacks["custom-keyhandlers"] || {}, window);

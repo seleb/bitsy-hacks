@@ -272,4 +272,4 @@ exports.hackOptions = hackOptions;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-}(this.hacks['itsy-bitsy'] = this.hacks['itsy-bitsy'] || {}, window));
+})(this.hacks["itsy-bitsy"] = this.hacks["itsy-bitsy"] || {}, window);

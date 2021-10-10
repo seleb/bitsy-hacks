@@ -245,4 +245,4 @@ before('startDialog', function () {
 	}
 });
 
-}(window));
+})(window);

@@ -286,4 +286,4 @@ exports.hackOptions = hackOptions;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-}(this.hacks.canvas_replacement = this.hacks.canvas_replacement || {}, window));
+})(this.hacks.canvas_replacement = this.hacks.canvas_replacement || {}, window);

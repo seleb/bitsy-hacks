@@ -532,4 +532,4 @@ exports.hackOptions = hackOptions;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-}(this.hacks.sprite_effects = this.hacks.sprite_effects || {}, window));
+})(this.hacks.sprite_effects = this.hacks.sprite_effects || {}, window);

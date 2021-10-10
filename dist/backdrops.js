@@ -403,4 +403,4 @@ exports.hackOptions = hackOptions;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-}(this.hacks.backdrops = this.hacks.backdrops || {}, window));
+})(this.hacks.backdrops = this.hacks.backdrops || {}, window);

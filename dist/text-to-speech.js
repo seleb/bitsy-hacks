@@ -486,4 +486,4 @@ exports.hackOptions = hackOptions;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-}(this.hacks['text-to-speech'] = this.hacks['text-to-speech'] || {}, window));
+})(this.hacks["text-to-speech"] = this.hacks["text-to-speech"] || {}, window);

@@ -248,4 +248,4 @@ after('onExitDialog', function () {
 	}
 });
 
-}(window));
+})(window);
