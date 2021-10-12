@@ -79,7 +79,7 @@ Last tested against Bitsy 7.10
 
 ## How to use
 
-Each script has a short "HOW TO USE" section included in the comments. For steps which say to `Copy-paste this script into a script tag after the bitsy source `, open your exported bitsy game and scroll to the bottom of the file (at the time of writing, it looks like this):
+Each script has a short "HOW TO USE" section included in the comments. For steps which say to `Copy-paste this script into a script tag after the bitsy source`, open your exported bitsy game and scroll to the bottom of the file (at the time of writing, it looks like this):
 
 ```html
 </script>

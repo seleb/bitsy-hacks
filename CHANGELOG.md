@@ -1,3 +1,10 @@
+## [19.1.2](https://github.com/seleb/bitsy-hacks/compare/v19.1.1...v19.1.2) (2021-10-12)
+
+
+### Bug Fixes
+
+* incorrect readme whitespace ([4176491](https://github.com/seleb/bitsy-hacks/commit/41764910480fd574b7ae5a86baa4623664f44e0e))
+
 ## [19.1.1](https://github.com/seleb/bitsy-hacks/compare/v19.1.0...v19.1.1) (2021-09-25)
 
 
