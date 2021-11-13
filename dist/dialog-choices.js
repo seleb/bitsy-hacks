@@ -1,15 +1,15 @@
 /**
 🔀
 @file dialog choices
-@summary binary dialog choices
+@summary dialog choices
 @license MIT
 @author Sean S. LeBlanc
-@version 19.1.2
+@version 19.2.0
 @requires Bitsy 7.10
 
 
 @description
-Adds a dialog tag which allows you to present the player with binary dialog choices.
+Adds a dialog tag which allows you to present the player with dialog choices.
 Uses as an arrow cursor by default, but this can be changed in the hackOptions to use a custom bitsy sprite instead.
 
 Usage:
@@ -47,11 +47,15 @@ constant part of answer{
 }
 """
 
+This hack includes the "long dialog" hack so that the textbox
+automatically expands to allow for more than 2 choices.
+
 Note: it's recommended you combine this hack
 with the dialog jump hack for complex cases.
 
 Limitations:
-Each option must fit on a single line, or the interaction will break.
+Each option must fit on a single line, or the cursor
+may not line up with the selected option.
 
 Checking the value of a variable set in an option
 *immediately after the choice* will not work,
@@ -93,6 +97,9 @@ var hackOptions = {
 		y: 1,
 		x: 0,
 	},
+	// long dialog options
+	minRows: 2,
+	maxRows: 2,
 };
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
@@ -164,12 +171,12 @@ function kitsyInject(searcher, replacer) {
 // Ex: before('load_game', function run() { alert('Loading!'); });
 //     before('show_text', function run(text) { return text.toUpperCase(); });
 //     before('show_text', function run(text, done) { done(text.toUpperCase()); });
-function before(targetFuncName, beforeFn) {
+function before$1(targetFuncName, beforeFn) {
     kitsy.queuedBeforeScripts[targetFuncName] = kitsy.queuedBeforeScripts[targetFuncName] || [];
     kitsy.queuedBeforeScripts[targetFuncName].push(beforeFn);
 }
 // Ex: after('load_game', function run() { alert('Loaded!'); });
-function after(targetFuncName, afterFn) {
+function after$1(targetFuncName, afterFn) {
     kitsy.queuedAfterScripts[targetFuncName] = kitsy.queuedAfterScripts[targetFuncName] || [];
     kitsy.queuedAfterScripts[targetFuncName].push(afterFn);
 }
@@ -234,7 +241,7 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 19.1.2
+@version 19.2.0
 @requires Bitsy 7.10
 
 */
@@ -243,8 +250,8 @@ var kitsy = (window.kitsy = window.kitsy || {
     queuedBeforeScripts: {},
     queuedAfterScripts: {},
     inject: kitsyInject,
-    before,
-    after,
+    before: before$1,
+    after: after$1,
     /**
      * Applies all queued `inject` calls.
      *
@@ -293,9 +300,107 @@ if (!hooked) {
 /** @see kitsy.inject */
 var inject = kitsy.inject;
 /** @see kitsy.before */
-kitsy.before;
+var before = kitsy.before;
 /** @see kitsy.after */
-kitsy.after;
+var after = kitsy.after;
+
+// Rewrite custom functions' parentheses to curly braces for Bitsy's
+// interpreter. Unescape escaped parentheticals, too.
+function convertDialogTags(input, tag) {
+	return input.replace(new RegExp('\\\\?\\((' + tag + '(\\s+(".*?"|.+?))?)\\\\?\\)', 'g'), function (match, group) {
+		if (match.substr(0, 1) === '\\') {
+			return '(' + group + ')'; // Rewrite \(tag "..."|...\) to (tag "..."|...)
+		}
+		return '{' + group + '}'; // Rewrite (tag "..."|...) to {tag "..."|...}
+	});
+}
+
+function addDialogFunction(tag, fn) {
+	kitsy.dialogFunctions = kitsy.dialogFunctions || {};
+	if (kitsy.dialogFunctions[tag]) {
+		console.warn('The dialog function "' + tag + '" already exists.');
+		return;
+	}
+
+	// Hook into game load and rewrite custom functions in game data to Bitsy format.
+	before('parseWorld', function (gameData) {
+		return [convertDialogTags(gameData, tag)];
+	});
+
+	kitsy.dialogFunctions[tag] = fn;
+}
+
+function injectDialogTag(tag, code) {
+	inject(/(var functionMap = \{\};[^]*?)(this.HasFunction)/m, '$1\nfunctionMap["' + tag + '"] = ' + code + ';\n$2');
+}
+
+/**
+ * Adds a custom dialog tag which executes the provided function.
+ * For ease-of-use with the bitsy editor, tags can be written as
+ * (tagname "parameters") in addition to the standard {tagname "parameters"}
+ *
+ * Function is executed immediately when the tag is reached.
+ *
+ * @param {string}   tag Name of tag
+ * @param {Function} fn  Function to execute, with signature `function(environment, parameters, onReturn){}`
+ *                       environment: provides access to SetVariable/GetVariable (among other things, see Environment in the bitsy source for more info)
+ *                       parameters: array containing parameters as string in first element (i.e. `parameters[0]`)
+ *                       onReturn: function to call with return value (just call `onReturn(null);` at the end of your function if your tag doesn't interact with the logic system)
+ */
+function addDialogTag(tag, fn) {
+	addDialogFunction(tag, fn);
+	injectDialogTag(tag, 'kitsy.dialogFunctions["' + tag + '"]');
+}
+
+/**
+ * Adds a custom dialog tag which executes the provided function.
+ * For ease-of-use with the bitsy editor, tags can be written as
+ * (tagname "parameters") in addition to the standard {tagname "parameters"}
+ *
+ * Function is executed after the dialog box.
+ *
+ * @param {string}   tag Name of tag
+ * @param {Function} fn  Function to execute, with signature `function(environment, parameters){}`
+ *                       environment: provides access to SetVariable/GetVariable (among other things, see Environment in the bitsy source for more info)
+ *                       parameters: array containing parameters as string in first element (i.e. `parameters[0]`)
+ */
+function addDeferredDialogTag(tag, fn) {
+	addDialogFunction(tag, fn);
+	bitsy.kitsy.deferredDialogFunctions = bitsy.kitsy.deferredDialogFunctions || {};
+	var deferred = (bitsy.kitsy.deferredDialogFunctions[tag] = []);
+	injectDialogTag(tag, 'function(e, p, o){ kitsy.deferredDialogFunctions["' + tag + '"].push({e:e,p:p}); o(null); }');
+	// Hook into the dialog finish event and execute the actual function
+	after('onExitDialog', function () {
+		while (deferred.length) {
+			var args = deferred.shift();
+			bitsy.kitsy.dialogFunctions[tag](args.e, args.p, args.o);
+		}
+	});
+	// Hook into the game reset and make sure data gets cleared
+	after('clearGameData', function () {
+		deferred.length = 0;
+	});
+}
+
+/**
+ * Adds two custom dialog tags which execute the provided function,
+ * one with the provided tagname executed after the dialog box,
+ * and one suffixed with 'Now' executed immediately when the tag is reached.
+ *
+ * i.e. helper for the (exit)/(exitNow) pattern.
+ *
+ * @param {string}   tag Name of tag
+ * @param {Function} fn  Function to execute, with signature `function(environment, parameters){}`
+ *                       environment: provides access to SetVariable/GetVariable (among other things, see Environment in the bitsy source for more info)
+ *                       parameters: array containing parameters as string in first element (i.e. `parameters[0]`)
+ */
+function addDualDialogTag(tag, fn) {
+	addDialogTag(tag + 'Now', function (environment, parameters, onReturn) {
+		fn(environment, parameters);
+		onReturn(null);
+	});
+	addDeferredDialogTag(tag, fn);
+}
 
 /**
  * Helper for printing a paragraph break inside of a dialog function.
@@ -304,9 +409,131 @@ kitsy.after;
 
 inject(/(this\.AddLinebreak = )/, 'this.AddParagraphBreak = function() { buffer.push( [[]] ); isActive = true; };\n$1');
 
+/**
+📃
+@file paragraph-break
+@summary Adds paragraph breaks to the dialogue parser
+@license WTFPL (do WTF you want)
+@author Sean S. LeBlanc, David Mowatt
+@version 19.2.0
+@requires Bitsy 7.10
+
+
+@description
+Adds a (p) tag to the dialogue parser that forces the following text to
+start on a fresh dialogue screen, eliminating the need to spend hours testing
+line lengths or adding multiple line breaks that then have to be reviewed
+when you make edits or change the font size.
+
+Note: Bitsy has a built-in implementation of paragraph-break as of 7.0;
+before using this, you may want to check if it fulfills your needs.
+
+Usage: (p)
+
+Example: I am a cat(p)and my dialogue contains multitudes
+
+HOW TO USE:
+  1. Copy-paste this script into a new script tag after the Bitsy source code.
+     It should appear *before* any other mods that handle loading your game
+     data so it executes *after* them (last-in first-out).
+
+NOTE: This uses parentheses "()" instead of curly braces "{}" around function
+      calls because the Bitsy editor's fancy dialog window strips unrecognized
+      curly-brace functions from dialog text. To keep from losing data, write
+      these function calls with parentheses like the examples above.
+
+      For full editor integration, you'd *probably* also need to paste this
+      code at the end of the editor's `bitsy.js` file. Untested.
+*/
+
+// Adds the actual dialogue tag. No deferred version is required.
+addDialogTag('p', function (environment, parameters, onReturn) {
+	environment.GetDialogBuffer().AddParagraphBreak();
+	onReturn(null);
+});
+// End of (p) paragraph break mod
+
+/**
+📜
+@file long dialog
+@summary put more words onscreen
+@license MIT
+@author Sean S. LeBlanc
+@version 19.2.0
+@requires Bitsy 7.10
+
+
+@description
+Makes the dialog box variable in height, allowing it to expand as needed.
+
+Minimum and maximum size are configurable.
+Cheat sheet:
+	2: bitsy default
+	8: reaches just below the halfway mark
+	16: roughly the max of the original bitsy margins
+	19: max before cutting off text
+
+Note: this hack also includes the paragraph break hack
+A common pattern in bitsy is using intentional whitespace to force new dialog pages,
+but the long dialog hack makes that look awkward since the text box expands.
+The paragraph break hack lets you get around this by using a (p) tag to immediately end the current page.
+
+There is also a dialog tag that lets you change the size ingame.
+
+Usage:
+	(textboxsize "<min>,<max>")
+	(textboxsizeNow "<min>,<max>")
+
+Examples:
+	(textboxsize "2,6")
+	(textboxsizeNow "2,2")
+
+HOW TO USE:
+	1. Copy-paste this script into a new script tag after the Bitsy source code.
+	2. edit hackOptions below as needed
+*/
+
+var hackOptions$1 = {
+	minRows: 2,
+	maxRows: 4,
+};
+
+kitsy.longDialogOptions = hackOptions$1;
+
+// override textbox height
+inject(
+	/textboxInfo\.height = .+;/,
+	`Object.defineProperty(textboxInfo, 'height', {
+	get() { return textboxInfo.padding_vert + (textboxInfo.padding_vert + relativeFontHeight()) * Math.max(window.kitsy.longDialogOptions.minRows, dialogBuffer.CurPage().indexOf(dialogBuffer.CurRow())+Math.sign(dialogBuffer.CurCharCount())) + textboxInfo.arrow_height; }
+})`
+);
+// export textbox info
+inject(/(var font = null;)/, 'this.textboxInfo = textboxInfo;$1');
+before('renderDrawingBuffer', function (bufferId, buffer) {
+	if (bufferId !== bitsy.textboxBufferId) return;
+	buffer.height = bitsy.dialogRenderer.textboxInfo.height / bitsy.dialogRenderer.textboxInfo.font_scale;
+});
+// rewrite hard-coded row limit
+inject(/(else if \(curRowIndex )== 0/g, '$1 < window.kitsy.longDialogOptions.maxRows - 1');
+inject(/(if \(lastPage\.length) <= 1/, '$1 < window.kitsy.longDialogOptions.maxRows');
+
+addDualDialogTag('textboxsize', function (environment, parameters) {
+	if (!parameters[0]) {
+		throw new Error('{textboxsize} was missing parameters! Usage: {textboxsize "minrows, maxrows"}');
+	}
+	// parse parameters
+	var params = parameters[0].split(/,\s?/);
+	var min = parseInt(params[0], 10);
+	var max = parseInt(params[1], 10);
+	hackOptions$1.minRows = min;
+	hackOptions$1.maxRows = max;
+});
 
 
 
+
+hackOptions$1.minRows = hackOptions.minRows;
+hackOptions$1.maxRows = hackOptions.maxRows;
 
 var dialogChoices = {
 	choice: 0,
@@ -410,6 +637,8 @@ var ChoiceNode = function(options) {
 	this.Eval = function(environment,onReturn) {
 		var lastVal = null;
 		var i = 0;
+		var prevRows = window.kitsy.longDialogOptions.maxRows;
+		window.kitsy.longDialogOptions.maxRows = Infinity;
 		function evalChildren(children,done) {
 			if(i < children.length) {
 				children[i].Eval(environment, function(val) {
@@ -432,6 +661,7 @@ var ChoiceNode = function(options) {
 		}
 		window.dialogChoices.choices = this.options.map(function(option){
 			return function(){
+				window.kitsy.longDialogOptions.maxRows = prevRows;
 				option.onSelect.forEach(function(child){
 					child.Eval(environment, function(){});
 				});

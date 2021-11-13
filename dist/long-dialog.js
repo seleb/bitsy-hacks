@@ -4,7 +4,7 @@
 @summary put more words onscreen
 @license MIT
 @author Sean S. LeBlanc
-@version 19.1.2
+@version 19.2.0
 @requires Bitsy 7.10
 
 
@@ -22,6 +22,16 @@ Note: this hack also includes the paragraph break hack
 A common pattern in bitsy is using intentional whitespace to force new dialog pages,
 but the long dialog hack makes that look awkward since the text box expands.
 The paragraph break hack lets you get around this by using a (p) tag to immediately end the current page.
+
+There is also a dialog tag that lets you change the size ingame.
+
+Usage:
+	(textboxsize "<min>,<max>")
+	(textboxsizeNow "<min>,<max>")
+
+Examples:
+	(textboxsize "2,6")
+	(textboxsizeNow "2,2")
 
 HOW TO USE:
 	1. Copy-paste this script into a new script tag after the Bitsy source code.
@@ -109,7 +119,7 @@ function before$1(targetFuncName, beforeFn) {
     kitsy.queuedBeforeScripts[targetFuncName].push(beforeFn);
 }
 // Ex: after('load_game', function run() { alert('Loaded!'); });
-function after(targetFuncName, afterFn) {
+function after$1(targetFuncName, afterFn) {
     kitsy.queuedAfterScripts[targetFuncName] = kitsy.queuedAfterScripts[targetFuncName] || [];
     kitsy.queuedAfterScripts[targetFuncName].push(afterFn);
 }
@@ -174,7 +184,7 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 19.1.2
+@version 19.2.0
 @requires Bitsy 7.10
 
 */
@@ -184,7 +194,7 @@ var kitsy = (window.kitsy = window.kitsy || {
     queuedAfterScripts: {},
     inject: kitsyInject,
     before: before$1,
-    after,
+    after: after$1,
     /**
      * Applies all queued `inject` calls.
      *
@@ -235,7 +245,7 @@ var inject = kitsy.inject;
 /** @see kitsy.before */
 var before = kitsy.before;
 /** @see kitsy.after */
-kitsy.after;
+var after = kitsy.after;
 
 // Rewrite custom functions' parentheses to curly braces for Bitsy's
 // interpreter. Unescape escaped parentheticals, too.
@@ -286,6 +296,56 @@ function addDialogTag(tag, fn) {
 }
 
 /**
+ * Adds a custom dialog tag which executes the provided function.
+ * For ease-of-use with the bitsy editor, tags can be written as
+ * (tagname "parameters") in addition to the standard {tagname "parameters"}
+ *
+ * Function is executed after the dialog box.
+ *
+ * @param {string}   tag Name of tag
+ * @param {Function} fn  Function to execute, with signature `function(environment, parameters){}`
+ *                       environment: provides access to SetVariable/GetVariable (among other things, see Environment in the bitsy source for more info)
+ *                       parameters: array containing parameters as string in first element (i.e. `parameters[0]`)
+ */
+function addDeferredDialogTag(tag, fn) {
+	addDialogFunction(tag, fn);
+	bitsy.kitsy.deferredDialogFunctions = bitsy.kitsy.deferredDialogFunctions || {};
+	var deferred = (bitsy.kitsy.deferredDialogFunctions[tag] = []);
+	injectDialogTag(tag, 'function(e, p, o){ kitsy.deferredDialogFunctions["' + tag + '"].push({e:e,p:p}); o(null); }');
+	// Hook into the dialog finish event and execute the actual function
+	after('onExitDialog', function () {
+		while (deferred.length) {
+			var args = deferred.shift();
+			bitsy.kitsy.dialogFunctions[tag](args.e, args.p, args.o);
+		}
+	});
+	// Hook into the game reset and make sure data gets cleared
+	after('clearGameData', function () {
+		deferred.length = 0;
+	});
+}
+
+/**
+ * Adds two custom dialog tags which execute the provided function,
+ * one with the provided tagname executed after the dialog box,
+ * and one suffixed with 'Now' executed immediately when the tag is reached.
+ *
+ * i.e. helper for the (exit)/(exitNow) pattern.
+ *
+ * @param {string}   tag Name of tag
+ * @param {Function} fn  Function to execute, with signature `function(environment, parameters){}`
+ *                       environment: provides access to SetVariable/GetVariable (among other things, see Environment in the bitsy source for more info)
+ *                       parameters: array containing parameters as string in first element (i.e. `parameters[0]`)
+ */
+function addDualDialogTag(tag, fn) {
+	addDialogTag(tag + 'Now', function (environment, parameters, onReturn) {
+		fn(environment, parameters);
+		onReturn(null);
+	});
+	addDeferredDialogTag(tag, fn);
+}
+
+/**
  * Helper for printing a paragraph break inside of a dialog function.
  * Adds the function `AddParagraphBreak` to `DialogBuffer`
  */
@@ -298,7 +358,7 @@ inject(/(this\.AddLinebreak = )/, 'this.AddParagraphBreak = function() { buffer.
 @summary Adds paragraph breaks to the dialogue parser
 @license WTFPL (do WTF you want)
 @author Sean S. LeBlanc, David Mowatt
-@version 19.1.2
+@version 19.2.0
 @requires Bitsy 7.10
 
 
@@ -340,11 +400,13 @@ addDialogTag('p', function (environment, parameters, onReturn) {
 
 
 
+kitsy.longDialogOptions = hackOptions;
+
 // override textbox height
 inject(
 	/textboxInfo\.height = .+;/,
 	`Object.defineProperty(textboxInfo, 'height', {
-	get() { return textboxInfo.padding_vert + (textboxInfo.padding_vert + relativeFontHeight()) * Math.max(${hackOptions.minRows}, dialogBuffer.CurPage().indexOf(dialogBuffer.CurRow())+Math.sign(dialogBuffer.CurCharCount())) + textboxInfo.arrow_height; }
+	get() { return textboxInfo.padding_vert + (textboxInfo.padding_vert + relativeFontHeight()) * Math.max(window.kitsy.longDialogOptions.minRows, dialogBuffer.CurPage().indexOf(dialogBuffer.CurRow())+Math.sign(dialogBuffer.CurCharCount())) + textboxInfo.arrow_height; }
 })`
 );
 // export textbox info
@@ -354,8 +416,20 @@ before('renderDrawingBuffer', function (bufferId, buffer) {
 	buffer.height = bitsy.dialogRenderer.textboxInfo.height / bitsy.dialogRenderer.textboxInfo.font_scale;
 });
 // rewrite hard-coded row limit
-inject(/(else if \(curRowIndex )== 0/g, '$1< ' + hackOptions.maxRows + ' - 1');
-inject(/(if \(lastPage\.length) <= 1/, '$1 < ' + hackOptions.maxRows);
+inject(/(else if \(curRowIndex )== 0/g, '$1 < window.kitsy.longDialogOptions.maxRows - 1');
+inject(/(if \(lastPage\.length) <= 1/, '$1 < window.kitsy.longDialogOptions.maxRows');
+
+addDualDialogTag('textboxsize', function (environment, parameters) {
+	if (!parameters[0]) {
+		throw new Error('{textboxsize} was missing parameters! Usage: {textboxsize "minrows, maxrows"}');
+	}
+	// parse parameters
+	var params = parameters[0].split(/,\s?/);
+	var min = parseInt(params[0], 10);
+	var max = parseInt(params[1], 10);
+	hackOptions.minRows = min;
+	hackOptions.maxRows = max;
+});
 
 exports.hackOptions = hackOptions;
 

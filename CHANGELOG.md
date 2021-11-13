@@ -1,3 +1,12 @@
+# [19.2.0](https://github.com/seleb/bitsy-hacks/compare/v19.1.2...v19.2.0) (2021-11-13)
+
+
+### Features
+
+* allow more than 2 choices by automatically expanding box ([e1014ac](https://github.com/seleb/bitsy-hacks/commit/e1014ac2287d5d523732d963314274db019ec58c))
+* include long dialog hack in dialog choices hack ([3cd01b6](https://github.com/seleb/bitsy-hacks/commit/3cd01b6ed9ffb747f3c4126416f1f5de1a14784a))
+* make long dialog size dynamic (adds `textboxsize` tag) ([2815a94](https://github.com/seleb/bitsy-hacks/commit/2815a94ae94cd2d124dac3b1ba64d668fc9bea56))
+
 ## [19.1.2](https://github.com/seleb/bitsy-hacks/compare/v19.1.1...v19.1.2) (2021-10-12)
 
 

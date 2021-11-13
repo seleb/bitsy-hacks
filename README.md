@@ -31,7 +31,7 @@ Last tested against Bitsy 7.10
 - 💬 [dialog audio](/dist/dialog-audio.js): animal crossing-style audio
 - 🎺 [dialog audio vocal synth](/dist/dialog-audio-vocal-synth.js): animal crossing-style audio powered by the pink trombone vocal synth
 - 🔁 [dialog box transition](/dist/dialog-box-transition.js): adds an easing transition animation to display the dialog box text
-- 🔀 [dialog choices](/dist/dialog-choices.js): binary dialog choices
+- 🔀 [dialog choices](/dist/dialog-choices.js): dialog choices
 - 🚀 [dialog jump](/dist/dialog-jump.js): jump from one dialog entry to another
 - 💬 [dialog pause](/dist/dialog-pause.js): add pauses in between printing text
 - ⌨ [dialog prompt](/dist/dialog-prompt.js): prompt the user for text input in dialog
