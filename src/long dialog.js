@@ -25,7 +25,8 @@ HOW TO USE:
 	2. edit hackOptions below as needed
 */
 import bitsy from 'bitsy';
-import { before, inject } from './helpers/kitsy-script-toolkit';
+import { kitsy } from 'kitsy';
+import { addDualDialogTag, before, inject } from './helpers/kitsy-script-toolkit';
 import './paragraph-break';
 
 export var hackOptions = {
@@ -33,11 +34,13 @@ export var hackOptions = {
 	maxRows: 4,
 };
 
+kitsy.longDialogOptions = hackOptions;
+
 // override textbox height
 inject(
 	/textboxInfo\.height = .+;/,
 	`Object.defineProperty(textboxInfo, 'height', {
-	get() { return textboxInfo.padding_vert + (textboxInfo.padding_vert + relativeFontHeight()) * Math.max(${hackOptions.minRows}, dialogBuffer.CurPage().indexOf(dialogBuffer.CurRow())+Math.sign(dialogBuffer.CurCharCount())) + textboxInfo.arrow_height; }
+	get() { return textboxInfo.padding_vert + (textboxInfo.padding_vert + relativeFontHeight()) * Math.max(window.kitsy.longDialogOptions.minRows, dialogBuffer.CurPage().indexOf(dialogBuffer.CurRow())+Math.sign(dialogBuffer.CurCharCount())) + textboxInfo.arrow_height; }
 })`
 );
 // export textbox info
@@ -47,5 +50,17 @@ before('renderDrawingBuffer', function (bufferId, buffer) {
 	buffer.height = bitsy.dialogRenderer.textboxInfo.height / bitsy.dialogRenderer.textboxInfo.font_scale;
 });
 // rewrite hard-coded row limit
-inject(/(else if \(curRowIndex )== 0/g, '$1< ' + hackOptions.maxRows + ' - 1');
-inject(/(if \(lastPage\.length) <= 1/, '$1 < ' + hackOptions.maxRows);
+inject(/(else if \(curRowIndex )== 0/g, '$1 < window.kitsy.longDialogOptions.maxRows - 1');
+inject(/(if \(lastPage\.length) <= 1/, '$1 < window.kitsy.longDialogOptions.maxRows');
+
+addDualDialogTag('textboxsize', function (environment, parameters) {
+	if (!parameters[0]) {
+		throw new Error('{textboxsize} was missing parameters! Usage: {textboxsize "minrows, maxrows"}');
+	}
+	// parse parameters
+	var params = parameters[0].split(/,\s?/);
+	var min = parseInt(params[0], 10);
+	var max = parseInt(params[1], 10);
+	hackOptions.minRows = min;
+	hackOptions.maxRows = max;
+});
