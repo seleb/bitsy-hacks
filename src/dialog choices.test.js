@@ -60,7 +60,7 @@ test('with long dialog', async () => {
     test b
 }
 """`,
-		hacks: ['long dialog', 'dialog choices'],
+		hacks: ['dialog choices'],
 	});
 	await walkToCat();
 	await press('ArrowRight'); // talk to cat
