@@ -80,6 +80,7 @@ HOW TO USE:
 import bitsy from 'bitsy';
 import './helpers/addParagraphBreak';
 import { inject } from './helpers/kitsy-script-toolkit';
+import { hackOptions as longDialog } from './long dialog';
 
 export var hackOptions = {
 	// if defined, the cursor is drawn as the sprite with the given id
@@ -91,7 +92,12 @@ export var hackOptions = {
 		y: 1,
 		x: 0,
 	},
+	// long dialog options
+	minRows: 2,
+	maxRows: 2,
 };
+longDialog.minRows = hackOptions.minRows;
+longDialog.maxRows = hackOptions.maxRows;
 
 var dialogChoices = {
 	choice: 0,
