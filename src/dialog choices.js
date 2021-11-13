@@ -201,6 +201,8 @@ var ChoiceNode = function(options) {
 	this.Eval = function(environment,onReturn) {
 		var lastVal = null;
 		var i = 0;
+		var prevRows = window.kitsy.longDialogOptions.maxRows;
+		window.kitsy.longDialogOptions.maxRows = Infinity;
 		function evalChildren(children,done) {
 			if(i < children.length) {
 				children[i].Eval(environment, function(val) {
@@ -223,6 +225,7 @@ var ChoiceNode = function(options) {
 		}
 		window.dialogChoices.choices = this.options.map(function(option){
 			return function(){
+				window.kitsy.longDialogOptions.maxRows = prevRows;
 				option.onSelect.forEach(function(child){
 					child.Eval(environment, function(){});
 				});
