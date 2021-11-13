@@ -1,12 +1,12 @@
 /**
 🔀
 @file dialog choices
-@summary binary dialog choices
+@summary dialog choices
 @license MIT
 @author Sean S. LeBlanc
 
 @description
-Adds a dialog tag which allows you to present the player with binary dialog choices.
+Adds a dialog tag which allows you to present the player with dialog choices.
 Uses as an arrow cursor by default, but this can be changed in the hackOptions to use a custom bitsy sprite instead.
 
 Usage:
@@ -44,11 +44,15 @@ constant part of answer{
 }
 """
 
+This hack includes the "long dialog" hack so that the textbox
+automatically expands to allow for more than 2 choices.
+
 Note: it's recommended you combine this hack
 with the dialog jump hack for complex cases.
 
 Limitations:
-Each option must fit on a single line, or the interaction will break.
+Each option must fit on a single line, or the cursor
+may not line up with the selected option.
 
 Checking the value of a variable set in an option
 *immediately after the choice* will not work,

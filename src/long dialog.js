@@ -20,6 +20,16 @@ A common pattern in bitsy is using intentional whitespace to force new dialog pa
 but the long dialog hack makes that look awkward since the text box expands.
 The paragraph break hack lets you get around this by using a (p) tag to immediately end the current page.
 
+There is also a dialog tag that lets you change the size ingame.
+
+Usage:
+	(textboxsize "<min>,<max>")
+	(textboxsizeNow "<min>,<max>")
+
+Examples:
+	(textboxsize "2,6")
+	(textboxsizeNow "2,2")
+
 HOW TO USE:
 	1. Copy-paste this script into a new script tag after the Bitsy source code.
 	2. edit hackOptions below as needed
