@@ -1,3 +1,10 @@
+## [19.2.2](https://github.com/seleb/bitsy-hacks/compare/v19.2.1...v19.2.2) (2021-11-17)
+
+
+### Bug Fixes
+
+* promote borksy more prominently now that it's directly tied to the repo ([1638ffe](https://github.com/seleb/bitsy-hacks/commit/1638ffe898624e951dbd09daddbbf3f6e4436e05))
+
 ## [19.2.1](https://github.com/seleb/bitsy-hacks/compare/v19.2.0...v19.2.1) (2021-11-17)
 
 

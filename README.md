@@ -4,7 +4,7 @@
 npm i @bitsy/hecks
 ```
 
-A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamledoux)'s [Bitsy Game Maker](https://ledoux.itch.io/bitsy).
+A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamledoux)'s [Bitsy Game Maker](https://ledoux.itch.io/bitsy). See [Ayolland's Borksy](https://ayolland.itch.io/borksy) for a GUI that allows you to use these hacks with less copy-pasting.
 
 Last tested against Bitsy 7.10
 
@@ -166,7 +166,6 @@ If you are using an older version of Bitsy (or a fork based on an older version)
 - [Writing hacks with this repo's source code](https://github.com/seleb/bitsy-hacks/wiki)
 - [Claire Morley's "A Bitsy Tutorial"](http://www.shimmerwitch.space/bitsyTutorial)
 - [Bitsy games!](https://itch.io/games/tag-bitsy)
-- [AYolland's Borksy](https://ayolland.itch.io/borksy): Hack helper
 - [elkie's bitsy-savior](https://aloelazoe.itch.io/bitsy-savior): Safe saver
 - [ruin's image-to-bitsy](https://ruin.itch.io/image-to-bitsy): Artistic aid
 - [Fontsy](https://seansleblanc.itch.io/Fontsy): Typographic tool
