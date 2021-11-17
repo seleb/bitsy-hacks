@@ -75,7 +75,7 @@ Last tested against Bitsy 7.10
 - 💱 [twine bitsy comms](/dist/twine-bitsy-comms.js): interprocess communication for twine and bitsy
 - ❄ [unique items](/dist/unique-items.js): items which, when picked up, remove all other instances of that item from the game
 
-![Imgur](https://i.imgur.com/peRLLHn.gif)![Imgur](https://i.imgur.com/yg81aH2.gif)![Imgur](https://i.imgur.com/r7AUHX4.gif)
+![Custom text effect demo](https://i.imgur.com/peRLLHn.gif)![Follower demo](https://i.imgur.com/yg81aH2.gif)![Unique items demo](https://i.imgur.com/r7AUHX4.gif)
 
 ## How to use
 

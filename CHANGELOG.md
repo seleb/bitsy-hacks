@@ -1,3 +1,10 @@
+## [19.2.3](https://github.com/seleb/bitsy-hacks/compare/v19.2.2...v19.2.3) (2021-11-17)
+
+
+### Bug Fixes
+
+* alt text on readme images ([e106d23](https://github.com/seleb/bitsy-hacks/commit/e106d2375bfa006eabeadac3fcaedd242bd81953))
+
 ## [19.2.2](https://github.com/seleb/bitsy-hacks/compare/v19.2.1...v19.2.2) (2021-11-17)
 
 
