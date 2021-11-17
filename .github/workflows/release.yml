@@ -19,3 +19,9 @@ jobs:
           ITCH_USER: seansleblanc
           PACKAGE: dist
           VERSION: ${{ steps.package-version.outputs.current-version}}
+      - name: update Borksy
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.REPO_READ_TOKEN }}
+          repository: Ayolland/borksy
+          event-type: update-hacks
