@@ -1,3 +1,10 @@
+## [19.2.1](https://github.com/seleb/bitsy-hacks/compare/v19.2.0...v19.2.1) (2021-11-17)
+
+
+### Bug Fixes
+
+* **custom text effect:** update `color` documentation/examples ([ca02add](https://github.com/seleb/bitsy-hacks/commit/ca02addc64b9c899aaed899b93270810224c0f51))
+
 # [19.2.0](https://github.com/seleb/bitsy-hacks/compare/v19.1.2...v19.2.0) (2021-11-13)
 
 

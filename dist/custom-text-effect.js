@@ -4,7 +4,7 @@
 @summary make {custom}text effects{custom}
 @license MIT
 @author Sean S. LeBlanc
-@version 19.2.0
+@version 19.2.1
 @requires Bitsy 7.10
 
 
@@ -37,7 +37,8 @@ The key is the text you'll write inside {} in bitsy to trigger the effect
 
 The first argument is `char`, an individual character, which has the following properties:
 	offset: offset from actual position in pixels. starts at {x:0, y:0}
-	color: color of rendered text in [0-255]. starts at {r:255, g:255, b:255, a:255}
+	color: palette index of rendered text. use `tileColorStartIndex`/`rainbowColorStartIndex`
+	       to modify this, e.g. `tileColorStartIndex + 2` is the sprite colour
 	bitmap: character bitmap as array of pixels
 	row: vertical position in rows (doesn't affect rendering)
 	col: horizontal position in characters (doesn't affect rendering)
@@ -59,10 +60,10 @@ this.hacks = this.hacks || {};
 'use strict';
 var hackOptions = {
 	'my-effect': function () {
-		// a horizontal wavy effect with a blue tint
+		// a horizontal wavy effect using the blue rbw colour
 		this.DoEffect = function (char, time) {
 			char.offset.x += 5 * Math.sin(time / 100 + char.col / 3);
-			char.color.r = 255 * Math.cos(time / 100 + char.col / 3);
+			char.color = bitsy.rainbowColorStartIndex + 4;
 		};
 	},
 	droop: function () {
@@ -71,13 +72,6 @@ var hackOptions = {
 		this.DoEffect = function (char, time) {
 			char.start = char.start || time;
 			char.offset.y += ((time - char.start) / 100) * Math.abs(Math.sin(char.col));
-		};
-	},
-	fadeout: function () {
-		// fades text to invisible after appearing
-		this.DoEffect = function (char, time) {
-			char.start = char.start || time;
-			char.color.a = Math.max(0, 255 - (time - char.start) / 2);
 		};
 	},
 	noise: function () {
@@ -357,7 +351,7 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 19.2.0
+@version 19.2.1
 @requires Bitsy 7.10
 
 */
