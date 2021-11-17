@@ -50,7 +50,7 @@ Last tested against Bitsy ${pkg.bitsyVersion}
 
 ${contents.map(hack => `- ${hack.emoji} [${hack.file}](${hack.url}): ${hack.summary}`).join('\n')}
 
-![Imgur](https://i.imgur.com/peRLLHn.gif)![Imgur](https://i.imgur.com/yg81aH2.gif)![Imgur](https://i.imgur.com/r7AUHX4.gif)
+![Custom text effect demo](https://i.imgur.com/peRLLHn.gif)![Follower demo](https://i.imgur.com/yg81aH2.gif)![Unique items demo](https://i.imgur.com/r7AUHX4.gif)
 
 ## How to use
 
