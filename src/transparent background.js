@@ -7,6 +7,8 @@
 
 @description
 Makes the game background transparent, showing whatever would be visible behind it in the html document.
+Note that the bitsy canvas has a black background in CSS by default, which blocks things behind it.
+Depending on your use case, you may need to change this (e.g. to `background: transparent;`)
 
 Note: also includes transparent sprites
 
