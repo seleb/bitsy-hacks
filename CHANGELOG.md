@@ -1,3 +1,10 @@
+## [19.2.4](https://github.com/seleb/bitsy-hacks/compare/v19.2.3...v19.2.4) (2021-12-01)
+
+
+### Bug Fixes
+
+* **transparent background:** add a readme note about canvas css ([4fe567e](https://github.com/seleb/bitsy-hacks/commit/4fe567e43b4c61ed7256e41358a54db09b8c6112))
+
 ## [19.2.3](https://github.com/seleb/bitsy-hacks/compare/v19.2.2...v19.2.3) (2021-11-17)
 
 
