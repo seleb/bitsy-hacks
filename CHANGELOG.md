@@ -1,3 +1,10 @@
+## [19.2.5](https://github.com/seleb/bitsy-hacks/compare/v19.2.4...v19.2.5) (2021-12-25)
+
+
+### Bug Fixes
+
+* hacks that edit images correctly clearing cache for extended palettes ([97dde43](https://github.com/seleb/bitsy-hacks/commit/97dde43822845b47c783382bfb858010671f39e0))
+
 ## [19.2.4](https://github.com/seleb/bitsy-hacks/compare/v19.2.3...v19.2.4) (2021-12-01)
 
 

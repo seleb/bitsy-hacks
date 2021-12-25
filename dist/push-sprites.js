@@ -4,7 +4,7 @@
 @summary sokoban-style sprite pushing
 @license MIT
 @author jan0sc
-@version 19.2.4
+@version 19.2.5
 @requires Bitsy 7.10
 
 
@@ -198,7 +198,7 @@ bitsy = bitsy || /*#__PURE__*/_interopDefaultLegacy(bitsy);
 @file utils
 @summary miscellaneous bitsy utilities
 @author Sean S. LeBlanc
-@version 19.2.4
+@version 19.2.5
 @requires Bitsy 7.10
 
 */
@@ -260,7 +260,7 @@ function getImage(name, map) {
 @file edit image at runtime
 @summary API for updating image data at runtime.
 @author Sean S. LeBlanc
-@version 19.2.4
+@version 19.2.5
 @requires Bitsy 7.10
 
 @description
@@ -284,10 +284,9 @@ e.g. the default player is:
 inject$1(
 	/\/\/ TODO : reset render cache for this image/,
 	`
-// TODO: clear extended palettes
-drawingCache.render[drawingId+"_0"] = undefined;
-drawingCache.render[drawingId+"_1"] = undefined;
-drawingCache.render[drawingId+"_2"] = undefined;
+Object.keys(drawingCache.render)
+	.filter(function (i) { return i.split('_').slice(0, -1).join('_') === drawingId; })
+	.forEach(function(i) { drawingCache.render[i] = undefined; })
 `
 );
 
@@ -463,7 +462,7 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 19.2.4
+@version 19.2.5
 @requires Bitsy 7.10
 
 */
