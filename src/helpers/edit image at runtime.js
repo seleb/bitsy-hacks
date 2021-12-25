@@ -27,10 +27,9 @@ export { getImage };
 inject(
 	/\/\/ TODO : reset render cache for this image/,
 	`
-// TODO: clear extended palettes
-drawingCache.render[drawingId+"_0"] = undefined;
-drawingCache.render[drawingId+"_1"] = undefined;
-drawingCache.render[drawingId+"_2"] = undefined;
+Object.keys(drawingCache.render)
+	.filter(function (i) { return i.split('_').slice(0, -1).join('_') === drawingId; })
+	.forEach(function(i) { drawingCache.render[i] = undefined; })
 `
 );
 
