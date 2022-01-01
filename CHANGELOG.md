@@ -1,3 +1,10 @@
+## [19.2.6](https://github.com/seleb/bitsy-hacks/compare/v19.2.5...v19.2.6) (2022-01-01)
+
+
+### Bug Fixes
+
+* test against bitsy 7.11 ([ed0ed06](https://github.com/seleb/bitsy-hacks/commit/ed0ed0641a0fda0a466eec375613b9fa218f77f7))
+
 ## [19.2.5](https://github.com/seleb/bitsy-hacks/compare/v19.2.4...v19.2.5) (2021-12-25)
 
 

@@ -4,8 +4,8 @@
 @summary edit dialog from dialog (yes really)
 @license MIT
 @author Sean S. LeBlanc
-@version 19.2.5
-@requires Bitsy 7.10
+@version 19.2.6
+@requires Bitsy 7.11
 
 
 @description
@@ -169,8 +169,8 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 19.2.5
-@requires Bitsy 7.10
+@version 19.2.6
+@requires Bitsy 7.11
 
 */
 var kitsy = (window.kitsy = window.kitsy || {
@@ -296,8 +296,8 @@ function addDeferredDialogTag(tag, fn) {
 @file utils
 @summary miscellaneous bitsy utilities
 @author Sean S. LeBlanc
-@version 19.2.5
-@requires Bitsy 7.10
+@version 19.2.6
+@requires Bitsy 7.11
 
 */
 
