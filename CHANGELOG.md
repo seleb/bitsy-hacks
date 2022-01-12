@@ -1,3 +1,10 @@
+## [19.2.7](https://github.com/seleb/bitsy-hacks/compare/v19.2.6...v19.2.7) (2022-01-12)
+
+
+### Bug Fixes
+
+* **canvas replacement:** mobile controls not working properly ([265f09c](https://github.com/seleb/bitsy-hacks/commit/265f09ca1c7215c0abd381c41b3c8f7dad344ff1))
+
 ## [19.2.6](https://github.com/seleb/bitsy-hacks/compare/v19.2.5...v19.2.6) (2022-01-01)
 
 
