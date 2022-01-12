@@ -60,6 +60,8 @@ export var hackOptions = {
 var glazy;
 after('startExportedGame', function () {
 	glazy = new WebGLazy(hackOptions.glazyOptions);
+	document.querySelector('#canvasContainer').style.pointerEvents = 'none';
+	document.querySelector('#touchTrigger').style.visibility = 'initial';
 	if (hackOptions.init) {
 		hackOptions.init(glazy);
 	}
