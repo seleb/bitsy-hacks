@@ -28,13 +28,8 @@ export var hackOptions = {
 	rows: 2, // number of rows per text box (bitsy default is 2)
 };
 
-// rewrite main canvas width/height
-inject(/(width =) 128/, '$1 64');
-inject(/(height =) 128/, '$1 64');
-
 inject(/4(; \/\/this is stupid but necessary)/, '1$1'); // rewrite canvas scale
 inject(/(mapsize =) 16/, '$1 8'); // rewrite mapsize
-inject(/(\+ 1 >=) 16/g, '$1 8'); // rewrite right/down wall checks
 
 // rewrite text scale
 inject(/(var textScale =) 2/, '$1 1');
