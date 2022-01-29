@@ -4,8 +4,8 @@
 @summary for when bitsy's not small enough
 @license MIT
 @author Sean S. LeBlanc
-@version 19.2.7
-@requires Bitsy 7.11
+@version 20.0.0
+@requires Bitsy 7.12
 
 
 @description
@@ -171,8 +171,8 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 19.2.7
-@requires Bitsy 7.11
+@version 20.0.0
+@requires Bitsy 7.12
 
 */
 var kitsy = (window.kitsy = window.kitsy || {
@@ -238,13 +238,8 @@ kitsy.after;
 
 
 
-// rewrite main canvas width/height
-inject(/(width =) 128/, '$1 64');
-inject(/(height =) 128/, '$1 64');
-
 inject(/4(; \/\/this is stupid but necessary)/, '1$1'); // rewrite canvas scale
 inject(/(mapsize =) 16/, '$1 8'); // rewrite mapsize
-inject(/(\+ 1 >=) 16/g, '$1 8'); // rewrite right/down wall checks
 
 // rewrite text scale
 inject(/(var textScale =) 2/, '$1 1');

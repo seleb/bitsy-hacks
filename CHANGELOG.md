@@ -1,3 +1,15 @@
+# [20.0.0](https://github.com/seleb/bitsy-hacks/compare/v19.2.7...v20.0.0) (2022-01-29)
+
+
+### Bug Fixes
+
+* **itsy-bitsy:** remove unnecessary overrides ([278a06a](https://github.com/seleb/bitsy-hacks/commit/278a06a384e40f4f782cc5a75ed7bb3e8d356667))
+
+
+### BREAKING CHANGES
+
+* **itsy-bitsy:** itsy-bitsy now requires bitsy v7.12
+
 ## [19.2.7](https://github.com/seleb/bitsy-hacks/compare/v19.2.6...v19.2.7) (2022-01-12)
 
 
