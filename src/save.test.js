@@ -1,7 +1,7 @@
 import { evaluate, press, snapshot, start, startDialog, waitForFrame, walkToCat } from './test/bitsy';
 
 const saveOptions = {
-	autosaveInterval: 999999999999999, // HACK: Infinity doesn't stringify correctly
+	autosaveInterval: 2 ** 31 - 1, // HACK: Infinity doesn't stringify correctly
 	loadOnStart: false,
 	clearOnEnd: false,
 	clearOnStart: false,
