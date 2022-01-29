@@ -11,7 +11,7 @@
 <script type="text/bitsyGameData" id="exportedGameData">
 Write your game's title here
 
-# BITSY VERSION 7.11
+# BITSY VERSION 7.12
 
 ! ROOM_FORMAT 1
 
@@ -397,12 +397,12 @@ var updateInterval = null;
 
 function initSystem() {
 	// temp hack for the editor? unless??
-	drawingBuffers[screenBufferId] = createDrawingBuffer(128, 128, scale);
+	drawingBuffers[screenBufferId] = createDrawingBuffer(width, height, scale);
 	drawingBuffers[textboxBufferId] = createDrawingBuffer(0, 0, textScale);
 }
 
 function loadGame(gameData, defaultFontData) {
-	drawingBuffers[screenBufferId] = createDrawingBuffer(128, 128, scale);
+	drawingBuffers[screenBufferId] = createDrawingBuffer(width, height, scale);
 	drawingBuffers[textboxBufferId] = createDrawingBuffer(0, 0, textScale);
 
 	document.addEventListener('keydown', input.onkeydown);
@@ -998,8 +998,8 @@ var TransitionManager = function() {
 			}
 
 			bitsyDrawBegin(0);
-			for (var y = 0; y < 128; y++) {
-				for (var x = 0; x < 128; x++) {
+			for (var y = 0; y < height; y++) {
+				for (var x = 0; x < width; x++) {
 					var color = transitionEffects[curEffect].pixelEffectFunc(transitionStart, transitionEnd, x, y, (step / maxStep));
 					bitsyDrawPixel(color, x, y);
 				}
@@ -1282,7 +1282,7 @@ var TransitionManager = function() {
 	function createRoomPixelBuffer(room) {
 		var pixelBuffer = [];
 
-		for (var i = 0; i < 128 * 128; i++) {
+		for (var i = 0; i < width * height; i++) {
 			pixelBuffer.push(tileColorStartIndex);
 		}
 
@@ -1292,7 +1292,7 @@ var TransitionManager = function() {
 			for (var y = 0; y < tilesize; y++) {
 				for (var x = 0; x < tilesize; x++) {
 					var color = tileColorStartIndex + (frameData[y][x] === 1 ? colorIndex : 0);
-					pixelBuffer[(((ty * tilesize) + y) * 128) + ((tx * tilesize) + x)] = color;
+					pixelBuffer[(((ty * tilesize) + y) * width) + ((tx * tilesize) + x)] = color;
 				}
 			}
 		}
@@ -1356,11 +1356,11 @@ var TransitionManager = function() {
 
 // todo : is this wrapper still useful?
 var PostProcessImage = function(imageData) {
-	this.Width = 128;
-	this.Height = 128;
+	this.Width = width;
+	this.Height = height;
 
 	this.GetPixel = function(x, y) {
-		return imageData[(y * 128) + x];
+		return imageData[(y * width) + x];
 	};
 
 	this.GetData = function() {
@@ -4785,9 +4785,12 @@ var ArabicHandler = function() {
 /* NEW TEXT EFFECTS */
 var TextEffects = {};
 
+function positiveModulo(number, divisor) {
+	return ((number % divisor) + divisor) % divisor;
+}
 var RainbowEffect = function() {
 	this.DoEffect = function(char, time) {
-		char.color = rainbowColorStartIndex + Math.floor(((time / 100) - char.col * 0.5) % rainbowColorCount);
+		char.color = rainbowColorStartIndex + Math.floor(positiveModulo((time / 100) - char.col * 0.5, rainbowColorCount));
 	}
 };
 TextEffects["rbw"] = new RainbowEffect();
@@ -5032,7 +5035,7 @@ var spriteStartLocations = {};
 /* VERSION */
 var version = {
 	major: 7, // major changes
-	minor: 11, // smaller changes
+	minor: 12, // smaller changes
 	devBuildPhase: "RELEASE",
 };
 function getEngineVersion() {
@@ -5078,11 +5081,11 @@ function clearGameData() {
 	textDirection = TextDirection.LeftToRight;
 }
 
-var width = 128;
-var height = 128;
 var scale = 4; //this is stupid but necessary
 var tilesize = 8;
 var mapsize = 16;
+var width = mapsize * tilesize;
+var height = mapsize * tilesize;
 
 var curRoom = "0";
 
@@ -5606,7 +5609,7 @@ function isWallLeft() {
 }
 
 function isWallRight() {
-	return (player().x + 1 >= 16) || isWall( player().x + 1, player().y );
+	return (player().x + 1 >= mapsize) || isWall( player().x + 1, player().y );
 }
 
 function isWallUp() {
@@ -5614,7 +5617,7 @@ function isWallUp() {
 }
 
 function isWallDown() {
-	return (player().y + 1 >= 16) || isWall( player().x, player().y + 1 );
+	return (player().y + 1 >= mapsize) || isWall( player().x, player().y + 1 );
 }
 
 function isWall(x,y,roomId) {
@@ -6067,9 +6070,9 @@ function serializeDrawing(drwId) {
 }
 
 function isExitValid(e) {
-	var hasValidStartPos = e.x >= 0 && e.x < 16 && e.y >= 0 && e.y < 16;
+	var hasValidStartPos = e.x >= 0 && e.x < mapsize && e.y >= 0 && e.y < mapsize;
 	var hasDest = e.dest != null;
-	var hasValidRoomDest = (e.dest.room != null && e.dest.x >= 0 && e.dest.x < 16 && e.dest.y >= 0 && e.dest.y < 16);
+	var hasValidRoomDest = (e.dest.room != null && e.dest.x >= 0 && e.dest.x < mapsize && e.dest.y >= 0 && e.dest.y < mapsize);
 	return hasValidStartPos && hasDest && hasValidRoomDest;
 }
 
