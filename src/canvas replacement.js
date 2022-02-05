@@ -36,6 +36,8 @@ void main(){
 		`,
 	},
 };
+
+See https://github.com/seleb/WebGLazy#configuration for more options
 */
 import WebGLazy from 'webglazy';
 import { after } from './helpers/kitsy-script-toolkit';
