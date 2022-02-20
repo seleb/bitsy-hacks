@@ -53,6 +53,7 @@ Last tested against Bitsy 7.12
 - ☕ [javascript dialog](/dist/javascript-dialog.js): execute arbitrary javascript from dialog
 - 🔀 [logic-operators-extended](/dist/logic-operators-extended.js): adds conditional logic operators
 - 📜 [long dialog](/dist/long-dialog.js): put more words onscreen
+- 🔢 [math-tool](/dist/math-tool.js): Apply math operation to variable
 - 👨‍👨‍👧‍👧 [multi-sprite avatar](/dist/multi-sprite-avatar.js): make the player big
 - 📎 [noclip](/dist/noclip.js): walk through wall tiles, sprites, items, exits, and endings
 - 🔄 [online](/dist/online.js): multiplayer bitsy
