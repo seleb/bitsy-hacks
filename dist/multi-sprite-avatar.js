@@ -4,7 +4,7 @@
 @summary make the player big
 @license MIT
 @author Sean S. LeBlanc
-@version 20.0.0
+@version 20.1.0
 @requires Bitsy 7.12
 
 
@@ -193,7 +193,7 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 20.0.0
+@version 20.1.0
 @requires Bitsy 7.12
 
 */
@@ -260,7 +260,7 @@ var after = kitsy.after;
 @file utils
 @summary miscellaneous bitsy utilities
 @author Sean S. LeBlanc
-@version 20.0.0
+@version 20.1.0
 @requires Bitsy 7.12
 
 */

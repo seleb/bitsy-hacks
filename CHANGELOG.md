@@ -1,3 +1,11 @@
+# [20.1.0](https://github.com/seleb/bitsy-hacks/compare/v20.0.0...v20.1.0) (2022-02-23)
+
+
+### Features
+
+* **javascript dialog:** evaluated javascript value returned to bitsy ([7fa4524](https://github.com/seleb/bitsy-hacks/commit/7fa45241900261d87d2d21ca3e28fb581a012cc5))
+* dialog tag returned values are returned to bitsy too ([3c701c4](https://github.com/seleb/bitsy-hacks/commit/3c701c4d4da0def8d6ad2c8a8aa5b22752e0b068))
+
 # [20.0.0](https://github.com/seleb/bitsy-hacks/compare/v19.2.7...v20.0.0) (2022-01-29)
 
 
