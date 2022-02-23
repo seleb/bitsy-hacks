@@ -134,8 +134,8 @@ export function addDeferredDialogTag(tag, fn) {
  */
 export function addDualDialogTag(tag, fn) {
 	addDialogTag(tag + 'Now', function (environment, parameters, onReturn) {
-		fn(environment, parameters);
-		onReturn(null);
+		var result = fn(environment, parameters);
+		onReturn(result === undefined ? null : result);
 	});
 	addDeferredDialogTag(tag, fn);
 }
