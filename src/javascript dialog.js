@@ -17,13 +17,21 @@ Usage:
 Examples:
 	move a sprite:
 	(js "sprite['a'].x = 10;")
+
 	edit palette colour:
 	(js "getPal(curPal())[0] = [255,0,0];renderer.ClearCache();")
+
 	place an item next to player:
 	(js "room[curRoom].items.push({id:'0',x:player().x+1,y:player().y});")
+
 	verbose facsimile of exit-from-dialog:
 	(js "var _onExitDialog=onExitDialog;onExitDialog=function(){player().room=curRoom='3';_onExitDialog.apply(this,arguments);onExitDialog=_onExitDialog;};")
 
+	reading a bitsy variable
+	(js "console.log(scriptInterpreter.GetVariable('variable_name'))")
+
+	writing a bitsy variable
+	(js "scriptInterpreter.SetVariable('variable_name', 'variable_value')")
 HOW TO USE:
 1. Copy-paste into a script tag after the bitsy source
 2. Add (js "<code>") to your dialog as needed
