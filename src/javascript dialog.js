@@ -43,7 +43,7 @@ import { addDualDialogTag } from './helpers/kitsy-script-toolkit';
 var indirectEval = eval;
 
 function executeJs(environment, parameters) {
-	indirectEval(parameters[0]);
+	return indirectEval(parameters[0]);
 }
 
 addDualDialogTag('js', executeJs);
