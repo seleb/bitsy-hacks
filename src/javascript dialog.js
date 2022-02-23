@@ -32,6 +32,13 @@ Examples:
 
 	writing a bitsy variable
 	(js "scriptInterpreter.SetVariable('variable_name', 'variable_value')")
+
+When using the "jsNow" version, the result of the evaluated JS will be returned to the Bitsy script.
+This allows it to be used as part of larger expressions, e.g.
+
+	{x = 10 * (jsNow "Math.random()")}
+
+
 HOW TO USE:
 1. Copy-paste into a script tag after the bitsy source
 2. Add (js "<code>") to your dialog as needed
