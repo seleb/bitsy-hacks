@@ -23,3 +23,14 @@ test('deferred', async () => {
 	await press('ArrowRight'); // close dialog page
 	await snapshot();
 });
+
+test('returns evaluated value', async () => {
+	await start({
+		hacks: ['javascript dialog'],
+		catDialog: `{a = 10 * {jsNow "Math.floor(scriptInterpreter.GetVariable('a')/10)"}}{print a}`,
+	});
+	await walkToCat();
+	await press('ArrowRight'); // talk to cat
+	await press('ArrowRight'); // complete dialog page
+	await snapshot();
+});
