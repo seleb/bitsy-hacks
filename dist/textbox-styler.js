@@ -995,6 +995,7 @@ var textboxStyler = window.textboxStyler = {
 		window.textboxInfo.arrow_height = textboxStyler.activeStyle.textPaddingY + textboxStyler.activeStyle.borderHeight - 4;
 
 		window.textboxInfo.img = bitsy.ctx.createImageData(window.textboxInfo.width * bitsy.scale, window.textboxInfo.height * bitsy.scale);
+		window.pixelsPerRow = (textboxStyler.activeStyle.textboxWidth*(4/textboxStyler.activeStyle.textScale)) - (textboxStyler.activeStyle.borderWidth*(4/textboxStyler.activeStyle.textScale)) - (textboxStyler.activeStyle.textPaddingX*(4/textboxStyler.activeStyle.textScale));
 	},
 	// Draw border to the background of the textbox image, before rendering text or arrows.
 	drawBorder: function () {
