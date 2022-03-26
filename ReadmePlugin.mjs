@@ -134,7 +134,7 @@ If you are using an older version of Bitsy (or a fork based on an older version)
 
 - [Bitsy 7.11](https://github.com/seleb/bitsy-hacks/tree/v19.2.7/dist)
 - [Bitsy 7.8-7.9](https://github.com/seleb/bitsy-hacks/tree/v17.0.0/dist)
-- [Bitsy 7.2-7.7](https://github.com/seleb/bitsy-hacks/tree/v16.0.2/dist)
+- [Bitsy 7.2-7.7](https://github.com/seleb/bitsy-hacks/tree/v16.0.3/dist)
 - [Bitsy 5.1](https://github.com/seleb/bitsy-hacks/tree/d419cf6b84822a6419a78ad82336333771b27bf0/dist)
 
 ## Further reading
