@@ -1,9 +1,10 @@
-name: main
+name: maintenance
 
 on:
   push:
     branches:
-      - main
+      - '*.x'
+      - '*.*.x'
 
 jobs:
   release:
