@@ -199,6 +199,14 @@
 
 * support changed from bitsy 7.2 to 7.8
 
+## [16.0.3](https://github.com/seleb/bitsy-hacks/compare/v16.0.2...v16.0.3) (2022-03-26)
+
+
+### Bug Fixes
+
+* **textbox-styler:** fix issue with changing the textbox size ([#182](https://github.com/seleb/bitsy-hacks/issues/182)) ([d901062](https://github.com/seleb/bitsy-hacks/commit/d90106281a86e38309be8e5b59c61b2a7c69c287))
+
+
 ## [16.0.2](https://github.com/seleb/bitsy-hacks/compare/v16.0.1...v16.0.2) (2021-07-15)
 
 

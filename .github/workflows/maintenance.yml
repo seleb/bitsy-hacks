@@ -1,18 +1,19 @@
-name: main
+name: maintenance
 
 on:
   push:
     branches:
-      - main
+      - '*.x'
+      - '*.*.x'
 
 jobs:
   release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v1
         with:
-          node-version: 14
+          node-version: 12
       - run: npm ci
       - uses: cycjimmy/semantic-release-action@v2
         env:
