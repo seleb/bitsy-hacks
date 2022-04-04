@@ -674,8 +674,8 @@ function copyBoxAt(mapId, targetId, x1, y1, x2, y2, copyRoomId, pasteXPos, paste
 			if (targetId === 'ANY' || bitsy.room[copyRoomId].tilemap[y][x] === targetId) {
 				copy.push({
 					map: 'TIL',
-					x: pasteXPos + x - 1,
-					y: pasteYPos + y - 1,
+					x: pasteXPos + x - leftPos,
+					y: pasteYPos + y - topPos,
 					id: bitsy.room[copyRoomId].tilemap[y][x],
 				});
 			}
@@ -689,8 +689,8 @@ function copyBoxAt(mapId, targetId, x1, y1, x2, y2, copyRoomId, pasteXPos, paste
 				if ((targetId === 'ANY' || targetId === item.id) && item.x === x && item.y === y) {
 					copy.push({
 						map: 'ITM',
-						x: pasteXPos + x - 1,
-						y: pasteYPos + y - 1,
+						x: pasteXPos + x - leftPos,
+						y: pasteYPos + y - topPos,
 						id: item.id,
 					});
 				}
@@ -706,8 +706,8 @@ function copyBoxAt(mapId, targetId, x1, y1, x2, y2, copyRoomId, pasteXPos, paste
 					} else if (spr.room === copyRoomId && spr.x === x && spr.y === y) {
 						copy.push({
 							map: 'SPR',
-							x: pasteXPos + x - 1,
-							y: pasteYPos + y - 1,
+							x: pasteXPos + x - leftPos,
+							y: pasteYPos + y - topPos,
 							id: spr.id,
 						});
 					}
@@ -716,8 +716,8 @@ function copyBoxAt(mapId, targetId, x1, y1, x2, y2, copyRoomId, pasteXPos, paste
 				if (bitsy.sprite[targetId] !== bitsy.playerId && bitsy.sprite[targetId].room === copyRoomId && bitsy.sprite[targetId].x === x && bitsy.sprite[targetId].y === y) {
 					copy.push({
 						map: 'SPR',
-						x: pasteXPos + x - 1,
-						y: pasteYPos + y - 1,
+						x: pasteXPos + x - leftPos,
+						y: pasteYPos + y - topPos,
 						id: bitsy.sprite[targetId].id,
 					});
 				}
