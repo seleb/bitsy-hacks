@@ -21,3 +21,4 @@ test('replaceBox', async () => testDialog('(replaceBoxNow "TIL, a, ITM, 0, 1, 1,
 test('replaceAll', async () => testDialog('(replaceAllNow "TIL, a, ITM, 0, 0")'));
 test('copy', async () => testDialog('(copyNow "TIL, a, 1, 1, 0, 2, 2, 0")'));
 test('copyBox', async () => testDialog('(copyBoxNow "TIL, a, 1, 1, 2, 2, 0, 3, 3, 0")'));
+test('copyBox', async () => testDialog('(copyBoxNow "TIL, a, 13, 13, 14, 14, 0, 3, 3, 0")'));
