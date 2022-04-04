@@ -1,3 +1,10 @@
+## [20.1.2](https://github.com/seleb/bitsy-hacks/compare/v20.1.1...v20.1.2) (2022-04-04)
+
+
+### Bug Fixes
+
+* **edit room from dialog:** use correct coordinates when copying box ([#196](https://github.com/seleb/bitsy-hacks/issues/196)) ([94ec669](https://github.com/seleb/bitsy-hacks/commit/94ec66901c21660fc2690fe330f29eadc8bad4dd))
+
 ## [20.1.1](https://github.com/seleb/bitsy-hacks/compare/v20.1.0...v20.1.1) (2022-03-26)
 
 
