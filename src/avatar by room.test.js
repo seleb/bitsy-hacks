@@ -1,6 +1,6 @@
 import { press, snapshot, start } from './test/bitsy';
 
-test('strike', async () => {
+test('avatar by room', async () => {
 	await start({
 		gamedata: `
 
