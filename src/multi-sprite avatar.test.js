@@ -1,4 +1,4 @@
-import { press, snapshot, start } from './test/bitsy';
+import { press, snapshot, start, startDialog } from './test/bitsy';
 
 test('multi-sprite avatar', async () => {
 	await start({
@@ -131,5 +131,17 @@ VAR a
 	await press('ArrowRight'); // end dialog
 	await snapshot();
 	await press('ArrowRight'); // move
+	await snapshot();
+
+	// test disableBig
+	await startDialog('{disableBig}');
+	await snapshot();
+
+	// test enableBig
+	await startDialog('{enableBig}');
+	await snapshot();
+
+	// test enableBig with pieces
+	await startDialog('{enableBig "0,0,f" "1,0,e" "0,1,d" "1,1,c"}');
 	await snapshot();
 });
