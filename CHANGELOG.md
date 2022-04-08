@@ -1,3 +1,17 @@
+# [20.2.0](https://github.com/seleb/bitsy-hacks/compare/v20.1.2...v20.2.0) (2022-04-08)
+
+
+### Bug Fixes
+
+* **avatar by room:** multi-sprite avatar not resetting ([d46cc55](https://github.com/seleb/bitsy-hacks/commit/d46cc558d2c5feab1bd69dacca60c8d5b00ed156))
+
+
+### Features
+
+* **avatar by room:** add multi-sprite avatar support ([588c68a](https://github.com/seleb/bitsy-hacks/commit/588c68ae0030c24e480ae0b827d8516cd43225d1))
+* **multi-sprite avatar:** add dialog tags ([fd5fc90](https://github.com/seleb/bitsy-hacks/commit/fd5fc902f1a2edb56f5c396026e80ef715e74af8))
+* **multi-sprite avatar:** export functions for other hack access ([9cf7cea](https://github.com/seleb/bitsy-hacks/commit/9cf7cea4ec81f05ac2ca13416c5ba521531600f9))
+
 ## [20.1.2](https://github.com/seleb/bitsy-hacks/compare/v20.1.1...v20.1.2) (2022-04-04)
 
 

@@ -4,7 +4,7 @@
 @summary put more words onscreen
 @license MIT
 @author Sean S. LeBlanc
-@version 20.1.2
+@version 20.2.0
 @requires Bitsy 7.12
 
 
@@ -184,7 +184,7 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 20.1.2
+@version 20.2.0
 @requires Bitsy 7.12
 
 */
@@ -358,7 +358,7 @@ inject(/(this\.AddLinebreak = )/, 'this.AddParagraphBreak = function() { buffer.
 @summary Adds paragraph breaks to the dialogue parser
 @license WTFPL (do WTF you want)
 @author Sean S. LeBlanc, David Mowatt
-@version 20.1.2
+@version 20.2.0
 @requires Bitsy 7.12
 
 

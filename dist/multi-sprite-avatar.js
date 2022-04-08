@@ -4,7 +4,7 @@
 @summary make the player big
 @license MIT
 @author Sean S. LeBlanc
-@version 20.1.2
+@version 20.2.0
 @requires Bitsy 7.12
 
 
@@ -14,6 +14,14 @@ to create the illusion of a larger avatar.
 
 Provided example is a 2x2 square for simplicity,
 but multi-sprite avatar's shape can be arbitrary.
+
+Dialog tags are also available to allow changing the avatar at runtime
+
+Usage:
+	{disableBig} - reverts to original avatar
+	{enableBig} - re-enables multi-sprite avatar
+	{enableBig "0,0,f" "1,0,e" "0,1,d" "1,1,c"} - enables multi-sprite avatar using the provided pieces
+	{disableBigNow}/{enableBigNow} - save as above but executes immediately when reached in dialog
 
 Notes:
 - will probably break any other hacks involving moving other sprites around (they'll probably use the player's modified collision)
@@ -67,7 +75,7 @@ bitsy = bitsy || /*#__PURE__*/_interopDefaultLegacy(bitsy);
  * @param searcher Regex to search and replace
  * @param replacer Replacer string/fn
  */
-function inject(searcher, replacer) {
+function inject$1(searcher, replacer) {
     // find the relevant script tag
     var scriptTags = document.getElementsByTagName('script');
     var scriptTag;
@@ -134,7 +142,7 @@ function after$1(targetFuncName, afterFn) {
 }
 function applyInjects() {
     kitsy.queuedInjectScripts.forEach(function (injectScript) {
-        inject(injectScript.searcher, injectScript.replacer);
+        inject$1(injectScript.searcher, injectScript.replacer);
     });
 }
 function applyHooks(root) {
@@ -193,7 +201,7 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 20.1.2
+@version 20.2.0
 @requires Bitsy 7.12
 
 */
@@ -250,17 +258,115 @@ if (!hooked) {
 }
 
 /** @see kitsy.inject */
-kitsy.inject;
+var inject = kitsy.inject;
 /** @see kitsy.before */
 var before = kitsy.before;
 /** @see kitsy.after */
 var after = kitsy.after;
 
+// Rewrite custom functions' parentheses to curly braces for Bitsy's
+// interpreter. Unescape escaped parentheticals, too.
+function convertDialogTags(input, tag) {
+	return input.replace(new RegExp('\\\\?\\((' + tag + '(\\s+(".*?"|.+?))?)\\\\?\\)', 'g'), function (match, group) {
+		if (match.substr(0, 1) === '\\') {
+			return '(' + group + ')'; // Rewrite \(tag "..."|...\) to (tag "..."|...)
+		}
+		return '{' + group + '}'; // Rewrite (tag "..."|...) to {tag "..."|...}
+	});
+}
+
+function addDialogFunction(tag, fn) {
+	kitsy.dialogFunctions = kitsy.dialogFunctions || {};
+	if (kitsy.dialogFunctions[tag]) {
+		console.warn('The dialog function "' + tag + '" already exists.');
+		return;
+	}
+
+	// Hook into game load and rewrite custom functions in game data to Bitsy format.
+	before('parseWorld', function (gameData) {
+		return [convertDialogTags(gameData, tag)];
+	});
+
+	kitsy.dialogFunctions[tag] = fn;
+}
+
+function injectDialogTag(tag, code) {
+	inject(/(var functionMap = \{\};[^]*?)(this.HasFunction)/m, '$1\nfunctionMap["' + tag + '"] = ' + code + ';\n$2');
+}
+
+/**
+ * Adds a custom dialog tag which executes the provided function.
+ * For ease-of-use with the bitsy editor, tags can be written as
+ * (tagname "parameters") in addition to the standard {tagname "parameters"}
+ *
+ * Function is executed immediately when the tag is reached.
+ *
+ * @param {string}   tag Name of tag
+ * @param {Function} fn  Function to execute, with signature `function(environment, parameters, onReturn){}`
+ *                       environment: provides access to SetVariable/GetVariable (among other things, see Environment in the bitsy source for more info)
+ *                       parameters: array containing parameters as string in first element (i.e. `parameters[0]`)
+ *                       onReturn: function to call with return value (just call `onReturn(null);` at the end of your function if your tag doesn't interact with the logic system)
+ */
+function addDialogTag(tag, fn) {
+	addDialogFunction(tag, fn);
+	injectDialogTag(tag, 'kitsy.dialogFunctions["' + tag + '"]');
+}
+
+/**
+ * Adds a custom dialog tag which executes the provided function.
+ * For ease-of-use with the bitsy editor, tags can be written as
+ * (tagname "parameters") in addition to the standard {tagname "parameters"}
+ *
+ * Function is executed after the dialog box.
+ *
+ * @param {string}   tag Name of tag
+ * @param {Function} fn  Function to execute, with signature `function(environment, parameters){}`
+ *                       environment: provides access to SetVariable/GetVariable (among other things, see Environment in the bitsy source for more info)
+ *                       parameters: array containing parameters as string in first element (i.e. `parameters[0]`)
+ */
+function addDeferredDialogTag(tag, fn) {
+	addDialogFunction(tag, fn);
+	bitsy.kitsy.deferredDialogFunctions = bitsy.kitsy.deferredDialogFunctions || {};
+	var deferred = (bitsy.kitsy.deferredDialogFunctions[tag] = []);
+	injectDialogTag(tag, 'function(e, p, o){ kitsy.deferredDialogFunctions["' + tag + '"].push({e:e,p:p}); o(null); }');
+	// Hook into the dialog finish event and execute the actual function
+	after('onExitDialog', function () {
+		while (deferred.length) {
+			var args = deferred.shift();
+			bitsy.kitsy.dialogFunctions[tag](args.e, args.p, args.o);
+		}
+	});
+	// Hook into the game reset and make sure data gets cleared
+	after('clearGameData', function () {
+		deferred.length = 0;
+	});
+}
+
+/**
+ * Adds two custom dialog tags which execute the provided function,
+ * one with the provided tagname executed after the dialog box,
+ * and one suffixed with 'Now' executed immediately when the tag is reached.
+ *
+ * i.e. helper for the (exit)/(exitNow) pattern.
+ *
+ * @param {string}   tag Name of tag
+ * @param {Function} fn  Function to execute, with signature `function(environment, parameters){}`
+ *                       environment: provides access to SetVariable/GetVariable (among other things, see Environment in the bitsy source for more info)
+ *                       parameters: array containing parameters as string in first element (i.e. `parameters[0]`)
+ */
+function addDualDialogTag(tag, fn) {
+	addDialogTag(tag + 'Now', function (environment, parameters, onReturn) {
+		var result = fn(environment, parameters);
+		onReturn(result === undefined ? null : result);
+	});
+	addDeferredDialogTag(tag, fn);
+}
+
 /**
 @file utils
 @summary miscellaneous bitsy utilities
 @author Sean S. LeBlanc
-@version 20.1.2
+@version 20.2.0
 @requires Bitsy 7.12
 
 */
@@ -413,7 +519,24 @@ after('startExportedGame', function () {
 	};
 });
 
+addDualDialogTag('enableBig', function (environment, parameters) {
+	enableBig(
+		parameters.length
+			? parameters.map(function (param) {
+					var props = param.split(/,\s*/);
+					return { x: parseInt(props[0], 10), y: parseInt(props[1], 10), spr: props[2] };
+			  })
+			: undefined
+	);
+});
+addDualDialogTag('disableBig', function (environment, parameters) {
+	disableBig();
+});
+
+exports.disableBig = disableBig;
+exports.enableBig = enableBig;
 exports.hackOptions = hackOptions;
+exports.syncPieces = syncPieces;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
