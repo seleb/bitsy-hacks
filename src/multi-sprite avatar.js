@@ -67,7 +67,7 @@ if (hackOptions.enabledOnStart) {
 var enabled = false;
 var pieces = [];
 
-function syncPieces() {
+export function syncPieces() {
 	var p = bitsy.player();
 	for (var i = 0; i < pieces.length; ++i) {
 		var piece = pieces[i];
@@ -79,14 +79,14 @@ function syncPieces() {
 	}
 }
 
-function enableBig(newPieces) {
+export function enableBig(newPieces) {
 	disableBig();
 	pieces = newPieces || hackOptions.pieces;
 	enabled = true;
 	syncPieces();
 }
 
-function disableBig() {
+export function disableBig() {
 	enabled = false;
 	for (var i = 0; i < pieces.length; ++i) {
 		getImage(pieces[i].spr, bitsy.sprite).room = null;
