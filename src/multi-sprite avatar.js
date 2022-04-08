@@ -12,6 +12,14 @@ to create the illusion of a larger avatar.
 Provided example is a 2x2 square for simplicity,
 but multi-sprite avatar's shape can be arbitrary.
 
+Dialog tags are also available to allow changing the avatar at runtime
+
+Usage:
+	{disableBig} - reverts to original avatar
+	{enableBig} - re-enables multi-sprite avatar
+	{enableBig "0,0,f" "1,0,e" "0,1,d" "1,1,c"} - enables multi-sprite avatar using the provided pieces
+	{disableBigNow}/{enableBigNow} - save as above but executes immediately when reached in dialog
+
 Notes:
 - will probably break any other hacks involving moving other sprites around (they'll probably use the player's modified collision)
 - the original avatar sprite isn't changed, but will be covered by a piece at x:0,y:0
@@ -23,7 +31,7 @@ HOW TO USE:
 	Pieces must have an x,y offset and a sprite id
 */
 import bitsy from 'bitsy';
-import { after, before } from './helpers/kitsy-script-toolkit';
+import { addDualDialogTag, after, before } from './helpers/kitsy-script-toolkit';
 import { getImage } from './helpers/utils';
 
 export var hackOptions = {
@@ -176,4 +184,18 @@ after('startExportedGame', function () {
 	bitsy.getSpriteAt = function () {
 		return filterPieces(originalGetSpriteAt.apply(this, arguments));
 	};
+});
+
+addDualDialogTag('enableBig', function (environment, parameters) {
+	enableBig(
+		parameters.length
+			? parameters.map(function (param) {
+					var props = param.split(/,\s*/);
+					return { x: parseInt(props[0], 10), y: parseInt(props[1], 10), spr: props[2] };
+			  })
+			: undefined
+	);
+});
+addDualDialogTag('disableBig', function (environment, parameters) {
+	disableBig();
 });
