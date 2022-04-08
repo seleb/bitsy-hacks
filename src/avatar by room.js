@@ -14,6 +14,9 @@ HOW TO USE:
 
 By default, the avatar will reset to the default if you enter a room without a sprite defined.
 This can also be changed in the hackOptions below to instead apply avatar changes permanently.
+
+Note: This hack is compatible with multi-sprite avatar. In order to use both of them together,
+fill out the `avatarByRoom` values using the `pieces` format instead of individual sprites.
 */
 import bitsy from 'bitsy';
 import { after, before } from './helpers/kitsy-script-toolkit';
@@ -49,26 +52,36 @@ after('load_game', function () {
 	originalAnimation = bitsy.player().animation;
 });
 
+function updateAvatar() {
+	var player = bitsy.player();
+	var newAvatarId = hackOptions.avatarByRoom[currentRoom];
+	if (window.hacks && window.hacks['multi-sprite_avatar'] && window.hacks['multi-sprite_avatar'].enableBig) {
+		// HACK: support multi-sprite avatar by room
+		window.hacks['multi-sprite_avatar'].enableBig(newAvatarId);
+	} else {
+		if (
+			(!newAvatarId && !hackOptions.permanent) || // if no sprite defined + not permanent, reset
+			newAvatarId === player.id // manual reset
+		) {
+			player.drw = originalDrw;
+			player.animation = originalAnimation;
+			return;
+		}
+		var newAvatar = getImage(newAvatarId, bitsy.sprite);
+		if (!newAvatar) {
+			throw new Error('Could not find sprite "' + newAvatarId + '" for room "' + currentRoom + '"');
+		}
+		player.drw = newAvatar.drw;
+		player.animation = Object.assign({}, newAvatar.animation);
+	}
+}
+
 var currentRoom;
 before('drawRoom', function () {
 	var player = bitsy.player();
-	if (bitsy.player().room === currentRoom) {
+	if (player.room === currentRoom) {
 		return;
 	}
 	currentRoom = player.room;
-	var newAvatarId = hackOptions.avatarByRoom[currentRoom];
-	if (
-		(!newAvatarId && !hackOptions.permanent) || // if no sprite defined + not permanent, reset
-		newAvatarId === player.id // manual reset
-	) {
-		player.drw = originalDrw;
-		player.animation = originalAnimation;
-		return;
-	}
-	var newAvatar = getImage(newAvatarId, bitsy.sprite);
-	if (!newAvatar) {
-		throw new Error('Could not find sprite "' + newAvatarId + '" for room "' + currentRoom + '"');
-	}
-	player.drw = newAvatar.drw;
-	player.animation = Object.assign({}, newAvatar.animation);
+	updateAvatar(currentRoom);
 });
