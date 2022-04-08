@@ -190,7 +190,7 @@ export async function press(key) {
 // and perform a snapshot test on it
 export async function snapshot(options) {
 	const screenshot = await page.screenshot();
-	expect(screenshot).toMatchImageSnapshot(options);
+	expect(screenshot).toMatchImageSnapshot({ dumpDiffToConsole: true, ...options });
 }
 
 // perform the sequence of key presses
