@@ -52,17 +52,27 @@ after('load_game', function () {
 	originalAnimation = bitsy.player().animation;
 });
 
-function updateAvatar() {
+var currentRoom;
+before('drawRoom', function () {
 	var player = bitsy.player();
+	if (player.room === currentRoom) {
+		return;
+	}
+	currentRoom = player.room;
 	var newAvatarId = hackOptions.avatarByRoom[currentRoom];
+	var shouldReset =
+		(!newAvatarId && !hackOptions.permanent) || // if no sprite defined + not permanent, reset
+		newAvatarId === player.id; // manual reset
+
 	if (window.hacks && window.hacks['multi-sprite_avatar'] && window.hacks['multi-sprite_avatar'].enableBig) {
 		// HACK: support multi-sprite avatar by room
-		window.hacks['multi-sprite_avatar'].enableBig(newAvatarId);
+		if (shouldReset) {
+			window.hacks['multi-sprite_avatar'].enableBig();
+		} else {
+			window.hacks['multi-sprite_avatar'].enableBig(newAvatarId);
+		}
 	} else {
-		if (
-			(!newAvatarId && !hackOptions.permanent) || // if no sprite defined + not permanent, reset
-			newAvatarId === player.id // manual reset
-		) {
+		if (shouldReset) {
 			player.drw = originalDrw;
 			player.animation = originalAnimation;
 			return;
@@ -74,14 +84,4 @@ function updateAvatar() {
 		player.drw = newAvatar.drw;
 		player.animation = Object.assign({}, newAvatar.animation);
 	}
-}
-
-var currentRoom;
-before('drawRoom', function () {
-	var player = bitsy.player();
-	if (player.room === currentRoom) {
-		return;
-	}
-	currentRoom = player.room;
-	updateAvatar(currentRoom);
 });
