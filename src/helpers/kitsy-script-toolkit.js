@@ -21,6 +21,7 @@ if (!hooked) {
 		bitsy.dialogRenderer = bitsy.dialogModule.CreateRenderer();
 		bitsy.dialogBuffer = bitsy.dialogModule.CreateBuffer();
 		bitsy.renderer = new bitsy.TileRenderer(bitsy.tilesize);
+		bitsy.transition = new bitsy.TransitionManager();
 
 		// Hook everything
 		kitsy.applyHooks();

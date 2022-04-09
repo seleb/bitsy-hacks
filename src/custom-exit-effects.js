@@ -79,8 +79,6 @@ function lerpPalettes(start, end, delta) {
 }
 
 before('startExportedGame', function () {
-	// recreate the transition manager so the injected code is used
-	bitsy.transition = new bitsy.TransitionManager();
 	// make the custom effects available
 	Object.entries(hackOptions).forEach(function (entry) {
 		bitsy.transition.RegisterTransitionEffect(entry[0], entry[1]);
