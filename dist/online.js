@@ -4,7 +4,7 @@
 @summary multiplayer bitsy
 @license MIT
 @author Sean S. LeBlanc
-@version 20.2.0
+@version 20.2.1
 @requires Bitsy 7.12
 
 @description
@@ -182,7 +182,7 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 20.2.0
+@version 20.2.1
 @requires Bitsy 7.12
 
 */
@@ -224,6 +224,7 @@ if (!hooked) {
 		bitsy.dialogRenderer = bitsy.dialogModule.CreateRenderer();
 		bitsy.dialogBuffer = bitsy.dialogModule.CreateBuffer();
 		bitsy.renderer = new bitsy.TileRenderer(bitsy.tilesize);
+		bitsy.transition = new bitsy.TransitionManager();
 
 		// Hook everything
 		kitsy.applyHooks();
@@ -347,7 +348,7 @@ function addDualDialogTag(tag, fn) {
 @file utils
 @summary miscellaneous bitsy utilities
 @author Sean S. LeBlanc
-@version 20.2.0
+@version 20.2.1
 @requires Bitsy 7.12
 
 */
@@ -411,7 +412,7 @@ function getImage(name, map) {
 @summary edit dialog from dialog (yes really)
 @license MIT
 @author Sean S. LeBlanc
-@version 20.2.0
+@version 20.2.1
 @requires Bitsy 7.12
 
 
@@ -478,7 +479,7 @@ addDeferredDialogTag('dialog', editDialog);
 @file edit image at runtime
 @summary API for updating image data at runtime.
 @author Sean S. LeBlanc
-@version 20.2.0
+@version 20.2.1
 @requires Bitsy 7.12
 
 @description
@@ -547,7 +548,7 @@ function setSpriteData(id, frame, newData) {
 @summary edit sprites, items, and tiles from dialog
 @license MIT
 @author Sean S. LeBlanc
-@version 20.2.0
+@version 20.2.1
 @requires Bitsy 7.12
 
 
@@ -692,7 +693,7 @@ addDualDialogTag('imagePal', editPalette);
 @summary execute arbitrary javascript from dialog
 @license MIT
 @author Sean S. LeBlanc
-@version 20.2.0
+@version 20.2.1
 @requires Bitsy 7.12
 
 

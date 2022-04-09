@@ -4,7 +4,7 @@
 @summary adds an easing transition animation to display the dialog box text
 @license MIT
 @author Delacannon
-@version 20.2.0
+@version 20.2.1
 @requires Bitsy 7.12
 
 
@@ -160,7 +160,7 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 20.2.0
+@version 20.2.1
 @requires Bitsy 7.12
 
 */
@@ -202,6 +202,7 @@ if (!hooked) {
 		bitsy.dialogRenderer = bitsy.dialogModule.CreateRenderer();
 		bitsy.dialogBuffer = bitsy.dialogModule.CreateBuffer();
 		bitsy.renderer = new bitsy.TileRenderer(bitsy.tilesize);
+		bitsy.transition = new bitsy.TransitionManager();
 
 		// Hook everything
 		kitsy.applyHooks();

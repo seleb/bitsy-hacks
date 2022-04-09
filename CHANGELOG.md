@@ -1,3 +1,11 @@
+## [20.2.1](https://github.com/seleb/bitsy-hacks/compare/v20.2.0...v20.2.1) (2022-04-09)
+
+
+### Bug Fixes
+
+* reinitialize `TransitionManager` as part of kitsy setup ([e241570](https://github.com/seleb/bitsy-hacks/commit/e241570ccfa4506abb60bfdcac8b61ed1182b6ff))
+* **transparent sprites:** transparency working during transitions ([9df1992](https://github.com/seleb/bitsy-hacks/commit/9df19926e579119c6bd4fe36d522d41bc7dc4ef1))
+
 # [20.2.0](https://github.com/seleb/bitsy-hacks/compare/v20.1.2...v20.2.0) (2022-04-08)
 
 
