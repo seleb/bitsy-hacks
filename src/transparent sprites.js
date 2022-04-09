@@ -31,6 +31,35 @@ before('renderer.GetDrawingFrame', function (drawing, frameIndex) {
 });
 // send -1 instead of background colour index if transparent
 inject(/bitsyDrawPixel\(backgroundColor, x, y\)/, 'bitsyDrawPixel(window.makeTransparent ? -1 : backgroundColor, x, y)');
+// make sure transitions render using regular room logic
+inject(
+	/(function createRoomPixelBuffer\(room\) {)/,
+	`$1
+var buffer = drawingBuffers[screenBufferId];
+var s = buffer.scale;
+buffer.scale = 1;
+drawRoom(room);
+renderDrawingBuffer(screenBufferId, buffer);
+const data = buffer.canvas.getContext('2d').getImageData(0, 0, buffer.width, buffer.height).data;
+var pixelBuffer = [];
+for (var y = 0; y < buffer.height; ++y) {
+for (var x = 0; x < buffer.width; ++x) {
+	var idx = (y*buffer.width + x)*4;
+	var r = data[idx + 0];
+	var g = data[idx + 1];
+	var b = data[idx + 2];
+	var p = getPal(getRoomPal(curRoom)).findIndex(i => r === i[0] && g === i[1] && b === i[2]);
+	pixelBuffer.push(tileColorStartIndex + p);
+}
+}
+buffer.scale = s;
+invalidateDrawingBuffer(buffer);
+return pixelBuffer;
+`
+);
+// make sure tiles are available when drawing rooms
+inject(/(var tileBuffer = drawingBuffers\[tileId\];)/, 'hackForEditor_GetImageFromTileId(tileId); $1');
+
 // overwrite transparent pixel
 after('renderPixelInstruction', function (bufferId, buffer, paletteIndex, x, y) {
 	if (paletteIndex !== -1) return;
