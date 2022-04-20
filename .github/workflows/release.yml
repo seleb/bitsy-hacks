@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - id: package-version
-        uses: martinbeentjes/npm-get-version-action@v1.1.0
+        uses: martinbeentjes/npm-get-version-action@v1.2.3
       - uses: josephbmanley/butler-publish-itchio-action@v1.0.3
         env:
           BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
