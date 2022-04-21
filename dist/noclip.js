@@ -4,7 +4,7 @@
 @summary walk through wall tiles, sprites, items, exits, and endings
 @license MIT
 @author Sean S. LeBlanc
-@version 20.2.1
+@version 20.2.2
 @requires Bitsy 7.12
 
 
@@ -182,7 +182,7 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 20.2.1
+@version 20.2.2
 @requires Bitsy 7.12
 
 */
@@ -252,7 +252,7 @@ var after = kitsy.after;
 @summary run custom code on key inputs
 @license MIT
 @author Sean S. LeBlanc
-@version 20.2.1
+@version 20.2.2
 @requires Bitsy 7.12
 
 
@@ -263,7 +263,7 @@ that allow custom functions to be run when a key is pressed, held, or released.
 Some simple example functions:
 	bitsy.scriptInterpreter.SetVariable('myvar', 10); // sets a variable that can be accessed in bitsy scripts
 	bitsy.startDialog('a dialog string'); // starts a bitsy dialog script
-	bitsy.startDialog(bitsy.dialog['script-id'], 'script-id'); // starts a bitsy dialog script by id
+	bitsy.startDialog(bitsy.dialog['script-id'].src, 'script-id'); // starts a bitsy dialog script by id
 	bitsy.room[bitsy.curRoom].items.push({ id: 0, x: bitsy.player().x, y: bitsy.player().y }); // adds an item at the player's current position
 
 HOW TO USE:

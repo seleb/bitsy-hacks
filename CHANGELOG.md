@@ -1,3 +1,10 @@
+## [20.2.2](https://github.com/seleb/bitsy-hacks/compare/v20.2.1...v20.2.2) (2022-04-21)
+
+
+### Bug Fixes
+
+* **custom-keyhandlers:** `startDialog` example ([0d054b6](https://github.com/seleb/bitsy-hacks/commit/0d054b619d4157eca83dcce7f7657d596948137f))
+
 ## [20.2.1](https://github.com/seleb/bitsy-hacks/compare/v20.2.0...v20.2.1) (2022-04-09)
 
 
