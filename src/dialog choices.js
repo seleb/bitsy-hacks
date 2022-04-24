@@ -35,8 +35,7 @@ Greeting text{choice
     {a = 1}
   - Response two
     {a = 2}
-}
-constant part of answer{
+}constant part of answer{
   - a == 1 ?
     custom part based on response one
   - a == 2 ?
