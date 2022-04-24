@@ -1,3 +1,10 @@
+## [20.2.3](https://github.com/seleb/bitsy-hacks/compare/v20.2.2...v20.2.3) (2022-04-24)
+
+
+### Bug Fixes
+
+* **dialog choices:** update example ([beb8518](https://github.com/seleb/bitsy-hacks/commit/beb85188450d5d0448ccfed5df84484be0ede3ae))
+
 ## [20.2.2](https://github.com/seleb/bitsy-hacks/compare/v20.2.1...v20.2.2) (2022-04-21)
 
 
