@@ -55,10 +55,10 @@ after('updateInput', function () {
 			vflip = false;
 			break;
 		case bitsy.Direction.Down:
-			vflip = allowed.verticalFlipAllowed;
+			vflip = true;
 			break;
 		case bitsy.Direction.Left:
-			hflip = allowed.horizontalFlipAllowed;
+			hflip = true;
 			break;
 		case bitsy.Direction.Right:
 			hflip = false;
@@ -66,6 +66,8 @@ after('updateInput', function () {
 		default:
 			break;
 	}
+	vflip = vflip && allowed.verticalFlipAllowed;
+	hflip = hflip && allowed.horizontalFlipAllowed;
 
 	// update sprite with flipped frames
 	for (i = 0; i < originalAnimation.frames.length; ++i) {
