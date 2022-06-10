@@ -14,7 +14,7 @@ HOW TO USE:
 */
 import bitsy from 'bitsy';
 import { getSpriteData, setSpriteData } from './helpers/edit image at runtime';
-import { after } from './helpers/kitsy-script-toolkit';
+import { after, before } from './helpers/kitsy-script-toolkit';
 import { transformSpriteData } from './helpers/transform-sprite-data';
 
 export var hackOptions = {
@@ -34,20 +34,8 @@ export var hackOptions = {
 
 var hflip = false;
 var vflip = false;
-var originalAnimation;
 
 after('updateInput', function () {
-	var i;
-	// save the original frames
-	if (!originalAnimation || originalAnimation.referenceFrame !== getSpriteData(bitsy.playerId, 0)) {
-		originalAnimation = {
-			frames: [],
-		};
-		for (i = 0; i < bitsy.player().animation.frameCount; ++i) {
-			originalAnimation.frames.push(getSpriteData(bitsy.playerId, i));
-		}
-	}
-
 	// determine which directions need flipping
 	var allowed = hackOptions.allowed();
 	switch (bitsy.curPlayerDirection) {
@@ -68,10 +56,14 @@ after('updateInput', function () {
 	}
 	vflip = vflip && allowed.verticalFlipAllowed;
 	hflip = hflip && allowed.horizontalFlipAllowed;
-
-	// update sprite with flipped frames
-	for (i = 0; i < originalAnimation.frames.length; ++i) {
-		setSpriteData(bitsy.playerId, i, transformSpriteData(originalAnimation.frames[i], vflip, hflip));
+});
+before('drawRoom', function () {
+	for (var i = 0; i < bitsy.player().animation.frameCount; ++i) {
+		setSpriteData(bitsy.playerId, i, transformSpriteData(getSpriteData(bitsy.playerId, i), vflip, hflip));
 	}
-	originalAnimation.referenceFrame = getSpriteData(bitsy.playerId, 0);
+});
+after('drawRoom', function () {
+	for (var i = 0; i < bitsy.player().animation.frameCount; ++i) {
+		setSpriteData(bitsy.playerId, i, transformSpriteData(getSpriteData(bitsy.playerId, i), vflip, hflip));
+	}
 });
