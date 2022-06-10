@@ -4,7 +4,7 @@
 @summary flips the player's sprite based on directional movement
 @license MIT
 @author Sean S. LeBlanc
-@version 20.2.3
+@version 20.2.4
 @requires Bitsy 7.12
 
 
@@ -41,7 +41,7 @@ bitsy = bitsy || /*#__PURE__*/_interopDefaultLegacy(bitsy);
 @file utils
 @summary miscellaneous bitsy utilities
 @author Sean S. LeBlanc
-@version 20.2.3
+@version 20.2.4
 @requires Bitsy 7.12
 
 */
@@ -103,7 +103,7 @@ function getImage(name, map) {
 @file edit image at runtime
 @summary API for updating image data at runtime.
 @author Sean S. LeBlanc
-@version 20.2.3
+@version 20.2.4
 @requires Bitsy 7.12
 
 @description
@@ -235,7 +235,7 @@ function kitsyInject(searcher, replacer) {
 // Ex: before('load_game', function run() { alert('Loading!'); });
 //     before('show_text', function run(text) { return text.toUpperCase(); });
 //     before('show_text', function run(text, done) { done(text.toUpperCase()); });
-function before(targetFuncName, beforeFn) {
+function before$1(targetFuncName, beforeFn) {
     kitsy.queuedBeforeScripts[targetFuncName] = kitsy.queuedBeforeScripts[targetFuncName] || [];
     kitsy.queuedBeforeScripts[targetFuncName].push(beforeFn);
 }
@@ -305,7 +305,7 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 20.2.3
+@version 20.2.4
 @requires Bitsy 7.12
 
 */
@@ -314,7 +314,7 @@ var kitsy = (window.kitsy = window.kitsy || {
     queuedBeforeScripts: {},
     queuedAfterScripts: {},
     inject: kitsyInject,
-    before,
+    before: before$1,
     after: after$1,
     /**
      * Applies all queued `inject` calls.
@@ -365,7 +365,7 @@ if (!hooked) {
 /** @see kitsy.inject */
 kitsy.inject;
 /** @see kitsy.before */
-kitsy.before;
+var before = kitsy.before;
 /** @see kitsy.after */
 var after = kitsy.after;
 
@@ -430,20 +430,8 @@ function transformSpriteData(spriteData, v, h, rot) {
 
 var hflip = false;
 var vflip = false;
-var originalAnimation;
 
 after('updateInput', function () {
-	var i;
-	// save the original frames
-	if (!originalAnimation || originalAnimation.referenceFrame !== getSpriteData(bitsy.playerId, 0)) {
-		originalAnimation = {
-			frames: [],
-		};
-		for (i = 0; i < bitsy.player().animation.frameCount; ++i) {
-			originalAnimation.frames.push(getSpriteData(bitsy.playerId, i));
-		}
-	}
-
 	// determine which directions need flipping
 	var allowed = hackOptions.allowed();
 	switch (bitsy.curPlayerDirection) {
@@ -451,21 +439,27 @@ after('updateInput', function () {
 			vflip = false;
 			break;
 		case bitsy.Direction.Down:
-			vflip = allowed.verticalFlipAllowed;
+			vflip = true;
 			break;
 		case bitsy.Direction.Left:
-			hflip = allowed.horizontalFlipAllowed;
+			hflip = true;
 			break;
 		case bitsy.Direction.Right:
 			hflip = false;
 			break;
 	}
-
-	// update sprite with flipped frames
-	for (i = 0; i < originalAnimation.frames.length; ++i) {
-		setSpriteData(bitsy.playerId, i, transformSpriteData(originalAnimation.frames[i], vflip, hflip));
+	vflip = vflip && allowed.verticalFlipAllowed;
+	hflip = hflip && allowed.horizontalFlipAllowed;
+});
+before('drawRoom', function () {
+	for (var i = 0; i < bitsy.player().animation.frameCount; ++i) {
+		setSpriteData(bitsy.playerId, i, transformSpriteData(getSpriteData(bitsy.playerId, i), vflip, hflip));
 	}
-	originalAnimation.referenceFrame = getSpriteData(bitsy.playerId, 0);
+});
+after('drawRoom', function () {
+	for (var i = 0; i < bitsy.player().animation.frameCount; ++i) {
+		setSpriteData(bitsy.playerId, i, transformSpriteData(getSpriteData(bitsy.playerId, i), vflip, hflip));
+	}
 });
 
 exports.hackOptions = hackOptions;

@@ -1,3 +1,11 @@
+## [20.2.4](https://github.com/seleb/bitsy-hacks/compare/v20.2.3...v20.2.4) (2022-06-10)
+
+
+### Bug Fixes
+
+* **directional avatar:** incorrect flipping when combined with avatar-by-room ([d65b71d](https://github.com/seleb/bitsy-hacks/commit/d65b71d829df96c5eb4761b5e8dbb80d1c66521d))
+* **directional avatar:** not flipping back when disabling at runtime ([b4602f5](https://github.com/seleb/bitsy-hacks/commit/b4602f55a99ba820942c42ba615ad038eb010875))
+
 ## [20.2.3](https://github.com/seleb/bitsy-hacks/compare/v20.2.2...v20.2.3) (2022-04-24)
 
 
