@@ -45,7 +45,7 @@
 		"jest-environment-jsdom": "^28.1.0",
 		"jest-image-snapshot": "^5.1.0",
 		"prettier": "^2.4.1",
-		"puppeteer": "^14.0.0"
+		"puppeteer": "^15.0.0"
 	},
 	"jest": {
 		"testEnvironment": "jsdom",
