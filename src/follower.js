@@ -71,6 +71,7 @@ function setFollower(followerName) {
 }
 
 var walking = false;
+var shouldWalk = false;
 
 function takeStep() {
 	if (walking) {
@@ -78,23 +79,7 @@ function takeStep() {
 	}
 	walking = true;
 	setTimeout(() => {
-		let takeAnother = false;
-		followers.forEach(function (follower) {
-			var path = paths[follower.id];
-			var point = path.shift();
-			if (point) {
-				follower.x = point.x;
-				follower.y = point.y;
-				follower.room = point.room;
-			}
-			walking = false;
-			if (path.length) {
-				takeAnother = true;
-			}
-		});
-		if (takeAnother) {
-			takeStep();
-		}
+		shouldWalk = true;
 	}, hackOptions.delay);
 }
 
@@ -115,6 +100,27 @@ before('update', function () {
 });
 let movedFollower = false;
 after('update', function () {
+	if (shouldWalk) {
+		shouldWalk = false;
+		let takeAnother = false;
+		followers.forEach(function (follower) {
+			var path = paths[follower.id];
+			var point = path.shift();
+			if (point) {
+				follower.x = point.x;
+				follower.y = point.y;
+				follower.room = point.room;
+			}
+			walking = false;
+			if (path.length) {
+				takeAnother = true;
+			}
+		});
+		if (takeAnother) {
+			takeStep();
+		}
+	}
+
 	// only walk if player moved
 	if (px === bitsy.player().x && py === bitsy.player().y) {
 		return;
