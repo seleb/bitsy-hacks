@@ -4,7 +4,7 @@
 @summary make sprites follow the player
 @license MIT
 @author Sean S. LeBlanc
-@version 20.2.4
+@version 20.2.5
 @requires Bitsy 7.12
 
 
@@ -193,7 +193,7 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 20.2.4
+@version 20.2.5
 @requires Bitsy 7.12
 
 */
@@ -359,7 +359,7 @@ function addDualDialogTag(tag, fn) {
 @file utils
 @summary miscellaneous bitsy utilities
 @author Sean S. LeBlanc
-@version 20.2.4
+@version 20.2.5
 @requires Bitsy 7.12
 
 */
@@ -405,6 +405,7 @@ function setFollower(followerName) {
 }
 
 var walking = false;
+var shouldWalk = false;
 
 function takeStep() {
 	if (walking) {
@@ -412,23 +413,7 @@ function takeStep() {
 	}
 	walking = true;
 	setTimeout(() => {
-		let takeAnother = false;
-		followers.forEach(function (follower) {
-			var path = paths[follower.id];
-			var point = path.shift();
-			if (point) {
-				follower.x = point.x;
-				follower.y = point.y;
-				follower.room = point.room;
-			}
-			walking = false;
-			if (path.length) {
-				takeAnother = true;
-			}
-		});
-		if (takeAnother) {
-			takeStep();
-		}
+		shouldWalk = true;
 	}, hackOptions.delay);
 }
 
@@ -449,6 +434,27 @@ before('update', function () {
 });
 let movedFollower = false;
 after('update', function () {
+	if (shouldWalk) {
+		shouldWalk = false;
+		let takeAnother = false;
+		followers.forEach(function (follower) {
+			var path = paths[follower.id];
+			var point = path.shift();
+			if (point) {
+				follower.x = point.x;
+				follower.y = point.y;
+				follower.room = point.room;
+			}
+			walking = false;
+			if (path.length) {
+				takeAnother = true;
+			}
+		});
+		if (takeAnother) {
+			takeStep();
+		}
+	}
+
 	// only walk if player moved
 	if (px === bitsy.player().x && py === bitsy.player().y) {
 		return;
