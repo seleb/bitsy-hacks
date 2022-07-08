@@ -6,7 +6,7 @@
 		"hacks"
 	],
 	"main": "index.mjs",
-	"version": "20.2.4",
+	"version": "20.2.5",
 	"bitsyVersion": "7.12",
 	"scripts": {
 		"build": "rollup -c",

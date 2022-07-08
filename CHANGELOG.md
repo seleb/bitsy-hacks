@@ -1,3 +1,10 @@
+## [20.2.5](https://github.com/seleb/bitsy-hacks/compare/v20.2.4...v20.2.5) (2022-07-08)
+
+
+### Bug Fixes
+
+* **follower:** incompatibility with smooth moves ([#267](https://github.com/seleb/bitsy-hacks/issues/267)) ([28b8243](https://github.com/seleb/bitsy-hacks/commit/28b8243870ea81a718d1a96a3948930177c4300b))
+
 ## [20.2.4](https://github.com/seleb/bitsy-hacks/compare/v20.2.3...v20.2.4) (2022-06-10)
 
 
