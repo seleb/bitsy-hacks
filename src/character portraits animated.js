@@ -125,7 +125,11 @@ after('startExportedGame', function () {
 // override portrait drawing to use frames
 var animation;
 var animationStart = 0;
-before('drawRoom', function () {
+before('bitsy._graphics.drawImage', function (id) {
+	// eslint-disable-next-line no-underscore-dangle
+	var layers = bitsy.bitsy._getTileMapLayers();
+	if (id !== layers[layers.length - 1]) return;
+
 	if (animation !== state.portrait) {
 		animationStart = bitsy.prevTime;
 	}
@@ -151,6 +155,10 @@ before('drawRoom', function () {
 		state.portrait = animation.frames[frame].img;
 	}
 });
-after('renderGame', function () {
+after('bitsy._graphics.drawImage', function (id) {
+	// eslint-disable-next-line no-underscore-dangle
+	var layers = bitsy.bitsy._getTileMapLayers();
+	if (id !== layers[layers.length - 1]) return;
+
 	state.portrait = animation;
 });
