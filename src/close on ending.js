@@ -21,8 +21,11 @@ Copy-paste this script into a script tag after the bitsy source
 import bitsy from 'bitsy';
 import { after, before } from './helpers/kitsy-script-toolkit';
 
+var closed = false;
+
 // prevent ctrl+r restart prompt
 before('bitsy.button', function (button) {
+	if (closed) return [-1];
 	if (button === bitsy.bitsy.BTN_MENU) return [-1];
 	return [button];
 });
@@ -30,10 +33,7 @@ before('bitsy.button', function (button) {
 after('onExitDialog', function () {
 	if (bitsy.isEnding) {
 		// prevent further input
-		var no = function () {
-			return false;
-		};
-		bitsy.input.isKeyDown = bitsy.input.anyKeyPressed = bitsy.input.swipeLeft = bitsy.input.swipeRight = bitsy.input.swipeUp = bitsy.input.swipeDown = bitsy.input.isTapReleased = no;
+		closed = true;
 		// remove canvas
 		// eslint-disable-next-line no-underscore-dangle
 		bitsy.bitsy._getCanvas().remove();
