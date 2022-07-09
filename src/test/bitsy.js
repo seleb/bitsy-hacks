@@ -212,6 +212,10 @@ export async function walkToCat() {
 	await press('ArrowRight');
 }
 
+export async function waitForBlip() {
+	await page.waitForFunction(() => !soundPlayer.isBlipPlaying());
+}
+
 export async function startDialog(dialog) {
 	await evaluate(d => window.startDialog(d), dialog);
 }
