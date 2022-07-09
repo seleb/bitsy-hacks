@@ -154,7 +154,7 @@ optionsShuffled = window.saveHack.loadShuffle(this) || optionsShuffled;
 window.saveHack.saveShuffle(this, optionsShuffled);
 options[index]`
 );
-inject(/(\/\/ bitsyLog\(".+" \+ index\);)/g, '$1\nvar i = window.saveHack.loadSeqIdx(this);index = i === undefined ? index : i;');
+inject(/(\/\/ bitsy\.log\(".+" \+ index\);)/g, '$1\nvar i = window.saveHack.loadSeqIdx(this);index = i === undefined ? index : i;');
 // save index on changes
 inject(/(index = next;)/g, '$1window.saveHack.saveSeqIdx(this, index);');
 inject(/(\tindex = 0;)/g, '$1window.saveHack.saveSeqIdx(this, index);');
