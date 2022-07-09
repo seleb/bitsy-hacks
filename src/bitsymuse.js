@@ -147,9 +147,9 @@ function changeMusic(newMusic) {
 }
 
 after('drawRoom', function () {
-	if (roomMusicFlag !== bitsy.curRoom) {
-		changeMusic(hackOptions.musicByRoom[bitsy.curRoom]);
-		roomMusicFlag = bitsy.curRoom;
+	if (roomMusicFlag !== bitsy.state.room) {
+		changeMusic(hackOptions.musicByRoom[bitsy.state.room]);
+		roomMusicFlag = bitsy.state.room;
 	}
 });
 
