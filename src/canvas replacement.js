@@ -69,7 +69,7 @@ after('startExportedGame', function () {
 	}
 });
 
-after('update', function () {
+after('bitsy._update', function () {
 	if (hackOptions.update) {
 		hackOptions.update(glazy);
 	}
