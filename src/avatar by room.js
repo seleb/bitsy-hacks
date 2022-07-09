@@ -40,6 +40,7 @@ export var hackOptions = {
 // and store the original player sprite
 var originalDrw;
 var originalAnimation;
+var isReady = false;
 after('load_game', function () {
 	var room;
 	Object.keys(hackOptions.avatarByRoom).forEach(function (i) {
@@ -50,10 +51,12 @@ after('load_game', function () {
 	});
 	originalDrw = bitsy.player().drw;
 	originalAnimation = bitsy.player().animation;
+	isReady = true;
 });
 
 var currentRoom;
 before('drawRoom', function () {
+	if (!isReady) return;
 	var player = bitsy.player();
 	if (player.room === currentRoom) {
 		return;
