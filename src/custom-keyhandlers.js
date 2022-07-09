@@ -13,7 +13,7 @@ Some simple example functions:
 	bitsy.scriptInterpreter.SetVariable('myvar', 10); // sets a variable that can be accessed in bitsy scripts
 	bitsy.startDialog('a dialog string'); // starts a bitsy dialog script
 	bitsy.startDialog(bitsy.dialog['script-id'].src, 'script-id'); // starts a bitsy dialog script by id
-	bitsy.room[bitsy.curRoom].items.push({ id: 0, x: bitsy.player().x, y: bitsy.player().y }); // adds an item at the player's current position
+	bitsy.room[bitsy.state.room].items.push({ id: 0, x: bitsy.player().x, y: bitsy.player().y }); // adds an item at the player's current position
 
 HOW TO USE:
 1. Copy-paste this script into a script tag after the bitsy source
