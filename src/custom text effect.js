@@ -49,6 +49,8 @@ A few helpers are provided under `window.customTextEffects` for more complex eff
 	- `editBitmapCopy`: copies the character bitmap and runs an edit function once
 
 The second argument is `time`, which is the time in milliseconds
+The third argument is `parameters`, which are additional parameters
+provided in the script (e.g. for the parametric clr effect)
 
 A number of example effects are included
 */
