@@ -35,7 +35,8 @@ after('onExitDialog', function () {
 		};
 		bitsy.input.isKeyDown = bitsy.input.anyKeyPressed = bitsy.input.swipeLeft = bitsy.input.swipeRight = bitsy.input.swipeUp = bitsy.input.swipeDown = bitsy.input.isTapReleased = no;
 		// remove canvas
-		bitsy.canvas.remove();
+		// eslint-disable-next-line no-underscore-dangle
+		bitsy.bitsy._getCanvas().remove();
 		// attempt to close
 		window.close();
 	}
