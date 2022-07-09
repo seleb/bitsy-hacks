@@ -1,4 +1,4 @@
-import { delay, evaluate, press, start, walkToCat } from './test/bitsy';
+import { delay, evaluate, press, start, waitForBlip, walkToCat } from './test/bitsy';
 
 test('dialog audio vocal synth', async () => {
 	await start({
@@ -22,9 +22,11 @@ test('dialog audio vocal synth', async () => {
 		}, 250);
 	});
 	await press('ArrowRight'); // talk to cat
+	await waitForBlip();
 	await delay(1500);
 	await press('ArrowRight'); // end dialog
 	await press('ArrowRight'); // talk to cat
+	await waitForBlip();
 	await press('ArrowRight'); // complete dialog
 	expect(await evaluate(() => window.log)).toMatchInlineSnapshot(`
 Array [
