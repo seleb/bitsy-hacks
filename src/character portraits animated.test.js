@@ -30,7 +30,7 @@ test('autoreset, dialog only', async () => {
 test('no reset, persist', async () => {
 	await start({
 		catDialog: `"""
-{sequence
+{cycle
   - (portrait "cat")\\(portrait "cat"\\)
   - (portrait "")\\(portrait ""\\)
 }
