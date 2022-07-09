@@ -7,7 +7,7 @@
 	],
 	"main": "index.mjs",
 	"version": "20.2.5",
-	"bitsyVersion": "7.12",
+	"bitsyVersion": "8.0",
 	"scripts": {
 		"build": "rollup -c",
 		"test": "jest --runInBand",
