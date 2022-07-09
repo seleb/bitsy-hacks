@@ -23,14 +23,14 @@ HOW TO USE:
 TEXT EFFECT NOTES:
 Each effect looks like:
 	key: function() {
-		this.DoEffect = function (char, time) {
+		this.doEffect = function (char, time) {
 			// effect code
 		}
 	}
 
 The key is the text you'll write inside {} in bitsy to trigger the effect
 
-`this.DoEffect` is called every frame for the characters the effect is applied to
+`this.doEffect` is called every frame for the characters the effect is applied to
 
 The first argument is `char`, an individual character, which has the following properties:
 	offset: offset from actual position in pixels. starts at {x:0, y:0}
@@ -58,7 +58,7 @@ import { inject } from './helpers/kitsy-script-toolkit';
 export var hackOptions = {
 	'my-effect': function () {
 		// a horizontal wavy effect using the blue rbw colour
-		this.DoEffect = function (char, time) {
+		this.doEffect = function (char, time) {
 			char.offset.x += 5 * Math.sin(time / 100 + char.col / 3);
 			char.color = bitsy.rainbowColorStartIndex + 4;
 		};
@@ -66,7 +66,7 @@ export var hackOptions = {
 	droop: function () {
 		// causes text to droop down slowly over time
 		// note that it's adding a custom property to the character if it doesn't already exist
-		this.DoEffect = function (char, time) {
+		this.doEffect = function (char, time) {
 			char.start = char.start || time;
 			char.offset.y += ((time - char.start) / 100) * Math.abs(Math.sin(char.col));
 		};
@@ -74,7 +74,7 @@ export var hackOptions = {
 	noise: function () {
 		// renders noise on top of text
 		// note that it's making a copy with `.slice()` since it's a dynamic bitmap change
-		this.DoEffect = function (char) {
+		this.doEffect = function (char) {
 			char.bitmap = char.bitmap.slice();
 			for (var i = 0; i < char.bitmap.length; ++i) {
 				char.bitmap[i] = Math.random() < 0.25 ? 1 : 0;
@@ -84,7 +84,7 @@ export var hackOptions = {
 	strike: function () {
 		// renders text with a strike-through
 		// note that it's using `editBitmapCopy` since it's a static bitmap change
-		this.DoEffect = function (char) {
+		this.doEffect = function (char) {
 			var font = window.fontManager.Get(window.fontName);
 			var w = font.getWidth();
 			var h = font.getHeight();
@@ -99,7 +99,7 @@ export var hackOptions = {
 		// animated text scrambling
 		// note that it's saving the original character with `saveOriginalChar` so `char.original` can be used
 		// it's also using `setBitmap` to render a different character in the font
-		this.DoEffect = function (char, time) {
+		this.doEffect = function (char, time) {
 			window.customTextEffects.saveOriginalChar(char);
 			if (char.original.match(/\s|\0/)) {
 				return;
@@ -110,7 +110,7 @@ export var hackOptions = {
 	},
 	rot13: function () {
 		// puts letters through the rot13 cipher (see www.rot13.com)
-		this.DoEffect = function (char) {
+		this.doEffect = function (char) {
 			window.customTextEffects.saveOriginalChar(char);
 			var bitmap = char.original
 				.replace(/[a-z]/, function (c) {
@@ -128,7 +128,7 @@ export var hackOptions = {
 		function posmod(a, b) {
 			return ((a % b) + b) % b;
 		}
-		this.DoEffect = function (char, time) {
+		this.doEffect = function (char, time) {
 			window.customTextEffects.saveOriginalChar(char);
 			var c = char.original[['toUpperCase', 'toLowerCase'][Math.round(posmod(time / 1000 - (char.col + char.row) / 2, 1))]]();
 			window.customTextEffects.setBitmap(char, c);
@@ -140,7 +140,7 @@ export var hackOptions = {
 		// multiple letters in order to figure out where words begin
 		var lastSpace = 0;
 		var lastCol = -Infinity;
-		this.DoEffect = function (char, time) {
+		this.doEffect = function (char, time) {
 			window.customTextEffects.saveOriginalChar(char);
 			if (char.original.match(/\s|\0/)) {
 				return;
@@ -157,7 +157,7 @@ export var hackOptions = {
 		// renders text with an italic slant
 		// note that with higher steps, some characters will be cut off on the edges
 		var steps = 2;
-		this.DoEffect = function (char) {
+		this.doEffect = function (char) {
 			var font = window.fontManager.Get(window.fontName);
 			var w = font.getWidth();
 			var h = font.getHeight();
@@ -175,7 +175,7 @@ export var hackOptions = {
 		// renders text with extra thickness
 		// note that with higher weight, some characters will be cut off on the edges
 		var weight = 2;
-		this.DoEffect = function (char) {
+		this.doEffect = function (char) {
 			var font = window.fontManager.Get(window.fontName);
 			var w = font.getWidth();
 			var h = font.getHeight();
@@ -196,7 +196,7 @@ export var hackOptions = {
 	},
 	u: function () {
 		// renders text with an underline
-		this.DoEffect = function (char) {
+		this.doEffect = function (char) {
 			var font = window.fontManager.Get(window.fontName);
 			var w = font.getWidth();
 			var h = font.getHeight();
