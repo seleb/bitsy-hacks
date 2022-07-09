@@ -22,8 +22,8 @@ import bitsy from 'bitsy';
 import { after, before } from './helpers/kitsy-script-toolkit';
 
 // prevent ctrl+r restart prompt
-before('bitsyGetButton', function (button) {
-	if (button === 5) return [-1];
+before('bitsy.button', function (button) {
+	if (button === bitsy.bitsy.BTN_MENU) return [-1];
 	return [button];
 });
 
