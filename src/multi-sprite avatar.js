@@ -171,6 +171,12 @@ function filterPieces(id) {
 	return id;
 }
 
+// always redraw the full room when sprites are moving
+before('drawRoom', function (room, args) {
+	args.redrawAll = true;
+	return [room, args];
+});
+
 after('startExportedGame', function () {
 	for (var i = 0; i < repeats.length; ++i) {
 		var r = repeats[i];
