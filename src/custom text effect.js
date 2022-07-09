@@ -244,7 +244,7 @@ window.customTextEffects = {
 var functionMapCode = '';
 var textEffectCode = '';
 Object.entries(hackOptions).forEach(function (entry) {
-	functionMapCode += 'functionMap["' + entry[0] + '"] = function (environment, parameters, onReturn) {addOrRemoveTextEffect(environment, "' + entry[0] + '");onReturn(null);};';
+	functionMapCode += 'functionMap["' + entry[0] + '"] = function (environment, parameters, onReturn) {toggleTextEffect(environment, "' + entry[0] + '");onReturn(null);};';
 	textEffectCode += 'TextEffects["' + entry[0] + '"] = new (' + entry[1].toString() + ')();';
 });
 
