@@ -193,14 +193,22 @@ before('startExportedGame', function () {
 	}
 });
 
+// override title if loading
+var replaceTitle;
+before('renderer.SetDrawings', function () {
+	if (replaceTitle !== undefined) {
+		bitsy.setTitle(replaceTitle);
+	}
+});
+
 // hook up dialog functions
 function dialogLoad(environment, parameters) {
+	replaceTitle = parameters[0] || '';
 	var loadOnStart = hackOptions.loadOnStart;
 	hackOptions.loadOnStart = true;
 	bitsy.reset_cur_game();
+	bitsy.load_game(bitsy.bitsy.getGameData(), bitsy.bitsy.getFontData());
 	hackOptions.loadOnStart = loadOnStart;
-	bitsy.dialogBuffer.EndDialog();
-	bitsy.startNarrating(parameters[0] || '');
 }
 addDualDialogTag('save', save);
 addDualDialogTag('load', dialogLoad);
