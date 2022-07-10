@@ -78,9 +78,13 @@ function takeStep() {
 		return;
 	}
 	walking = true;
-	setTimeout(() => {
+	if (hackOptions.delay) {
+		setTimeout(() => {
+			shouldWalk = true;
+		}, hackOptions.delay);
+	} else {
 		shouldWalk = true;
-	}, hackOptions.delay);
+	}
 }
 
 after('loadWorldFromGameData', function () {
