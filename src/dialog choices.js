@@ -245,7 +245,9 @@ inject(
 	/(this\.DrawNextArrow = )/,
 	`
 this.DrawChoiceArrow = function() {
-	bitsyDrawBegin(1);
+	var text_scale = getTextScale();
+	var textboxScaleW = textboxInfo.width * text_scale;
+	var textboxScaleH = textboxInfo.height * text_scale;
 	var rows = ${hackOptions.cursor};
 	var top = (${hackOptions.transform.y} + window.dialogChoices.choice * (textboxInfo.padding_vert + relativeFontHeight())) * text_scale;
 	var left = ${hackOptions.transform.x}*text_scale;
@@ -256,18 +258,19 @@ this.DrawChoiceArrow = function() {
 				//scaling nonsense
 				for (var sy = 0; sy < text_scale; sy++) {
 					for (var sx = 0; sx < text_scale; sx++) {
-						bitsyDrawPixel(textArrowIndex, left + (x * text_scale) + sx, top + (y * text_scale) + sy);
+						var px = left + (x * text_scale) + sx;
+						var py = top + (y * text_scale) + sy;
+						bitsy.set(bitsy.TEXTBOX, (py * textboxScaleW) + px, textArrowIndex);
 					}
 				}
 			}
 		}
 	}
-	bitsyDrawEnd();
 };
 $1`
 );
 inject(
-	/(this\.DrawTextbox\(\);)/,
+	/(if \(buffer.CanContinue\(\) && shouldDrawArrow\) {)/,
 	`
 if (window.dialogChoices.choicesActive) {
 	this.DrawChoiceArrow();
