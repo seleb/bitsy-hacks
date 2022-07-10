@@ -14,7 +14,7 @@ HOW TO USE:
 */
 import bitsy from 'bitsy';
 import { getSpriteData, setSpriteData } from './helpers/edit image at runtime';
-import { after, before } from './helpers/kitsy-script-toolkit';
+import { after } from './helpers/kitsy-script-toolkit';
 import { transformSpriteData } from './helpers/transform-sprite-data';
 
 export var hackOptions = {
@@ -57,12 +57,12 @@ after('updateInput', function () {
 	vflip = vflip && allowed.verticalFlipAllowed;
 	hflip = hflip && allowed.horizontalFlipAllowed;
 });
-before('drawRoom', function () {
+after('updateInput', function () {
 	for (var i = 0; i < bitsy.player().animation.frameCount; ++i) {
 		setSpriteData(bitsy.playerId, i, transformSpriteData(getSpriteData(bitsy.playerId, i), vflip, hflip));
 	}
 });
-after('drawRoom', function () {
+after('bitsy._update', function () {
 	for (var i = 0; i < bitsy.player().animation.frameCount; ++i) {
 		setSpriteData(bitsy.playerId, i, transformSpriteData(getSpriteData(bitsy.playerId, i), vflip, hflip));
 	}
