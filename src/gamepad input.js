@@ -40,12 +40,12 @@ var move = function (dpad, face, axis, axis2, axispast, axisdir, key) {
 	}
 };
 
-before('update', function () {
+before('updateInput', function () {
 	move(Buttons.DPAD_LEFT, Buttons.X, Axes.LSTICK_H, Axes.RSTICK_H, -0.5, -1, bitsy.bitsy.BTN_LEFT);
 	move(Buttons.DPAD_RIGHT, Buttons.B, Axes.LSTICK_H, Axes.RSTICK_H, 0.5, 1, bitsy.bitsy.BTN_RIGHT);
 	move(Buttons.DPAD_UP, Buttons.Y, Axes.LSTICK_V, Axes.RSTICK_V, -0.5, -1, bitsy.bitsy.BTN_UP);
 	move(Buttons.DPAD_DOWN, Buttons.A, Axes.LSTICK_V, Axes.RSTICK_V, 0.5, 1, bitsy.bitsy.BTN_DOWN);
 });
-after('update', function () {
+after('bitsy._update', function () {
 	gamepads.update();
 });
