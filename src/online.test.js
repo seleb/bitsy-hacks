@@ -1,6 +1,6 @@
 import { rm, writeFile } from 'fs/promises';
 import { resolve } from 'path';
-import { delay, evaluate, press, snapshot, start, walkToCat } from './test/bitsy';
+import { delay, evaluate, press, snapshot, start, waitForBlip, walkToCat } from './test/bitsy';
 
 const clientfile = resolve(__dirname, './test/client.js');
 
@@ -112,6 +112,7 @@ test('online', async () => {
 	await delay(1000);
 	await snapshot();
 	await press('ArrowRight'); // start dialog
+	await waitForBlip();
 	await press('ArrowRight'); // complete dialog
 	await snapshot();
 	expect(await evaluate(() => window.Client.default.log)).toMatchInlineSnapshot(`
