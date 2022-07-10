@@ -115,6 +115,7 @@ function load() {
 		bitsy.saveHack.sequenceIndices = snapshot.sequenceIndices;
 		bitsy.saveHack.shuffles = snapshot.shuffles;
 	}
+	bitsy.drawRoom(bitsy.room[bitsy.state.room], { redrawAll: true });
 }
 
 function clear() {
