@@ -108,6 +108,7 @@ function onData(event) {
 			for (var frame = 0; frame < data.data.length; ++frame) {
 				setSpriteData(event.from, frame, data.data[frame]);
 			}
+			bitsy.drawRoom(bitsy.room[bitsy.state.room], { redrawAll: true });
 			break;
 		default:
 			break;
