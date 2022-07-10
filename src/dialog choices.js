@@ -132,15 +132,6 @@ var dialogChoices = {
 			this.choice = 0;
 			this.choices = [];
 			this.choicesActive = false;
-			// get back into the regular dialog flow
-			if (dialogBuffer.Continue()) {
-				dialogBuffer.Update(0);
-				// make sure to close dialog if there's nothing to say
-				// after the choice has been made
-				if (!dialogBuffer.CurCharCount()) {
-					dialogBuffer.EndDialog();
-				}
-			}
 			return true;
 		}
 		return false;
@@ -204,6 +195,12 @@ function ChoiceNode(options) {
 				children[i].Eval(environment, function(val) {
 					if (i === children.length - 1) {
 						environment.GetDialogBuffer().AddParagraphBreak();
+						environment.GetDialogBuffer().AddScriptReturn(function () {
+							// end dialog if there's no content after the choice
+							if (environment.GetDialogBuffer().CurCharCount() <= 1) {
+								environment.GetDialogBuffer().EndDialog();
+							}
+						});
 					} else {
 						environment.GetDialogBuffer().AddLinebreak();
 					}
