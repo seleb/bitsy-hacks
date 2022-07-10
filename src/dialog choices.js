@@ -292,3 +292,8 @@ if(window.dialogChoices.choicesActive){
 }
 `
 );
+
+// force redrawing textbox to avoid flickering issues
+inject(/shouldClearTextbox = false;/, '');
+inject(/char.redraw = false;/, '');
+inject(/shouldDrawArrow = false;/, '');
