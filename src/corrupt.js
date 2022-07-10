@@ -85,7 +85,7 @@ after('dialogRenderer.SetFont', function (font) {
 });
 
 function corrupt() {
-	var currentRoom = bitsy.room[bitsy.curRoom];
+	var currentRoom = bitsy.room[bitsy.state.room];
 	// corrupt pixels of visible tiles
 	var visibleTiles = {};
 	currentRoom.tilemap.forEach(function (row) {
@@ -110,7 +110,7 @@ function corrupt() {
 	// corrupt pixels of visible sprites
 	var visibleSprites = {};
 	Object.keys(bitsy.sprite).forEach(function (spr) {
-		if (bitsy.sprite[spr].room === bitsy.curRoom) {
+		if (bitsy.sprite[spr].room === bitsy.state.room) {
 			visibleSprites[spr] = true;
 		}
 	});
@@ -154,7 +154,7 @@ function corrupt() {
 	});
 
 	// corrupt visible palette colours
-	var visibleColors = bitsy.getPal(bitsy.curPal());
+	var visibleColors = bitsy.getPal(bitsy.state.pal);
 	iterate(hackOptions.paletteFreq * hackOptions.globalFreq, function () {
 		var c = rndItem(visibleColors);
 		var i = rndIndex(c);
