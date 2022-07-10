@@ -138,7 +138,7 @@ after('dialogBuffer.EndDialog', function () {
 });
 
 // save the character on dialog font characters so we can read it back post-render
-inject(/(function DialogFontChar\(font, char, effectList\) {)/, '$1\nthis.char = char;');
+inject(/(function DialogFontChar\(font, char, effectList, effectParameterList\) {)/, '$1\nthis.char = char;');
 
 // queue speaking based on whether we have finished rendering text
 var spoke = false;
