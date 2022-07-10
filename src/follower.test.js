@@ -84,7 +84,7 @@ test('follower', async () => {
 	await press('ArrowLeft');
 	await press('ArrowLeft');
 	await press('ArrowLeft'); // walk on top of tile border
-	await delay(500); // wait for follower to catch up
+	await delay(1000); // wait for follower to catch up
 	await snapshot();
 });
 
