@@ -1,4 +1,4 @@
-import { press, snapshot, start, waitForBlip, walkToCat } from './test/bitsy';
+import { press, snapshot, start, waitForBlip, waitForFrame, walkToCat } from './test/bitsy';
 
 test('image', async () => {
 	await start({
@@ -131,6 +131,7 @@ VAR a
 `,
 		hacks: ['edit image from dialog'],
 	});
+	await waitForFrame();
 	await press('ArrowRight'); // talk to cat
 	await waitForBlip();
 	await press('ArrowRight'); // complete dialog page
