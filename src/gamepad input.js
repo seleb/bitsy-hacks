@@ -45,6 +45,14 @@ before('updateInput', function () {
 	move(Buttons.DPAD_RIGHT, Buttons.B, Axes.LSTICK_H, Axes.RSTICK_H, 0.5, 1, bitsy.bitsy.BTN_RIGHT);
 	move(Buttons.DPAD_UP, Buttons.Y, Axes.LSTICK_V, Axes.RSTICK_V, -0.5, -1, bitsy.bitsy.BTN_UP);
 	move(Buttons.DPAD_DOWN, Buttons.A, Axes.LSTICK_V, Axes.RSTICK_V, 0.5, 1, bitsy.bitsy.BTN_DOWN);
+	if (gamepads.isJustDown(Buttons.START) || gamepads.isJustDown(Buttons.BACK)) {
+		// eslint-disable-next-line no-underscore-dangle
+		bitsy.bitsy._poke(bitsy.bitsy._buttonBlock, bitsy.bitsy.BTN_MENU, 1);
+	}
+	if (gamepads.isJustUp(Buttons.START) || gamepads.isJustUp(Buttons.BACK)) {
+		// eslint-disable-next-line no-underscore-dangle
+		bitsy.bitsy._poke(bitsy.bitsy._buttonBlock, bitsy.bitsy.BTN_MENU, 0);
+	}
 });
 after('bitsy._update', function () {
 	gamepads.update();
