@@ -58,5 +58,5 @@ after('load_game', function () {
 
 // wrap every function which involves changing the palette
 after('movePlayer', updateBg);
-after('parseWorld', updateBg);
+after('loadWorldFromGameData', updateBg);
 after('movePlayerThroughExit', updateBg);
