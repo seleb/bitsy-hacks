@@ -33,7 +33,7 @@ export var hackOptions = {
 // and updates the background to match
 function updateBg() {
 	// get the palette colour
-	var c = hackOptions.byRoom[bitsy.curRoom];
+	var c = hackOptions.byRoom[bitsy.state.room];
 	if (c === undefined) {
 		c = hackOptions.default;
 	}
