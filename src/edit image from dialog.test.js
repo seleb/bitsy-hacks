@@ -1,4 +1,4 @@
-import { press, snapshot, start, walkToCat } from './test/bitsy';
+import { press, snapshot, start, waitForBlip, walkToCat } from './test/bitsy';
 
 test('image', async () => {
 	await start({
@@ -7,6 +7,7 @@ test('image', async () => {
 	});
 	await walkToCat();
 	await press('ArrowRight'); // talk to cat
+	await waitForBlip();
 	await press('ArrowRight'); // complete dialog page
 	await snapshot();
 	await press('ArrowRight'); // end dialog
@@ -21,6 +22,7 @@ test('imageNow', async () => {
 	await walkToCat();
 	await snapshot();
 	await press('ArrowRight'); // talk to cat
+	await waitForBlip();
 	await press('ArrowRight'); // complete dialog page
 	await snapshot();
 });
@@ -32,6 +34,7 @@ test('compatible with transparency', async () => {
 	});
 	await walkToCat();
 	await press('ArrowRight'); // talk to cat
+	await waitForBlip();
 	await press('ArrowRight'); // complete dialog page
 	await press('ArrowRight'); // close dialog
 	await press('ArrowDown');
@@ -129,6 +132,7 @@ VAR a
 		hacks: ['edit image from dialog'],
 	});
 	await press('ArrowRight'); // talk to cat
+	await waitForBlip();
 	await press('ArrowRight'); // complete dialog page
 	await press('ArrowRight'); // close dialog
 	await snapshot();
