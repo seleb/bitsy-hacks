@@ -367,9 +367,9 @@ function checkTargets() {
 			}
 		}
 	}
-	targetsLookup[bitsy.curRoom] = targetsLookup[bitsy.curRoom] || [];
-	targetsLookup[bitsy.curRoom][bitsy.player().x] = targetsLookup[bitsy.curRoom][bitsy.player().x] || [];
-	targetsLookup[bitsy.curRoom][bitsy.player().x][bitsy.player().y] = bitsy.playerId;
+	targetsLookup[bitsy.state.room] = targetsLookup[bitsy.state.room] || [];
+	targetsLookup[bitsy.state.room][bitsy.player().x] = targetsLookup[bitsy.state.room][bitsy.player().x] || [];
+	targetsLookup[bitsy.state.room][bitsy.player().x][bitsy.player().y] = bitsy.playerId;
 
 	for (k in hackOptions.conditions) {
 		if (Object.prototype.hasOwnProperty.call(hackOptions.conditions, k)) {
