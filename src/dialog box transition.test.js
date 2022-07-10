@@ -1,4 +1,4 @@
-import { delay, press, snapshot, start, startDialog, waitForFrame } from './test/bitsy';
+import { delay, snapshot, start, startDialog, waitForFrame } from './test/bitsy';
 
 test('dialog box transition', async () => {
 	await start({
@@ -19,13 +19,12 @@ test('dialog box transition', async () => {
 	const fuzzyMatch = { failureThreshold: 0.1, failureThresholdType: 'percent' };
 	await snapshot();
 	await startDialog('test');
-	await delay(1000);
+	await delay(1500);
 	await snapshot(fuzzyMatch);
 	await delay(1000);
 	await snapshot(fuzzyMatch);
 	await delay(1000);
 	await snapshot(fuzzyMatch);
 	await delay(1000);
-	await press('ArrowRight'); // end dialog
 	await snapshot();
 });
