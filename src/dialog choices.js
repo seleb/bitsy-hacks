@@ -277,13 +277,7 @@ $1`
 
 // interaction
 // (overrides the dialog skip/page flip)
-inject(
-	/(\/\* CONTINUE DIALOG \*\/)/,
-	`$1
-if(window.dialogChoices.handleInput(dialogBuffer)) {
-	return;
-} else `
-);
+inject(/(dialogBuffer.CanContinue)/, `(!window.dialogChoices.choicesActive || window.dialogChoices.handleInput(dialogBuffer)) && $1`);
 inject(
 	/(this\.CanContinue = function\(\) {)/,
 	`$1
