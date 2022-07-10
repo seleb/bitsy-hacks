@@ -211,9 +211,7 @@ function ChoiceNode(options) {
 			}
 			else {
 				done();
-				setTimeout(() => {
-					window.dialogChoices.choicesActive = true;
-				});
+				window.dialogChoices.choicesActive = true;
 			}
 		}
 		window.dialogChoices.choices = this.options.map(function(option){
