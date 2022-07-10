@@ -95,6 +95,8 @@ after('loadWorldFromGameData', function () {
 let px;
 let py;
 before('bitsy._update', function () {
+	var player = bitsy.player();
+	if (!player) return;
 	px = bitsy.player().x;
 	py = bitsy.player().y;
 });
