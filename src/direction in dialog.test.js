@@ -1,4 +1,4 @@
-import { press, snapshot, start, walkToCat } from './test/bitsy';
+import { press, snapshot, start, waitForBlip, walkToCat } from './test/bitsy';
 
 test('direction in dialog', async () => {
 	await start({
@@ -20,6 +20,7 @@ test('direction in dialog', async () => {
 	});
 	await walkToCat();
 	await press('ArrowRight'); // talk to cat from the right
+	await waitForBlip();
 	await press('ArrowRight'); // complete dialog page
 	await snapshot();
 	await press('ArrowRight'); // close dialog page
@@ -27,6 +28,7 @@ test('direction in dialog', async () => {
 	await press('ArrowUp');
 	await press('ArrowRight');
 	await press('ArrowDown'); // talk to cat from above
+	await waitForBlip();
 	await press('ArrowRight'); // complete dialog page
 	await snapshot();
 	await press('ArrowRight'); // close dialog page
@@ -34,6 +36,7 @@ test('direction in dialog', async () => {
 	await press('ArrowRight');
 	await press('ArrowDown');
 	await press('ArrowLeft'); // talk to cat from the left
+	await waitForBlip();
 	await press('ArrowRight'); // complete dialog page
 	await snapshot();
 	await press('ArrowRight'); // close dialog page
@@ -41,6 +44,7 @@ test('direction in dialog', async () => {
 	await press('ArrowDown');
 	await press('ArrowLeft');
 	await press('ArrowUp'); // talk to cat from below
+	await waitForBlip();
 	await press('ArrowRight'); // complete dialog page
 	await snapshot();
 });
