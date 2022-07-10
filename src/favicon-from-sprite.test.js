@@ -1,4 +1,4 @@
-import { evaluate, snapshot, start } from './test/bitsy';
+import { evaluate, snapshot, start, waitForFrame } from './test/bitsy';
 
 function fullscreenFavicon() {
 	return evaluate(() => {
@@ -20,6 +20,7 @@ test('favicon-from-sprite', async () => {
 	await start({
 		hacks: ['favicon-from-sprite'],
 	});
+	await waitForFrame();
 	await fullscreenFavicon();
 	await snapshot();
 });
@@ -41,6 +42,7 @@ test('options', async () => {
 			],
 		],
 	});
+	await waitForFrame();
 	await fullscreenFavicon();
 	await snapshot();
 });
