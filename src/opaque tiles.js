@@ -40,10 +40,24 @@ after('movePlayer', function () {
 	bitsy.opaque = hackOptions.tileIsOpaque(tile);
 });
 
+// create a new map layer that renders underneath tiles
+after('startExportedGame', function () {
+	// eslint-disable-next-line no-underscore-dangle
+	bitsy.bitsy.MAP0 = bitsy.bitsy._addTileMapLayer();
+	// eslint-disable-next-line no-underscore-dangle
+	bitsy.bitsy._getTileMapLayers().unshift(bitsy.bitsy._getTileMapLayers().pop());
+});
+after('clearRoom', function () {
+	bitsy.bitsy.fill(bitsy.bitsy.MAP0, 0);
+});
+after('startNarrating', function () {
+	bitsy.bitsy.fill(bitsy.bitsy.MAP0, 0);
+});
+
 // always redraw all, never redraw avatar or animated only
 inject(/(var redrawAll = ).*;/, '$1true;');
 inject(/(var redrawAnimated = ).*;/, '$1false;');
 inject(/(var redrawAvatar = ).*;/, '$1false;');
-inject(/(\/\/ draw tiles)/m, 'window.opaque && drawTile(getSpriteFrame(player(), frameIndex), player().x, player().y);\n$1');
+inject(/(\/\/ draw tiles)/m, 'bitsy.fill(bitsy.MAP0, 0); window.opaque && setTile(bitsy.MAP0, player().x, player().y, getSpriteFrame(player(), frameIndex));\n$1');
 // don't draw player over tiles/sprites when opaque
 inject(/if \(\(redrawAll \|\| redrawAnimated/, 'if (!window.opaque && (redrawAll || redrawAnimated');
