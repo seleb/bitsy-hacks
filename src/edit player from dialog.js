@@ -25,6 +25,8 @@ NOTE:
 - Inventory (i.e. item counts) is per-sprite, not shared.
   If you want to simulate "shared" inventory, include standard
   dialog variables on your items that increment when picked up
+- If you only want to change the avatar to visually match another sprite,
+  you should use the built-in `AVA` dialog command instead of this hack
 */
 import bitsy from 'bitsy';
 import { addDualDialogTag } from './helpers/kitsy-script-toolkit';
