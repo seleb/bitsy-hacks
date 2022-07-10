@@ -70,6 +70,7 @@ function onData(event) {
 				spr.x = data.x;
 				spr.y = data.y;
 				spr.room = data.room;
+				bitsy.drawRoom(bitsy.room[bitsy.state.room], { redrawAll: true });
 			} else {
 				// got a move from an unknown player,
 				// so ask them who they are
