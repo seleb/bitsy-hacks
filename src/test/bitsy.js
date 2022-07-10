@@ -213,7 +213,7 @@ export async function walkToCat() {
 }
 
 export async function waitForBlip() {
-	await page.waitForFunction(() => !soundPlayer.isBlipPlaying());
+	await page.waitForFunction(() => !window.soundPlayer.isBlipPlaying());
 }
 
 export async function startDialog(dialog) {
