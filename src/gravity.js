@@ -171,14 +171,14 @@ var offsets = {
 var px;
 var py;
 var pr;
-before('update', function () {
 	var player = bitsy.player();
+before('bitsy._update', function () {
 	px = player.x;
 	py = player.y;
 	pr = player.room;
 });
-after('update', function () {
 	var player = bitsy.player();
+after('bitsy._update', function () {
 	if (px !== player.x || py !== player.y || pr !== player.room) {
 		if (!active) return;
 
