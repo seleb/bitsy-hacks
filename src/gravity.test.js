@@ -1,4 +1,4 @@
-import { press, snapshot, start } from './test/bitsy';
+import { press, snapshot, start, waitForBlip } from './test/bitsy';
 
 const gamedata = `
 Write your game's title here
@@ -97,6 +97,7 @@ test('gravity: jump', async () => {
 	await press('ArrowRight'); // complete title dialog
 	await press('ArrowRight'); // end dialog
 	await press('ArrowRight'); // talk to cat
+	await waitForBlip();
 	await press('ArrowRight'); // complete dialog
 	await press('ArrowRight'); // end dialog
 	await press('ArrowUp'); // jump up
@@ -114,6 +115,7 @@ test('gravity: jetpack', async () => {
 	await press('ArrowRight'); // complete title dialog
 	await press('ArrowRight'); // end dialog
 	await press('ArrowRight'); // talk to cat
+	await waitForBlip();
 	await press('ArrowRight'); // complete dialog
 	await press('ArrowRight'); // end dialog
 	await press('ArrowUp'); // jetpack up
@@ -132,6 +134,7 @@ test('gravity: force', async () => {
 	await press('ArrowRight'); // complete title dialog
 	await press('ArrowRight'); // end dialog
 	await press('ArrowRight'); // talk to cat
+	await waitForBlip();
 	await press('ArrowRight'); // complete dialog
 	await press('ArrowRight'); // end dialog
 	await press('ArrowLeft'); // attempt to move left, forced up instead
@@ -158,6 +161,7 @@ test('gravity: invert', async () => {
 	await press('ArrowRight'); // complete title dialog
 	await press('ArrowRight'); // end dialog
 	await press('ArrowRight'); // talk to cat
+	await waitForBlip();
 	await press('ArrowRight'); // complete dialog
 	await press('ArrowRight'); // end dialog
 	await press('ArrowUp'); // move "up"
