@@ -47,4 +47,5 @@ addDualDialogTag('player', function (environment, parameters) {
 	bitsy.playerPrevX = target.x;
 	bitsy.playerPrevY = target.y;
 	target.type = 'AVA';
+	bitsy.drawRoom(bitsy.room[target.room], { redrawAll: true });
 });
