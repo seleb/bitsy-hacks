@@ -39,7 +39,7 @@ function updateBg() {
 	}
 
 	// if the palette changed, update background
-	var bg = 'rgb(' + bitsy.getPal(bitsy.curPal())[c].join(',') + ')';
+	var bg = 'rgb(' + bitsy.getPal(bitsy.state.pal)[c].join(',') + ')';
 	if (document.body.style.background !== bg) {
 		document.body.style.background = bg;
 	}
