@@ -92,6 +92,7 @@ function onData(event) {
 					isAnimated: data.data.length > 1,
 				},
 				col: data.col,
+				bgc: data.bgc,
 				dlg: longname,
 				drw: longname,
 				id: event.from,
@@ -180,6 +181,7 @@ function getSpriteUpdate() {
 		room: p.room,
 		dlg: bitsy.dialog[p.dlg],
 		col: p.col,
+		bgc: p.bgc,
 	};
 }
 
