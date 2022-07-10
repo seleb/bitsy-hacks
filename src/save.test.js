@@ -1,4 +1,4 @@
-import { evaluate, press, snapshot, start, startDialog, waitForFrame, walkToCat } from './test/bitsy';
+import { evaluate, press, snapshot, start, startDialog, waitForBlip, waitForFrame, walkToCat } from './test/bitsy';
 
 const saveOptions = {
 	autosaveInterval: 2 ** 31 - 1, // HACK: Infinity doesn't stringify correctly
@@ -99,28 +99,33 @@ test('sequence', async () => {
 	});
 	await walkToCat();
 	await press('ArrowRight'); // talk to cat
+	await waitForBlip();
 	await press('ArrowRight'); // complete dialog
 	// 1
 	await snapshot();
 	await press('ArrowRight'); // end dialog
 	await startDialog('{save}');
 	await press('ArrowRight'); // talk to cat
+	await waitForBlip();
 	await press('ArrowRight'); // complete dialog
 	// 2
 	await snapshot();
 	await press('ArrowRight'); // end dialog
 	await press('ArrowRight'); // talk to cat
+	await waitForBlip();
 	await press('ArrowRight'); // complete dialog
 	// 3
 	await snapshot();
 	await press('ArrowRight'); // end dialog
 	await startDialog('{load}');
 	await press('ArrowRight'); // talk to cat
+	await waitForBlip();
 	await press('ArrowRight'); // complete dialog
 	// 2
 	await snapshot();
 	await press('ArrowRight'); // end dialog
 	await press('ArrowRight'); // talk to cat
+	await waitForBlip();
 	await press('ArrowRight'); // complete dialog
 	// 3
 	await snapshot();
@@ -128,6 +133,7 @@ test('sequence', async () => {
 	await startDialog('{save}');
 	await startDialog('{load}');
 	await press('ArrowRight'); // talk to cat
+	await waitForBlip();
 	await press('ArrowRight'); // complete dialog
 	// 3
 	await snapshot();
@@ -145,23 +151,27 @@ test('cycle', async () => {
 	});
 	await walkToCat();
 	await press('ArrowRight'); // talk to cat
+	await waitForBlip();
 	await press('ArrowRight'); // complete dialog
 	// 1
 	await snapshot();
 	await press('ArrowRight'); // end dialog
 	await startDialog('{save}');
 	await press('ArrowRight'); // talk to cat
+	await waitForBlip();
 	await press('ArrowRight'); // complete dialog
 	// 2
 	await snapshot();
 	await press('ArrowRight'); // end dialog
 	await startDialog('{load}');
 	await press('ArrowRight'); // talk to cat
+	await waitForBlip();
 	await press('ArrowRight'); // complete dialog
 	// 2
 	await snapshot();
 	await press('ArrowRight'); // end dialog
 	await press('ArrowRight'); // talk to cat
+	await waitForBlip();
 	await press('ArrowRight'); // complete dialog
 	// 1
 	await snapshot();
@@ -184,28 +194,33 @@ test('shuffle', async () => {
 		Math.random = () => 0;
 	});
 	await press('ArrowRight'); // talk to cat
+	await waitForBlip();
 	await press('ArrowRight'); // complete dialog
 	// 1
 	await snapshot();
 	await press('ArrowRight'); // end dialog
 	await startDialog('{save}');
 	await press('ArrowRight'); // talk to cat
+	await waitForBlip();
 	await press('ArrowRight'); // complete dialog
 	// 2
 	await snapshot();
 	await press('ArrowRight'); // end dialog
 	await press('ArrowRight'); // talk to cat
+	await waitForBlip();
 	await press('ArrowRight'); // complete dialog
 	// 3
 	await snapshot();
 	await press('ArrowRight'); // end dialog
 	await startDialog('{load}');
 	await press('ArrowRight'); // talk to cat
+	await waitForBlip();
 	await press('ArrowRight'); // complete dialog
 	// 2
 	await snapshot();
 	await press('ArrowRight'); // end dialog
 	await press('ArrowRight'); // talk to cat
+	await waitForBlip();
 	await press('ArrowRight'); // complete dialog
 	// 3
 	await snapshot();
