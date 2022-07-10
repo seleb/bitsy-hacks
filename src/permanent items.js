@@ -13,7 +13,7 @@ HOW TO USE:
 2. Update the `itemIsPermanent` function below to match your needs
 */
 import bitsy from 'bitsy';
-import { before } from './helpers/kitsy-script-toolkit';
+import { before, inject } from './helpers/kitsy-script-toolkit';
 
 export var hackOptions = {
 	itemIsPermanent: function (item) {
@@ -70,3 +70,6 @@ before('startItemDialog', function (itemId, dialogCallback) {
 		},
 	];
 });
+
+// always redraw all or items won't be visible
+inject(/(var redrawAll = ).*;/, '$1true;');
