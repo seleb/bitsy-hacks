@@ -27,7 +27,7 @@ export var hackOptions = {
 var room;
 var oldItems;
 before('movePlayer', function () {
-	room = bitsy.room[bitsy.curRoom];
+	room = bitsy.room[bitsy.state.room];
 	oldItems = room.items.slice();
 });
 before('startItemDialog', function (itemId, dialogCallback) {
@@ -35,7 +35,7 @@ before('startItemDialog', function (itemId, dialogCallback) {
 	if (!hackOptions.itemIsPermanent(bitsy.item[itemId])) {
 		return undefined;
 	}
-	room = bitsy.room[bitsy.curRoom];
+	room = bitsy.room[bitsy.state.room];
 	oldItems = room.items.slice();
 	return [
 		itemId,
