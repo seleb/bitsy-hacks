@@ -1,4 +1,4 @@
-import { evaluate, press, snapshot, start, startDialog, waitForBlip, waitForFrame, walkToCat } from './test/bitsy';
+import { evaluate, page, press, snapshot, start, startDialog, waitForBlip, waitForFrame, walkToCat } from './test/bitsy';
 
 const saveOptions = {
 	autosaveInterval: 2 ** 31 - 1, // HACK: Infinity doesn't stringify correctly
@@ -54,6 +54,7 @@ test('loadOnStart', async () => {
 	await snapshot();
 	await startDialog('{save}');
 	await evaluate(() => window.onload());
+	await page.waitForFunction(() => window.isGameLoaded);
 	await snapshot();
 });
 
@@ -68,6 +69,7 @@ test('clearOnStart', async () => {
 	await snapshot();
 	await startDialog('{save}');
 	await evaluate(() => window.onload());
+	await page.waitForFunction(() => window.isGameLoaded);
 	await startDialog('{load}');
 	await snapshot();
 });
