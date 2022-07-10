@@ -39,6 +39,12 @@ addDualDialogTag('player', function (environment, parameters) {
 	if (!target.room) {
 		throw new Error('Could not change player: sprite "' + targetId + '" not placed in a room');
 	}
+	var original = bitsy.player();
+	original.type = 'SPR';
 	bitsy.playerId = targetId;
+	bitsy.state.ava = target.drw;
 	bitsy.state.room = target.room;
+	bitsy.playerPrevX = target.x;
+	bitsy.playerPrevY = target.y;
+	target.type = 'AVA';
 });
