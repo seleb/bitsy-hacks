@@ -92,8 +92,8 @@ function load() {
 			bitsy.state.room = bitsy.player().room = snapshot.room;
 		}
 		if (snapshot.x && snapshot.y) {
-			bitsy.player().x = snapshot.x;
-			bitsy.player().y = snapshot.y;
+			bitsy.playerPrevX = bitsy.player().x = snapshot.x;
+			bitsy.playerPrevY = bitsy.player().y = snapshot.y;
 		}
 	}
 	if (hackOptions.items) {
