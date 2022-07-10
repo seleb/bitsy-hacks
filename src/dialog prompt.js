@@ -162,3 +162,8 @@ addDialogTag('prompt', function (environment, parameters, onReturn) {
 
 // expose a setter/getter for private buffer in DialogBuffer class
 inject(/(this\.CurPage =)/, 'this.GetBuffer = function(){ return buffer; };this.SetBuffer = function(b){ buffer = b; };\n$1');
+
+// force redrawing textbox to allow interactive preview
+inject(/shouldClearTextbox = false;/, '');
+inject(/char.redraw = false;/, '');
+inject(/shouldDrawArrow = false;/, '');
