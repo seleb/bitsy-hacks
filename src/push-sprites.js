@@ -257,6 +257,7 @@ function pushSprite(spr, direction) {
 			s.y = newy;
 		});
 		checkExit(spr, direction);
+		bitsy.drawRoom(bitsy.room[bitsy.state.room], { redrawAll: true });
 		return true;
 	}
 	return false;
