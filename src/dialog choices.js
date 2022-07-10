@@ -111,28 +111,21 @@ var dialogChoices = {
 		if (!this.choicesActive) {
 			return false;
 		}
-		var pmoved = this.moved;
-		this.moved = bitsy.input.anyKeyDown() || bitsy.input.swipeUp() || bitsy.input.swipeDown() || bitsy.input.swipeRight();
 		var l = Math.max(this.choices.length, 1);
 		// navigate
-		if (!pmoved && ((bitsy.input.anyKeyDown() && (bitsy.input.isKeyDown(bitsy.key.up) || bitsy.input.isKeyDown(bitsy.key.w))) || bitsy.input.swipeUp())) {
+		if (bitsy.bitsy.button(bitsy.bitsy.BTN_UP)) {
 			this.choice -= 1;
 			if (this.choice < 0) {
 				this.choice += l;
 			}
 			return false;
 		}
-		if (!pmoved && ((bitsy.input.anyKeyDown() && (bitsy.input.isKeyDown(bitsy.key.down) || bitsy.input.isKeyDown(bitsy.key.s))) || bitsy.input.swipeDown())) {
+		if (bitsy.bitsy.button(bitsy.bitsy.BTN_DOWN)) {
 			this.choice = (this.choice + 1) % l;
 			return false;
 		}
 		// select
-		if (
-			!pmoved &&
-			((bitsy.input.anyKeyDown() &&
-				(bitsy.input.isKeyDown(bitsy.key.right) || bitsy.input.isKeyDown(bitsy.key.d) || bitsy.input.isKeyDown(bitsy.key.enter) || bitsy.input.isKeyDown(bitsy.key.space))) ||
-				bitsy.input.swipeRight())
-		) {
+		if (bitsy.bitsy.button(bitsy.bitsy.BTN_RIGHT)) {
 			// evaluate choice
 			this.choices[this.choice]();
 			// reset
@@ -285,7 +278,7 @@ $1`
 // interaction
 // (overrides the dialog skip/page flip)
 inject(
-	/(if\(\s*dialogBuffer\.IsActive\(\)\s*\) {)/,
+	/(\/\* CONTINUE DIALOG \*\/)/,
 	`$1
 if(window.dialogChoices.handleInput(dialogBuffer)) {
 	return;
