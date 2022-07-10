@@ -57,7 +57,7 @@ export var hackOptions = {
 function save() {
 	var snapshot = {};
 	if (hackOptions.position) {
-		snapshot.room = bitsy.curRoom;
+		snapshot.room = bitsy.state.room;
 		snapshot.x = bitsy.player().x;
 		snapshot.y = bitsy.player().y;
 	}
@@ -89,7 +89,7 @@ function load() {
 
 	if (hackOptions.position) {
 		if (snapshot.room) {
-			bitsy.curRoom = bitsy.player().room = snapshot.room;
+			bitsy.state.room = bitsy.player().room = snapshot.room;
 		}
 		if (snapshot.x && snapshot.y) {
 			bitsy.player().x = snapshot.x;
