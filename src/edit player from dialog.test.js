@@ -1,4 +1,4 @@
-import { press, snapshot, start, walkToCat } from './test/bitsy';
+import { press, snapshot, start, waitForBlip, walkToCat } from './test/bitsy';
 
 test('edits player', async () => {
 	await start({
@@ -7,6 +7,7 @@ test('edits player', async () => {
 	});
 	await walkToCat();
 	await press('ArrowRight'); // talk to cat
+	await waitForBlip();
 	await press('ArrowRight'); // complete dialog page
 	await press('ArrowRight'); // end dialog page
 	await press('ArrowRight'); // take a step as the cat
