@@ -124,19 +124,13 @@ addDialogTag('prompt', function (environment, parameters, onReturn) {
 	var defaultValue = params[1] || '';
 
 	// prevent bitsy from handling input
-	var key = bitsy.key;
 	var isPlayerEmbeddedInEditor = bitsy.isPlayerEmbeddedInEditor;
-	var anyKeyPressed = bitsy.input.anyKeyPressed;
-	var isTapReleased = bitsy.input.isTapReleased;
+	var isAnyButtonDown = bitsy.isAnyButtonDown;
 	var CanContinue = environment.GetDialogBuffer().CanContinue;
-	bitsy.key = {};
-	bitsy.input.anyKeyPressed =
-		bitsy.input.isTapReleased =
-		environment.GetDialogBuffer().CanContinue =
-			function () {
-				return false;
-			};
 	bitsy.isPlayerEmbeddedInEditor = true;
+	bitsy.isAnyButtonDown = environment.GetDialogBuffer().CanContinue = function () {
+		return false;
+	};
 
 	promptInput.value = defaultValue;
 	promptInput.focus();
@@ -153,10 +147,8 @@ addDialogTag('prompt', function (environment, parameters, onReturn) {
 		promptInput.blur();
 
 		// allow bitsy to start handling input again
-		bitsy.key = key;
 		bitsy.isPlayerEmbeddedInEditor = isPlayerEmbeddedInEditor;
-		bitsy.input.anyKeyPressed = anyKeyPressed;
-		bitsy.input.isTapReleased = isTapReleased;
+		bitsy.isAnyButtonDown = isAnyButtonDown;
 		environment.GetDialogBuffer().CanContinue = CanContinue;
 
 		onReturn(null);
