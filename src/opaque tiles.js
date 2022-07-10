@@ -16,7 +16,7 @@ HOW TO USE:
 2. Update the `tileIsOpaque` function below to match your needs
 */
 import bitsy from 'bitsy';
-import { after, before, inject } from './helpers/kitsy-script-toolkit';
+import { after, inject } from './helpers/kitsy-script-toolkit';
 
 export var hackOptions = {
 	tileIsOpaque: function (tile) {
@@ -28,28 +28,22 @@ export var hackOptions = {
 };
 
 // track whether opaque
-var opaque = false;
+bitsy.opaque = false;
 after('movePlayer', function () {
 	// check for changes
 	var player = bitsy.player();
 	var tile = bitsy.tile[bitsy.getTile(player.x, player.y)];
 	if (!tile) {
-		opaque = false;
+		bitsy.opaque = false;
 		return;
 	}
-	opaque = hackOptions.tileIsOpaque(tile);
+	bitsy.opaque = hackOptions.tileIsOpaque(tile);
 });
 
-// prevent player from drawing on top of opaque tiles
-var room;
-before('drawRoom', function () {
-	var player = bitsy.player();
-	room = player.room;
-	player.room = opaque ? null : room;
-});
-after('drawRoom', function () {
-	bitsy.player().room = room;
-});
-
-// draw player underneath opaque tile
-inject(/^(\t\/\/draw tiles)/m, 'drawTile(getSpriteFrame(player(), frameIndex), player().x, player().y);\n$1');
+// always redraw all, never redraw avatar or animated only
+inject(/(var redrawAll = ).*;/, '$1true;');
+inject(/(var redrawAnimated = ).*;/, '$1false;');
+inject(/(var redrawAvatar = ).*;/, '$1false;');
+inject(/(\/\/ draw tiles)/m, 'window.opaque && drawTile(getSpriteFrame(player(), frameIndex), player().x, player().y);\n$1');
+// don't draw player over tiles/sprites when opaque
+inject(/if \(\(redrawAll \|\| redrawAnimated/, 'if (!window.opaque && (redrawAll || redrawAnimated');
