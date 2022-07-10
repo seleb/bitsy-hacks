@@ -108,6 +108,7 @@ function editImage(environment, parameters) {
 	for (i = 0; i < srcObj.animation.frameCount; ++i) {
 		setImageData(tgtId, i, mapObj, getImageData(srcId, i, mapObj));
 	}
+	bitsy.drawRoom(bitsy.room[bitsy.state.room], { redrawAll: true });
 }
 
 function editPalette(environment, parameters) {
@@ -138,6 +139,7 @@ function editPalette(environment, parameters) {
 
 	// set palette
 	tgtObj.col = palObj;
+	bitsy.drawRoom(bitsy.room[bitsy.state.room], { redrawAll: true });
 }
 
 // hook up the dialog tags
