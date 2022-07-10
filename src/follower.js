@@ -269,4 +269,5 @@ addDualDialogTag('followerSync', function () {
 		follower.y = player.y;
 		paths[follower.id].length = 0;
 	});
+	bitsy.drawRoom(bitsy.room[bitsy.state.room], { redrawAll: true });
 });
