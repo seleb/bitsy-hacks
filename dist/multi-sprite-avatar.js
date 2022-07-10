@@ -4,8 +4,8 @@
 @summary make the player big
 @license MIT
 @author Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 
 @description
@@ -25,7 +25,7 @@ Usage:
 
 Notes:
 - will probably break any other hacks involving moving other sprites around (they'll probably use the player's modified collision)
-- the original avatar sprite isn't changed, but will be covered by a piece at x:0,y:0
+- the original avatar sprite isn't changed, and will cover a piece placed at x:0,y:0
 - make sure not to include the original avatar sprite in the pieces list (this will cause the syncing to remove the player from the game)
 
 HOW TO USE:
@@ -201,8 +201,8 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 */
 var kitsy = (window.kitsy = window.kitsy || {
@@ -247,11 +247,6 @@ if (!hooked) {
 
 		// Hook everything
 		kitsy.applyHooks();
-
-		// reset callbacks using hacked functions
-		bitsy.bitsyOnUpdate(bitsy.update);
-		bitsy.bitsyOnQuit(bitsy.stopGame);
-		bitsy.bitsyOnLoad(bitsy.load_game);
 
 		// Start the game
 		bitsy.startExportedGame.apply(this, arguments);
@@ -367,8 +362,8 @@ function addDualDialogTag(tag, fn) {
 @file utils
 @summary miscellaneous bitsy utilities
 @author Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 */
 
@@ -504,6 +499,12 @@ function filterPieces(id) {
 	}
 	return id;
 }
+
+// always redraw the full room when sprites are moving
+before('drawRoom', function (room, args) {
+	args.redrawAll = true;
+	return [room, args];
+});
 
 after('startExportedGame', function () {
 	for (var i = 0; i < repeats.length; ++i) {

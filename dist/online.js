@@ -4,8 +4,8 @@
 @summary multiplayer bitsy
 @license MIT
 @author Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 @description
 Provides the groundwork for running a small online multiplayer bitsy game.
@@ -56,7 +56,7 @@ bitsy = bitsy || /*#__PURE__*/_interopDefaultLegacy(bitsy);
  * @param searcher Regex to search and replace
  * @param replacer Replacer string/fn
  */
-function inject$2(searcher, replacer) {
+function inject$1(searcher, replacer) {
     // find the relevant script tag
     var scriptTags = document.getElementsByTagName('script');
     var scriptTag;
@@ -123,7 +123,7 @@ function after$1(targetFuncName, afterFn) {
 }
 function applyInjects() {
     kitsy.queuedInjectScripts.forEach(function (injectScript) {
-        inject$2(injectScript.searcher, injectScript.replacer);
+        inject$1(injectScript.searcher, injectScript.replacer);
     });
 }
 function applyHooks(root) {
@@ -182,8 +182,8 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 */
 var kitsy = (window.kitsy = window.kitsy || {
@@ -229,18 +229,13 @@ if (!hooked) {
 		// Hook everything
 		kitsy.applyHooks();
 
-		// reset callbacks using hacked functions
-		bitsy.bitsyOnUpdate(bitsy.update);
-		bitsy.bitsyOnQuit(bitsy.stopGame);
-		bitsy.bitsyOnLoad(bitsy.load_game);
-
 		// Start the game
 		bitsy.startExportedGame.apply(this, arguments);
 	};
 }
 
 /** @see kitsy.inject */
-var inject$1 = kitsy.inject;
+var inject = kitsy.inject;
 /** @see kitsy.before */
 var before = kitsy.before;
 /** @see kitsy.after */
@@ -273,7 +268,7 @@ function addDialogFunction(tag, fn) {
 }
 
 function injectDialogTag(tag, code) {
-	inject$1(/(var functionMap = \{\};[^]*?)(this.HasFunction)/m, '$1\nfunctionMap["' + tag + '"] = ' + code + ';\n$2');
+	inject(/(var functionMap = \{\};[^]*?)(this.HasFunction)/m, '$1\nfunctionMap["' + tag + '"] = ' + code + ';\n$2');
 }
 
 /**
@@ -348,45 +343,10 @@ function addDualDialogTag(tag, fn) {
 @file utils
 @summary miscellaneous bitsy utilities
 @author Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 */
-
-/*
-Helper used to replace code in a script tag based on a search regex
-To inject code without erasing original string, using capturing groups; e.g.
-	inject(/(some string)/,'injected before $1 injected after')
-*/
-function inject(searchRegex, replaceString) {
-	// find the relevant script tag
-	var scriptTags = document.getElementsByTagName('script');
-	var scriptTag;
-	var code;
-	for (var i = 0; i < scriptTags.length; ++i) {
-		scriptTag = scriptTags[i];
-		var matchesSearch = scriptTag.textContent.search(searchRegex) !== -1;
-		var isCurrentScript = scriptTag === document.currentScript;
-		if (matchesSearch && !isCurrentScript) {
-			code = scriptTag.textContent;
-			break;
-		}
-	}
-
-	// error-handling
-	if (!code) {
-		throw new Error('Couldn\'t find "' + searchRegex + '" in script tags');
-	}
-
-	// modify the content
-	code = code.replace(searchRegex, replaceString);
-
-	// replace the old script tag with a new one using our modified code
-	var newScriptTag = document.createElement('script');
-	newScriptTag.textContent = code;
-	scriptTag.insertAdjacentElement('afterend', newScriptTag);
-	scriptTag.remove();
-}
 
 /*
 Helper for getting image by name or id
@@ -412,8 +372,8 @@ function getImage(name, map) {
 @summary edit dialog from dialog (yes really)
 @license MIT
 @author Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 
 @description
@@ -479,8 +439,8 @@ addDeferredDialogTag('dialog', editDialog);
 @file edit image at runtime
 @summary API for updating image data at runtime.
 @author Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 @description
 Adds API for updating sprite, tile, and item data at runtime.
@@ -498,16 +458,6 @@ e.g. the default player is:
 	[0,0,1,0,0,1,0,0]
 ]
 */
-
-// force cache to clear if edit image fns are used
-inject(
-	/\/\/ TODO : reset render cache for this image/,
-	`
-Object.keys(drawingCache.render)
-	.filter(function (i) { return i.split('_').slice(0, -1).join('_') === drawingId; })
-	.forEach(function(i) { drawingCache.render[i] = undefined; })
-`
-);
 
 /*
 Args:
@@ -548,8 +498,8 @@ function setSpriteData(id, frame, newData) {
 @summary edit sprites, items, and tiles from dialog
 @license MIT
 @author Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 
 @description
@@ -651,6 +601,7 @@ function editImage(environment, parameters) {
 	for (i = 0; i < srcObj.animation.frameCount; ++i) {
 		setImageData(tgtId, i, mapObj, getImageData(srcId, i, mapObj));
 	}
+	bitsy.drawRoom(bitsy.room[bitsy.state.room], { redrawAll: true });
 }
 
 function editPalette(environment, parameters) {
@@ -681,6 +632,7 @@ function editPalette(environment, parameters) {
 
 	// set palette
 	tgtObj.col = palObj;
+	bitsy.drawRoom(bitsy.room[bitsy.state.room], { redrawAll: true });
 }
 
 // hook up the dialog tags
@@ -693,8 +645,8 @@ addDualDialogTag('imagePal', editPalette);
 @summary execute arbitrary javascript from dialog
 @license MIT
 @author Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 
 @description
@@ -783,6 +735,7 @@ function onData(event) {
 				spr.x = data.x;
 				spr.y = data.y;
 				spr.room = data.room;
+				bitsy.drawRoom(bitsy.room[bitsy.state.room], { redrawAll: true });
 			} else {
 				// got a move from an unknown player,
 				// so ask them who they are
@@ -805,6 +758,7 @@ function onData(event) {
 					isAnimated: data.data.length > 1,
 				},
 				col: data.col,
+				bgc: data.bgc,
 				dlg: longname,
 				drw: longname,
 				id: event.from,
@@ -821,6 +775,7 @@ function onData(event) {
 			for (var frame = 0; frame < data.data.length; ++frame) {
 				setSpriteData(event.from, frame, data.data[frame]);
 			}
+			bitsy.drawRoom(bitsy.room[bitsy.state.room], { redrawAll: true });
 			break;
 	}
 }
@@ -890,6 +845,7 @@ function getSpriteUpdate() {
 		room: p.room,
 		dlg: bitsy.dialog[p.dlg],
 		col: p.col,
+		bgc: p.bgc,
 	};
 }
 

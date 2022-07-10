@@ -4,8 +4,8 @@
 @summary sokoban-style sprite pushing
 @license MIT
 @author jan0sc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 
 @description
@@ -198,45 +198,10 @@ bitsy = bitsy || /*#__PURE__*/_interopDefaultLegacy(bitsy);
 @file utils
 @summary miscellaneous bitsy utilities
 @author Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 */
-
-/*
-Helper used to replace code in a script tag based on a search regex
-To inject code without erasing original string, using capturing groups; e.g.
-	inject(/(some string)/,'injected before $1 injected after')
-*/
-function inject$1(searchRegex, replaceString) {
-	// find the relevant script tag
-	var scriptTags = document.getElementsByTagName('script');
-	var scriptTag;
-	var code;
-	for (var i = 0; i < scriptTags.length; ++i) {
-		scriptTag = scriptTags[i];
-		var matchesSearch = scriptTag.textContent.search(searchRegex) !== -1;
-		var isCurrentScript = scriptTag === document.currentScript;
-		if (matchesSearch && !isCurrentScript) {
-			code = scriptTag.textContent;
-			break;
-		}
-	}
-
-	// error-handling
-	if (!code) {
-		throw new Error('Couldn\'t find "' + searchRegex + '" in script tags');
-	}
-
-	// modify the content
-	code = code.replace(searchRegex, replaceString);
-
-	// replace the old script tag with a new one using our modified code
-	var newScriptTag = document.createElement('script');
-	newScriptTag.textContent = code;
-	scriptTag.insertAdjacentElement('afterend', newScriptTag);
-	scriptTag.remove();
-}
 
 /*
 Helper for getting image by name or id
@@ -260,8 +225,8 @@ function getImage(name, map) {
 @file edit image at runtime
 @summary API for updating image data at runtime.
 @author Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 @description
 Adds API for updating sprite, tile, and item data at runtime.
@@ -279,16 +244,6 @@ e.g. the default player is:
 	[0,0,1,0,0,1,0,0]
 ]
 */
-
-// force cache to clear if edit image fns are used
-inject$1(
-	/\/\/ TODO : reset render cache for this image/,
-	`
-Object.keys(drawingCache.render)
-	.filter(function (i) { return i.split('_').slice(0, -1).join('_') === drawingId; })
-	.forEach(function(i) { drawingCache.render[i] = undefined; })
-`
-);
 
 /*
 Args:
@@ -462,8 +417,8 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 */
 var kitsy = (window.kitsy = window.kitsy || {
@@ -508,11 +463,6 @@ if (!hooked) {
 
 		// Hook everything
 		kitsy.applyHooks();
-
-		// reset callbacks using hacked functions
-		bitsy.bitsyOnUpdate(bitsy.update);
-		bitsy.bitsyOnQuit(bitsy.stopGame);
-		bitsy.bitsyOnLoad(bitsy.load_game);
 
 		// Start the game
 		bitsy.startExportedGame.apply(this, arguments);
@@ -648,6 +598,7 @@ function pushSprite(spr, direction) {
 			s.y = newy;
 		});
 		checkExit(spr, direction);
+		bitsy.drawRoom(bitsy.room[bitsy.state.room], { redrawAll: true });
 		return true;
 	}
 	return false;
@@ -758,9 +709,9 @@ function checkTargets() {
 			}
 		}
 	}
-	targetsLookup[bitsy.curRoom] = targetsLookup[bitsy.curRoom] || [];
-	targetsLookup[bitsy.curRoom][bitsy.player().x] = targetsLookup[bitsy.curRoom][bitsy.player().x] || [];
-	targetsLookup[bitsy.curRoom][bitsy.player().x][bitsy.player().y] = bitsy.playerId;
+	targetsLookup[bitsy.state.room] = targetsLookup[bitsy.state.room] || [];
+	targetsLookup[bitsy.state.room][bitsy.player().x] = targetsLookup[bitsy.state.room][bitsy.player().x] || [];
+	targetsLookup[bitsy.state.room][bitsy.player().x][bitsy.player().y] = bitsy.playerId;
 
 	for (k in hackOptions.conditions) {
 		if (Object.prototype.hasOwnProperty.call(hackOptions.conditions, k)) {

@@ -4,8 +4,8 @@
 @summary tiles which hide the player
 @license MIT
 @author Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 
 @description
@@ -99,7 +99,7 @@ function kitsyInject(searcher, replacer) {
 // Ex: before('load_game', function run() { alert('Loading!'); });
 //     before('show_text', function run(text) { return text.toUpperCase(); });
 //     before('show_text', function run(text, done) { done(text.toUpperCase()); });
-function before$1(targetFuncName, beforeFn) {
+function before(targetFuncName, beforeFn) {
     kitsy.queuedBeforeScripts[targetFuncName] = kitsy.queuedBeforeScripts[targetFuncName] || [];
     kitsy.queuedBeforeScripts[targetFuncName].push(beforeFn);
 }
@@ -169,8 +169,8 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 */
 var kitsy = (window.kitsy = window.kitsy || {
@@ -178,7 +178,7 @@ var kitsy = (window.kitsy = window.kitsy || {
     queuedBeforeScripts: {},
     queuedAfterScripts: {},
     inject: kitsyInject,
-    before: before$1,
+    before,
     after: after$1,
     /**
      * Applies all queued `inject` calls.
@@ -216,11 +216,6 @@ if (!hooked) {
 		// Hook everything
 		kitsy.applyHooks();
 
-		// reset callbacks using hacked functions
-		bitsy.bitsyOnUpdate(bitsy.update);
-		bitsy.bitsyOnQuit(bitsy.stopGame);
-		bitsy.bitsyOnLoad(bitsy.load_game);
-
 		// Start the game
 		bitsy.startExportedGame.apply(this, arguments);
 	};
@@ -229,7 +224,7 @@ if (!hooked) {
 /** @see kitsy.inject */
 var inject = kitsy.inject;
 /** @see kitsy.before */
-var before = kitsy.before;
+kitsy.before;
 /** @see kitsy.after */
 var after = kitsy.after;
 
@@ -238,31 +233,39 @@ var after = kitsy.after;
 
 
 // track whether opaque
-var opaque = false;
+bitsy.opaque = false;
 after('movePlayer', function () {
 	// check for changes
 	var player = bitsy.player();
 	var tile = bitsy.tile[bitsy.getTile(player.x, player.y)];
 	if (!tile) {
-		opaque = false;
+		bitsy.opaque = false;
 		return;
 	}
-	opaque = hackOptions.tileIsOpaque(tile);
+	bitsy.opaque = hackOptions.tileIsOpaque(tile);
 });
 
-// prevent player from drawing on top of opaque tiles
-var room;
-before('drawRoom', function () {
-	var player = bitsy.player();
-	room = player.room;
-	player.room = opaque ? null : room;
+// create a new map layer that renders underneath tiles
+after('startExportedGame', function () {
+	// eslint-disable-next-line no-underscore-dangle
+	bitsy.bitsy.MAP0 = bitsy.bitsy._addTileMapLayer();
+	// eslint-disable-next-line no-underscore-dangle
+	bitsy.bitsy._getTileMapLayers().unshift(bitsy.bitsy._getTileMapLayers().pop());
 });
-after('drawRoom', function () {
-	bitsy.player().room = room;
+after('clearRoom', function () {
+	bitsy.bitsy.fill(bitsy.bitsy.MAP0, 0);
+});
+after('startNarrating', function () {
+	bitsy.bitsy.fill(bitsy.bitsy.MAP0, 0);
 });
 
-// draw player underneath opaque tile
-inject(/^(\t\/\/draw tiles)/m, 'drawTile(getSpriteFrame(player(), frameIndex), player().x, player().y);\n$1');
+// always redraw all, never redraw avatar or animated only
+inject(/(var redrawAll = ).*;/, '$1true;');
+inject(/(var redrawAnimated = ).*;/, '$1false;');
+inject(/(var redrawAvatar = ).*;/, '$1false;');
+inject(/(\/\/ draw tiles)/m, 'bitsy.fill(bitsy.MAP0, 0); window.opaque && setTile(bitsy.MAP0, player().x, player().y, getSpriteFrame(player(), frameIndex));\n$1');
+// don't draw player over tiles/sprites when opaque
+inject(/if \(\(redrawAll \|\| redrawAnimated/, 'if (!window.opaque && (redrawAll || redrawAnimated');
 
 exports.hackOptions = hackOptions;
 

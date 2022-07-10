@@ -4,8 +4,8 @@
 @summary high quality anime gifs
 @license MIT
 @author Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 
 @description
@@ -971,8 +971,8 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 */
 var kitsy = (window.kitsy = window.kitsy || {
@@ -1017,11 +1017,6 @@ if (!hooked) {
 
 		// Hook everything
 		kitsy.applyHooks();
-
-		// reset callbacks using hacked functions
-		bitsy.bitsyOnUpdate(bitsy.update);
-		bitsy.bitsyOnQuit(bitsy.stopGame);
-		bitsy.bitsyOnLoad(bitsy.load_game);
 
 		// Start the game
 		bitsy.startExportedGame.apply(this, arguments);
@@ -1089,8 +1084,8 @@ function addDialogTag(tag, fn) {
 @summary high quality anime jpegs (or pngs i guess)
 @license MIT
 @author Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 
 @description
@@ -1170,19 +1165,14 @@ addDialogTag('portrait', function (environment, parameters, onReturn) {
 });
 
 // draw portrait on top of screen
-after('renderDrawingBuffer', function (bufferId, buffer) {
-	if (bufferId !== bitsy.screenBufferId || (hackOptions$1.dialogOnly && !bitsy.isDialogMode && !bitsy.isNarrating) || !state.portrait) return;
-
-	var context = buffer.canvas.getContext('2d');
-	context.imageSmoothingEnabled = false;
+after('bitsy._graphics.drawImage', function (id) {
+	// eslint-disable-next-line no-underscore-dangle
+	var layers = bitsy.bitsy._getTileMapLayers();
+	if (id !== layers[layers.length - 1] || (hackOptions$1.dialogOnly && !bitsy.isDialogMode && !bitsy.isNarrating) || !state.portrait) return;
+	// eslint-disable-next-line no-underscore-dangle
+	var context = bitsy.bitsy._getContext();
 	try {
 		context.drawImage(state.portrait, 0, 0, bitsy.width * hackOptions$1.scale, bitsy.height * hackOptions$1.scale, 0, 0, bitsy.width * bitsy.scale, bitsy.height * bitsy.scale);
-
-		// if text is present, redraw it on top of the portrait
-		var lastInstruction = buffer.instructions[buffer.instructions.length - 1];
-		if (lastInstruction.type === bitsy.DrawingInstruction.Textbox) {
-			bitsy.renderTextboxInstruction(bufferId, buffer, lastInstruction.x, lastInstruction.y);
-		}
 	} catch (error) {
 		// log and ignore errors
 		// so broken images don't break the game
@@ -1282,7 +1272,11 @@ after('startExportedGame', function () {
 // override portrait drawing to use frames
 var animation;
 var animationStart = 0;
-before('drawRoom', function () {
+before('bitsy._graphics.drawImage', function (id) {
+	// eslint-disable-next-line no-underscore-dangle
+	var layers = bitsy.bitsy._getTileMapLayers();
+	if (id !== layers[layers.length - 1]) return;
+
 	if (animation !== state.portrait) {
 		animationStart = bitsy.prevTime;
 	}
@@ -1308,7 +1302,11 @@ before('drawRoom', function () {
 		state.portrait = animation.frames[frame].img;
 	}
 });
-after('renderGame', function () {
+after('bitsy._graphics.drawImage', function (id) {
+	// eslint-disable-next-line no-underscore-dangle
+	var layers = bitsy.bitsy._getTileMapLayers();
+	if (id !== layers[layers.length - 1]) return;
+
 	state.portrait = animation;
 });
 

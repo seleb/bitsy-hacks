@@ -4,8 +4,8 @@
 @summary customizable WebGL transitions
 @license MIT
 @author Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 
 @description
@@ -68,7 +68,7 @@ var hackOptions = {
 	// return true to indicate a transition; false otherwise
 	// example implementation is transition on room change
 	checkTransition: function () {
-		var r = bitsy.curRoom;
+		var r = bitsy.state.room;
 		if (this.room !== r) {
 			// room changed between frames
 			this.room = r;
@@ -223,8 +223,8 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 */
 var kitsy = (window.kitsy = window.kitsy || {
@@ -270,11 +270,6 @@ if (!hooked) {
 		// Hook everything
 		kitsy.applyHooks();
 
-		// reset callbacks using hacked functions
-		bitsy.bitsyOnUpdate(bitsy.update);
-		bitsy.bitsyOnQuit(bitsy.stopGame);
-		bitsy.bitsyOnLoad(bitsy.load_game);
-
 		// Start the game
 		bitsy.startExportedGame.apply(this, arguments);
 	};
@@ -293,8 +288,8 @@ var after = kitsy.after;
 @summary WebGLazy bitsy integration (this one's mostly just for me)
 @license MIT
 @author Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 
 @description
@@ -359,7 +354,7 @@ after('startExportedGame', function () {
 	}
 });
 
-after('update', function () {
+after('bitsy._update', function () {
 	if (hackOptions$1.update) {
 		hackOptions$1.update(glazy);
 	}

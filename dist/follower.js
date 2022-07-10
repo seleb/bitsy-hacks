@@ -4,8 +4,8 @@
 @summary make sprites follow the player
 @license MIT
 @author Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 
 @description
@@ -193,8 +193,8 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 */
 var kitsy = (window.kitsy = window.kitsy || {
@@ -239,11 +239,6 @@ if (!hooked) {
 
 		// Hook everything
 		kitsy.applyHooks();
-
-		// reset callbacks using hacked functions
-		bitsy.bitsyOnUpdate(bitsy.update);
-		bitsy.bitsyOnQuit(bitsy.stopGame);
-		bitsy.bitsyOnLoad(bitsy.load_game);
 
 		// Start the game
 		bitsy.startExportedGame.apply(this, arguments);
@@ -359,8 +354,8 @@ function addDualDialogTag(tag, fn) {
 @file utils
 @summary miscellaneous bitsy utilities
 @author Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 */
 
@@ -412,12 +407,16 @@ function takeStep() {
 		return;
 	}
 	walking = true;
-	setTimeout(() => {
+	if (hackOptions.delay) {
+		setTimeout(() => {
+			shouldWalk = true;
+		}, hackOptions.delay);
+	} else {
 		shouldWalk = true;
-	}, hackOptions.delay);
+	}
 }
 
-after('startExportedGame', function () {
+after('loadWorldFromGameData', function () {
 	hackOptions.followers.forEach(setFollower);
 
 	// remove + add player to sprite list to force rendering them on top of followers
@@ -428,12 +427,14 @@ after('startExportedGame', function () {
 
 let px;
 let py;
-before('update', function () {
+before('bitsy._update', function () {
+	var player = bitsy.player();
+	if (!player) return;
 	px = bitsy.player().x;
 	py = bitsy.player().y;
 });
 let movedFollower = false;
-after('update', function () {
+after('bitsy._update', function () {
 	if (shouldWalk) {
 		shouldWalk = false;
 		let takeAnother = false;
@@ -450,6 +451,7 @@ after('update', function () {
 				takeAnother = true;
 			}
 		});
+		bitsy.drawRoom(bitsy.room[bitsy.state.room], { redrawAll: true });
 		if (takeAnother) {
 			takeStep();
 		}
@@ -594,6 +596,7 @@ addDualDialogTag('followerSync', function () {
 		follower.y = player.y;
 		paths[follower.id].length = 0;
 	});
+	bitsy.drawRoom(bitsy.room[bitsy.state.room], { redrawAll: true });
 });
 
 exports.followers = followers;

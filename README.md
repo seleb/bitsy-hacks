@@ -6,7 +6,7 @@ npm i @bitsy/hecks
 
 A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamledoux)'s [Bitsy Game Maker](https://ledoux.itch.io/bitsy). See [Ayolland's Borksy](https://ayolland.itch.io/borksy) for a GUI that allows you to use these hacks with less copy-pasting.
 
-Last tested against Bitsy 7.12
+Last tested against Bitsy 8.0
 
 - [Contents](#contents)
 - [How to use](#how-to-use)
@@ -26,7 +26,6 @@ Last tested against Bitsy 7.12
 - ⛔️ [close on ending](/dist/close-on-ending.js): Prevents from playing past an ending
 - ➿ [corrupt](/dist/corrupt.js): corrupts gamedata at runtime
 - 🎞 [custom-exit-effects](/dist/custom-exit-effects.js): make custom exit transition effects
-- ⌨ [custom-keyhandlers](/dist/custom-keyhandlers.js): run custom code on key inputs
 - 🅰 [custom text effect](/dist/custom-text-effect.js): make {custom}text effects{custom}
 - 💬 [dialog audio](/dist/dialog-audio.js): animal crossing-style audio
 - 🎺 [dialog audio vocal synth](/dist/dialog-audio-vocal-synth.js): animal crossing-style audio powered by the pink trombone vocal synth
@@ -42,7 +41,7 @@ Last tested against Bitsy 7.12
 - 🖌 [edit image from dialog](/dist/edit-image-from-dialog.js): edit sprites, items, and tiles from dialog
 - 👯‍♂️ [edit player from dialog](/dist/edit-player-from-dialog.js): change which sprite is controlled by the player
 - 🏠 [edit room from dialog](/dist/edit-room-from-dialog.js): modify the content of a room from dialog
-- 🔚 [end-from-dialog](/dist/end-from-dialog.js): trigger an ending from dialog, including narration text
+- 🔚 [end-from-dialog](/dist/end-from-dialog.js): trigger an ending from dialog, including narration text (deprecated)
 - 🚪 [exit-from-dialog](/dist/exit-from-dialog.js): exit to another room from dialog, including conditionals
 - 🛰 [external-game-data](/dist/external-game-data.js): separate Bitsy game data from your (modded) HTML for easier development
 - 🌐 [favicon-from-sprite](/dist/favicon-from-sprite.js): generate a browser favicon (tab icon) from a Bitsy sprite, including animation!
@@ -54,7 +53,6 @@ Last tested against Bitsy 7.12
 - 🔀 [logic-operators-extended](/dist/logic-operators-extended.js): adds conditional logic operators
 - 📜 [long dialog](/dist/long-dialog.js): put more words onscreen
 - 👨‍👨‍👧‍👧 [multi-sprite avatar](/dist/multi-sprite-avatar.js): make the player big
-- 📎 [noclip](/dist/noclip.js): walk through wall tiles, sprites, items, exits, and endings
 - 🔄 [online](/dist/online.js): multiplayer bitsy
 - ⬛ [opaque tiles](/dist/opaque-tiles.js): tiles which hide the player
 - 📃 [paragraph-break](/dist/paragraph-break.js): Adds paragraph breaks to the dialogue parser
@@ -62,16 +60,14 @@ Last tested against Bitsy 7.12
 - ➡ [push sprites](/dist/push-sprites.js): sokoban-style sprite pushing
 - 🎭 [replace drawing](/dist/replace-drawing.js): add name-tags to replace drawings when the game is loading
 - 💾 [save](/dist/save.js): save/load your game
-- 🏃 [smooth moves](/dist/smooth-moves.js): ease the player's movement
 - 🛑 [solid items](/dist/solid-items.js): treat some items like sprites that can be placed multiple times
-- 💃 [sprite effects](/dist/sprite-effects.js): like text effects, but for sprites
 - ⏱️ [stopwatch](/dist/stopwatch.js): time player actions
 - 🗣 [text-to-speech](/dist/text-to-speech.js): text-to-speech for bitsy dialog
 - 🏰 [tracery processing](/dist/tracery-processing.js): process all dialog text with a tracery grammar
 - 🎞 [transitions](/dist/transitions.js): customizable WebGL transitions
 - 🔳 [transparent background](/dist/transparent-background.js): makes the game have a transparent background
 - 👁️‍🗨️ [transparent dialog](/dist/transparent-dialog.js): makes the dialog box have a transparent background
-- 🏁 [transparent sprites](/dist/transparent-sprites.js): makes all sprites have transparent backgrounds
+- 🏁 [transparent sprites](/dist/transparent-sprites.js): makes all sprites have transparent backgrounds (deprecated)
 - 💱 [twine bitsy comms](/dist/twine-bitsy-comms.js): interprocess communication for twine and bitsy
 - ❄ [unique items](/dist/unique-items.js): items which, when picked up, remove all other instances of that item from the game
 
@@ -157,6 +153,7 @@ Bitsy and the hacks are generally not backwards-compatible: when Bitsy updates, 
 
 If you are using an older version of Bitsy (or a fork based on an older version), you may require old versions of the hacks. Support is not guaranteed across versions, and old versions are not maintained, but some helpful points in history are listed below.
 
+- [Bitsy 7.12](https://github.com/seleb/bitsy-hacks/tree/v20.2.5/dist)
 - [Bitsy 7.11](https://github.com/seleb/bitsy-hacks/tree/v19.2.7/dist)
 - [Bitsy 7.8-7.9](https://github.com/seleb/bitsy-hacks/tree/v17.0.0/dist)
 - [Bitsy 7.2-7.7](https://github.com/seleb/bitsy-hacks/tree/v16.0.3/dist)

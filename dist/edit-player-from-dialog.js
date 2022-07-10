@@ -4,8 +4,8 @@
 @summary change which sprite is controlled by the player
 @license MIT
 @author Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 
 @description
@@ -28,6 +28,8 @@ NOTE:
 - Inventory (i.e. item counts) is per-sprite, not shared.
   If you want to simulate "shared" inventory, include standard
   dialog variables on your items that increment when picked up
+- If you only want to change the avatar to visually match another sprite,
+  you should use the built-in `AVA` dialog command instead of this hack
 */
 (function (bitsy) {
 'use strict';
@@ -171,8 +173,8 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 */
 var kitsy = (window.kitsy = window.kitsy || {
@@ -217,11 +219,6 @@ if (!hooked) {
 
 		// Hook everything
 		kitsy.applyHooks();
-
-		// reset callbacks using hacked functions
-		bitsy.bitsyOnUpdate(bitsy.update);
-		bitsy.bitsyOnQuit(bitsy.stopGame);
-		bitsy.bitsyOnLoad(bitsy.load_game);
 
 		// Start the game
 		bitsy.startExportedGame.apply(this, arguments);
@@ -337,8 +334,8 @@ function addDualDialogTag(tag, fn) {
 @file utils
 @summary miscellaneous bitsy utilities
 @author Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 */
 
@@ -371,8 +368,15 @@ addDualDialogTag('player', function (environment, parameters) {
 	if (!target.room) {
 		throw new Error('Could not change player: sprite "' + targetId + '" not placed in a room');
 	}
+	var original = bitsy.player();
+	original.type = 'SPR';
 	bitsy.playerId = targetId;
-	bitsy.curRoom = target.room;
+	bitsy.state.ava = target.drw;
+	bitsy.state.room = target.room;
+	bitsy.playerPrevX = target.x;
+	bitsy.playerPrevY = target.y;
+	target.type = 'AVA';
+	bitsy.drawRoom(bitsy.room[target.room], { redrawAll: true });
 });
 
 })(window);

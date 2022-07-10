@@ -4,8 +4,8 @@
 @summary adds an easing transition animation to display the dialog box text
 @license MIT
 @author Delacannon
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 
 @description
@@ -18,7 +18,19 @@ this.hacks = this.hacks || {};
 (function (exports, bitsy) {
 'use strict';
 var hackOptions = {
-	easing: 0.025, //  easing speed
+	// easing function applied to the transition
+	// the provided parameter is the time in 0-1,
+	// and the expected return value is a value in 0-1
+	// that indicates how much to lerp between the
+	// screen edge and the final position
+	//
+	// the default is a quadratic ease out,
+	// see https://gist.github.com/gre/1650294 for more examples
+	ease: function (t) {
+		return t * (2 - t);
+	},
+	// how long the transition lasts
+	duration: 500,
 };
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
@@ -34,7 +46,7 @@ bitsy = bitsy || /*#__PURE__*/_interopDefaultLegacy(bitsy);
  * @param searcher Regex to search and replace
  * @param replacer Replacer string/fn
  */
-function inject$1(searcher, replacer) {
+function inject(searcher, replacer) {
     // find the relevant script tag
     var scriptTags = document.getElementsByTagName('script');
     var scriptTag;
@@ -90,18 +102,18 @@ function kitsyInject(searcher, replacer) {
 // Ex: before('load_game', function run() { alert('Loading!'); });
 //     before('show_text', function run(text) { return text.toUpperCase(); });
 //     before('show_text', function run(text, done) { done(text.toUpperCase()); });
-function before(targetFuncName, beforeFn) {
+function before$1(targetFuncName, beforeFn) {
     kitsy.queuedBeforeScripts[targetFuncName] = kitsy.queuedBeforeScripts[targetFuncName] || [];
     kitsy.queuedBeforeScripts[targetFuncName].push(beforeFn);
 }
 // Ex: after('load_game', function run() { alert('Loaded!'); });
-function after(targetFuncName, afterFn) {
+function after$1(targetFuncName, afterFn) {
     kitsy.queuedAfterScripts[targetFuncName] = kitsy.queuedAfterScripts[targetFuncName] || [];
     kitsy.queuedAfterScripts[targetFuncName].push(afterFn);
 }
 function applyInjects() {
     kitsy.queuedInjectScripts.forEach(function (injectScript) {
-        inject$1(injectScript.searcher, injectScript.replacer);
+        inject(injectScript.searcher, injectScript.replacer);
     });
 }
 function applyHooks(root) {
@@ -160,8 +172,8 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 */
 var kitsy = (window.kitsy = window.kitsy || {
@@ -169,8 +181,8 @@ var kitsy = (window.kitsy = window.kitsy || {
     queuedBeforeScripts: {},
     queuedAfterScripts: {},
     inject: kitsyInject,
-    before,
-    after,
+    before: before$1,
+    after: after$1,
     /**
      * Applies all queued `inject` calls.
      *
@@ -207,74 +219,50 @@ if (!hooked) {
 		// Hook everything
 		kitsy.applyHooks();
 
-		// reset callbacks using hacked functions
-		bitsy.bitsyOnUpdate(bitsy.update);
-		bitsy.bitsyOnQuit(bitsy.stopGame);
-		bitsy.bitsyOnLoad(bitsy.load_game);
-
 		// Start the game
 		bitsy.startExportedGame.apply(this, arguments);
 	};
 }
 
 /** @see kitsy.inject */
-var inject = kitsy.inject;
+kitsy.inject;
 /** @see kitsy.before */
-kitsy.before;
+var before = kitsy.before;
 /** @see kitsy.after */
-kitsy.after;
+var after = kitsy.after;
 
 
 
 
 
-var drawOverride = `
-if (isCentered) {
-	bitsyDrawBegin(0);
-	bitsyDrawTextbox(textboxInfo.left, ((height / 2) - (textboxInfo.height / 2)));
-	bitsyDrawEnd();
-	this.onExit = ((height/2)-(textboxInfo.height/2)) === ((height/2)-(textboxInfo.height/2))
+function lerp(from, to, by) {
+	return from + (to - from) * by;
 }
-else if (player().y < mapsize/2) {
-	easingDialog(textboxInfo, ${hackOptions.easing}, !this.onClose
-		? height-textboxInfo.bottom-textboxInfo.height
-		: height+textboxInfo.height
-	);
-	this.onExit = this.onClose && textboxInfo.y >= height;
-}
-else {
-	easingDialog(textboxInfo, ${hackOptions.easing}, !this.onClose
-		? textboxInfo.top
-		: -textboxInfo.top-textboxInfo.height
-	);
-	this.onExit = this.onClose && textboxInfo.y <= -textboxInfo.height;
-}
-return;`;
 
-var functionEasing = `
-	function easingDialog(tbox, easing, targetY) {
-		var vy = (targetY - tbox.y) * easing;
-		tbox.y += vy;
-		bitsyDrawBegin(0);
-		bitsyDrawTextbox(tbox.left, tbox.y);
-		bitsyDrawEnd();
+var start;
+var height = 0;
+
+// always redraw the full room when sprites are moving
+before('drawRoom', function (room, args) {
+	args.redrawAll = true;
+	return [room, args];
+});
+
+var edge = 0;
+before('bitsy.textbox', function (visible, x, y, w, h) {
+	height = h || height;
+	edge = y < bitsy.height / 2 ? -height : bitsy.height;
+});
+before('bitsy._graphics.drawImage', function (id, x, y) {
+	if (id !== bitsy.bitsy.TEXTBOX) return undefined;
+	if (!start) {
+		start = bitsy.prevTime;
 	}
-	this.onClose = false;
-	this.onExit = false;
-`;
-
-inject(/(this\.DrawTextbox\(\))/, '$1\nif(this.onExit && this.onClose){dialogBuffer.EndDialog()}');
-inject(/(\/\/end dialog mode\s+this\.EndDialog\(\))/m, 'dialogRenderer.onClose=true');
-inject(/(var DialogRenderer = function\(\) {)/, `$1${functionEasing}`);
-inject(/(var textboxInfo = {)/, '$1y:0,');
-inject(
-	/(this\.Reset = function\(\) {)/,
-	`$1 this.onClose=false;
-		this.onExit=false;
-		textboxInfo.y = player().y < mapsize/2 ? height : -(textboxInfo.height);`
-);
-
-inject(/(this\.DrawTextbox = function\(\) {)/, `$1${drawOverride}`);
+	return [id, x, lerp(edge, y, hackOptions.ease(Math.min(Math.max(0, (bitsy.prevTime - start) / hackOptions.duration), 1)))];
+});
+after('onExitDialog', function () {
+	start = undefined;
+});
 
 exports.hackOptions = hackOptions;
 

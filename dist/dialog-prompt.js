@@ -4,8 +4,8 @@
 @summary prompt the user for text input in dialog
 @license MIT
 @author Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 
 @description
@@ -197,8 +197,8 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 */
 var kitsy = (window.kitsy = window.kitsy || {
@@ -243,11 +243,6 @@ if (!hooked) {
 
 		// Hook everything
 		kitsy.applyHooks();
-
-		// reset callbacks using hacked functions
-		bitsy.bitsyOnUpdate(bitsy.update);
-		bitsy.bitsyOnQuit(bitsy.stopGame);
-		bitsy.bitsyOnLoad(bitsy.load_game);
 
 		// Start the game
 		bitsy.startExportedGame.apply(this, arguments);
@@ -322,8 +317,8 @@ inject(/(this\.AddLinebreak = )/, 'this.AddParagraphBreak = function() { buffer.
 @summary Adds paragraph breaks to the dialogue parser
 @license WTFPL (do WTF you want)
 @author Sean S. LeBlanc, David Mowatt
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 
 @description
@@ -431,19 +426,13 @@ addDialogTag('prompt', function (environment, parameters, onReturn) {
 	var defaultValue = params[1] || '';
 
 	// prevent bitsy from handling input
-	var key = bitsy.key;
 	var isPlayerEmbeddedInEditor = bitsy.isPlayerEmbeddedInEditor;
-	var anyKeyPressed = bitsy.input.anyKeyPressed;
-	var isTapReleased = bitsy.input.isTapReleased;
+	var isAnyButtonDown = bitsy.isAnyButtonDown;
 	var CanContinue = environment.GetDialogBuffer().CanContinue;
-	bitsy.key = {};
-	bitsy.input.anyKeyPressed =
-		bitsy.input.isTapReleased =
-		environment.GetDialogBuffer().CanContinue =
-			function () {
-				return false;
-			};
 	bitsy.isPlayerEmbeddedInEditor = true;
+	bitsy.isAnyButtonDown = environment.GetDialogBuffer().CanContinue = function () {
+		return false;
+	};
 
 	promptInput.value = defaultValue;
 	promptInput.focus();
@@ -460,10 +449,8 @@ addDialogTag('prompt', function (environment, parameters, onReturn) {
 		promptInput.blur();
 
 		// allow bitsy to start handling input again
-		bitsy.key = key;
 		bitsy.isPlayerEmbeddedInEditor = isPlayerEmbeddedInEditor;
-		bitsy.input.anyKeyPressed = anyKeyPressed;
-		bitsy.input.isTapReleased = isTapReleased;
+		bitsy.isAnyButtonDown = isAnyButtonDown;
 		environment.GetDialogBuffer().CanContinue = CanContinue;
 
 		onReturn(null);
@@ -477,6 +464,11 @@ addDialogTag('prompt', function (environment, parameters, onReturn) {
 
 // expose a setter/getter for private buffer in DialogBuffer class
 inject(/(this\.CurPage =)/, 'this.GetBuffer = function(){ return buffer; };this.SetBuffer = function(b){ buffer = b; };\n$1');
+
+// force redrawing textbox to allow interactive preview
+inject(/shouldClearTextbox = false;/, '');
+inject(/char.redraw = false;/, '');
+inject(/shouldDrawArrow = false;/, '');
 
 exports.hackOptions = hackOptions;
 

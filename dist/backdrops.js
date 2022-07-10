@@ -4,8 +4,8 @@
 @summary makes the game have a backdrop
 @license MIT
 @author Cephalopodunk & Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 
 @description
@@ -55,7 +55,7 @@ bitsy = bitsy || /*#__PURE__*/_interopDefaultLegacy(bitsy);
  * @param searcher Regex to search and replace
  * @param replacer Replacer string/fn
  */
-function inject$1(searcher, replacer) {
+function inject(searcher, replacer) {
     // find the relevant script tag
     var scriptTags = document.getElementsByTagName('script');
     var scriptTag;
@@ -122,7 +122,7 @@ function after$1(targetFuncName, afterFn) {
 }
 function applyInjects() {
     kitsy.queuedInjectScripts.forEach(function (injectScript) {
-        inject$1(injectScript.searcher, injectScript.replacer);
+        inject(injectScript.searcher, injectScript.replacer);
     });
 }
 function applyHooks(root) {
@@ -181,8 +181,8 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 */
 var kitsy = (window.kitsy = window.kitsy || {
@@ -228,18 +228,13 @@ if (!hooked) {
 		// Hook everything
 		kitsy.applyHooks();
 
-		// reset callbacks using hacked functions
-		bitsy.bitsyOnUpdate(bitsy.update);
-		bitsy.bitsyOnQuit(bitsy.stopGame);
-		bitsy.bitsyOnLoad(bitsy.load_game);
-
 		// Start the game
 		bitsy.startExportedGame.apply(this, arguments);
 	};
 }
 
 /** @see kitsy.inject */
-var inject = kitsy.inject;
+kitsy.inject;
 /** @see kitsy.before */
 var before = kitsy.before;
 /** @see kitsy.after */
@@ -248,16 +243,23 @@ var after = kitsy.after;
 /**
 🏁
 @file transparent sprites
-@summary makes all sprites have transparent backgrounds
+@summary makes all sprites have transparent backgrounds (deprecated)
 @license MIT
 @author Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 
 @description
 Makes all sprites have transparent backgrounds.
 i.e. tiles can be seen underneath the player, sprites, and items.
+
+NOTE: This hack is no longer necessary as Bitsy 8.0
+supports transparent sprites directly in gamedata.
+To flag a drawing as transparent in Bitsy,
+add the following line underneath its data:
+
+BGC *
 
 HOW TO USE:
 1. Copy-paste this script into a script tag after the bitsy source
@@ -273,57 +275,15 @@ var hackOptions$2 = {
 	},
 };
 
-window.makeTransparent = false;
-// flag what should be transparent
-before('renderer.GetDrawingFrame', function (drawing, frameIndex) {
-	window.makeTransparent = hackOptions$2.isTransparent(drawing);
-});
-// send -1 instead of background colour index if transparent
-inject(/bitsyDrawPixel\(backgroundColor, x, y\)/, 'bitsyDrawPixel(window.makeTransparent ? -1 : backgroundColor, x, y)');
-// make sure transitions render using regular room logic
-inject(
-	/(function createRoomPixelBuffer\(room\) {)/,
-	`$1
-var buffer = drawingBuffers[screenBufferId];
-var s = buffer.scale;
-buffer.scale = 1;
-drawRoom(room);
-renderDrawingBuffer(screenBufferId, buffer);
-const data = buffer.canvas.getContext('2d').getImageData(0, 0, buffer.width, buffer.height).data;
-var pixelBuffer = [];
-for (var y = 0; y < buffer.height; ++y) {
-for (var x = 0; x < buffer.width; ++x) {
-	var idx = (y*buffer.width + x)*4;
-	var r = data[idx + 0];
-	var g = data[idx + 1];
-	var b = data[idx + 2];
-	var p = getPal(getRoomPal(curRoom)).findIndex(i => r === i[0] && g === i[1] && b === i[2]);
-	pixelBuffer.push(tileColorStartIndex + p);
-}
-}
-buffer.scale = s;
-invalidateDrawingBuffer(buffer);
-return pixelBuffer;
-`
-);
-// make sure tiles are available when drawing rooms
-inject(/(var tileBuffer = drawingBuffers\[tileId\];)/, 'hackForEditor_GetImageFromTileId(tileId); $1');
-
-// overwrite transparent pixel
-after('renderPixelInstruction', function (bufferId, buffer, paletteIndex, x, y) {
-	if (paletteIndex !== -1) return;
-
-	if (buffer.imageData) {
-		for (var sy = 0; sy < buffer.scale; sy++) {
-			for (var sx = 0; sx < buffer.scale; sx++) {
-				var pixelIndex = (y * buffer.scale + sy) * buffer.width * buffer.scale * 4 + (x * buffer.scale + sx) * 4;
-				buffer.imageData.data[pixelIndex + 3] = 0;
+before('renderer.SetDrawings', function () {
+	Object.values(bitsy.tile)
+		.concat(Object.values(bitsy.sprite))
+		.concat(Object.values(bitsy.item))
+		.forEach(drawing => {
+			if (hackOptions$2.isTransparent(drawing)) {
+				drawing.bgc = -bitsy.tileColorStartIndex;
 			}
-		}
-	} else {
-		var bufferContext = buffer.canvas.getContext('2d');
-		bufferContext.clearRect(x * buffer.scale, y * buffer.scale, buffer.scale, buffer.scale);
-	}
+		});
 });
 
 /**
@@ -332,8 +292,8 @@ after('renderPixelInstruction', function (bufferId, buffer, paletteIndex, x, y) 
 @summary makes the game have a transparent background
 @license MIT
 @author Cephalopodunk & Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 
 @description
@@ -363,14 +323,9 @@ hackOptions$2.isTransparent = function (drawing) {
 	return hackOptions$1.isTransparent(drawing);
 };
 
-before('renderGame', function () {
-	bitsy.ctx.clearRect(0, 0, bitsy.canvas.width, bitsy.canvas.height);
-});
-
-after('renderClearInstruction', function (bufferId, buffer, paletteIndex) {
-	if (bufferId !== bitsy.screenBufferId || paletteIndex !== bitsy.tileColorStartIndex) return;
-	var bufferContext = buffer.canvas.getContext('2d');
-	bufferContext.clearRect(0, 0, buffer.canvas.width, buffer.canvas.height);
+after('bitsy._graphics.clearCanvas', function () {
+	// eslint-disable-next-line no-underscore-dangle
+	bitsy.bitsy._graphics.getContext().clearRect(0, 0, bitsy.bitsy._graphics.getCanvas().width, bitsy.bitsy._graphics.getCanvas().height);
 });
 
 

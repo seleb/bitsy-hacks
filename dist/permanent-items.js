@@ -4,8 +4,8 @@
 @summary prevent some items from being picked up
 @license MIT
 @author Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 
 @description
@@ -40,7 +40,7 @@ bitsy = bitsy || /*#__PURE__*/_interopDefaultLegacy(bitsy);
  * @param searcher Regex to search and replace
  * @param replacer Replacer string/fn
  */
-function inject(searcher, replacer) {
+function inject$1(searcher, replacer) {
     // find the relevant script tag
     var scriptTags = document.getElementsByTagName('script');
     var scriptTag;
@@ -107,7 +107,7 @@ function after(targetFuncName, afterFn) {
 }
 function applyInjects() {
     kitsy.queuedInjectScripts.forEach(function (injectScript) {
-        inject(injectScript.searcher, injectScript.replacer);
+        inject$1(injectScript.searcher, injectScript.replacer);
     });
 }
 function applyHooks(root) {
@@ -166,8 +166,8 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 */
 var kitsy = (window.kitsy = window.kitsy || {
@@ -213,18 +213,13 @@ if (!hooked) {
 		// Hook everything
 		kitsy.applyHooks();
 
-		// reset callbacks using hacked functions
-		bitsy.bitsyOnUpdate(bitsy.update);
-		bitsy.bitsyOnQuit(bitsy.stopGame);
-		bitsy.bitsyOnLoad(bitsy.load_game);
-
 		// Start the game
 		bitsy.startExportedGame.apply(this, arguments);
 	};
 }
 
 /** @see kitsy.inject */
-kitsy.inject;
+var inject = kitsy.inject;
 /** @see kitsy.before */
 var before = kitsy.before;
 /** @see kitsy.after */
@@ -237,7 +232,7 @@ kitsy.after;
 var room;
 var oldItems;
 before('movePlayer', function () {
-	room = bitsy.room[bitsy.curRoom];
+	room = bitsy.room[bitsy.state.room];
 	oldItems = room.items.slice();
 });
 before('startItemDialog', function (itemId, dialogCallback) {
@@ -245,7 +240,7 @@ before('startItemDialog', function (itemId, dialogCallback) {
 	if (!hackOptions.itemIsPermanent(bitsy.item[itemId])) {
 		return undefined;
 	}
-	room = bitsy.room[bitsy.curRoom];
+	room = bitsy.room[bitsy.state.room];
 	oldItems = room.items.slice();
 	return [
 		itemId,
@@ -280,6 +275,9 @@ before('startItemDialog', function (itemId, dialogCallback) {
 		},
 	];
 });
+
+// always redraw all or items won't be visible
+inject(/(var redrawAll = ).*;/, '$1true;');
 
 exports.hackOptions = hackOptions;
 

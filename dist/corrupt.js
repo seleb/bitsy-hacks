@@ -4,8 +4,8 @@
 @summary corrupts gamedata at runtime
 @license MIT
 @author Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 
 @description
@@ -60,45 +60,10 @@ bitsy = bitsy || /*#__PURE__*/_interopDefaultLegacy(bitsy);
 @file utils
 @summary miscellaneous bitsy utilities
 @author Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 */
-
-/*
-Helper used to replace code in a script tag based on a search regex
-To inject code without erasing original string, using capturing groups; e.g.
-	inject(/(some string)/,'injected before $1 injected after')
-*/
-function inject$1(searchRegex, replaceString) {
-	// find the relevant script tag
-	var scriptTags = document.getElementsByTagName('script');
-	var scriptTag;
-	var code;
-	for (var i = 0; i < scriptTags.length; ++i) {
-		scriptTag = scriptTags[i];
-		var matchesSearch = scriptTag.textContent.search(searchRegex) !== -1;
-		var isCurrentScript = scriptTag === document.currentScript;
-		if (matchesSearch && !isCurrentScript) {
-			code = scriptTag.textContent;
-			break;
-		}
-	}
-
-	// error-handling
-	if (!code) {
-		throw new Error('Couldn\'t find "' + searchRegex + '" in script tags');
-	}
-
-	// modify the content
-	code = code.replace(searchRegex, replaceString);
-
-	// replace the old script tag with a new one using our modified code
-	var newScriptTag = document.createElement('script');
-	newScriptTag.textContent = code;
-	scriptTag.insertAdjacentElement('afterend', newScriptTag);
-	scriptTag.remove();
-}
 
 /*
 Helper for getting image by name or id
@@ -122,8 +87,8 @@ function getImage(name, map) {
 @file edit image at runtime
 @summary API for updating image data at runtime.
 @author Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 @description
 Adds API for updating sprite, tile, and item data at runtime.
@@ -141,16 +106,6 @@ e.g. the default player is:
 	[0,0,1,0,0,1,0,0]
 ]
 */
-
-// force cache to clear if edit image fns are used
-inject$1(
-	/\/\/ TODO : reset render cache for this image/,
-	`
-Object.keys(drawingCache.render)
-	.filter(function (i) { return i.split('_').slice(0, -1).join('_') === drawingId; })
-	.forEach(function(i) { drawingCache.render[i] = undefined; })
-`
-);
 
 /*
 Args:
@@ -340,8 +295,8 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 */
 var kitsy = (window.kitsy = window.kitsy || {
@@ -387,11 +342,6 @@ if (!hooked) {
 		// Hook everything
 		kitsy.applyHooks();
 
-		// reset callbacks using hacked functions
-		bitsy.bitsyOnUpdate(bitsy.update);
-		bitsy.bitsyOnQuit(bitsy.stopGame);
-		bitsy.bitsyOnLoad(bitsy.load_game);
-
 		// Start the game
 		bitsy.startExportedGame.apply(this, arguments);
 	};
@@ -415,16 +365,19 @@ var after = kitsy.after;
 var px;
 var py;
 var pr;
-before('update', function () {
-	var player = bitsy.player();
+var player;
+before('bitsy._update', function () {
+	player = bitsy.player();
+	if (!player) return;
 	px = player.x;
 	py = player.y;
 	pr = player.room;
 });
-after('update', function () {
-	var player = bitsy.player();
+after('bitsy._update', function () {
+	if (!player) return;
 	if (px !== player.x || py !== player.y || pr !== player.room) {
 		corrupt();
+		bitsy.drawRoom(bitsy.room[bitsy.state.room], { redrawAll: true });
 	}
 });
 
@@ -441,7 +394,7 @@ after('dialogRenderer.SetFont', function (font) {
 });
 
 function corrupt() {
-	var currentRoom = bitsy.room[bitsy.curRoom];
+	var currentRoom = bitsy.room[bitsy.state.room];
 	// corrupt pixels of visible tiles
 	var visibleTiles = {};
 	currentRoom.tilemap.forEach(function (row) {
@@ -466,7 +419,7 @@ function corrupt() {
 	// corrupt pixels of visible sprites
 	var visibleSprites = {};
 	Object.keys(bitsy.sprite).forEach(function (spr) {
-		if (bitsy.sprite[spr].room === bitsy.curRoom) {
+		if (bitsy.sprite[spr].room === bitsy.state.room) {
 			visibleSprites[spr] = true;
 		}
 	});
@@ -510,7 +463,7 @@ function corrupt() {
 	});
 
 	// corrupt visible palette colours
-	var visibleColors = bitsy.getPal(bitsy.curPal());
+	var visibleColors = bitsy.getPal(bitsy.state.pal);
 	iterate(hackOptions.paletteFreq * hackOptions.globalFreq, function () {
 		var c = rndItem(visibleColors);
 		var i = rndIndex(c);

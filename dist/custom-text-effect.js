@@ -4,8 +4,8 @@
 @summary make {custom}text effects{custom}
 @license MIT
 @author Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 
 @description
@@ -26,14 +26,14 @@ HOW TO USE:
 TEXT EFFECT NOTES:
 Each effect looks like:
 	key: function() {
-		this.DoEffect = function (char, time) {
+		this.doEffect = function (char, time) {
 			// effect code
 		}
 	}
 
 The key is the text you'll write inside {} in bitsy to trigger the effect
 
-`this.DoEffect` is called every frame for the characters the effect is applied to
+`this.doEffect` is called every frame for the characters the effect is applied to
 
 The first argument is `char`, an individual character, which has the following properties:
 	offset: offset from actual position in pixels. starts at {x:0, y:0}
@@ -52,6 +52,8 @@ A few helpers are provided under `window.customTextEffects` for more complex eff
 	- `editBitmapCopy`: copies the character bitmap and runs an edit function once
 
 The second argument is `time`, which is the time in milliseconds
+The third argument is `parameters`, which are additional parameters
+provided in the script (e.g. for the parametric clr effect)
 
 A number of example effects are included
 */
@@ -61,7 +63,7 @@ this.hacks = this.hacks || {};
 var hackOptions = {
 	'my-effect': function () {
 		// a horizontal wavy effect using the blue rbw colour
-		this.DoEffect = function (char, time) {
+		this.doEffect = function (char, time) {
 			char.offset.x += 5 * Math.sin(time / 100 + char.col / 3);
 			char.color = bitsy.rainbowColorStartIndex + 4;
 		};
@@ -69,7 +71,7 @@ var hackOptions = {
 	droop: function () {
 		// causes text to droop down slowly over time
 		// note that it's adding a custom property to the character if it doesn't already exist
-		this.DoEffect = function (char, time) {
+		this.doEffect = function (char, time) {
 			char.start = char.start || time;
 			char.offset.y += ((time - char.start) / 100) * Math.abs(Math.sin(char.col));
 		};
@@ -77,7 +79,7 @@ var hackOptions = {
 	noise: function () {
 		// renders noise on top of text
 		// note that it's making a copy with `.slice()` since it's a dynamic bitmap change
-		this.DoEffect = function (char) {
+		this.doEffect = function (char) {
 			char.bitmap = char.bitmap.slice();
 			for (var i = 0; i < char.bitmap.length; ++i) {
 				char.bitmap[i] = Math.random() < 0.25 ? 1 : 0;
@@ -87,7 +89,7 @@ var hackOptions = {
 	strike: function () {
 		// renders text with a strike-through
 		// note that it's using `editBitmapCopy` since it's a static bitmap change
-		this.DoEffect = function (char) {
+		this.doEffect = function (char) {
 			var font = window.fontManager.Get(window.fontName);
 			var w = font.getWidth();
 			var h = font.getHeight();
@@ -102,7 +104,7 @@ var hackOptions = {
 		// animated text scrambling
 		// note that it's saving the original character with `saveOriginalChar` so `char.original` can be used
 		// it's also using `setBitmap` to render a different character in the font
-		this.DoEffect = function (char, time) {
+		this.doEffect = function (char, time) {
 			window.customTextEffects.saveOriginalChar(char);
 			if (char.original.match(/\s|\0/)) {
 				return;
@@ -113,7 +115,7 @@ var hackOptions = {
 	},
 	rot13: function () {
 		// puts letters through the rot13 cipher (see www.rot13.com)
-		this.DoEffect = function (char) {
+		this.doEffect = function (char) {
 			window.customTextEffects.saveOriginalChar(char);
 			var bitmap = char.original
 				.replace(/[a-z]/, function (c) {
@@ -131,7 +133,7 @@ var hackOptions = {
 		function posmod(a, b) {
 			return ((a % b) + b) % b;
 		}
-		this.DoEffect = function (char, time) {
+		this.doEffect = function (char, time) {
 			window.customTextEffects.saveOriginalChar(char);
 			var c = char.original[['toUpperCase', 'toLowerCase'][Math.round(posmod(time / 1000 - (char.col + char.row) / 2, 1))]]();
 			window.customTextEffects.setBitmap(char, c);
@@ -143,7 +145,7 @@ var hackOptions = {
 		// multiple letters in order to figure out where words begin
 		var lastSpace = 0;
 		var lastCol = -Infinity;
-		this.DoEffect = function (char, time) {
+		this.doEffect = function (char, time) {
 			window.customTextEffects.saveOriginalChar(char);
 			if (char.original.match(/\s|\0/)) {
 				return;
@@ -160,7 +162,7 @@ var hackOptions = {
 		// renders text with an italic slant
 		// note that with higher steps, some characters will be cut off on the edges
 		var steps = 2;
-		this.DoEffect = function (char) {
+		this.doEffect = function (char) {
 			var font = window.fontManager.Get(window.fontName);
 			var w = font.getWidth();
 			var h = font.getHeight();
@@ -178,7 +180,7 @@ var hackOptions = {
 		// renders text with extra thickness
 		// note that with higher weight, some characters will be cut off on the edges
 		var weight = 2;
-		this.DoEffect = function (char) {
+		this.doEffect = function (char) {
 			var font = window.fontManager.Get(window.fontName);
 			var w = font.getWidth();
 			var h = font.getHeight();
@@ -199,7 +201,7 @@ var hackOptions = {
 	},
 	u: function () {
 		// renders text with an underline
-		this.DoEffect = function (char) {
+		this.doEffect = function (char) {
 			var font = window.fontManager.Get(window.fontName);
 			var w = font.getWidth();
 			var h = font.getHeight();
@@ -351,8 +353,8 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 */
 var kitsy = (window.kitsy = window.kitsy || {
@@ -397,11 +399,6 @@ if (!hooked) {
 
 		// Hook everything
 		kitsy.applyHooks();
-
-		// reset callbacks using hacked functions
-		bitsy.bitsyOnUpdate(bitsy.update);
-		bitsy.bitsyOnQuit(bitsy.stopGame);
-		bitsy.bitsyOnLoad(bitsy.load_game);
 
 		// Start the game
 		bitsy.startExportedGame.apply(this, arguments);
@@ -454,7 +451,7 @@ window.customTextEffects = {
 var functionMapCode = '';
 var textEffectCode = '';
 Object.entries(hackOptions).forEach(function (entry) {
-	functionMapCode += 'functionMap["' + entry[0] + '"] = function (environment, parameters, onReturn) {addOrRemoveTextEffect(environment, "' + entry[0] + '");onReturn(null);};';
+	functionMapCode += 'functionMap["' + entry[0] + '"] = function (environment, parameters, onReturn) {toggleTextEffect(environment, "' + entry[0] + '");onReturn(null);};';
 	textEffectCode += 'TextEffects["' + entry[0] + '"] = new (' + entry[1].toString() + ')();';
 });
 

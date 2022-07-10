@@ -4,8 +4,8 @@
 @summary put more words onscreen
 @license MIT
 @author Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 
 @description
@@ -184,8 +184,8 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 */
 var kitsy = (window.kitsy = window.kitsy || {
@@ -230,11 +230,6 @@ if (!hooked) {
 
 		// Hook everything
 		kitsy.applyHooks();
-
-		// reset callbacks using hacked functions
-		bitsy.bitsyOnUpdate(bitsy.update);
-		bitsy.bitsyOnQuit(bitsy.stopGame);
-		bitsy.bitsyOnLoad(bitsy.load_game);
 
 		// Start the game
 		bitsy.startExportedGame.apply(this, arguments);
@@ -359,8 +354,8 @@ inject(/(this\.AddLinebreak = )/, 'this.AddParagraphBreak = function() { buffer.
 @summary Adds paragraph breaks to the dialogue parser
 @license WTFPL (do WTF you want)
 @author Sean S. LeBlanc, David Mowatt
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 
 @description
@@ -403,7 +398,7 @@ addDialogTag('p', function (environment, parameters, onReturn) {
 
 kitsy.longDialogOptions = hackOptions;
 
-// override textbox height
+// override textbox height to be dynamic based on row count
 inject(
 	/textboxInfo\.height = .+;/,
 	`Object.defineProperty(textboxInfo, 'height', {
@@ -412,13 +407,28 @@ inject(
 );
 // export textbox info
 inject(/(var font = null;)/, 'this.textboxInfo = textboxInfo;$1');
-before('renderDrawingBuffer', function (bufferId, buffer) {
-	if (bufferId !== bitsy.textboxBufferId) return;
-	buffer.height = bitsy.dialogRenderer.textboxInfo.height / bitsy.dialogRenderer.textboxInfo.font_scale;
-});
 // rewrite hard-coded row limit
 inject(/(else if \(curRowIndex )== 0/g, '$1 < window.kitsy.longDialogOptions.maxRows - 1');
 inject(/(if \(lastPage\.length) <= 1/, '$1 < window.kitsy.longDialogOptions.maxRows');
+
+// update textbox size
+var ph;
+function updateTextbox() {
+	var h = bitsy.dialogRenderer.textboxInfo.height;
+	if (h === ph) return;
+	ph = h;
+	var textScale = bitsy.bitsy.textMode() === bitsy.bitsy.TXT_LOREZ ? 1 : 2;
+	bitsy.bitsy.textbox(undefined, undefined, undefined, undefined, h * textScale);
+}
+before('dialogRenderer.Draw', updateTextbox);
+
+// reserve textbox memory on startup to avoid flickering
+// when it expands dynamically
+after('dialogRenderer.SetFont', function () {
+	// eslint-disable-next-line no-underscore-dangle
+	var t = bitsy.bitsy._dump()[bitsy.bitsy.TEXTBOX];
+	t.length = Math.max(t.length, 256000);
+});
 
 addDualDialogTag('textboxsize', function (environment, parameters) {
 	if (!parameters[0]) {
@@ -430,6 +440,8 @@ addDualDialogTag('textboxsize', function (environment, parameters) {
 	var max = parseInt(params[1], 10);
 	hackOptions.minRows = min;
 	hackOptions.maxRows = max;
+
+	updateTextbox();
 });
 
 exports.hackOptions = hackOptions;

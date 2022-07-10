@@ -4,8 +4,8 @@
 @summary for when bitsy's not small enough
 @license MIT
 @author Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 
 @description
@@ -101,12 +101,12 @@ function kitsyInject(searcher, replacer) {
 // Ex: before('load_game', function run() { alert('Loading!'); });
 //     before('show_text', function run(text) { return text.toUpperCase(); });
 //     before('show_text', function run(text, done) { done(text.toUpperCase()); });
-function before(targetFuncName, beforeFn) {
+function before$1(targetFuncName, beforeFn) {
     kitsy.queuedBeforeScripts[targetFuncName] = kitsy.queuedBeforeScripts[targetFuncName] || [];
     kitsy.queuedBeforeScripts[targetFuncName].push(beforeFn);
 }
 // Ex: after('load_game', function run() { alert('Loaded!'); });
-function after(targetFuncName, afterFn) {
+function after$1(targetFuncName, afterFn) {
     kitsy.queuedAfterScripts[targetFuncName] = kitsy.queuedAfterScripts[targetFuncName] || [];
     kitsy.queuedAfterScripts[targetFuncName].push(afterFn);
 }
@@ -171,8 +171,8 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 */
 var kitsy = (window.kitsy = window.kitsy || {
@@ -180,8 +180,8 @@ var kitsy = (window.kitsy = window.kitsy || {
     queuedBeforeScripts: {},
     queuedAfterScripts: {},
     inject: kitsyInject,
-    before,
-    after,
+    before: before$1,
+    after: after$1,
     /**
      * Applies all queued `inject` calls.
      *
@@ -218,11 +218,6 @@ if (!hooked) {
 		// Hook everything
 		kitsy.applyHooks();
 
-		// reset callbacks using hacked functions
-		bitsy.bitsyOnUpdate(bitsy.update);
-		bitsy.bitsyOnQuit(bitsy.stopGame);
-		bitsy.bitsyOnLoad(bitsy.load_game);
-
 		// Start the game
 		bitsy.startExportedGame.apply(this, arguments);
 	};
@@ -231,31 +226,35 @@ if (!hooked) {
 /** @see kitsy.inject */
 var inject = kitsy.inject;
 /** @see kitsy.before */
-kitsy.before;
+var before = kitsy.before;
 /** @see kitsy.after */
-kitsy.after;
+var after = kitsy.after;
 
 
 
 
 
-inject(/4(; \/\/this is stupid but necessary)/, '1$1'); // rewrite canvas scale
-inject(/(mapsize =) 16/, '$1 8'); // rewrite mapsize
-
-// rewrite text scale
-inject(/(var textScale =) 2/, '$1 1');
-inject(/2(; \/\/using a different scaling factor for text feels like cheating\.\.\. but it looks better)/, '1$1'); // rewrite text scale
+before('startExportedGame', function () {
+	bitsy.scale = 1;
+	bitsy.textScale = 1;
+	bitsy.mapsize = 8;
+	bitsy.width = bitsy.mapsize * bitsy.tilesize;
+	bitsy.height = bitsy.mapsize * bitsy.tilesize;
+	bitsy.bitsy.MAP_SIZE = bitsy.mapsize;
+	bitsy.bitsy.VIDEO_SIZE = bitsy.width;
+	// eslint-disable-next-line no-underscore-dangle
+	bitsy.bitsy._graphics.setScale(1);
+});
+after('bitsy.textMode', function () {
+	return bitsy.bitsy.TXT_LOREZ;
+});
 
 // rewrite textbox info
-inject(
-	/(var textboxInfo = {)[^]*?(};)/,
-	'$1' + ['img : null,', 'width : 62,', 'height : 64,', 'top : 1,', 'left : 1,', 'bottom : 1,', 'font_scale : 1,', 'padding_vert : 2,', 'arrow_height : 6'].join('\n') + '$2'
-);
-inject(/(top = \()4/, '$1 1');
-inject(/(left = \()4/, '$1 1');
+inject(/(var textboxInfo = {)[^]*?(};)/, '$1 width : 62, height : 64, top : 1, left : 1, bottom : 1, padding_vert : 2, padding_horz : 0, arrow_height : 6 $2');
+inject(/(top = \()4/g, '$1 1');
+inject(/(left = \()4/g, '$1 1');
 
 inject(/(relativeFontHeight\(\) \*) 2/, '$1 ' + hackOptions.rows); // rewrite textbox height
-inject(/(pixelsPerRow =) 192/, '$1 62'); // rewrite hard-coded textbox wrap width
 inject(/(else if \(curRowIndex )== 0/g, '$1< ' + (hackOptions.rows - 1)); // rewrite hard-coded row limit
 
 // inject pixelated rendering style

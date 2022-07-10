@@ -4,8 +4,8 @@
 @summary save/load your game
 @license MIT
 @author Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 
 @description
@@ -195,8 +195,8 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 */
 var kitsy = (window.kitsy = window.kitsy || {
@@ -241,11 +241,6 @@ if (!hooked) {
 
 		// Hook everything
 		kitsy.applyHooks();
-
-		// reset callbacks using hacked functions
-		bitsy.bitsyOnUpdate(bitsy.update);
-		bitsy.bitsyOnQuit(bitsy.stopGame);
-		bitsy.bitsyOnLoad(bitsy.load_game);
 
 		// Start the game
 		bitsy.startExportedGame.apply(this, arguments);
@@ -361,8 +356,8 @@ function addDualDialogTag(tag, fn) {
 @file utils
 @summary miscellaneous bitsy utilities
 @author Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 */
 
@@ -408,7 +403,7 @@ function inject(searchRegex, replaceString) {
 function save() {
 	var snapshot = {};
 	if (hackOptions.position) {
-		snapshot.room = bitsy.curRoom;
+		snapshot.room = bitsy.state.room;
 		snapshot.x = bitsy.player().x;
 		snapshot.y = bitsy.player().y;
 	}
@@ -440,11 +435,11 @@ function load() {
 
 	if (hackOptions.position) {
 		if (snapshot.room) {
-			bitsy.curRoom = bitsy.player().room = snapshot.room;
+			bitsy.state.room = bitsy.player().room = snapshot.room;
 		}
 		if (snapshot.x && snapshot.y) {
-			bitsy.player().x = snapshot.x;
-			bitsy.player().y = snapshot.y;
+			bitsy.playerPrevX = bitsy.player().x = snapshot.x;
+			bitsy.playerPrevY = bitsy.player().y = snapshot.y;
 		}
 	}
 	if (hackOptions.items) {
@@ -466,6 +461,7 @@ function load() {
 		bitsy.saveHack.sequenceIndices = snapshot.sequenceIndices;
 		bitsy.saveHack.shuffles = snapshot.shuffles;
 	}
+	bitsy.drawRoom(bitsy.room[bitsy.state.room], { redrawAll: true });
 }
 
 function clear() {
@@ -505,7 +501,7 @@ optionsShuffled = window.saveHack.loadShuffle(this) || optionsShuffled;
 window.saveHack.saveShuffle(this, optionsShuffled);
 options[index]`
 );
-inject(/(\/\/ bitsyLog\(".+" \+ index\);)/g, '$1\nvar i = window.saveHack.loadSeqIdx(this);index = i === undefined ? index : i;');
+inject(/(\/\/ bitsy\.log\(".+" \+ index\);)/g, '$1\nvar i = window.saveHack.loadSeqIdx(this);index = i === undefined ? index : i;');
 // save index on changes
 inject(/(index = next;)/g, '$1window.saveHack.saveSeqIdx(this, index);');
 inject(/(\tindex = 0;)/g, '$1window.saveHack.saveSeqIdx(this, index);');
@@ -543,14 +539,22 @@ before('startExportedGame', function () {
 	}
 });
 
+// override title if loading
+var replaceTitle;
+before('renderer.SetDrawings', function () {
+	if (replaceTitle !== undefined) {
+		bitsy.setTitle(replaceTitle);
+	}
+});
+
 // hook up dialog functions
 function dialogLoad(environment, parameters) {
+	replaceTitle = parameters[0] || '';
 	var loadOnStart = hackOptions.loadOnStart;
 	hackOptions.loadOnStart = true;
 	bitsy.reset_cur_game();
+	bitsy.load_game(bitsy.bitsy.getGameData(), bitsy.bitsy.getFontData());
 	hackOptions.loadOnStart = loadOnStart;
-	bitsy.dialogBuffer.EndDialog();
-	bitsy.startNarrating(parameters[0] || '');
 }
 addDualDialogTag('save', save);
 addDualDialogTag('load', dialogLoad);

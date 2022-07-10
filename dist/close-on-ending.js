@@ -4,8 +4,8 @@
 @summary Prevents from playing past an ending
 @license MIT
 @author Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 
 @description
@@ -163,8 +163,8 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 */
 var kitsy = (window.kitsy = window.kitsy || {
@@ -210,11 +210,6 @@ if (!hooked) {
 		// Hook everything
 		kitsy.applyHooks();
 
-		// reset callbacks using hacked functions
-		bitsy.bitsyOnUpdate(bitsy.update);
-		bitsy.bitsyOnQuit(bitsy.stopGame);
-		bitsy.bitsyOnLoad(bitsy.load_game);
-
 		// Start the game
 		bitsy.startExportedGame.apply(this, arguments);
 	};
@@ -229,21 +224,22 @@ var after = kitsy.after;
 
 
 
+var closed = false;
+
 // prevent ctrl+r restart prompt
-before('bitsyGetButton', function (button) {
-	if (button === 5) return [-1];
+before('bitsy.button', function (button) {
+	if (closed) return [-1];
+	if (button === bitsy.bitsy.BTN_MENU) return [-1];
 	return [button];
 });
 
 after('onExitDialog', function () {
 	if (bitsy.isEnding) {
 		// prevent further input
-		var no = function () {
-			return false;
-		};
-		bitsy.input.isKeyDown = bitsy.input.anyKeyPressed = bitsy.input.swipeLeft = bitsy.input.swipeRight = bitsy.input.swipeUp = bitsy.input.swipeDown = bitsy.input.isTapReleased = no;
+		closed = true;
 		// remove canvas
-		bitsy.canvas.remove();
+		// eslint-disable-next-line no-underscore-dangle
+		bitsy.bitsy._getCanvas().remove();
 		// attempt to close
 		window.close();
 	}

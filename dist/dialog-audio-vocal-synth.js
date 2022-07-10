@@ -4,8 +4,8 @@
 @summary animal crossing-style audio powered by the pink trombone vocal synth
 @license MIT
 @author Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 
 @description
@@ -884,8 +884,8 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 */
 var kitsy = (window.kitsy = window.kitsy || {
@@ -930,11 +930,6 @@ if (!hooked) {
 
 		// Hook everything
 		kitsy.applyHooks();
-
-		// reset callbacks using hacked functions
-		bitsy.bitsyOnUpdate(bitsy.update);
-		bitsy.bitsyOnQuit(bitsy.stopGame);
-		bitsy.bitsyOnLoad(bitsy.load_game);
 
 		// Start the game
 		bitsy.startExportedGame.apply(this, arguments);
@@ -1002,8 +997,8 @@ function addDialogTag(tag, fn) {
 @summary animal crossing-style audio
 @license MIT
 @author Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 
 @description
@@ -1048,7 +1043,7 @@ var hackOptions$1 = {
 };
 
 // save the character on dialog font characters so we can read it back post-render
-inject(/(function DialogFontChar\(font, char, effectList\) {)/, '$1\nthis.char = char;');
+inject(/(function DialogFontChar\(font, char, effectList, effectParameterList\) {)/, '$1\nthis.char = char;');
 
 // hook up letter function
 before('dialogBuffer.DoNextChar', function () {
@@ -1059,8 +1054,8 @@ before('dialogBuffer.DoNextChar', function () {
 @file utils
 @summary miscellaneous bitsy utilities
 @author Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 */
 
@@ -1078,7 +1073,7 @@ function clamp(value, min, max) {
 
 
 
-var defaultVoice;
+var defaultVoice = hackOptions.voices.default;
 var voice;
 
 // these are mostly guess-work based on playing around with the original pink trombone UI

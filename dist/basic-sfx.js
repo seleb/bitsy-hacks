@@ -4,8 +4,8 @@
 @summary "walk" and "talk" sound effect support
 @license MIT
 @author Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 
 @description
@@ -172,8 +172,8 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 */
 var kitsy = (window.kitsy = window.kitsy || {
@@ -219,11 +219,6 @@ if (!hooked) {
 		// Hook everything
 		kitsy.applyHooks();
 
-		// reset callbacks using hacked functions
-		bitsy.bitsyOnUpdate(bitsy.update);
-		bitsy.bitsyOnQuit(bitsy.stopGame);
-		bitsy.bitsyOnLoad(bitsy.load_game);
-
 		// Start the game
 		bitsy.startExportedGame.apply(this, arguments);
 	};
@@ -240,8 +235,8 @@ var after = kitsy.after;
 @file utils
 @summary miscellaneous bitsy utilities
 @author Sean S. LeBlanc
-@version 20.2.5
-@requires Bitsy 7.12
+@version 21.0.0
+@requires Bitsy 8.0
 
 */
 
@@ -266,7 +261,7 @@ function createAudio(id, options) {
 	el.id = id;
 	Object.assign(el, options);
 	if (typeof src !== 'string') {
-		el.src = null;
+		el.removeAttribute('src');
 		src.forEach(function (s) {
 			var sourceEl = document.createElement('source');
 			sourceEl.src = s;
@@ -307,14 +302,16 @@ before('startExportedGame', function () {
 var px;
 var py;
 var pr;
-before('update', function () {
+before('bitsy._update', function () {
 	var player = bitsy.player();
+	if (!player) return;
 	px = player.x;
 	py = player.y;
 	pr = player.room;
 });
-after('update', function () {
+after('bitsy._update', function () {
 	var player = bitsy.player();
+	if (!player) return;
 	if ((px !== player.x || py !== player.y || pr !== player.room) && sounds.walk) {
 		sounds.walk();
 	}
