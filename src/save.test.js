@@ -48,6 +48,7 @@ test('loadOnStart', async () => {
 			],
 		],
 	});
+	await waitForFrame();
 	await snapshot();
 	await press('ArrowRight');
 	await snapshot();
@@ -61,6 +62,7 @@ test('clearOnStart', async () => {
 		title: '',
 		hacks: [['save', { ...saveOptions, clearOnStart: true }]],
 	});
+	await waitForFrame();
 	await snapshot();
 	await press('ArrowRight');
 	await snapshot();
@@ -75,6 +77,7 @@ test('clearOnEnd', async () => {
 		title: '',
 		hacks: [['save', { ...saveOptions, clearOnEnd: true }]],
 	});
+	await waitForFrame();
 	await snapshot();
 	await press('ArrowRight');
 	await snapshot();
