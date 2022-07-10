@@ -22,29 +22,34 @@ The number of rows is the only provided hack option,
 but most of the numbers being replaced can be easily
 customized if you want slightly different sizes/positions.
 */
-import { inject } from './helpers/kitsy-script-toolkit';
+import bitsy from 'bitsy';
+import { after, before, inject } from './helpers/kitsy-script-toolkit';
 
 export var hackOptions = {
 	rows: 2, // number of rows per text box (bitsy default is 2)
 };
 
-inject(/4(; \/\/this is stupid but necessary)/, '1$1'); // rewrite canvas scale
-inject(/(mapsize =) 16/, '$1 8'); // rewrite mapsize
-
-// rewrite text scale
-inject(/(var textScale =) 2/, '$1 1');
-inject(/2(; \/\/using a different scaling factor for text feels like cheating\.\.\. but it looks better)/, '1$1'); // rewrite text scale
+before('startExportedGame', function () {
+	bitsy.scale = 1;
+	bitsy.textScale = 1;
+	bitsy.mapsize = 8;
+	bitsy.width = bitsy.mapsize * bitsy.tilesize;
+	bitsy.height = bitsy.mapsize * bitsy.tilesize;
+	bitsy.bitsy.MAP_SIZE = bitsy.mapsize;
+	bitsy.bitsy.VIDEO_SIZE = bitsy.width;
+	// eslint-disable-next-line no-underscore-dangle
+	bitsy.bitsy._graphics.setScale(1);
+});
+after('bitsy.textMode', function () {
+	return bitsy.bitsy.TXT_LOREZ;
+});
 
 // rewrite textbox info
-inject(
-	/(var textboxInfo = {)[^]*?(};)/,
-	'$1' + ['img : null,', 'width : 62,', 'height : 64,', 'top : 1,', 'left : 1,', 'bottom : 1,', 'font_scale : 1,', 'padding_vert : 2,', 'arrow_height : 6'].join('\n') + '$2'
-);
-inject(/(top = \()4/, '$1 1');
-inject(/(left = \()4/, '$1 1');
+inject(/(var textboxInfo = {)[^]*?(};)/, '$1 width : 62, height : 64, top : 1, left : 1, bottom : 1, padding_vert : 2, padding_horz : 0, arrow_height : 6 $2');
+inject(/(top = \()4/g, '$1 1');
+inject(/(left = \()4/g, '$1 1');
 
 inject(/(relativeFontHeight\(\) \*) 2/, '$1 ' + hackOptions.rows); // rewrite textbox height
-inject(/(pixelsPerRow =) 192/, '$1 62'); // rewrite hard-coded textbox wrap width
 inject(/(else if \(curRowIndex )== 0/g, '$1< ' + (hackOptions.rows - 1)); // rewrite hard-coded row limit
 
 // inject pixelated rendering style
