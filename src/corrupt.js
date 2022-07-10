@@ -57,14 +57,16 @@ export var hackOptions = {
 var px;
 var py;
 var pr;
+var player;
 before('bitsy._update', function () {
-	var player = bitsy.player();
+	player = bitsy.player();
+	if (!player) return;
 	px = player.x;
 	py = player.y;
 	pr = player.room;
 });
 after('bitsy._update', function () {
-	var player = bitsy.player();
+	if (!player) return;
 	if (px !== player.x || py !== player.y || pr !== player.room) {
 		corrupt();
 	}
