@@ -73,12 +73,9 @@ before('dialogRenderer.Draw', updateTextbox);
 // reserve textbox memory on startup to avoid flickering
 // when it expands dynamically
 after('dialogRenderer.SetFont', function () {
-	var textScale = bitsy.bitsy.textMode() === bitsy.bitsy.TXT_LOREZ ? 1 : 2;
-	bitsy.bitsy.textbox(undefined, undefined, undefined, bitsy.width * textScale, bitsy.height * textScale);
-	bitsy.startDialog('{br}'.repeat(bitsy.height));
-	bitsy.dialogBuffer.Skip();
-	bitsy.dialogBuffer.EndDialog();
-	bitsy.bitsy.textbox(undefined, undefined, undefined, bitsy.dialogRenderer.textboxInfo.width * textScale, bitsy.dialogRenderer.textboxInfo.height * textScale);
+	// eslint-disable-next-line no-underscore-dangle
+	var t = bitsy.bitsy._dump()[bitsy.bitsy.TEXTBOX];
+	t.length = Math.max(t.length, 256000);
 });
 
 addDualDialogTag('textboxsize', function (environment, parameters) {
