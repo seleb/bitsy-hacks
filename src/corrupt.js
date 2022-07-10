@@ -69,6 +69,7 @@ after('bitsy._update', function () {
 	if (!player) return;
 	if (px !== player.x || py !== player.y || pr !== player.room) {
 		corrupt();
+		bitsy.drawRoom(bitsy.room[bitsy.state.room], { redrawAll: true });
 	}
 });
 
