@@ -83,7 +83,7 @@ function takeStep() {
 	}, hackOptions.delay);
 }
 
-after('startExportedGame', function () {
+after('loadWorldFromGameData', function () {
 	hackOptions.followers.forEach(setFollower);
 
 	// remove + add player to sprite list to force rendering them on top of followers
@@ -94,12 +94,12 @@ after('startExportedGame', function () {
 
 let px;
 let py;
-before('update', function () {
+before('bitsy._update', function () {
 	px = bitsy.player().x;
 	py = bitsy.player().y;
 });
 let movedFollower = false;
-after('update', function () {
+after('bitsy._update', function () {
 	if (shouldWalk) {
 		shouldWalk = false;
 		let takeAnother = false;
