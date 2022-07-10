@@ -176,9 +176,9 @@ else if(sequenceType === "choice") {
 );
 
 inject(
-	/(var ShuffleNode = )/,
+	/(function ShuffleNode\(options\) {)/,
 	`
-var ChoiceNode = function(options) {
+function ChoiceNode(options) {
 	Object.assign( this, new TreeRelationship() );
 	Object.assign( this, new SequenceBase() );
 	this.type = "choice";
