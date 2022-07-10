@@ -65,7 +65,7 @@ export var hackOptions = {
 	// return true to indicate a transition; false otherwise
 	// example implementation is transition on room change
 	checkTransition: function () {
-		var r = bitsy.curRoom;
+		var r = bitsy.state.room;
 		if (this.room !== r) {
 			// room changed between frames
 			this.room = r;
