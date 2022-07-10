@@ -1,4 +1,4 @@
-import { delay, press, snapshot, start, startDialog } from './test/bitsy';
+import { delay, press, snapshot, start, startDialog, waitForFrame } from './test/bitsy';
 
 test('dialog box transition', async () => {
 	await start({
@@ -15,6 +15,7 @@ test('dialog box transition', async () => {
 			],
 		],
 	});
+	await waitForFrame();
 	const fuzzyMatch = { failureThreshold: 0.1, failureThresholdType: 'percent' };
 	await snapshot();
 	await startDialog('test');
