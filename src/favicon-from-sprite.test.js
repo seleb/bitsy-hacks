@@ -12,7 +12,8 @@ function fullscreenFavicon() {
 		image.style.width = '100%';
 		image.style.height = '100%';
 		image.style.imageRendering = 'pixelated';
-		window.canvas.style.display = 'none';
+		// eslint-disable-next-line no-underscore-dangle
+		window.bitsy._getCanvas().style.display = 'none';
 	});
 }
 
