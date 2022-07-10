@@ -21,9 +21,11 @@ test('save', async () => {
 	await startDialog('{save}');
 	await press('ArrowLeft');
 	await startDialog('{load}');
+	await page.waitForFunction(() => window.isGameLoaded);
 	await snapshot();
 	await press('ArrowLeft');
 	await startDialog('{load "title text"}');
+	await page.waitForFunction(() => window.isGameLoaded);
 	await press('ArrowLeft'); // complete dialog
 	await snapshot();
 	await press('ArrowLeft'); // end dialog
@@ -31,6 +33,7 @@ test('save', async () => {
 	await press('ArrowLeft');
 	await startDialog('{clear}');
 	await startDialog('{load}');
+	await page.waitForFunction(() => window.isGameLoaded);
 	await snapshot();
 });
 
@@ -71,6 +74,7 @@ test('clearOnStart', async () => {
 	await evaluate(() => window.onload());
 	await page.waitForFunction(() => window.isGameLoaded);
 	await startDialog('{load}');
+	await page.waitForFunction(() => window.isGameLoaded);
 	await snapshot();
 });
 
@@ -88,6 +92,7 @@ test('clearOnEnd', async () => {
 	await press('ArrowRight'); // complete ending dialog
 	await press('ArrowRight'); // close ending dialog
 	await startDialog('{load}');
+	await page.waitForFunction(() => window.isGameLoaded);
 	await snapshot();
 });
 
@@ -123,6 +128,7 @@ test('sequence', async () => {
 	await snapshot();
 	await press('ArrowRight'); // end dialog
 	await startDialog('{load}');
+	await page.waitForFunction(() => window.isGameLoaded);
 	await press('ArrowRight'); // talk to cat
 	await waitForBlip();
 	await press('ArrowRight'); // complete dialog
@@ -137,6 +143,7 @@ test('sequence', async () => {
 	await press('ArrowRight'); // end dialog
 	await startDialog('{save}');
 	await startDialog('{load}');
+	await page.waitForFunction(() => window.isGameLoaded);
 	await press('ArrowRight'); // talk to cat
 	await waitForBlip();
 	await press('ArrowRight'); // complete dialog
@@ -169,6 +176,7 @@ test('cycle', async () => {
 	await snapshot();
 	await press('ArrowRight'); // end dialog
 	await startDialog('{load}');
+	await page.waitForFunction(() => window.isGameLoaded);
 	await press('ArrowRight'); // talk to cat
 	await waitForBlip();
 	await press('ArrowRight'); // complete dialog
@@ -218,6 +226,7 @@ test('shuffle', async () => {
 	await snapshot();
 	await press('ArrowRight'); // end dialog
 	await startDialog('{load}');
+	await page.waitForFunction(() => window.isGameLoaded);
 	await press('ArrowRight'); // talk to cat
 	await waitForBlip();
 	await press('ArrowRight'); // complete dialog
@@ -332,6 +341,7 @@ VAR a
 	await snapshot();
 	await press('ArrowRight'); // end dialog
 	await startDialog('{load}');
+	await page.waitForFunction(() => window.isGameLoaded);
 	await startDialog('a: {say a}{br}tea: {say {item 0}}');
 	await press('ArrowRight'); // complete dialog
 	await snapshot();
