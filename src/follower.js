@@ -118,6 +118,7 @@ after('bitsy._update', function () {
 				takeAnother = true;
 			}
 		});
+		bitsy.drawRoom(bitsy.room[bitsy.state.room], { redrawAll: true });
 		if (takeAnother) {
 			takeStep();
 		}
