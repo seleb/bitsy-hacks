@@ -28,6 +28,7 @@ test('gamepad input', async () => {
 		hacks: ['gamepad input'],
 		title: '',
 	});
+	await waitForFrame();
 
 	await snapshot();
 	// moves
