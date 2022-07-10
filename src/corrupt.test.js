@@ -1,4 +1,4 @@
-import { evaluate, press, snapshot, start, walkToCat } from './test/bitsy';
+import { evaluate, press, snapshot, start, waitForBlip, walkToCat } from './test/bitsy';
 
 test('corrupt', async () => {
 	await start({
@@ -25,6 +25,7 @@ test('corrupt', async () => {
 	});
 	await walkToCat();
 	await press('ArrowRight'); // talk to cat
+	await waitForBlip();
 	await press('ArrowRight'); // skip dialogue
 	await snapshot();
 });

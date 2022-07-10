@@ -35,7 +35,7 @@ HOW TO USE:
 import bitsy from 'bitsy';
 import { after } from './helpers/kitsy-script-toolkit';
 
-after('parseWorld', function () {
+after('renderer.SetDrawings', function () {
 	[].concat(Object.values(bitsy.item), Object.values(bitsy.tile), Object.values(bitsy.sprite)).forEach(function (drawing) {
 		// replace drawings marked with the #draw(TYPE,id) tag
 		var name = drawing.name || '';

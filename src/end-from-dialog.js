@@ -1,7 +1,7 @@
 /**
 🔚
 @file end-from-dialog
-@summary trigger an ending from dialog, including narration text
+@summary trigger an ending from dialog, including narration text (deprecated)
 @license WTFPL (do WTF you want)
 @author @mildmojo
 

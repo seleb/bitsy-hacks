@@ -34,7 +34,7 @@ before('movePlayer', function () {
 	y = bitsy.player().y;
 });
 before('startItemDialog', function (itemId, dialogCallback) {
-	room = bitsy.room[bitsy.curRoom];
+	room = bitsy.room[bitsy.state.room];
 	oldItems = room.items.slice();
 	// something changed
 	if (!hackOptions.itemIsSolid(bitsy.item[itemId])) {

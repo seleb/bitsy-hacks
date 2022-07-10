@@ -171,14 +171,16 @@ var offsets = {
 var px;
 var py;
 var pr;
-before('update', function () {
-	var player = bitsy.player();
+var player;
+before('bitsy._update', function () {
+	player = bitsy.player();
+	if (!player) return;
 	px = player.x;
 	py = player.y;
 	pr = player.room;
 });
-after('update', function () {
-	var player = bitsy.player();
+after('bitsy._update', function () {
+	if (!player) return;
 	if (px !== player.x || py !== player.y || pr !== player.room) {
 		if (!active) return;
 
@@ -191,7 +193,6 @@ after('update', function () {
 
 before('movePlayer', function () {
 	if (!active) return;
-	var player = bitsy.player();
 
 	wasStandingOnSomething = isSolid(gravityDir, player.x, player.y);
 
@@ -220,7 +221,6 @@ before('movePlayer', function () {
 
 window.advanceGravity = function () {
 	if (!active) return;
-	var player = bitsy.player();
 	// player input something, but could not move.
 
 	// force them up if they are doing that
@@ -238,7 +238,6 @@ window.advanceGravity = function () {
 };
 
 window.movePlayerWithGravity = function (dir, axis, amt) {
-	var player = bitsy.player();
 	if (!active) {
 		// if the hack is not active, just move the player in the direction they pressed
 		player[axis] += amt;
@@ -353,11 +352,11 @@ function isTileClimbable(x, y) {
 	return tile && hackOptions.isClimbable(tile);
 }
 
-function isOnStandableTile(player) {
+function isOnStandableTile(p) {
 	if (fallCounter > 1) {
 		return false;
 	}
-	var coords = [player.x, player.y];
+	var coords = [p.x, p.y];
 	var offset = offsets[gravityDir]; // like [0, -1] for y -= 1
 	coords[0] += offset[0];
 	coords[1] += offset[1];
@@ -372,8 +371,8 @@ function canMoveHorizontallyWhileFalling() {
 	return !fallCounter || (lastMoveMapped === 'down' && withinMaxRatio);
 }
 
-function reallyMovePlayer(player, dir) {
-	if (isSolid(dir, player.x, player.y)) {
+function reallyMovePlayer(p, dir) {
+	if (isSolid(dir, p.x, p.y)) {
 		// can't move into solid thing...so...chill?
 		// should maybe trigger sprites here?
 		return;
@@ -382,19 +381,19 @@ function reallyMovePlayer(player, dir) {
 	// why doesn't isSolid catch the out of bounds? stuff? isWall should as well? weird...
 	switch (dir) {
 		case 'up':
-			if (player.y > 0) player.y -= 1;
+			if (p.y > 0) p.y -= 1;
 			break;
 		case 'down':
-			if (player.y < bitsy.mapsize - 1) player.y += 1;
+			if (p.y < bitsy.mapsize - 1) p.y += 1;
 			break;
 		case 'left':
-			if (player.x > 0) player.x -= 1;
+			if (p.x > 0) p.x -= 1;
 			break;
 		case 'right':
-			if (player.x < bitsy.mapsize - 1) player.x += 1;
+			if (p.x < bitsy.mapsize - 1) p.x += 1;
 			break;
 		default:
-			console.warn('gravity: invalid move', player.x, player.y, dir);
+			console.warn('gravity: invalid move', p.x, p.y, dir);
 	}
 }
 

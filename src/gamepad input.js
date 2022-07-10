@@ -19,7 +19,6 @@ import { Axes, Buttons, Gamepads } from 'input-gamepads.js';
 import { after, before } from './helpers/kitsy-script-toolkit';
 
 var gamepads = new Gamepads();
-var empty = function () {};
 
 var move = function (dpad, face, axis, axis2, axispast, axisdir, key) {
 	// keydown
@@ -30,28 +29,31 @@ var move = function (dpad, face, axis, axis2, axispast, axisdir, key) {
 		gamepads.axisJustPast(axis2, axispast, axisdir) ||
 		(bitsy.playerHoldToMoveTimer <= 0 && (gamepads.isDown(dpad) || gamepads.isDown(face) || gamepads.axisPast(axis, axispast, axisdir)))
 	) {
-		bitsy.curPlayerDirection = bitsy.Direction.None;
-		bitsy.input.onkeydown({
-			keyCode: key,
-			preventDefault: empty,
-		});
+		// eslint-disable-next-line no-underscore-dangle
+		bitsy.bitsy._poke(bitsy.bitsy._buttonBlock, key, 1);
 	}
 
 	// keyup
 	if (gamepads.isJustUp(dpad) || gamepads.isJustUp(face) || gamepads.axisJustPast(axis, axispast, -axisdir) || gamepads.axisJustPast(axis2, axispast, -axisdir)) {
-		bitsy.input.onkeyup({
-			keyCode: key,
-			preventDefault: empty,
-		});
+		// eslint-disable-next-line no-underscore-dangle
+		bitsy.bitsy._poke(bitsy.bitsy._buttonBlock, key, 0);
 	}
 };
 
-before('update', function () {
-	move(Buttons.DPAD_LEFT, Buttons.X, Axes.LSTICK_H, Axes.RSTICK_H, -0.5, -1, bitsy.key.left);
-	move(Buttons.DPAD_RIGHT, Buttons.B, Axes.LSTICK_H, Axes.RSTICK_H, 0.5, 1, bitsy.key.right);
-	move(Buttons.DPAD_UP, Buttons.Y, Axes.LSTICK_V, Axes.RSTICK_V, -0.5, -1, bitsy.key.up);
-	move(Buttons.DPAD_DOWN, Buttons.A, Axes.LSTICK_V, Axes.RSTICK_V, 0.5, 1, bitsy.key.down);
+before('updateInput', function () {
+	move(Buttons.DPAD_LEFT, Buttons.X, Axes.LSTICK_H, Axes.RSTICK_H, -0.5, -1, bitsy.bitsy.BTN_LEFT);
+	move(Buttons.DPAD_RIGHT, Buttons.B, Axes.LSTICK_H, Axes.RSTICK_H, 0.5, 1, bitsy.bitsy.BTN_RIGHT);
+	move(Buttons.DPAD_UP, Buttons.Y, Axes.LSTICK_V, Axes.RSTICK_V, -0.5, -1, bitsy.bitsy.BTN_UP);
+	move(Buttons.DPAD_DOWN, Buttons.A, Axes.LSTICK_V, Axes.RSTICK_V, 0.5, 1, bitsy.bitsy.BTN_DOWN);
+	if (gamepads.isJustDown(Buttons.START) || gamepads.isJustDown(Buttons.BACK)) {
+		// eslint-disable-next-line no-underscore-dangle
+		bitsy.bitsy._poke(bitsy.bitsy._buttonBlock, bitsy.bitsy.BTN_MENU, 1);
+	}
+	if (gamepads.isJustUp(Buttons.START) || gamepads.isJustUp(Buttons.BACK)) {
+		// eslint-disable-next-line no-underscore-dangle
+		bitsy.bitsy._poke(bitsy.bitsy._buttonBlock, bitsy.bitsy.BTN_MENU, 0);
+	}
 });
-after('update', function () {
+after('bitsy._update', function () {
 	gamepads.update();
 });

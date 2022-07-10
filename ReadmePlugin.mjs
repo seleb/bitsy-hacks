@@ -132,6 +132,7 @@ Bitsy and the hacks are generally not backwards-compatible: when Bitsy updates, 
 
 If you are using an older version of Bitsy (or a fork based on an older version), you may require old versions of the hacks. Support is not guaranteed across versions, and old versions are not maintained, but some helpful points in history are listed below.
 
+- [Bitsy 7.12](https://github.com/seleb/bitsy-hacks/tree/v20.2.5/dist)
 - [Bitsy 7.11](https://github.com/seleb/bitsy-hacks/tree/v19.2.7/dist)
 - [Bitsy 7.8-7.9](https://github.com/seleb/bitsy-hacks/tree/v17.0.0/dist)
 - [Bitsy 7.2-7.7](https://github.com/seleb/bitsy-hacks/tree/v16.0.3/dist)

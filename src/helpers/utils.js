@@ -137,7 +137,7 @@ export function createAudio(id, options) {
 	el.id = id;
 	Object.assign(el, options);
 	if (typeof src !== 'string') {
-		el.src = null;
+		el.removeAttribute('src');
 		src.forEach(function (s) {
 			var sourceEl = document.createElement('source');
 			sourceEl.src = s;

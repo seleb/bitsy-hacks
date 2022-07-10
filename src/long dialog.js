@@ -36,7 +36,7 @@ HOW TO USE:
 */
 import bitsy from 'bitsy';
 import { kitsy } from 'kitsy';
-import { addDualDialogTag, before, inject } from './helpers/kitsy-script-toolkit';
+import { addDualDialogTag, after, before, inject } from './helpers/kitsy-script-toolkit';
 import './paragraph-break';
 
 export var hackOptions = {
@@ -46,7 +46,7 @@ export var hackOptions = {
 
 kitsy.longDialogOptions = hackOptions;
 
-// override textbox height
+// override textbox height to be dynamic based on row count
 inject(
 	/textboxInfo\.height = .+;/,
 	`Object.defineProperty(textboxInfo, 'height', {
@@ -55,13 +55,28 @@ inject(
 );
 // export textbox info
 inject(/(var font = null;)/, 'this.textboxInfo = textboxInfo;$1');
-before('renderDrawingBuffer', function (bufferId, buffer) {
-	if (bufferId !== bitsy.textboxBufferId) return;
-	buffer.height = bitsy.dialogRenderer.textboxInfo.height / bitsy.dialogRenderer.textboxInfo.font_scale;
-});
 // rewrite hard-coded row limit
 inject(/(else if \(curRowIndex )== 0/g, '$1 < window.kitsy.longDialogOptions.maxRows - 1');
 inject(/(if \(lastPage\.length) <= 1/, '$1 < window.kitsy.longDialogOptions.maxRows');
+
+// update textbox size
+var ph;
+function updateTextbox() {
+	var h = bitsy.dialogRenderer.textboxInfo.height;
+	if (h === ph) return;
+	ph = h;
+	var textScale = bitsy.bitsy.textMode() === bitsy.bitsy.TXT_LOREZ ? 1 : 2;
+	bitsy.bitsy.textbox(undefined, undefined, undefined, undefined, h * textScale);
+}
+before('dialogRenderer.Draw', updateTextbox);
+
+// reserve textbox memory on startup to avoid flickering
+// when it expands dynamically
+after('dialogRenderer.SetFont', function () {
+	// eslint-disable-next-line no-underscore-dangle
+	var t = bitsy.bitsy._dump()[bitsy.bitsy.TEXTBOX];
+	t.length = Math.max(t.length, 256000);
+});
 
 addDualDialogTag('textboxsize', function (environment, parameters) {
 	if (!parameters[0]) {
@@ -73,4 +88,6 @@ addDualDialogTag('textboxsize', function (environment, parameters) {
 	var max = parseInt(params[1], 10);
 	hackOptions.minRows = min;
 	hackOptions.maxRows = max;
+
+	updateTextbox();
 });

@@ -57,16 +57,19 @@ export var hackOptions = {
 var px;
 var py;
 var pr;
-before('update', function () {
-	var player = bitsy.player();
+var player;
+before('bitsy._update', function () {
+	player = bitsy.player();
+	if (!player) return;
 	px = player.x;
 	py = player.y;
 	pr = player.room;
 });
-after('update', function () {
-	var player = bitsy.player();
+after('bitsy._update', function () {
+	if (!player) return;
 	if (px !== player.x || py !== player.y || pr !== player.room) {
 		corrupt();
+		bitsy.drawRoom(bitsy.room[bitsy.state.room], { redrawAll: true });
 	}
 });
 
@@ -83,7 +86,7 @@ after('dialogRenderer.SetFont', function (font) {
 });
 
 function corrupt() {
-	var currentRoom = bitsy.room[bitsy.curRoom];
+	var currentRoom = bitsy.room[bitsy.state.room];
 	// corrupt pixels of visible tiles
 	var visibleTiles = {};
 	currentRoom.tilemap.forEach(function (row) {
@@ -108,7 +111,7 @@ function corrupt() {
 	// corrupt pixels of visible sprites
 	var visibleSprites = {};
 	Object.keys(bitsy.sprite).forEach(function (spr) {
-		if (bitsy.sprite[spr].room === bitsy.curRoom) {
+		if (bitsy.sprite[spr].room === bitsy.state.room) {
 			visibleSprites[spr] = true;
 		}
 	});
@@ -152,7 +155,7 @@ function corrupt() {
 	});
 
 	// corrupt visible palette colours
-	var visibleColors = bitsy.getPal(bitsy.curPal());
+	var visibleColors = bitsy.getPal(bitsy.state.pal);
 	iterate(hackOptions.paletteFreq * hackOptions.globalFreq, function () {
 		var c = rndItem(visibleColors);
 		var i = rndIndex(c);

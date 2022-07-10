@@ -49,7 +49,7 @@ export var hackOptions = {
 };
 
 // save the character on dialog font characters so we can read it back post-render
-inject(/(function DialogFontChar\(font, char, effectList\) {)/, '$1\nthis.char = char;');
+inject(/(function DialogFontChar\(font, char, effectList, effectParameterList\) {)/, '$1\nthis.char = char;');
 
 // hook up letter function
 before('dialogBuffer.DoNextChar', function () {

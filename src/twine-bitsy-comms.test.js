@@ -1,4 +1,4 @@
-import { evaluate, start, startDialog } from './test/bitsy';
+import { evaluate, start, startDialog, waitForFrame } from './test/bitsy';
 
 test('twine-bitsy-comms', async () => {
 	await start({
@@ -30,6 +30,7 @@ test('twine-bitsy-comms', async () => {
 			],
 		],
 	});
+	await waitForFrame();
 	await evaluate(() =>
 		window.receiveMessage('variables', {
 			externalvar: 'value',

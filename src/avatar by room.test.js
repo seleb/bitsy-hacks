@@ -1,4 +1,4 @@
-import { press, snapshot, start } from './test/bitsy';
+import { press, snapshot, start, waitForFrame } from './test/bitsy';
 
 test('avatar by room', async () => {
 	await start({
@@ -88,6 +88,7 @@ VAR a
 			],
 		],
 	});
+	await waitForFrame();
 	await snapshot();
 	await press('ArrowRight'); // walk through exit
 	await snapshot();
@@ -271,6 +272,7 @@ VAR a
 			],
 		],
 	});
+	await waitForFrame();
 	await snapshot();
 	await press('ArrowRight'); // walk through exit
 	await snapshot();

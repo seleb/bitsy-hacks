@@ -111,43 +111,27 @@ var dialogChoices = {
 		if (!this.choicesActive) {
 			return false;
 		}
-		var pmoved = this.moved;
-		this.moved = bitsy.input.anyKeyDown() || bitsy.input.swipeUp() || bitsy.input.swipeDown() || bitsy.input.swipeRight();
 		var l = Math.max(this.choices.length, 1);
 		// navigate
-		if (!pmoved && ((bitsy.input.anyKeyDown() && (bitsy.input.isKeyDown(bitsy.key.up) || bitsy.input.isKeyDown(bitsy.key.w))) || bitsy.input.swipeUp())) {
+		if (bitsy.bitsy.button(bitsy.bitsy.BTN_UP)) {
 			this.choice -= 1;
 			if (this.choice < 0) {
 				this.choice += l;
 			}
 			return false;
 		}
-		if (!pmoved && ((bitsy.input.anyKeyDown() && (bitsy.input.isKeyDown(bitsy.key.down) || bitsy.input.isKeyDown(bitsy.key.s))) || bitsy.input.swipeDown())) {
+		if (bitsy.bitsy.button(bitsy.bitsy.BTN_DOWN)) {
 			this.choice = (this.choice + 1) % l;
 			return false;
 		}
 		// select
-		if (
-			!pmoved &&
-			((bitsy.input.anyKeyDown() &&
-				(bitsy.input.isKeyDown(bitsy.key.right) || bitsy.input.isKeyDown(bitsy.key.d) || bitsy.input.isKeyDown(bitsy.key.enter) || bitsy.input.isKeyDown(bitsy.key.space))) ||
-				bitsy.input.swipeRight())
-		) {
+		if (bitsy.bitsy.button(bitsy.bitsy.BTN_RIGHT)) {
 			// evaluate choice
 			this.choices[this.choice]();
 			// reset
 			this.choice = 0;
 			this.choices = [];
 			this.choicesActive = false;
-			// get back into the regular dialog flow
-			if (dialogBuffer.Continue()) {
-				dialogBuffer.Update(0);
-				// make sure to close dialog if there's nothing to say
-				// after the choice has been made
-				if (!dialogBuffer.CurCharCount()) {
-					dialogBuffer.EndDialog();
-				}
-			}
 			return true;
 		}
 		return false;
@@ -183,9 +167,9 @@ else if(sequenceType === "choice") {
 );
 
 inject(
-	/(var ShuffleNode = )/,
+	/(function ShuffleNode\(options\) {)/,
 	`
-var ChoiceNode = function(options) {
+function ChoiceNode(options) {
 	Object.assign( this, new TreeRelationship() );
 	Object.assign( this, new SequenceBase() );
 	this.type = "choice";
@@ -211,6 +195,12 @@ var ChoiceNode = function(options) {
 				children[i].Eval(environment, function(val) {
 					if (i === children.length - 1) {
 						environment.GetDialogBuffer().AddParagraphBreak();
+						environment.GetDialogBuffer().AddScriptReturn(function () {
+							// end dialog if there's no content after the choice
+							if (environment.GetDialogBuffer().CurCharCount() <= 1) {
+								environment.GetDialogBuffer().EndDialog();
+							}
+						});
 					} else {
 						environment.GetDialogBuffer().AddLinebreak();
 					}
@@ -221,9 +211,7 @@ var ChoiceNode = function(options) {
 			}
 			else {
 				done();
-				setTimeout(() => {
-					window.dialogChoices.choicesActive = true;
-				});
+				window.dialogChoices.choicesActive = true;
 			}
 		}
 		window.dialogChoices.choices = this.options.map(function(option){
@@ -252,7 +240,9 @@ inject(
 	/(this\.DrawNextArrow = )/,
 	`
 this.DrawChoiceArrow = function() {
-	bitsyDrawBegin(1);
+	var text_scale = getTextScale();
+	var textboxScaleW = textboxInfo.width * text_scale;
+	var textboxScaleH = textboxInfo.height * text_scale;
 	var rows = ${hackOptions.cursor};
 	var top = (${hackOptions.transform.y} + window.dialogChoices.choice * (textboxInfo.padding_vert + relativeFontHeight())) * text_scale;
 	var left = ${hackOptions.transform.x}*text_scale;
@@ -263,18 +253,19 @@ this.DrawChoiceArrow = function() {
 				//scaling nonsense
 				for (var sy = 0; sy < text_scale; sy++) {
 					for (var sx = 0; sx < text_scale; sx++) {
-						bitsyDrawPixel(textArrowIndex, left + (x * text_scale) + sx, top + (y * text_scale) + sy);
+						var px = left + (x * text_scale) + sx;
+						var py = top + (y * text_scale) + sy;
+						bitsy.set(bitsy.TEXTBOX, (py * textboxScaleW) + px, textArrowIndex);
 					}
 				}
 			}
 		}
 	}
-	bitsyDrawEnd();
 };
 $1`
 );
 inject(
-	/(this\.DrawTextbox\(\);)/,
+	/(if \(buffer.CanContinue\(\) && shouldDrawArrow\) {)/,
 	`
 if (window.dialogChoices.choicesActive) {
 	this.DrawChoiceArrow();
@@ -284,13 +275,7 @@ $1`
 
 // interaction
 // (overrides the dialog skip/page flip)
-inject(
-	/(if\(\s*dialogBuffer\.IsActive\(\)\s*\) {)/,
-	`$1
-if(window.dialogChoices.handleInput(dialogBuffer)) {
-	return;
-} else `
-);
+inject(/(dialogBuffer.CanContinue)/, `(!window.dialogChoices.choicesActive || window.dialogChoices.handleInput(dialogBuffer)) && $1`);
 inject(
 	/(this\.CanContinue = function\(\) {)/,
 	`$1
@@ -299,3 +284,8 @@ if(window.dialogChoices.choicesActive){
 }
 `
 );
+
+// force redrawing textbox to avoid flickering issues
+inject(/shouldClearTextbox = false;/, '');
+inject(/char.redraw = false;/, '');
+inject(/shouldDrawArrow = false;/, '');

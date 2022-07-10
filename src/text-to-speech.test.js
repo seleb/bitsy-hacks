@@ -19,6 +19,7 @@ test('automatic and hurried', async () => {
 		hacks: ['text-to-speech'],
 		title: '',
 	});
+	await waitForFrame();
 	await hackTTS();
 
 	await startDialog('test1{pg}test2');
@@ -34,6 +35,7 @@ test('non-hurried', async () => {
 		hacks: [['text-to-speech', { automatic: true, hurried: false }]],
 		title: '',
 	});
+	await waitForFrame();
 	await hackTTS();
 
 	await startDialog('test1{pg}test2');
@@ -49,6 +51,7 @@ test('non-automatic', async () => {
 		hacks: [['text-to-speech', { automatic: false, hurried: true }]],
 		title: '',
 	});
+	await waitForFrame();
 	await hackTTS();
 
 	await startDialog('test1{pg}test2{ttsNow "test"}');

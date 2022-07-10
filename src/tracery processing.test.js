@@ -1,4 +1,4 @@
-import { evaluate, press, snapshot, start, walkToCat } from './test/bitsy';
+import { evaluate, press, snapshot, start, waitForBlip, walkToCat } from './test/bitsy';
 
 test('tracery processing', async () => {
 	await start({
@@ -19,6 +19,7 @@ test('tracery processing', async () => {
 		Math.random = () => 0;
 	});
 	await press('ArrowRight'); // talk to cat
+	await waitForBlip();
 	await press('ArrowRight'); // complete dialog page
 	await snapshot();
 	await press('ArrowRight');
@@ -26,6 +27,7 @@ test('tracery processing', async () => {
 		Math.random = () => 0.99;
 	});
 	await press('ArrowRight'); // talk to cat
+	await waitForBlip();
 	await press('ArrowRight'); // complete dialog page
 	await snapshot();
 });

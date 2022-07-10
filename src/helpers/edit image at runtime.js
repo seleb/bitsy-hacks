@@ -19,19 +19,9 @@ e.g. the default player is:
 ]
 */
 import bitsy from 'bitsy';
-import { getImage, inject } from './utils';
+import { getImage } from './utils';
 
 export { getImage };
-
-// force cache to clear if edit image fns are used
-inject(
-	/\/\/ TODO : reset render cache for this image/,
-	`
-Object.keys(drawingCache.render)
-	.filter(function (i) { return i.split('_').slice(0, -1).join('_') === drawingId; })
-	.forEach(function(i) { drawingCache.render[i] = undefined; })
-`
-);
 
 /*
 Args:

@@ -33,13 +33,13 @@ export var hackOptions = {
 // and updates the background to match
 function updateBg() {
 	// get the palette colour
-	var c = hackOptions.byRoom[bitsy.curRoom];
+	var c = hackOptions.byRoom[bitsy.state.room];
 	if (c === undefined) {
 		c = hackOptions.default;
 	}
 
 	// if the palette changed, update background
-	var bg = 'rgb(' + bitsy.getPal(bitsy.curPal())[c].join(',') + ')';
+	var bg = 'rgb(' + bitsy.getPal(bitsy.state.pal)[c].join(',') + ')';
 	if (document.body.style.background !== bg) {
 		document.body.style.background = bg;
 	}
@@ -58,5 +58,5 @@ after('load_game', function () {
 
 // wrap every function which involves changing the palette
 after('movePlayer', updateBg);
-after('parseWorld', updateBg);
+after('loadWorldFromGameData', updateBg);
 after('movePlayerThroughExit', updateBg);

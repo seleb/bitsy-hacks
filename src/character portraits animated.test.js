@@ -1,4 +1,4 @@
-import { delay, press, snapshot, start, walkToCat } from './test/bitsy';
+import { delay, press, snapshot, start, waitForBlip, walkToCat } from './test/bitsy';
 
 test('autoreset, dialog only', async () => {
 	await start({
@@ -19,6 +19,7 @@ test('autoreset, dialog only', async () => {
 	});
 	await walkToCat();
 	await press('ArrowRight'); // talk to cat
+	await waitForBlip();
 	await press('ArrowRight'); // complete dialog page
 	await snapshot();
 	await delay(2000);
@@ -30,7 +31,7 @@ test('autoreset, dialog only', async () => {
 test('no reset, persist', async () => {
 	await start({
 		catDialog: `"""
-{sequence
+{cycle
   - (portrait "cat")\\(portrait "cat"\\)
   - (portrait "")\\(portrait ""\\)
 }
@@ -51,6 +52,7 @@ test('no reset, persist', async () => {
 	});
 	await walkToCat();
 	await press('ArrowRight'); // talk to cat
+	await waitForBlip();
 	await press('ArrowRight'); // complete dialog page
 	await snapshot();
 	await delay(2000);
@@ -58,6 +60,7 @@ test('no reset, persist', async () => {
 	await press('ArrowRight'); // end dialog page
 	await snapshot();
 	await press('ArrowRight'); // talk to cat
+	await waitForBlip();
 	await press('ArrowRight'); // complete dialog page
 	await snapshot();
 	await press('ArrowRight'); // end dialog page

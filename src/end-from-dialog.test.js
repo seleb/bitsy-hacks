@@ -1,4 +1,4 @@
-import { press, snapshot, start, walkToCat } from './test/bitsy';
+import { press, snapshot, start, waitForBlip, walkToCat } from './test/bitsy';
 
 test('end', async () => {
 	await start({
@@ -7,6 +7,7 @@ test('end', async () => {
 	});
 	await walkToCat();
 	await press('ArrowRight'); // talk to cat
+	await waitForBlip();
 	await press('ArrowRight'); // complete dialog page
 	await snapshot();
 	await press('ArrowRight'); // end dialog
@@ -22,6 +23,7 @@ test('endNow', async () => {
 	await walkToCat();
 	await snapshot();
 	await press('ArrowRight'); // talk to cat
+	await waitForBlip();
 	await press('ArrowRight'); // complete dialog page (also completes ending page due to hack quirk)
 	await snapshot();
 });

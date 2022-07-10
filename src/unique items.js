@@ -32,5 +32,6 @@ after('onInventoryChanged', function (id) {
 				return i.id !== id;
 			});
 		});
+		bitsy.drawRoom(bitsy.room[bitsy.state.room], { redrawAll: true });
 	}
 });

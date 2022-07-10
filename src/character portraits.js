@@ -84,19 +84,14 @@ addDialogTag('portrait', function (environment, parameters, onReturn) {
 });
 
 // draw portrait on top of screen
-after('renderDrawingBuffer', function (bufferId, buffer) {
-	if (bufferId !== bitsy.screenBufferId || (hackOptions.dialogOnly && !bitsy.isDialogMode && !bitsy.isNarrating) || !state.portrait) return;
-
-	var context = buffer.canvas.getContext('2d');
-	context.imageSmoothingEnabled = false;
+after('bitsy._graphics.drawImage', function (id) {
+	// eslint-disable-next-line no-underscore-dangle
+	var layers = bitsy.bitsy._getTileMapLayers();
+	if (id !== layers[layers.length - 1] || (hackOptions.dialogOnly && !bitsy.isDialogMode && !bitsy.isNarrating) || !state.portrait) return;
+	// eslint-disable-next-line no-underscore-dangle
+	var context = bitsy.bitsy._getContext();
 	try {
 		context.drawImage(state.portrait, 0, 0, bitsy.width * hackOptions.scale, bitsy.height * hackOptions.scale, 0, 0, bitsy.width * bitsy.scale, bitsy.height * bitsy.scale);
-
-		// if text is present, redraw it on top of the portrait
-		var lastInstruction = buffer.instructions[buffer.instructions.length - 1];
-		if (lastInstruction.type === bitsy.DrawingInstruction.Textbox) {
-			bitsy.renderTextboxInstruction(bufferId, buffer, lastInstruction.x, lastInstruction.y);
-		}
 	} catch (error) {
 		// log and ignore errors
 		// so broken images don't break the game

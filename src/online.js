@@ -70,6 +70,7 @@ function onData(event) {
 				spr.x = data.x;
 				spr.y = data.y;
 				spr.room = data.room;
+				bitsy.drawRoom(bitsy.room[bitsy.state.room], { redrawAll: true });
 			} else {
 				// got a move from an unknown player,
 				// so ask them who they are
@@ -92,6 +93,7 @@ function onData(event) {
 					isAnimated: data.data.length > 1,
 				},
 				col: data.col,
+				bgc: data.bgc,
 				dlg: longname,
 				drw: longname,
 				id: event.from,
@@ -108,6 +110,7 @@ function onData(event) {
 			for (var frame = 0; frame < data.data.length; ++frame) {
 				setSpriteData(event.from, frame, data.data[frame]);
 			}
+			bitsy.drawRoom(bitsy.room[bitsy.state.room], { redrawAll: true });
 			break;
 		default:
 			break;
@@ -179,6 +182,7 @@ function getSpriteUpdate() {
 		room: p.room,
 		dlg: bitsy.dialog[p.dlg],
 		col: p.col,
+		bgc: p.bgc,
 	};
 }
 

@@ -1,12 +1,13 @@
-import { press, snapshot, start, walkToCat } from './test/bitsy';
+import { press, snapshot, start, waitForBlip, walkToCat } from './test/bitsy';
 
 test('now', async () => {
 	await start({
 		hacks: ['javascript dialog'],
-		catDialog: '{jsNow "canvas.width *= 2"}I\'m a cat',
+		catDialog: '{jsNow "bitsy._getCanvas().width *= 2"}I\'m a cat',
 	});
 	await walkToCat();
 	await press('ArrowRight'); // talk to cat
+	await waitForBlip();
 	await press('ArrowRight'); // complete dialog page
 	await snapshot();
 });
@@ -14,10 +15,11 @@ test('now', async () => {
 test('deferred', async () => {
 	await start({
 		hacks: ['javascript dialog'],
-		catDialog: '{js "canvas.width *= 2"}I\'m a cat',
+		catDialog: '{js "bitsy._getCanvas().width *= 2"}I\'m a cat',
 	});
 	await walkToCat();
 	await press('ArrowRight'); // talk to cat
+	await waitForBlip();
 	await press('ArrowRight'); // complete dialog page
 	await snapshot();
 	await press('ArrowRight'); // close dialog page
@@ -31,6 +33,7 @@ test('returns evaluated value', async () => {
 	});
 	await walkToCat();
 	await press('ArrowRight'); // talk to cat
+	await waitForBlip();
 	await press('ArrowRight'); // complete dialog page
 	await snapshot();
 });

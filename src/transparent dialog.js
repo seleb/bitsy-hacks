@@ -14,8 +14,6 @@ Copy-paste into a script tag after the bitsy source
 import bitsy from 'bitsy';
 import { after } from './helpers/kitsy-script-toolkit';
 
-after('renderClearInstruction', function (bufferId, buffer, paletteIndex) {
-	if (bufferId !== bitsy.textboxBufferId || paletteIndex !== bitsy.textBackgroundIndex) return;
-	var bufferContext = buffer.canvas.getContext('2d');
-	bufferContext.clearRect(0, 0, buffer.canvas.width, buffer.canvas.height);
+after('dialogRenderer.ClearTextbox', function () {
+	bitsy.bitsy.fill(bitsy.bitsy.TEXTBOX, 0);
 });

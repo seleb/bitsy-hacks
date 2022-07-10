@@ -67,7 +67,7 @@ export async function start({ gamedata = '', title, catDialog = '', hacks = [] }
 	let game = template;
 
 	// hack update to let jest know when updates happen
-	game = game.replace(/(function update\(\) {)/, '$1window.jestUpdate && window.jestUpdate();');
+	game = game.replace(/(this\._update = function\(dt\) {)/, '$1window.jestUpdate && window.jestUpdate();');
 
 	// replace gamedata
 	if (gamedata) {
@@ -210,6 +210,10 @@ export async function walkToCat() {
 	await press('ArrowRight');
 	await press('ArrowRight');
 	await press('ArrowRight');
+}
+
+export async function waitForBlip() {
+	await page.waitForFunction(() => !window.soundPlayer.isBlipPlaying());
 }
 
 export async function startDialog(dialog) {

@@ -1,4 +1,4 @@
-import { press, snapshot, start, walkToCat } from './test/bitsy';
+import { press, snapshot, start, waitForBlip, walkToCat } from './test/bitsy';
 
 test('dialog prompt', async () => {
 	await start({
@@ -7,6 +7,7 @@ test('dialog prompt', async () => {
 	});
 	await walkToCat();
 	await press('ArrowRight'); // talk to cat
+	await waitForBlip();
 	await press('ArrowRight'); // complete dialog
 	await snapshot();
 	await press('Backspace');

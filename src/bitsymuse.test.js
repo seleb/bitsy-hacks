@@ -31,15 +31,13 @@ test('bitsymuse', async () => {
 
 	// hack audio elements to test playback
 	await evaluate(() => {
-		function play() {
-			this.dataset.playing = true;
-		}
-		function pause() {
-			this.dataset.playing = false;
-		}
 		Array.from(window.document.querySelectorAll('audio')).forEach(i => {
-			i.play = play;
-			i.pause = pause;
+			i.play = () => {
+				i.dataset.playing = true;
+			};
+			i.pause = () => {
+				i.dataset.playing = false;
+			};
 		});
 	});
 	await press('ArrowRight'); // complete title dialog

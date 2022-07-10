@@ -75,7 +75,7 @@ export var hackOptions = {
 	},
 };
 
-var defaultVoice;
+var defaultVoice = hackOptions.voices.default;
 var voice;
 
 // these are mostly guess-work based on playing around with the original pink trombone UI

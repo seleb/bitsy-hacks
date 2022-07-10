@@ -84,7 +84,7 @@ test('follower', async () => {
 	await press('ArrowLeft');
 	await press('ArrowLeft');
 	await press('ArrowLeft'); // walk on top of tile border
-	await delay(500); // wait for follower to catch up
+	await delay(1000); // wait for follower to catch up
 	await snapshot();
 });
 
@@ -96,7 +96,7 @@ test('multiple followers (chain)', async () => {
 				{
 					allowFollowerCollision: false,
 					followers: ['a', 'b'],
-					delay: 1,
+					delay: 0,
 				},
 			],
 		],
@@ -104,8 +104,10 @@ test('multiple followers (chain)', async () => {
 	});
 	await waitForFrame();
 	await press('ArrowLeft');
+	await waitForFrame();
 	await snapshot();
 	await press('ArrowLeft');
+	await waitForFrame();
 	await snapshot();
 });
 
@@ -117,7 +119,7 @@ test('multiple followers (stack)', async () => {
 				{
 					allowFollowerCollision: false,
 					followers: ['a', 'b'],
-					delay: 1,
+					delay: 0,
 					stack: true,
 				},
 			],
@@ -126,8 +128,10 @@ test('multiple followers (stack)', async () => {
 	});
 	await waitForFrame();
 	await press('ArrowLeft');
+	await waitForFrame();
 	await snapshot();
 	await press('ArrowLeft');
+	await waitForFrame();
 	await snapshot();
 });
 

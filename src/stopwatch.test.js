@@ -1,10 +1,11 @@
-import { evaluate, press, snapshot, start, startDialog } from './test/bitsy';
+import { evaluate, press, snapshot, start, startDialog, waitForFrame } from './test/bitsy';
 
 test('stopwatch', async () => {
 	await start({
 		hacks: ['stopwatch'],
 		title: '',
 	});
+	await waitForFrame();
 
 	// basic (1:05)
 	await evaluate(() => {

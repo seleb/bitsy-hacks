@@ -1,6 +1,6 @@
 import { rm, writeFile } from 'fs/promises';
 import { resolve } from 'path';
-import { delay, evaluate, press, snapshot, start, walkToCat } from './test/bitsy';
+import { delay, evaluate, press, snapshot, start, waitForBlip, walkToCat } from './test/bitsy';
 
 const clientfile = resolve(__dirname, './test/client.js');
 
@@ -56,6 +56,7 @@ class Client {
 			e.data = {
 				e: 'sprite',
 				col: 1,
+				bgc: 0,
 				x: 8,
 				y: 12,
 				room: '0',
@@ -112,228 +113,230 @@ test('online', async () => {
 	await delay(1000);
 	await snapshot();
 	await press('ArrowRight'); // start dialog
+	await waitForBlip();
 	await press('ArrowRight'); // complete dialog
 	await snapshot();
 	expect(await evaluate(() => window.Client.default.log)).toMatchInlineSnapshot(`
-Array [
-  Array [
-    "debug",
-    null,
-  ],
-  Array [
-    "broadcast",
-    Object {
-      "e": "move",
-      "room": "0",
-      "x": 4,
-      "y": 5,
-    },
-  ],
-  Array [
-    "broadcast",
-    Object {
-      "e": "move",
-      "room": "0",
-      "x": 4,
-      "y": 6,
-    },
-  ],
-  Array [
-    "broadcast",
-    Object {
-      "e": "move",
-      "room": "0",
-      "x": 4,
-      "y": 7,
-    },
-  ],
-  Array [
-    "broadcast",
-    Object {
-      "e": "move",
-      "room": "0",
-      "x": 4,
-      "y": 8,
-    },
-  ],
-  Array [
-    "broadcast",
-    Object {
-      "e": "move",
-      "room": "0",
-      "x": 4,
-      "y": 9,
-    },
-  ],
-  Array [
-    "broadcast",
-    Object {
-      "e": "move",
-      "room": "0",
-      "x": 4,
-      "y": 10,
-    },
-  ],
-  Array [
-    "broadcast",
-    Object {
-      "e": "move",
-      "room": "0",
-      "x": 4,
-      "y": 11,
-    },
-  ],
-  Array [
-    "broadcast",
-    Object {
-      "e": "move",
-      "room": "0",
-      "x": 4,
-      "y": 12,
-    },
-  ],
-  Array [
-    "broadcast",
-    Object {
-      "e": "move",
-      "room": "0",
-      "x": 5,
-      "y": 12,
-    },
-  ],
-  Array [
-    "broadcast",
-    Object {
-      "e": "move",
-      "room": "0",
-      "x": 6,
-      "y": 12,
-    },
-  ],
-  Array [
-    "broadcast",
-    Object {
-      "e": "move",
-      "room": "0",
-      "x": 7,
-      "y": 12,
-    },
-  ],
-  Array [
-    "broadcast",
-    Object {
-      "col": 2,
-      "data": Array [
-        Array [
-          Array [
-            0,
-            0,
-            0,
-            1,
-            1,
-            0,
-            0,
-            0,
-          ],
-          Array [
-            0,
-            0,
-            0,
-            1,
-            1,
-            0,
-            0,
-            0,
-          ],
-          Array [
-            0,
-            0,
-            0,
-            1,
-            1,
-            0,
-            0,
-            0,
-          ],
-          Array [
-            0,
-            0,
-            1,
-            1,
-            1,
-            1,
-            0,
-            0,
-          ],
-          Array [
-            0,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            0,
-          ],
-          Array [
-            1,
-            0,
-            1,
-            1,
-            1,
-            1,
-            0,
-            1,
-          ],
-          Array [
-            0,
-            0,
-            1,
-            0,
-            0,
-            1,
-            0,
-            0,
-          ],
-          Array [
-            0,
-            0,
-            1,
-            0,
-            0,
-            1,
-            0,
-            0,
-          ],
-        ],
-      ],
-      "e": "sprite",
-      "room": "0",
-      "x": 7,
-      "y": 12,
-    },
-  ],
-  Array [
-    "broadcast",
-    Object {
-      "e": "gimmeSprite",
-    },
-  ],
-  Array [
-    "mock",
-    Object {
-      "e": "gimmeSprite",
-    },
-  ],
-  Array [
-    "broadcast",
-    Object {
-      "e": "move",
-      "room": "0",
-      "x": 7,
-      "y": 12,
-    },
-  ],
-]
-`);
+		Array [
+		  Array [
+		    "debug",
+		    null,
+		  ],
+		  Array [
+		    "broadcast",
+		    Object {
+		      "e": "move",
+		      "room": "0",
+		      "x": 4,
+		      "y": 5,
+		    },
+		  ],
+		  Array [
+		    "broadcast",
+		    Object {
+		      "e": "move",
+		      "room": "0",
+		      "x": 4,
+		      "y": 6,
+		    },
+		  ],
+		  Array [
+		    "broadcast",
+		    Object {
+		      "e": "move",
+		      "room": "0",
+		      "x": 4,
+		      "y": 7,
+		    },
+		  ],
+		  Array [
+		    "broadcast",
+		    Object {
+		      "e": "move",
+		      "room": "0",
+		      "x": 4,
+		      "y": 8,
+		    },
+		  ],
+		  Array [
+		    "broadcast",
+		    Object {
+		      "e": "move",
+		      "room": "0",
+		      "x": 4,
+		      "y": 9,
+		    },
+		  ],
+		  Array [
+		    "broadcast",
+		    Object {
+		      "e": "move",
+		      "room": "0",
+		      "x": 4,
+		      "y": 10,
+		    },
+		  ],
+		  Array [
+		    "broadcast",
+		    Object {
+		      "e": "move",
+		      "room": "0",
+		      "x": 4,
+		      "y": 11,
+		    },
+		  ],
+		  Array [
+		    "broadcast",
+		    Object {
+		      "e": "move",
+		      "room": "0",
+		      "x": 4,
+		      "y": 12,
+		    },
+		  ],
+		  Array [
+		    "broadcast",
+		    Object {
+		      "e": "move",
+		      "room": "0",
+		      "x": 5,
+		      "y": 12,
+		    },
+		  ],
+		  Array [
+		    "broadcast",
+		    Object {
+		      "e": "move",
+		      "room": "0",
+		      "x": 6,
+		      "y": 12,
+		    },
+		  ],
+		  Array [
+		    "broadcast",
+		    Object {
+		      "e": "move",
+		      "room": "0",
+		      "x": 7,
+		      "y": 12,
+		    },
+		  ],
+		  Array [
+		    "broadcast",
+		    Object {
+		      "bgc": 0,
+		      "col": 2,
+		      "data": Array [
+		        Array [
+		          Array [
+		            0,
+		            0,
+		            0,
+		            1,
+		            1,
+		            0,
+		            0,
+		            0,
+		          ],
+		          Array [
+		            0,
+		            0,
+		            0,
+		            1,
+		            1,
+		            0,
+		            0,
+		            0,
+		          ],
+		          Array [
+		            0,
+		            0,
+		            0,
+		            1,
+		            1,
+		            0,
+		            0,
+		            0,
+		          ],
+		          Array [
+		            0,
+		            0,
+		            1,
+		            1,
+		            1,
+		            1,
+		            0,
+		            0,
+		          ],
+		          Array [
+		            0,
+		            1,
+		            1,
+		            1,
+		            1,
+		            1,
+		            1,
+		            0,
+		          ],
+		          Array [
+		            1,
+		            0,
+		            1,
+		            1,
+		            1,
+		            1,
+		            0,
+		            1,
+		          ],
+		          Array [
+		            0,
+		            0,
+		            1,
+		            0,
+		            0,
+		            1,
+		            0,
+		            0,
+		          ],
+		          Array [
+		            0,
+		            0,
+		            1,
+		            0,
+		            0,
+		            1,
+		            0,
+		            0,
+		          ],
+		        ],
+		      ],
+		      "e": "sprite",
+		      "room": "0",
+		      "x": 7,
+		      "y": 12,
+		    },
+		  ],
+		  Array [
+		    "broadcast",
+		    Object {
+		      "e": "gimmeSprite",
+		    },
+		  ],
+		  Array [
+		    "mock",
+		    Object {
+		      "e": "gimmeSprite",
+		    },
+		  ],
+		  Array [
+		    "broadcast",
+		    Object {
+		      "e": "move",
+		      "room": "0",
+		      "x": 7,
+		      "y": 12,
+		    },
+		  ],
+		]
+	`);
 });

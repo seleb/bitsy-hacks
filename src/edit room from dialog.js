@@ -277,7 +277,7 @@ function drawAt(mapId, sourceId, xPos, yPos, roomId) {
 	}
 
 	// Trim and sanitize Room ID parameter, and set to current room if omitted
-	roomId = (roomId || bitsy.curRoom).toString().trim();
+	roomId = (roomId || bitsy.state.room).toString().trim();
 	if (!bitsy.room[roomId]) {
 		console.log("CAN'T DRAW. ROOM ID (" + roomId + ') NOT FOUND.');
 		return;
@@ -313,6 +313,7 @@ function drawAt(mapId, sourceId, xPos, yPos, roomId) {
 		default:
 			break;
 	}
+	bitsy.drawRoom(bitsy.room[bitsy.state.room], { redrawAll: true });
 }
 
 function drawBoxAt(mapId, sourceId, x1, y1, x2, y2, roomId) {
@@ -333,6 +334,7 @@ function drawBoxAt(mapId, sourceId, x1, y1, x2, y2, roomId) {
 			drawAt(mapId, sourceId, xPos, yPos, roomId);
 		}
 	}
+	bitsy.drawRoom(bitsy.room[bitsy.state.room], { redrawAll: true });
 }
 
 function eraseAt(mapId, targetId, xPos, yPos, roomId) {
@@ -354,7 +356,7 @@ function eraseAt(mapId, targetId, xPos, yPos, roomId) {
 	}
 
 	// Trim and sanitize Room ID parameter, and set to current room if omitted
-	roomId = (roomId || bitsy.curRoom).toString().trim();
+	roomId = (roomId || bitsy.state.room).toString().trim();
 	if (!bitsy.room[roomId]) {
 		console.log("CAN'T DRAW. ROOM ID (" + roomId + ') NOT FOUND.');
 		return;
@@ -395,6 +397,7 @@ function eraseAt(mapId, targetId, xPos, yPos, roomId) {
 			}
 		}
 	}
+	bitsy.drawRoom(bitsy.room[bitsy.state.room], { redrawAll: true });
 }
 
 function eraseBoxAt(mapId, targetId, x1, y1, x2, y2, roomId) {
@@ -415,6 +418,7 @@ function eraseBoxAt(mapId, targetId, x1, y1, x2, y2, roomId) {
 			eraseAt(mapId, targetId, xPos, yPos, roomId);
 		}
 	}
+	bitsy.drawRoom(bitsy.room[bitsy.state.room], { redrawAll: true });
 }
 
 function replaceAt(targetMapId, targetId, newMapId, newId, xPos, yPos, roomId) {
@@ -452,7 +456,7 @@ function replaceAt(targetMapId, targetId, newMapId, newId, xPos, yPos, roomId) {
 	}
 
 	// Trim and sanitize Room ID parameter, and set to current room if omitted
-	roomId = (roomId || bitsy.curRoom).toString().trim();
+	roomId = (roomId || bitsy.state.room).toString().trim();
 	if (!bitsy.room[roomId]) {
 		console.log("CAN'T REPLACE. ROOM ID (" + roomId + ') NOT FOUND.');
 		return;
@@ -502,6 +506,7 @@ function replaceAt(targetMapId, targetId, newMapId, newId, xPos, yPos, roomId) {
 			}
 		}
 	}
+	bitsy.drawRoom(bitsy.room[bitsy.state.room], { redrawAll: true });
 }
 
 function replaceBoxAt(targetMapId, targetId, newMapId, newId, x1, y1, x2, y2, roomId) {
@@ -522,6 +527,7 @@ function replaceBoxAt(targetMapId, targetId, newMapId, newId, x1, y1, x2, y2, ro
 			replaceAt(targetMapId, targetId, newMapId, newId, xPos, yPos, roomId);
 		}
 	}
+	bitsy.drawRoom(bitsy.room[bitsy.state.room], { redrawAll: true });
 }
 
 function copyAt(mapId, targetId, copyXPos, copyYPos, copyRoomId, pasteXPos, pasteYPos, pasteRoomId) {
@@ -544,7 +550,7 @@ function copyAt(mapId, targetId, copyXPos, copyYPos, copyRoomId, pasteXPos, past
 	}
 
 	// Trim and sanitize Target ID parameter, and use any if not provided
-	copyRoomId = (copyRoomId || bitsy.curRoom).toString().trim();
+	copyRoomId = (copyRoomId || bitsy.state.room).toString().trim();
 	if (!bitsy.room[copyRoomId]) {
 		console.log("CAN'T COPY. ROOM ID (" + copyRoomId + ') NOT FOUND.');
 		return;
@@ -563,7 +569,7 @@ function copyAt(mapId, targetId, copyXPos, copyYPos, copyRoomId, pasteXPos, past
 		return;
 	}
 
-	pasteRoomId = (pasteRoomId || bitsy.curRoom).toString().trim();
+	pasteRoomId = (pasteRoomId || bitsy.state.room).toString().trim();
 	if (!bitsy.room[pasteRoomId]) {
 		console.log("CAN'T PASTE. ROOM ID (" + pasteRoomId + ') NOT FOUND.');
 		return;
@@ -606,6 +612,7 @@ function copyAt(mapId, targetId, copyXPos, copyYPos, copyRoomId, pasteXPos, past
 			}
 		}
 	}
+	bitsy.drawRoom(bitsy.room[bitsy.state.room], { redrawAll: true });
 }
 
 function copyBoxAt(mapId, targetId, x1, y1, x2, y2, copyRoomId, pasteXPos, pasteYPos, pasteRoomId) {
@@ -621,7 +628,7 @@ function copyBoxAt(mapId, targetId, x1, y1, x2, y2, copyRoomId, pasteXPos, paste
 	// Trim and sanitize Target ID parameter, and use any if not provided
 	targetId = (targetId || 'ANY').toString().trim();
 
-	copyRoomId = (copyRoomId || bitsy.curRoom).toString().trim();
+	copyRoomId = (copyRoomId || bitsy.state.room).toString().trim();
 	if (!bitsy.room[copyRoomId]) {
 		console.log("CAN'T COPY. ROOM ID (" + copyRoomId + ') NOT FOUND.');
 		return;
@@ -640,7 +647,7 @@ function copyBoxAt(mapId, targetId, x1, y1, x2, y2, copyRoomId, pasteXPos, paste
 		return;
 	}
 
-	pasteRoomId = (pasteRoomId || bitsy.curRoom).toString().trim();
+	pasteRoomId = (pasteRoomId || bitsy.state.room).toString().trim();
 	if (!bitsy.room[pasteRoomId]) {
 		console.log("CAN'T PASTE. ROOM ID (" + pasteRoomId + ') NOT FOUND.');
 		return;
@@ -729,4 +736,5 @@ function copyBoxAt(mapId, targetId, x1, y1, x2, y2, copyRoomId, pasteXPos, paste
 	copy.forEach(function (copyEntry) {
 		drawAt(copyEntry.map, copyEntry.id, copyEntry.x, copyEntry.y, pasteRoomId);
 	});
+	bitsy.drawRoom(bitsy.room[bitsy.state.room], { redrawAll: true });
 }

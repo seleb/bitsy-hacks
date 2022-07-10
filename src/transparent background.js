@@ -17,7 +17,7 @@ HOW TO USE:
 2. Edit hackOptions below as needed
 */
 import bitsy from 'bitsy';
-import { after, before } from './helpers/kitsy-script-toolkit';
+import { after } from './helpers/kitsy-script-toolkit';
 import { hackOptions as transparentSprites } from './transparent sprites';
 
 export var hackOptions = {
@@ -35,12 +35,7 @@ transparentSprites.isTransparent = function (drawing) {
 	return hackOptions.isTransparent(drawing);
 };
 
-before('renderGame', function () {
-	bitsy.ctx.clearRect(0, 0, bitsy.canvas.width, bitsy.canvas.height);
-});
-
-after('renderClearInstruction', function (bufferId, buffer, paletteIndex) {
-	if (bufferId !== bitsy.screenBufferId || paletteIndex !== bitsy.tileColorStartIndex) return;
-	var bufferContext = buffer.canvas.getContext('2d');
-	bufferContext.clearRect(0, 0, buffer.canvas.width, buffer.canvas.height);
+after('bitsy._graphics.clearCanvas', function () {
+	// eslint-disable-next-line no-underscore-dangle
+	bitsy.bitsy._graphics.getContext().clearRect(0, 0, bitsy.bitsy._graphics.getCanvas().width, bitsy.bitsy._graphics.getCanvas().height);
 });

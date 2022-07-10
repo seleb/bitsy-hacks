@@ -56,14 +56,16 @@ before('startExportedGame', function () {
 var px;
 var py;
 var pr;
-before('update', function () {
+before('bitsy._update', function () {
 	var player = bitsy.player();
+	if (!player) return;
 	px = player.x;
 	py = player.y;
 	pr = player.room;
 });
-after('update', function () {
+after('bitsy._update', function () {
 	var player = bitsy.player();
+	if (!player) return;
 	if ((px !== player.x || py !== player.y || pr !== player.room) && sounds.walk) {
 		sounds.walk();
 	}
