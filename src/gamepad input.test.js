@@ -21,6 +21,7 @@ async function gamepadPressDown() {
 	await gamepadSetDownPressed(true);
 	await waitForFrame();
 	await gamepadSetDownPressed(false);
+	await waitForFrame();
 }
 
 test('gamepad input', async () => {
