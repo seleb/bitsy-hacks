@@ -1,4 +1,4 @@
-import kebabCase from 'lodash/kebabCase';
+import kebabCase from 'lodash.kebabcase';
 import path from 'path';
 import { delay, press, snapshot, start } from './test/bitsy';
 
