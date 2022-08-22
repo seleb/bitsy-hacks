@@ -1,6 +1,8 @@
+import kebabCase from 'lodash/kebabCase';
 import { delay, press, snapshot, start, waitForFrame } from './test/bitsy';
 
 jest.retryTimes(3);
+const customSnapshotIdentifier = ({ testPath, currentTestName, counter }) => kebabCase(`${path.basename(testPath)}-${currentTestName}-${counter}`);
 
 const multiple = `
 
@@ -87,7 +89,7 @@ test('follower', async () => {
 	await press('ArrowLeft');
 	await press('ArrowLeft'); // walk on top of tile border
 	await delay(1000); // wait for follower to catch up
-	await snapshot();
+	await snapshot({ customSnapshotIdentifier });
 });
 
 test('multiple followers (chain)', async () => {
@@ -107,10 +109,10 @@ test('multiple followers (chain)', async () => {
 	await waitForFrame();
 	await press('ArrowLeft');
 	await waitForFrame();
-	await snapshot();
+	await snapshot({ customSnapshotIdentifier });
 	await press('ArrowLeft');
 	await waitForFrame();
-	await snapshot();
+	await snapshot({ customSnapshotIdentifier });
 });
 
 test('multiple followers (stack)', async () => {
@@ -131,10 +133,10 @@ test('multiple followers (stack)', async () => {
 	await waitForFrame();
 	await press('ArrowLeft');
 	await waitForFrame();
-	await snapshot();
+	await snapshot({ customSnapshotIdentifier });
 	await press('ArrowLeft');
 	await waitForFrame();
-	await snapshot();
+	await snapshot({ customSnapshotIdentifier });
 });
 
 test('through exits', async () => {
@@ -246,10 +248,10 @@ NAME cat dialog
 	});
 	await waitForFrame();
 	await press('ArrowLeft'); // next to exit
-	await snapshot();
+	await snapshot({ customSnapshotIdentifier });
 	await press('ArrowLeft'); // through exit
 	await press('ArrowRight'); // next to exit
-	await snapshot();
+	await snapshot({ customSnapshotIdentifier });
 	await press('ArrowRight'); // 2 steps from exit
 	await press('ArrowLeft'); // turn off follower
 	await press('ArrowDown');
@@ -257,5 +259,5 @@ NAME cat dialog
 	await press('ArrowLeft');
 	await press('ArrowUp'); // through exit
 	await press('ArrowRight'); // next to exit
-	await snapshot();
+	await snapshot({ customSnapshotIdentifier });
 });
