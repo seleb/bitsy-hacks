@@ -1,4 +1,5 @@
 import kebabCase from 'lodash/kebabCase';
+import path from 'path';
 import { delay, press, snapshot, start } from './test/bitsy';
 
 jest.retryTimes(3);
