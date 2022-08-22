@@ -1,5 +1,7 @@
 import { delay, snapshot, start, startDialog, waitForFrame } from './test/bitsy';
 
+jest.retryTimes(3);
+
 test('dialog box transition', async () => {
 	await start({
 		title: '',
