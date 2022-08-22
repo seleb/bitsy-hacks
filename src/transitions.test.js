@@ -1,5 +1,7 @@
 import { delay, press, snapshot, start } from './test/bitsy';
 
+jest.retryTimes(3);
+
 test('transitions', async () => {
 	await start({
 		hacks: [
