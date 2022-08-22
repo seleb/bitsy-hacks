@@ -1,5 +1,7 @@
 import { delay, evaluate, start, startDialog } from './test/bitsy';
 
+jest.retryTimes(3);
+
 test('dialog audio vocal synth', async () => {
 	async function capture() {
 		await evaluate(() => {

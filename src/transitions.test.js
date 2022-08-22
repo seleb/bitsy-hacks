@@ -1,4 +1,9 @@
+import kebabCase from 'lodash.kebabcase';
+import path from 'path';
 import { delay, press, snapshot, start } from './test/bitsy';
+
+jest.retryTimes(3);
+const customSnapshotIdentifier = ({ testPath, currentTestName, counter }) => kebabCase(`${path.basename(testPath)}-${currentTestName}-${counter}`);
 
 test('transitions', async () => {
 	await start({
@@ -34,11 +39,11 @@ if (t < 0.01 || t > 0.99) {
 	await press('ArrowRight'); // complete title page
 	await press('ArrowRight'); // end title page
 	await delay(2000);
-	await snapshot();
+	await snapshot({ customSnapshotIdentifier });
 	await press('ArrowRight');
-	await snapshot();
+	await snapshot({ customSnapshotIdentifier });
 	await delay(1000);
-	await snapshot();
+	await snapshot({ customSnapshotIdentifier });
 	await delay(1000);
-	await snapshot();
+	await snapshot({ customSnapshotIdentifier });
 });
