@@ -1,5 +1,7 @@
 import { delay, press, snapshot, start, waitForFrame } from './test/bitsy';
 
+jest.retryTimes(3);
+
 const multiple = `
 
 # BITSY VERSION 7.2
