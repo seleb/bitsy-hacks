@@ -1,3 +1,11 @@
+## [21.0.2](https://github.com/seleb/bitsy-hacks/compare/v21.0.1...v21.0.2) (2022-08-25)
+
+
+### Bug Fixes
+
+* **online:** migrate sample server from heroku to glitch ([9e5e768](https://github.com/seleb/bitsy-hacks/commit/9e5e768a09ca00fc379be8fc3ec6cd381a5c4559))
+* **online:** undefined player dialog causing errors ([22f90f8](https://github.com/seleb/bitsy-hacks/commit/22f90f8d0c238da8f9b7841eabe3e4fe8353cbfc))
+
 ## [21.0.1](https://github.com/seleb/bitsy-hacks/compare/v21.0.0...v21.0.1) (2022-07-23)
 
 

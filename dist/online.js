@@ -4,7 +4,7 @@
 @summary multiplayer bitsy
 @license MIT
 @author Sean S. LeBlanc
-@version 21.0.1
+@version 21.0.2
 @requires Bitsy 8.1
 
 @description
@@ -16,7 +16,7 @@ Server notes:
 	the server just hosts client code and negotiates initial connections.
 	(i.e. it uses very little bandwidth)
 	- A single server can host multiple games simultaneously
-	- A sample server is wss://bitsy-online.herokuapp.com
+	- A sample server is wss://bitsy-online.glitch.me
 	  This server is free to use, but I recommend setting up your own
 	  if you need to guarantee stability or maintenance
 	- If you're not sure how to setup/use the server, ask for help!
@@ -37,7 +37,7 @@ this.hacks = this.hacks || {};
 (function (exports, bitsy) {
 'use strict';
 var hackOptions = {
-	host: 'wss://your signalling server',
+	host: 'wss://bitsy-online.glitch.me',
 	// room: "custom room", // sets the room on the server to use; otherwise, uses game title
 	ghosts: false, // if true, sprites from players who disconnected while you were online won't go away until you restart
 	debug: false, // if true, includes web-rtc-mesh debug logs in console
@@ -182,7 +182,7 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 21.0.1
+@version 21.0.2
 @requires Bitsy 8.1
 
 */
@@ -343,7 +343,7 @@ function addDualDialogTag(tag, fn) {
 @file utils
 @summary miscellaneous bitsy utilities
 @author Sean S. LeBlanc
-@version 21.0.1
+@version 21.0.2
 @requires Bitsy 8.1
 
 */
@@ -372,7 +372,7 @@ function getImage(name, map) {
 @summary edit dialog from dialog (yes really)
 @license MIT
 @author Sean S. LeBlanc
-@version 21.0.1
+@version 21.0.2
 @requires Bitsy 8.1
 
 
@@ -439,7 +439,7 @@ addDeferredDialogTag('dialog', editDialog);
 @file edit image at runtime
 @summary API for updating image data at runtime.
 @author Sean S. LeBlanc
-@version 21.0.1
+@version 21.0.2
 @requires Bitsy 8.1
 
 @description
@@ -498,7 +498,7 @@ function setSpriteData(id, frame, newData) {
 @summary edit sprites, items, and tiles from dialog
 @license MIT
 @author Sean S. LeBlanc
-@version 21.0.1
+@version 21.0.2
 @requires Bitsy 8.1
 
 
@@ -645,7 +645,7 @@ addDualDialogTag('imagePal', editPalette);
 @summary execute arbitrary javascript from dialog
 @license MIT
 @author Sean S. LeBlanc
-@version 21.0.1
+@version 21.0.2
 @requires Bitsy 8.1
 
 
@@ -769,7 +769,7 @@ function onData(event) {
 				room: data.room,
 				type: 'SPR',
 			};
-			bitsy.dialog[longname] = { src: data.dlg };
+			bitsy.dialog[longname] = { src: data.dlg || '' };
 			bitsy.renderer.SetDrawingSource(longname, data.data);
 
 			for (var frame = 0; frame < data.data.length; ++frame) {
