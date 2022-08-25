@@ -13,7 +13,7 @@ Server notes:
 	the server just hosts client code and negotiates initial connections.
 	(i.e. it uses very little bandwidth)
 	- A single server can host multiple games simultaneously
-	- A sample server is wss://bitsy-online.herokuapp.com
+	- A sample server is wss://bitsy-online.glitch.me
 	  This server is free to use, but I recommend setting up your own
 	  if you need to guarantee stability or maintenance
 	- If you're not sure how to setup/use the server, ask for help!
@@ -38,7 +38,7 @@ import { after } from './helpers/kitsy-script-toolkit';
 import './javascript dialog';
 
 export var hackOptions = {
-	host: 'wss://your signalling server',
+	host: 'wss://bitsy-online.glitch.me',
 	// room: "custom room", // sets the room on the server to use; otherwise, uses game title
 	ghosts: false, // if true, sprites from players who disconnected while you were online won't go away until you restart
 	debug: false, // if true, includes web-rtc-mesh debug logs in console
