@@ -167,7 +167,7 @@ function moveSprite() {
 }
 
 // tell everyone who you are
-function updateSprite() {
+export function updateSprite() {
 	client.broadcast(getSpriteUpdate());
 }
 
