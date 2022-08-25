@@ -104,7 +104,7 @@ function onData(event) {
 				room: data.room,
 				type: 'SPR',
 			};
-			bitsy.dialog[longname] = { src: data.dlg };
+			bitsy.dialog[longname] = { src: data.dlg || '' };
 			bitsy.renderer.SetDrawingSource(longname, data.data);
 
 			for (var frame = 0; frame < data.data.length; ++frame) {
