@@ -1,3 +1,10 @@
+## [21.0.3](https://github.com/seleb/bitsy-hacks/compare/v21.0.2...v21.0.3) (2022-08-25)
+
+
+### Bug Fixes
+
+* **online:** export `updateSprite` for easier js dialog use ([a4503fc](https://github.com/seleb/bitsy-hacks/commit/a4503fcecad44bbd0cabc437c75e16aac07ab85c))
+
 ## [21.0.2](https://github.com/seleb/bitsy-hacks/compare/v21.0.1...v21.0.2) (2022-08-25)
 
 
