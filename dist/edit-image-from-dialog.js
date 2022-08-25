@@ -4,7 +4,7 @@
 @summary edit sprites, items, and tiles from dialog
 @license MIT
 @author Sean S. LeBlanc
-@version 21.0.1
+@version 21.0.2
 @requires Bitsy 8.1
 
 
@@ -67,7 +67,7 @@ bitsy = bitsy || /*#__PURE__*/_interopDefaultLegacy(bitsy);
 @file utils
 @summary miscellaneous bitsy utilities
 @author Sean S. LeBlanc
-@version 21.0.1
+@version 21.0.2
 @requires Bitsy 8.1
 
 */
@@ -94,7 +94,7 @@ function getImage(name, map) {
 @file edit image at runtime
 @summary API for updating image data at runtime.
 @author Sean S. LeBlanc
-@version 21.0.1
+@version 21.0.2
 @requires Bitsy 8.1
 
 @description
@@ -278,7 +278,7 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 21.0.1
+@version 21.0.2
 @requires Bitsy 8.1
 
 */
