@@ -3,7 +3,7 @@ import path from 'path';
 import { delay, press, snapshot, start, waitForFrame } from './test/bitsy';
 
 jest.retryTimes(3);
-const customSnapshotIdentifier = ({ testPath, currentTestName, counter }) => kebabCase(`${path.basename(testPath)}-${currentTestName}-${counter}`);
+const customSnapshotIdentifier = ({ testPath, currentTestName, counter }) => kebabCase(`${path.basename(testPath)}-${currentTestName}-${counter}-snap`);
 
 const multiple = `
 
