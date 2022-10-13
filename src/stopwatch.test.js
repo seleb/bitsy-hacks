@@ -47,4 +47,10 @@ test('stopwatch', async () => {
 	await startDialog('{sayWatch "timer"}');
 	await press('ArrowRight');
 	await snapshot();
+	await press('ArrowRight');
+
+	// get (0:05)
+	await startDialog('{x = {getWatch "timer"}}{print x}');
+	await press('ArrowRight');
+	await snapshot();
 });
