@@ -13,6 +13,7 @@ Usage:
 	(stopWatch "timer id"): stops a timer with provided id
 	(resumeWatch "timer id"): resumes a timer with provided id
 	(sayWatch "timer id"): prints a timer with provided id
+	(getWatch "timer id"): returns the value of a timer with provided id
 
 There's also startWatchNow, stopWatchNow, and resumeWatchNow,
 which do the same things, but immediately instead of when dialog ends.
@@ -24,6 +25,7 @@ Notes on edge/error cases:
 	(resumeWatch "non-existent id"): starts new timer
 	(resumeWatch "running id"): does nothing
 	(sayWatch "non-existent id"): throws error
+	(getWatch "non-existent id"): throws error
 
 HOW TO USE:
 1. Copy-paste into a script tag after the bitsy source
@@ -129,4 +131,13 @@ addDialogTag('sayWatch', function (environment, parameters, onReturn) {
 		throw new Error('Tried to sayWatch "' + parameters[0] + '" but it was never started');
 	}
 	printDialog(environment, hackOptions.timeToString(timer), onReturn);
+});
+
+// add get function
+addDialogTag('getWatch', function (environment, parameters, onReturn) {
+	var timer = timers[parameters[0]];
+	if (!timer) {
+		throw new Error('Tried to getWatch "' + parameters[0] + '" but it was never started');
+	}
+	onReturn(hackOptions.timeToString(timer));
 });
