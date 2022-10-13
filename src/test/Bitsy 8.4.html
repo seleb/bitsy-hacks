@@ -11,10 +11,10 @@
 <script type="text/bitsyGameData" id="exportedGameData">
 Write your game's title here
 
-# BITSY VERSION 8.2
+# BITSY VERSION 8.4
 
 ! VER_MAJ 8
-! VER_MIN 2
+! VER_MIN 4
 ! ROOM_FORMAT 1
 ! DLG_COMPAT 0
 ! TXT_MODE 0
@@ -1544,6 +1544,17 @@ var bitsy = mainProcess.system;
 
 <!-- engine -->
 <script>
+/* BITSY VERSION */
+// is this the right place for this to live?
+var version = {
+	major: 8, // major changes
+	minor: 4, // smaller changes
+	devBuildPhase: "RELEASE",
+};
+function getEngineVersion() {
+	return version.major + "." + version.minor;
+}
+
 /* TEXT CONSTANTS */
 var titleDialogId = "title";
 
@@ -3167,6 +3178,18 @@ function SoundPlayer() {
 		}
 	};
 
+	this.isTunePlaying = function() {
+		return curTune != null;
+	};
+
+	this.getCurTuneId = function() {
+		if (curTune) {
+			return curTune.id;
+		}
+
+		return null;
+	};
+
 	this.stopTune = function() {
 		curTune = null;
 	};
@@ -4583,6 +4606,7 @@ function endFunc(environment,parameters,onReturn) {
 	isEnding = true;
 	isNarrating = true;
 	dialogRenderer.SetCentered(true);
+	dialogRenderer.DrawTextbox();
 	onReturn(null);
 }
 
@@ -7825,16 +7849,6 @@ function setTitle(titleSrc) {
 	dialog[titleDialogId] = { src:titleSrc, name:null };
 }
 
-/* VERSION */
-var version = {
-	major: 8, // major changes
-	minor: 2, // smaller changes
-	devBuildPhase: "RELEASE",
-};
-function getEngineVersion() {
-	return version.major + "." + version.minor;
-}
-
 /* FLAGS */
 var flags = createDefaultFlags();
 
@@ -9524,7 +9538,9 @@ function startEndingDialog(ending) {
 		endingDialogStr = end[ending.id].src;
 	}
 
+	var tmpTuneId = null;
 	if (isEnding && soundPlayer) {
+		tmpTuneId = soundPlayer.getCurTuneId();
 		soundPlayer.stopTune();
 	}
 
@@ -9535,6 +9551,12 @@ function startEndingDialog(ending) {
 			var isLocked = ending.property && ending.property.locked === true;
 			if (isLocked) {
 				isEnding = false;
+
+				// if the ending was cancelled, restart the music
+				// todo : should it resume from where it started? (right now it starts over)
+				if (tmpTuneId && soundPlayer && !soundPlayer.isTunePlaying()) {
+					soundPlayer.playTune(tune[tmpTuneId]);
+				}
 			}
 		},
 		ending);
@@ -9718,6 +9740,24 @@ CHAR 34
 000000
 000000
 000000
+CHAR 8220
+011011
+011011
+010010
+000000
+000000
+000000
+000000
+000000
+CHAR 8221
+011011
+011011
+010010
+000000
+000000
+000000
+000000
+000000
 CHAR 35
 000000
 001010
@@ -9755,6 +9795,24 @@ CHAR 38
 001101
 000000
 CHAR 39
+001100
+001100
+001000
+000000
+000000
+000000
+000000
+000000
+CHAR 8216
+001100
+001100
+001000
+000000
+000000
+000000
+000000
+000000
+CHAR 8217
 001100
 001100
 001000
