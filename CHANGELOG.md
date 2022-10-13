@@ -1,3 +1,10 @@
+# [21.2.0](https://github.com/seleb/bitsy-hacks/compare/v21.1.0...v21.2.0) (2022-10-13)
+
+
+### Features
+
+* update bitsy version to 8.4 ([b8b7ba2](https://github.com/seleb/bitsy-hacks/commit/b8b7ba206116f0c09d7c09dfbdf782ce5aeeaacc))
+
 # [21.1.0](https://github.com/seleb/bitsy-hacks/compare/v21.0.3...v21.1.0) (2022-10-13)
 
 
