@@ -1,3 +1,10 @@
+# [21.1.0](https://github.com/seleb/bitsy-hacks/compare/v21.0.3...v21.1.0) (2022-10-13)
+
+
+### Features
+
+* **stopwatch:** add `getWatch` dialog tag ([b9bbae8](https://github.com/seleb/bitsy-hacks/commit/b9bbae863aea092b821c2fc9d3e7660fc4d11d42))
+
 ## [21.0.3](https://github.com/seleb/bitsy-hacks/compare/v21.0.2...v21.0.3) (2022-08-25)
 
 

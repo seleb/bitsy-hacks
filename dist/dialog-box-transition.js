@@ -4,8 +4,8 @@
 @summary adds an easing transition animation to display the dialog box text
 @license MIT
 @author Delacannon
-@version 21.0.3
-@requires Bitsy 8.1
+@version 21.1.0
+@requires Bitsy 8.2
 
 
 @description
@@ -172,8 +172,8 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 21.0.3
-@requires Bitsy 8.1
+@version 21.1.0
+@requires Bitsy 8.2
 
 */
 var kitsy = (window.kitsy = window.kitsy || {

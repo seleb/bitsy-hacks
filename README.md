@@ -6,7 +6,7 @@ npm i @bitsy/hecks
 
 A collection of re-usable scripts for [Adam Le Doux](https://twitter.com/adamledoux)'s [Bitsy Game Maker](https://ledoux.itch.io/bitsy). See [Ayolland's Borksy](https://ayolland.itch.io/borksy) for a GUI that allows you to use these hacks with less copy-pasting.
 
-Last tested against Bitsy 8.1
+Last tested against Bitsy 8.2
 
 - [Contents](#contents)
 - [How to use](#how-to-use)

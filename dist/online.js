@@ -4,8 +4,8 @@
 @summary multiplayer bitsy
 @license MIT
 @author Sean S. LeBlanc
-@version 21.0.3
-@requires Bitsy 8.1
+@version 21.1.0
+@requires Bitsy 8.2
 
 @description
 Provides the groundwork for running a small online multiplayer bitsy game.
@@ -182,8 +182,8 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 21.0.3
-@requires Bitsy 8.1
+@version 21.1.0
+@requires Bitsy 8.2
 
 */
 var kitsy = (window.kitsy = window.kitsy || {
@@ -343,8 +343,8 @@ function addDualDialogTag(tag, fn) {
 @file utils
 @summary miscellaneous bitsy utilities
 @author Sean S. LeBlanc
-@version 21.0.3
-@requires Bitsy 8.1
+@version 21.1.0
+@requires Bitsy 8.2
 
 */
 
@@ -372,8 +372,8 @@ function getImage(name, map) {
 @summary edit dialog from dialog (yes really)
 @license MIT
 @author Sean S. LeBlanc
-@version 21.0.3
-@requires Bitsy 8.1
+@version 21.1.0
+@requires Bitsy 8.2
 
 
 @description
@@ -439,8 +439,8 @@ addDeferredDialogTag('dialog', editDialog);
 @file edit image at runtime
 @summary API for updating image data at runtime.
 @author Sean S. LeBlanc
-@version 21.0.3
-@requires Bitsy 8.1
+@version 21.1.0
+@requires Bitsy 8.2
 
 @description
 Adds API for updating sprite, tile, and item data at runtime.
@@ -498,8 +498,8 @@ function setSpriteData(id, frame, newData) {
 @summary edit sprites, items, and tiles from dialog
 @license MIT
 @author Sean S. LeBlanc
-@version 21.0.3
-@requires Bitsy 8.1
+@version 21.1.0
+@requires Bitsy 8.2
 
 
 @description
@@ -645,8 +645,8 @@ addDualDialogTag('imagePal', editPalette);
 @summary execute arbitrary javascript from dialog
 @license MIT
 @author Sean S. LeBlanc
-@version 21.0.3
-@requires Bitsy 8.1
+@version 21.1.0
+@requires Bitsy 8.2
 
 
 @description
