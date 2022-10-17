@@ -9,7 +9,7 @@
 	"version": "21.2.0",
 	"bitsyVersion": "8.4",
 	"scripts": {
-		"build": "rollup -c",
+		"build": "rollup -c --bundleConfigAsCjs",
 		"test": "jest --runInBand",
 		"lint": "eslint ./src/**/*.js",
 		"postversion": "npm run build"
@@ -25,7 +25,7 @@
 		"input-gamepads.js": "^3.0.4",
 		"kitsy": "^1.1.0",
 		"omggif": "^1.0.10",
-		"rollup": "^2.56.3",
+		"rollup": "^3.2.2",
 		"rollup-plugin-commonjs": "^10.1.0",
 		"rollup-plugin-node-resolve": "^5.2.0",
 		"tracery-grammar": "^2.7.4",
