@@ -9,7 +9,7 @@
 	"version": "21.2.0",
 	"bitsyVersion": "8.4",
 	"scripts": {
-		"build": "rollup -c",
+		"build": "rollup -c --bundleConfigAsCjs",
 		"test": "jest --runInBand",
 		"lint": "eslint ./src/**/*.js",
 		"postversion": "npm run build"
