@@ -71,6 +71,11 @@ describe('getRelativeNumber', () => {
 		expect(getRelativeNumber(0, 5)).toBe(0);
 		expect(getRelativeNumber(-1, 5)).toBe(-1);
 	});
+	it('ignores whitespace', () => {
+		expect(getRelativeNumber(' +1', 5)).toBe(6);
+		expect(getRelativeNumber(' +1 ', 5)).toBe(6);
+		expect(getRelativeNumber('+1 ', 5)).toBe(6);
+	});
 });
 
 describe('clamp', () => {
