@@ -4,7 +4,7 @@
 @summary high quality anime gifs
 @license MIT
 @author Sean S. LeBlanc
-@version 21.2.0
+@version 21.2.1
 @requires Bitsy 8.4
 
 
@@ -43,10 +43,6 @@ var hackOptions = {
 		png: './test.gif',
 	},
 };
-
-function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
-
-bitsy = bitsy || /*#__PURE__*/_interopDefaultLegacy(bitsy);
 
 function createCommonjsModule(fn, module) {
 	return module = { exports: {} }, fn(module, module.exports), module.exports;
@@ -971,7 +967,7 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 21.2.0
+@version 21.2.1
 @requires Bitsy 8.4
 
 */
@@ -1084,7 +1080,7 @@ function addDialogTag(tag, fn) {
 @summary high quality anime jpegs (or pngs i guess)
 @license MIT
 @author Sean S. LeBlanc
-@version 21.2.0
+@version 21.2.1
 @requires Bitsy 8.4
 
 
@@ -1311,7 +1307,5 @@ after('bitsy._graphics.drawImage', function (id) {
 });
 
 exports.hackOptions = hackOptions;
-
-Object.defineProperty(exports, '__esModule', { value: true });
 
 })(this.hacks.character_portraits_animated = this.hacks.character_portraits_animated || {}, window);

@@ -4,7 +4,7 @@
 @summary put more words onscreen
 @license MIT
 @author Sean S. LeBlanc
-@version 21.2.0
+@version 21.2.1
 @requires Bitsy 8.4
 
 
@@ -44,10 +44,6 @@ var hackOptions = {
 	minRows: 2,
 	maxRows: 4,
 };
-
-function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
-
-bitsy = bitsy || /*#__PURE__*/_interopDefaultLegacy(bitsy);
 
 /**
  * Helper used to replace code in a script tag based on a search regex.
@@ -184,7 +180,7 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 21.2.0
+@version 21.2.1
 @requires Bitsy 8.4
 
 */
@@ -354,7 +350,7 @@ inject(/(this\.AddLinebreak = )/, 'this.AddParagraphBreak = function() { buffer.
 @summary Adds paragraph breaks to the dialogue parser
 @license WTFPL (do WTF you want)
 @author Sean S. LeBlanc, David Mowatt
-@version 21.2.0
+@version 21.2.1
 @requires Bitsy 8.4
 
 
@@ -445,7 +441,5 @@ addDualDialogTag('textboxsize', function (environment, parameters) {
 });
 
 exports.hackOptions = hackOptions;
-
-Object.defineProperty(exports, '__esModule', { value: true });
 
 })(this.hacks.long_dialog = this.hacks.long_dialog || {}, window);

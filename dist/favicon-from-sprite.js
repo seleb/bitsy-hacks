@@ -4,7 +4,7 @@
 @summary generate a browser favicon (tab icon) from a Bitsy sprite, including animation!
 @license WTFPL (do WTF you want)
 @author @mildmojo
-@version 21.2.0
+@version 21.2.1
 @requires Bitsy 8.4
 
 
@@ -30,10 +30,6 @@ var hackOptions = {
 	ROUNDED_CORNERS: true, // Should the favicon have rounded corners? (Suggest margin 2px if rounding.)
 	FRAME_DELAY: 400, // Frame change interval (ms) if sprite is animated. Use `Infinity` to disable.
 };
-
-function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
-
-bitsy = bitsy || /*#__PURE__*/_interopDefaultLegacy(bitsy);
 
 /**
  * Helper used to replace code in a script tag based on a search regex.
@@ -170,7 +166,7 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 21.2.0
+@version 21.2.1
 @requires Bitsy 8.4
 
 */
@@ -233,7 +229,7 @@ var after = kitsy.after;
 @file utils
 @summary miscellaneous bitsy utilities
 @author Sean S. LeBlanc
-@version 21.2.0
+@version 21.2.1
 @requires Bitsy 8.4
 
 */
@@ -361,7 +357,5 @@ function rgb(values) {
 }
 
 exports.hackOptions = hackOptions;
-
-Object.defineProperty(exports, '__esModule', { value: true });
 
 })(this.hacks["favicon-from-sprite"] = this.hacks["favicon-from-sprite"] || {}, window);

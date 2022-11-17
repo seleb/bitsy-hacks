@@ -4,7 +4,7 @@
 @summary multiplayer bitsy
 @license MIT
 @author Sean S. LeBlanc
-@version 21.2.0
+@version 21.2.1
 @requires Bitsy 8.4
 
 @description
@@ -42,10 +42,6 @@ var hackOptions = {
 	ghosts: false, // if true, sprites from players who disconnected while you were online won't go away until you restart
 	debug: false, // if true, includes web-rtc-mesh debug logs in console
 };
-
-function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
-
-bitsy = bitsy || /*#__PURE__*/_interopDefaultLegacy(bitsy);
 
 /**
  * Helper used to replace code in a script tag based on a search regex.
@@ -182,7 +178,7 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 21.2.0
+@version 21.2.1
 @requires Bitsy 8.4
 
 */
@@ -343,7 +339,7 @@ function addDualDialogTag(tag, fn) {
 @file utils
 @summary miscellaneous bitsy utilities
 @author Sean S. LeBlanc
-@version 21.2.0
+@version 21.2.1
 @requires Bitsy 8.4
 
 */
@@ -372,7 +368,7 @@ function getImage(name, map) {
 @summary edit dialog from dialog (yes really)
 @license MIT
 @author Sean S. LeBlanc
-@version 21.2.0
+@version 21.2.1
 @requires Bitsy 8.4
 
 
@@ -439,7 +435,7 @@ addDeferredDialogTag('dialog', editDialog);
 @file edit image at runtime
 @summary API for updating image data at runtime.
 @author Sean S. LeBlanc
-@version 21.2.0
+@version 21.2.1
 @requires Bitsy 8.4
 
 @description
@@ -498,7 +494,7 @@ function setSpriteData(id, frame, newData) {
 @summary edit sprites, items, and tiles from dialog
 @license MIT
 @author Sean S. LeBlanc
-@version 21.2.0
+@version 21.2.1
 @requires Bitsy 8.4
 
 
@@ -645,7 +641,7 @@ addDualDialogTag('imagePal', editPalette);
 @summary execute arbitrary javascript from dialog
 @license MIT
 @author Sean S. LeBlanc
-@version 21.2.0
+@version 21.2.1
 @requires Bitsy 8.4
 
 
@@ -860,7 +856,5 @@ function getSpriteUpdate() {
 
 exports.hackOptions = hackOptions;
 exports.updateSprite = updateSprite;
-
-Object.defineProperty(exports, '__esModule', { value: true });
 
 })(this.hacks.online = this.hacks.online || {}, window);

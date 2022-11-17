@@ -4,7 +4,7 @@
 @summary separate Bitsy game data from your (modded) HTML for easier development
 @license WTFPL (do WTF you want)
 @author @mildmojo
-@version 21.2.0
+@version 21.2.1
 @requires Bitsy 8.4
 
 
@@ -42,10 +42,6 @@ NOTE: Chrome can only fetch external files when they're served from a
 */
 (function (bitsy) {
 'use strict';
-
-function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
-
-bitsy = bitsy || /*#__PURE__*/_interopDefaultLegacy(bitsy);
 
 /**
  * Helper used to replace code in a script tag based on a search regex.
@@ -182,7 +178,7 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 21.2.0
+@version 21.2.1
 @requires Bitsy 8.4
 
 */

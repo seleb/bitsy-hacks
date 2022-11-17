@@ -4,7 +4,7 @@
 @summary make {custom}text effects{custom}
 @license MIT
 @author Sean S. LeBlanc
-@version 21.2.0
+@version 21.2.1
 @requires Bitsy 8.4
 
 
@@ -214,10 +214,6 @@ var hackOptions = {
 	},
 };
 
-function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
-
-bitsy = bitsy || /*#__PURE__*/_interopDefaultLegacy(bitsy);
-
 /**
  * Helper used to replace code in a script tag based on a search regex.
  * To inject code without erasing original string, using capturing groups; e.g.
@@ -353,7 +349,7 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 21.2.0
+@version 21.2.1
 @requires Bitsy 8.4
 
 */
@@ -460,7 +456,5 @@ inject(/(var functionMap = \{\};)/, '$1' + functionMapCode);
 inject(/(var TextEffects = \{\};)/, '$1' + textEffectCode);
 
 exports.hackOptions = hackOptions;
-
-Object.defineProperty(exports, '__esModule', { value: true });
 
 })(this.hacks.custom_text_effect = this.hacks.custom_text_effect || {}, window);

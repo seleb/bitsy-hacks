@@ -4,7 +4,7 @@
 @summary change the avatar in certain rooms
 @license MIT
 @author Sean S. LeBlanc
-@version 21.2.0
+@version 21.2.1
 @requires Bitsy 8.4
 
 
@@ -37,10 +37,6 @@ var hackOptions = {
 		'my room': 'a sprite ID for a room with a user-defined name',
 	},
 };
-
-function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
-
-bitsy = bitsy || /*#__PURE__*/_interopDefaultLegacy(bitsy);
 
 /**
  * Helper used to replace code in a script tag based on a search regex.
@@ -177,7 +173,7 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 21.2.0
+@version 21.2.1
 @requires Bitsy 8.4
 
 */
@@ -240,7 +236,7 @@ var after = kitsy.after;
 @file utils
 @summary miscellaneous bitsy utilities
 @author Sean S. LeBlanc
-@version 21.2.0
+@version 21.2.1
 @requires Bitsy 8.4
 
 */
@@ -331,7 +327,5 @@ before('drawRoom', function () {
 });
 
 exports.hackOptions = hackOptions;
-
-Object.defineProperty(exports, '__esModule', { value: true });
 
 })(this.hacks.avatar_by_room = this.hacks.avatar_by_room || {}, window);

@@ -4,7 +4,7 @@
 @summary animal crossing-style audio powered by the pink trombone vocal synth
 @license MIT
 @author Sean S. LeBlanc
-@version 21.2.0
+@version 21.2.1
 @requires Bitsy 8.4
 
 
@@ -75,10 +75,6 @@ var hackOptions = {
 		},
 	},
 };
-
-function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
-
-bitsy = bitsy || /*#__PURE__*/_interopDefaultLegacy(bitsy);
 
 /*
  * A speed-improved perlin and simplex noise algorithms for 2D.
@@ -884,7 +880,7 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 21.2.0
+@version 21.2.1
 @requires Bitsy 8.4
 
 */
@@ -997,7 +993,7 @@ function addDialogTag(tag, fn) {
 @summary animal crossing-style audio
 @license MIT
 @author Sean S. LeBlanc
-@version 21.2.0
+@version 21.2.1
 @requires Bitsy 8.4
 
 
@@ -1054,7 +1050,7 @@ before('dialogBuffer.DoNextChar', function () {
 @file utils
 @summary miscellaneous bitsy utilities
 @author Sean S. LeBlanc
-@version 21.2.0
+@version 21.2.1
 @requires Bitsy 8.4
 
 */
@@ -1386,7 +1382,5 @@ after('onready', function () {
 exports.Glottis = Glottis;
 exports.Tract = Tract;
 exports.hackOptions = hackOptions;
-
-Object.defineProperty(exports, '__esModule', { value: true });
 
 })(this.hacks.dialog_audio_vocal_synth = this.hacks.dialog_audio_vocal_synth || {}, window);

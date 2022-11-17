@@ -1,3 +1,10 @@
+## [21.2.1](https://github.com/seleb/bitsy-hacks/compare/v21.2.0...v21.2.1) (2022-11-17)
+
+
+### Bug Fixes
+
+* **utils:** `getRelativeNumber` ignores whitespace (fixes [#336](https://github.com/seleb/bitsy-hacks/issues/336)) ([a2dc72f](https://github.com/seleb/bitsy-hacks/commit/a2dc72f17d07750480a0e8875ba8b2d13320f09d))
+
 # [21.2.0](https://github.com/seleb/bitsy-hacks/compare/v21.1.0...v21.2.0) (2022-10-13)
 
 

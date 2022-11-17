@@ -4,7 +4,7 @@
 @summary corrupts gamedata at runtime
 @license MIT
 @author Sean S. LeBlanc
-@version 21.2.0
+@version 21.2.1
 @requires Bitsy 8.4
 
 
@@ -52,15 +52,11 @@ var hackOptions = {
 	paletteAmplitude: 10, // how much to corrupt palette by (0-128)
 };
 
-function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
-
-bitsy = bitsy || /*#__PURE__*/_interopDefaultLegacy(bitsy);
-
 /**
 @file utils
 @summary miscellaneous bitsy utilities
 @author Sean S. LeBlanc
-@version 21.2.0
+@version 21.2.1
 @requires Bitsy 8.4
 
 */
@@ -87,7 +83,7 @@ function getImage(name, map) {
 @file edit image at runtime
 @summary API for updating image data at runtime.
 @author Sean S. LeBlanc
-@version 21.2.0
+@version 21.2.1
 @requires Bitsy 8.4
 
 @description
@@ -295,7 +291,7 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 21.2.0
+@version 21.2.1
 @requires Bitsy 8.4
 
 */
@@ -502,7 +498,5 @@ function rndItem(array) {
 }
 
 exports.hackOptions = hackOptions;
-
-Object.defineProperty(exports, '__esModule', { value: true });
 
 })(this.hacks.corrupt = this.hacks.corrupt || {}, window);

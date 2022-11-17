@@ -4,7 +4,7 @@
 @summary process all dialog text with a tracery grammar
 @license MIT
 @author Sean S. LeBlanc
-@version 21.2.0
+@version 21.2.1
 @requires Bitsy 8.4
 
 
@@ -55,10 +55,6 @@ var hackOptions = {
 	// modifiers to include (if this is not provided, the default tracery-provided modifiers like `.capitalize` are used)
 	modifiers: undefined,
 };
-
-function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
-
-bitsy = bitsy || /*#__PURE__*/_interopDefaultLegacy(bitsy);
 
 /**
  * @author Kate
@@ -1036,7 +1032,7 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 21.2.0
+@version 21.2.1
 @requires Bitsy 8.4
 
 */
@@ -1111,7 +1107,5 @@ before('onready', function () {
 inject(/onReturn\(this\.value\)/, 'onReturn(window.tracery(this.value))');
 
 exports.hackOptions = hackOptions;
-
-Object.defineProperty(exports, '__esModule', { value: true });
 
 })(this.hacks.tracery_processing = this.hacks.tracery_processing || {}, window);

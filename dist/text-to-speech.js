@@ -4,7 +4,7 @@
 @summary text-to-speech for bitsy dialog
 @license MIT
 @author Sean S. LeBlanc
-@version 21.2.0
+@version 21.2.1
 @requires Bitsy 8.4
 
 
@@ -52,10 +52,6 @@ var hackOptions = {
 	automatic: true, // disable this to prevent TTS from playing for all dialog (i.e. you only want to use TTS via commands)
 	hurried: true, // disable this to let bitsy text animations play out normally (not recommended for automatic mode)
 };
-
-function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
-
-bitsy = bitsy || /*#__PURE__*/_interopDefaultLegacy(bitsy);
 
 /**
  * Helper used to replace code in a script tag based on a search regex.
@@ -192,7 +188,7 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 21.2.0
+@version 21.2.1
 @requires Bitsy 8.4
 
 */
@@ -479,7 +475,5 @@ addDualDialogTag('tts', function (environment, parameters) {
 });
 
 exports.hackOptions = hackOptions;
-
-Object.defineProperty(exports, '__esModule', { value: true });
 
 })(this.hacks["text-to-speech"] = this.hacks["text-to-speech"] || {}, window);
