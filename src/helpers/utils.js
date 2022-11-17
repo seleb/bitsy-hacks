@@ -110,6 +110,7 @@ export function printDialog(environment, text, onReturn) {
  */
 export function getRelativeNumber(value, relativeTo) {
 	var v = value || value === 0 ? value : relativeTo;
+	if (typeof v === 'string') v = v.trim();
 	if (typeof v === 'string' && (v.startsWith('+') || v.startsWith('-'))) {
 		return relativeTo + Number(v);
 	}
