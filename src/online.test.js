@@ -117,118 +117,118 @@ test('online', async () => {
 	await press('ArrowRight'); // complete dialog
 	await snapshot();
 	expect(await evaluate(() => window.Client.default.log)).toMatchInlineSnapshot(`
-		Array [
-		  Array [
+		[
+		  [
 		    "debug",
 		    null,
 		  ],
-		  Array [
+		  [
 		    "broadcast",
-		    Object {
+		    {
 		      "e": "move",
 		      "room": "0",
 		      "x": 4,
 		      "y": 5,
 		    },
 		  ],
-		  Array [
+		  [
 		    "broadcast",
-		    Object {
+		    {
 		      "e": "move",
 		      "room": "0",
 		      "x": 4,
 		      "y": 6,
 		    },
 		  ],
-		  Array [
+		  [
 		    "broadcast",
-		    Object {
+		    {
 		      "e": "move",
 		      "room": "0",
 		      "x": 4,
 		      "y": 7,
 		    },
 		  ],
-		  Array [
+		  [
 		    "broadcast",
-		    Object {
+		    {
 		      "e": "move",
 		      "room": "0",
 		      "x": 4,
 		      "y": 8,
 		    },
 		  ],
-		  Array [
+		  [
 		    "broadcast",
-		    Object {
+		    {
 		      "e": "move",
 		      "room": "0",
 		      "x": 4,
 		      "y": 9,
 		    },
 		  ],
-		  Array [
+		  [
 		    "broadcast",
-		    Object {
+		    {
 		      "e": "move",
 		      "room": "0",
 		      "x": 4,
 		      "y": 10,
 		    },
 		  ],
-		  Array [
+		  [
 		    "broadcast",
-		    Object {
+		    {
 		      "e": "move",
 		      "room": "0",
 		      "x": 4,
 		      "y": 11,
 		    },
 		  ],
-		  Array [
+		  [
 		    "broadcast",
-		    Object {
+		    {
 		      "e": "move",
 		      "room": "0",
 		      "x": 4,
 		      "y": 12,
 		    },
 		  ],
-		  Array [
+		  [
 		    "broadcast",
-		    Object {
+		    {
 		      "e": "move",
 		      "room": "0",
 		      "x": 5,
 		      "y": 12,
 		    },
 		  ],
-		  Array [
+		  [
 		    "broadcast",
-		    Object {
+		    {
 		      "e": "move",
 		      "room": "0",
 		      "x": 6,
 		      "y": 12,
 		    },
 		  ],
-		  Array [
+		  [
 		    "broadcast",
-		    Object {
+		    {
 		      "e": "move",
 		      "room": "0",
 		      "x": 7,
 		      "y": 12,
 		    },
 		  ],
-		  Array [
+		  [
 		    "broadcast",
-		    Object {
+		    {
 		      "bgc": 0,
 		      "col": 2,
-		      "data": Array [
-		        Array [
-		          Array [
+		      "data": [
+		        [
+		          [
 		            0,
 		            0,
 		            0,
@@ -238,7 +238,7 @@ test('online', async () => {
 		            0,
 		            0,
 		          ],
-		          Array [
+		          [
 		            0,
 		            0,
 		            0,
@@ -248,7 +248,7 @@ test('online', async () => {
 		            0,
 		            0,
 		          ],
-		          Array [
+		          [
 		            0,
 		            0,
 		            0,
@@ -258,7 +258,7 @@ test('online', async () => {
 		            0,
 		            0,
 		          ],
-		          Array [
+		          [
 		            0,
 		            0,
 		            1,
@@ -268,7 +268,7 @@ test('online', async () => {
 		            0,
 		            0,
 		          ],
-		          Array [
+		          [
 		            0,
 		            1,
 		            1,
@@ -278,7 +278,7 @@ test('online', async () => {
 		            1,
 		            0,
 		          ],
-		          Array [
+		          [
 		            1,
 		            0,
 		            1,
@@ -288,7 +288,7 @@ test('online', async () => {
 		            0,
 		            1,
 		          ],
-		          Array [
+		          [
 		            0,
 		            0,
 		            1,
@@ -298,7 +298,7 @@ test('online', async () => {
 		            0,
 		            0,
 		          ],
-		          Array [
+		          [
 		            0,
 		            0,
 		            1,
@@ -316,21 +316,21 @@ test('online', async () => {
 		      "y": 12,
 		    },
 		  ],
-		  Array [
+		  [
 		    "broadcast",
-		    Object {
+		    {
 		      "e": "gimmeSprite",
 		    },
 		  ],
-		  Array [
+		  [
 		    "mock",
-		    Object {
+		    {
 		      "e": "gimmeSprite",
 		    },
 		  ],
-		  Array [
+		  [
 		    "broadcast",
-		    Object {
+		    {
 		      "e": "move",
 		      "room": "0",
 		      "x": 7,
