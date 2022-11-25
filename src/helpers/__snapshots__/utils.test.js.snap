@@ -1,9 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`unique returns an array which is a copy of the parameter, without duplicates 1`] = `Array []`;
+exports[`unique returns an array which is a copy of the parameter, without duplicates 1`] = `[]`;
 
 exports[`unique returns an array which is a copy of the parameter, without duplicates 2`] = `
-Array [
+[
   1,
   2,
   3,
@@ -13,7 +13,7 @@ Array [
 `;
 
 exports[`unique returns an array which is a copy of the parameter, without duplicates 3`] = `
-Array [
+[
   "a",
   "b",
   "c",
@@ -22,15 +22,15 @@ Array [
 `;
 
 exports[`unique returns an array which is a copy of the parameter, without duplicates 4`] = `
-Array [
-  Object {},
+[
+  {},
 ]
 `;
 
 exports[`unique returns an array which is a copy of the parameter, without duplicates 5`] = `
-Array [
+[
   1,
   "1",
-  Object {},
+  {},
 ]
 `;
