@@ -40,48 +40,48 @@ test('twine-bitsy-comms', async () => {
 	await startDialog('{twineBack}');
 	await startDialog('{twineEval "js"}');
 	expect(await evaluate(() => Object.fromEntries(window.scriptInterpreter.GetVariableNames().map(i => [i, window.scriptInterpreter.GetVariable(i)])))).toMatchInlineSnapshot(`
-		Object {
+		{
 		  "a": 42,
 		  "twine_externalvar": "value",
 		}
 	`);
 	expect(await evaluate(() => window.messages)).toMatchInlineSnapshot(`
-Array [
-  Object {
-    "data": Object {
-      "name": "bitsy_a",
-      "value": 42,
-    },
-    "type": "variable",
-  },
-  Object {
-    "data": Object {
-      "name": "bitsy_item_tea",
-      "value": 0,
-    },
-    "type": "variable",
-  },
-  Object {
-    "data": Object {
-      "name": "bitsy_item_key",
-      "value": 0,
-    },
-    "type": "variable",
-  },
-  Object {
-    "type": "start",
-  },
-  Object {
-    "data": "passage",
-    "type": "play",
-  },
-  Object {
-    "type": "back",
-  },
-  Object {
-    "data": "js",
-    "type": "eval",
-  },
-]
-`);
+		[
+		  {
+		    "data": {
+		      "name": "bitsy_a",
+		      "value": 42,
+		    },
+		    "type": "variable",
+		  },
+		  {
+		    "data": {
+		      "name": "bitsy_item_tea",
+		      "value": 0,
+		    },
+		    "type": "variable",
+		  },
+		  {
+		    "data": {
+		      "name": "bitsy_item_key",
+		      "value": 0,
+		    },
+		    "type": "variable",
+		  },
+		  {
+		    "type": "start",
+		  },
+		  {
+		    "data": "passage",
+		    "type": "play",
+		  },
+		  {
+		    "type": "back",
+		  },
+		  {
+		    "data": "js",
+		    "type": "eval",
+		  },
+		]
+	`);
 });
