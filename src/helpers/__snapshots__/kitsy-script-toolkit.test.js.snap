@@ -1,39 +1,39 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`convertDialogTags doesn't work when nested 1`] = `"{js \\"(js \\"(js \\"\\"}\\")\\")"`;
+exports[`convertDialogTags doesn't work when nested 1`] = `"{js "(js "(js ""}")")"`;
 
-exports[`convertDialogTags handles relatively complex cases 1`] = `"a{js \\"console.log('a');\\"}b{js \\"console.log('b');\\"}c{js \\"console.log('c');\\"}d{js \\"console.log('d');\\"}e{js e}f{js f}e{js e}f{js f}"`;
+exports[`convertDialogTags handles relatively complex cases 1`] = `"a{js "console.log('a');"}b{js "console.log('b');"}c{js "console.log('c');"}d{js "console.log('d');"}e{js e}f{js f}e{js e}f{js f}"`;
 
 exports[`convertDialogTags handles relatively complex cases 2`] = `
 "{cycle
-			- {image \\"ITM, hud switch SOLID PERMANENT, hud on SOLID PERMANENT\\"}(image \\"ITM, 1HU display PERMANENT, 1HU on PERMANENT\\"){image \\"ITM, 2HU display PERMANENT, 2HU on PERMANENT\\"}{image \\"ITM, 3HU display PERMANENT, 3HU on PERMANENT\\"}{image \\"ITM, 4HU display PERMANENT, 4HU on PERMANENT\\"}{image \\"ITM, 5HU display PERMANENT, 5HU on PERMANENT\\"}{image \\"ITM, 6HU display PERMANENT, 6HU on PERMANENT\\"}{image \\"ITM, 7HU display PERMANENT, 7HU on PERMANENT\\"}{image \\"ITM, 8HU display PERMANENT, 8HU on PERMANENT\\"}
-			- {image \\"ITM, hud switch SOLID PERMANENT, hud off SOLID PERMANENT\\"}{image \\"ITM, 1HU display PERMANENT, 1HU off PERMANENT\\"}{image \\"ITM, 2HU display PERMANENT, 2HU off PERMANENT\\"}{image \\"ITM, 3HU display PERMANENT, 3HU off PERMANENT\\"}{image \\"ITM, 4HU display PERMANENT, 4HU off PERMANENT\\"}{image \\"ITM, 5HU display PERMANENT, 5HU off PERMANENT\\"}{image \\"ITM, 6HU display PERMANENT, 6HU off PERMANENT\\"}{image \\"ITM, 7HU display PERMANENT, 7HU off PERMANENT\\"}{image \\"ITM, 8HU display PERMANENT, 8HU off PERMANENT\\"}
+			- {image "ITM, hud switch SOLID PERMANENT, hud on SOLID PERMANENT"}(image "ITM, 1HU display PERMANENT, 1HU on PERMANENT"){image "ITM, 2HU display PERMANENT, 2HU on PERMANENT"}{image "ITM, 3HU display PERMANENT, 3HU on PERMANENT"}{image "ITM, 4HU display PERMANENT, 4HU on PERMANENT"}{image "ITM, 5HU display PERMANENT, 5HU on PERMANENT"}{image "ITM, 6HU display PERMANENT, 6HU on PERMANENT"}{image "ITM, 7HU display PERMANENT, 7HU on PERMANENT"}{image "ITM, 8HU display PERMANENT, 8HU on PERMANENT"}
+			- {image "ITM, hud switch SOLID PERMANENT, hud off SOLID PERMANENT"}{image "ITM, 1HU display PERMANENT, 1HU off PERMANENT"}{image "ITM, 2HU display PERMANENT, 2HU off PERMANENT"}{image "ITM, 3HU display PERMANENT, 3HU off PERMANENT"}{image "ITM, 4HU display PERMANENT, 4HU off PERMANENT"}{image "ITM, 5HU display PERMANENT, 5HU off PERMANENT"}{image "ITM, 6HU display PERMANENT, 6HU off PERMANENT"}{image "ITM, 7HU display PERMANENT, 7HU off PERMANENT"}{image "ITM, 8HU display PERMANENT, 8HU off PERMANENT"}
 		  }"
 `;
 
 exports[`convertDialogTags handles relatively complex cases 3`] = `
 "{cycle
-			- {image \\"ITM, hud switch SOLID PERMANENT, hud on SOLID PERMANENT\\"}
-		  {image \\"ITM, 1HU display PERMANENT, 1HU on PERMANENT\\"}
-		  {image \\"ITM, 2HU display PERMANENT, 2HU on PERMANENT\\"}
-		  {image \\"ITM, 3HU display PERMANENT, 3HU on PERMANENT\\"}
-		  {image \\"ITM, 4HU display PERMANENT, 4HU on PERMANENT\\"}
-		  {image \\"ITM, 5HU display PERMANENT, 5HU on PERMANENT\\"}
-		  (image \\"ITM, 6HU display PERMANENT, 6HU on PERMANENT\\")
-		  {image \\"ITM, 7HU display PERMANENT, 7HU on PERMANENT\\"}
-		  {image \\"ITM, 8HU display PERMANENT, 8HU on PERMANENT\\"}
-			- {image \\"ITM, hud switch SOLID PERMANENT, hud off SOLID PERMANENT\\"}
-		  {image \\"ITM, 1HU display PERMANENT, 1HU off PERMANENT\\"}
-		  {image \\"ITM, 2HU display PERMANENT, 2HU off PERMANENT\\"}
-		  {image \\"ITM, 3HU display PERMANENT, 3HU off PERMANENT\\"}
-		  (image \\"ITM, 4HU display PERMANENT, 4HU off PERMANENT\\")
-		  (image \\"ITM, 5HU display PERMANENT, 5HU off PERMANENT\\")
-		  {image \\"ITM, 6HU display PERMANENT, 6HU off PERMANENT\\"}
-		  {image \\"ITM, 7HU display PERMANENT, 7HU off PERMANENT\\"}
-		  {image \\"ITM, 8HU display PERMANENT, 8HU off PERMANENT\\"}
+			- {image "ITM, hud switch SOLID PERMANENT, hud on SOLID PERMANENT"}
+		  {image "ITM, 1HU display PERMANENT, 1HU on PERMANENT"}
+		  {image "ITM, 2HU display PERMANENT, 2HU on PERMANENT"}
+		  {image "ITM, 3HU display PERMANENT, 3HU on PERMANENT"}
+		  {image "ITM, 4HU display PERMANENT, 4HU on PERMANENT"}
+		  {image "ITM, 5HU display PERMANENT, 5HU on PERMANENT"}
+		  (image "ITM, 6HU display PERMANENT, 6HU on PERMANENT")
+		  {image "ITM, 7HU display PERMANENT, 7HU on PERMANENT"}
+		  {image "ITM, 8HU display PERMANENT, 8HU on PERMANENT"}
+			- {image "ITM, hud switch SOLID PERMANENT, hud off SOLID PERMANENT"}
+		  {image "ITM, 1HU display PERMANENT, 1HU off PERMANENT"}
+		  {image "ITM, 2HU display PERMANENT, 2HU off PERMANENT"}
+		  {image "ITM, 3HU display PERMANENT, 3HU off PERMANENT"}
+		  (image "ITM, 4HU display PERMANENT, 4HU off PERMANENT")
+		  (image "ITM, 5HU display PERMANENT, 5HU off PERMANENT")
+		  {image "ITM, 6HU display PERMANENT, 6HU off PERMANENT"}
+		  {image "ITM, 7HU display PERMANENT, 7HU off PERMANENT"}
+		  {image "ITM, 8HU display PERMANENT, 8HU off PERMANENT"}
 		  }"
 `;
 
-exports[`convertDialogTags handles relatively complex cases 4`] = `"{a \\"\\"}{b \\"\\"}"`;
+exports[`convertDialogTags handles relatively complex cases 4`] = `"{a ""}{b ""}"`;
 
-exports[`convertDialogTags handles relatively complex cases 5`] = `"{a \\"\\"}{b \\"\\"}"`;
+exports[`convertDialogTags handles relatively complex cases 5`] = `"{a ""}{b ""}"`;
