@@ -13,6 +13,8 @@ jobs:
         with:
           persist-credentials: false
       - uses: actions/setup-node@v3
+        with:
+          node-version: 18
       - run: npm ci
       - uses: cycjimmy/semantic-release-action@v3
         env:
