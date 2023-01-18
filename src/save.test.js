@@ -1,6 +1,9 @@
+import kebabCase from 'lodash.kebabcase';
+import path from 'path';
 import { evaluate, page, press, snapshot, start, startDialog, waitForBlip, waitForFrame, walkToCat } from './test/bitsy';
 
 jest.retryTimes(3);
+const customSnapshotIdentifier = ({ testPath, currentTestName, counter }) => kebabCase(`${path.basename(testPath)}-${currentTestName}-${counter}-snap`);
 
 const saveOptions = {
 	autosaveInterval: 2 ** 31 - 1, // HACK: Infinity doesn't stringify correctly
@@ -24,24 +27,24 @@ test('save', async () => {
 		hacks: [['save', { ...saveOptions, clearOnStart: true }]],
 	});
 	await walkToCat();
-	await snapshot();
+	await snapshot({ customSnapshotIdentifier });
 	await startDialog('{save}');
 	await press('ArrowLeft');
 	await startDialog('{load}');
 	await waitForLoaded();
-	await snapshot();
+	await snapshot({ customSnapshotIdentifier });
 	await press('ArrowLeft');
 	await startDialog('{load "title text"}');
 	await waitForLoaded();
 	await press('ArrowLeft'); // complete dialog
-	await snapshot();
+	await snapshot({ customSnapshotIdentifier });
 	await press('ArrowLeft'); // end dialog
-	await snapshot();
+	await snapshot({ customSnapshotIdentifier });
 	await press('ArrowLeft');
 	await startDialog('{clear}');
 	await startDialog('{load}');
 	await waitForLoaded();
-	await snapshot();
+	await snapshot({ customSnapshotIdentifier });
 });
 
 test('loadOnStart', async () => {
@@ -59,13 +62,13 @@ test('loadOnStart', async () => {
 		],
 	});
 	await waitForFrame();
-	await snapshot();
+	await snapshot({ customSnapshotIdentifier });
 	await press('ArrowRight');
-	await snapshot();
+	await snapshot({ customSnapshotIdentifier });
 	await startDialog('{save}');
 	await evaluate(() => window.onload());
 	await waitForLoaded();
-	await snapshot();
+	await snapshot({ customSnapshotIdentifier });
 });
 
 test('clearOnStart', async () => {
@@ -74,15 +77,15 @@ test('clearOnStart', async () => {
 		hacks: [['save', { ...saveOptions, clearOnStart: true }]],
 	});
 	await waitForFrame();
-	await snapshot();
+	await snapshot({ customSnapshotIdentifier });
 	await press('ArrowRight');
-	await snapshot();
+	await snapshot({ customSnapshotIdentifier });
 	await startDialog('{save}');
 	await evaluate(() => window.onload());
 	await waitForLoaded();
 	await startDialog('{load}');
 	await waitForLoaded();
-	await snapshot();
+	await snapshot({ customSnapshotIdentifier });
 });
 
 test('clearOnEnd', async () => {
@@ -91,16 +94,16 @@ test('clearOnEnd', async () => {
 		hacks: [['save', { ...saveOptions, clearOnEnd: true }]],
 	});
 	await waitForFrame();
-	await snapshot();
+	await snapshot({ customSnapshotIdentifier });
 	await press('ArrowRight');
-	await snapshot();
+	await snapshot({ customSnapshotIdentifier });
 	await startDialog('{save}');
 	await evaluate(() => window.startEndingDialog({ id: '0' })); // force ending
 	await press('ArrowRight'); // complete ending dialog
 	await press('ArrowRight'); // close ending dialog
 	await startDialog('{load}');
 	await waitForLoaded();
-	await snapshot();
+	await snapshot({ customSnapshotIdentifier });
 });
 
 test('sequence', async () => {
@@ -119,20 +122,20 @@ test('sequence', async () => {
 	await waitForBlip();
 	await press('ArrowRight'); // complete dialog
 	// 1
-	await snapshot();
+	await snapshot({ customSnapshotIdentifier });
 	await press('ArrowRight'); // end dialog
 	await startDialog('{save}');
 	await press('ArrowRight'); // talk to cat
 	await waitForBlip();
 	await press('ArrowRight'); // complete dialog
 	// 2
-	await snapshot();
+	await snapshot({ customSnapshotIdentifier });
 	await press('ArrowRight'); // end dialog
 	await press('ArrowRight'); // talk to cat
 	await waitForBlip();
 	await press('ArrowRight'); // complete dialog
 	// 3
-	await snapshot();
+	await snapshot({ customSnapshotIdentifier });
 	await press('ArrowRight'); // end dialog
 	await startDialog('{load}');
 	await waitForLoaded();
@@ -140,13 +143,13 @@ test('sequence', async () => {
 	await waitForBlip();
 	await press('ArrowRight'); // complete dialog
 	// 2
-	await snapshot();
+	await snapshot({ customSnapshotIdentifier });
 	await press('ArrowRight'); // end dialog
 	await press('ArrowRight'); // talk to cat
 	await waitForBlip();
 	await press('ArrowRight'); // complete dialog
 	// 3
-	await snapshot();
+	await snapshot({ customSnapshotIdentifier });
 	await press('ArrowRight'); // end dialog
 	await startDialog('{save}');
 	await startDialog('{load}');
@@ -155,7 +158,7 @@ test('sequence', async () => {
 	await waitForBlip();
 	await press('ArrowRight'); // complete dialog
 	// 3
-	await snapshot();
+	await snapshot({ customSnapshotIdentifier });
 });
 
 test('cycle', async () => {
@@ -173,14 +176,14 @@ test('cycle', async () => {
 	await waitForBlip();
 	await press('ArrowRight'); // complete dialog
 	// 1
-	await snapshot();
+	await snapshot({ customSnapshotIdentifier });
 	await press('ArrowRight'); // end dialog
 	await startDialog('{save}');
 	await press('ArrowRight'); // talk to cat
 	await waitForBlip();
 	await press('ArrowRight'); // complete dialog
 	// 2
-	await snapshot();
+	await snapshot({ customSnapshotIdentifier });
 	await press('ArrowRight'); // end dialog
 	await startDialog('{load}');
 	await waitForLoaded();
@@ -188,13 +191,13 @@ test('cycle', async () => {
 	await waitForBlip();
 	await press('ArrowRight'); // complete dialog
 	// 2
-	await snapshot();
+	await snapshot({ customSnapshotIdentifier });
 	await press('ArrowRight'); // end dialog
 	await press('ArrowRight'); // talk to cat
 	await waitForBlip();
 	await press('ArrowRight'); // complete dialog
 	// 1
-	await snapshot();
+	await snapshot({ customSnapshotIdentifier });
 });
 
 test('shuffle', async () => {
@@ -217,20 +220,20 @@ test('shuffle', async () => {
 	await waitForBlip();
 	await press('ArrowRight'); // complete dialog
 	// 1
-	await snapshot();
+	await snapshot({ customSnapshotIdentifier });
 	await press('ArrowRight'); // end dialog
 	await startDialog('{save}');
 	await press('ArrowRight'); // talk to cat
 	await waitForBlip();
 	await press('ArrowRight'); // complete dialog
 	// 2
-	await snapshot();
+	await snapshot({ customSnapshotIdentifier });
 	await press('ArrowRight'); // end dialog
 	await press('ArrowRight'); // talk to cat
 	await waitForBlip();
 	await press('ArrowRight'); // complete dialog
 	// 3
-	await snapshot();
+	await snapshot({ customSnapshotIdentifier });
 	await press('ArrowRight'); // end dialog
 	await startDialog('{load}');
 	await waitForLoaded();
@@ -238,13 +241,13 @@ test('shuffle', async () => {
 	await waitForBlip();
 	await press('ArrowRight'); // complete dialog
 	// 2
-	await snapshot();
+	await snapshot({ customSnapshotIdentifier });
 	await press('ArrowRight'); // end dialog
 	await press('ArrowRight'); // talk to cat
 	await waitForBlip();
 	await press('ArrowRight'); // complete dialog
 	// 3
-	await snapshot();
+	await snapshot({ customSnapshotIdentifier });
 });
 
 test('items + variables', async () => {
@@ -339,17 +342,17 @@ VAR a
 	await startDialog('{save}');
 	await startDialog('a: {say a}{br}tea: {say {item 0}}');
 	await press('ArrowRight'); // complete dialog
-	await snapshot();
+	await snapshot({ customSnapshotIdentifier });
 	await press('ArrowRight'); // end dialog
 	await press('ArrowRight'); // pick up tea 3
 	await startDialog('{a = a+1}'); // increment variable
 	await startDialog('a: {say a}{br}tea: {say {item 0}}');
 	await press('ArrowRight'); // complete dialog
-	await snapshot();
+	await snapshot({ customSnapshotIdentifier });
 	await press('ArrowRight'); // end dialog
 	await startDialog('{load}');
 	await waitForLoaded();
 	await startDialog('a: {say a}{br}tea: {say {item 0}}');
 	await press('ArrowRight'); // complete dialog
-	await snapshot();
+	await snapshot({ customSnapshotIdentifier });
 });
