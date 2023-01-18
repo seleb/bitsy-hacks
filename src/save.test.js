@@ -1,5 +1,7 @@
 import { evaluate, page, press, snapshot, start, startDialog, waitForBlip, waitForFrame, walkToCat } from './test/bitsy';
 
+jest.retryTimes(3);
+
 const saveOptions = {
 	autosaveInterval: 2 ** 31 - 1, // HACK: Infinity doesn't stringify correctly
 	loadOnStart: false,

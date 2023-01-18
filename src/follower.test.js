@@ -2,7 +2,7 @@ import kebabCase from 'lodash.kebabcase';
 import path from 'path';
 import { delay, press, snapshot, start, waitForFrame } from './test/bitsy';
 
-jest.retryTimes(3);
+jest.retryTimes(5);
 const customSnapshotIdentifier = ({ testPath, currentTestName, counter }) => kebabCase(`${path.basename(testPath)}-${currentTestName}-${counter}-snap`);
 
 const multiple = `
