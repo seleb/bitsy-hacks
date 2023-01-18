@@ -11,7 +11,7 @@ test('transitions', async () => {
 			[
 				'transitions',
 				{
-					duration: 2000,
+					duration: 4000,
 					includeTitle: false,
 					checkTransition: function () {
 						var x = window.player().x;
@@ -38,12 +38,12 @@ if (t < 0.01 || t > 0.99) {
 	});
 	await press('ArrowRight'); // complete title page
 	await press('ArrowRight'); // end title page
-	await delay(2000);
+	await delay(4000);
 	await snapshot({ customSnapshotIdentifier });
 	await press('ArrowRight');
 	await snapshot({ customSnapshotIdentifier });
-	await delay(1000);
+	await delay(2000);
 	await snapshot({ customSnapshotIdentifier });
-	await delay(1000);
+	await delay(2000);
 	await snapshot({ customSnapshotIdentifier });
 });

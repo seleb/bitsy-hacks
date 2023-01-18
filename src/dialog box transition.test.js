@@ -15,7 +15,7 @@ test('dialog box transition', async () => {
 					ease: function (t) {
 						return Math.floor(t * 4) / 4;
 					},
-					duration: 4000,
+					duration: 8000,
 				},
 			],
 		],
@@ -24,12 +24,12 @@ test('dialog box transition', async () => {
 	const fuzzyMatch = { failureThreshold: 0.1, failureThresholdType: 'percent' };
 	await snapshot({ customSnapshotIdentifier });
 	await startDialog('test');
-	await delay(1500);
+	await delay(3000);
 	await snapshot({ customSnapshotIdentifier, ...fuzzyMatch });
-	await delay(1000);
+	await delay(2000);
 	await snapshot({ customSnapshotIdentifier, ...fuzzyMatch });
-	await delay(1000);
+	await delay(2000);
 	await snapshot({ customSnapshotIdentifier, ...fuzzyMatch });
-	await delay(1000);
+	await delay(2000);
 	await snapshot({ customSnapshotIdentifier });
 });
