@@ -1,3 +1,10 @@
+# [21.3.0](https://github.com/seleb/bitsy-hacks/compare/v21.2.1...v21.3.0) (2023-01-21)
+
+
+### Features
+
+* update links in docs ([0590da2](https://github.com/seleb/bitsy-hacks/commit/0590da21ab9018476fdeb5c7c89f20733eef36df))
+
 ## [21.2.1](https://github.com/seleb/bitsy-hacks/compare/v21.2.0...v21.2.1) (2022-11-17)
 
 

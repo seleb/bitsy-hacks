@@ -143,9 +143,9 @@ then edit it to look like this:
 
   No. Emulators function by re-implementing parts of the engine and/or browser into another environment, but the hacks rely heavily on how the engine is structured and how the browser handles `<script>` tags. However, desktop projects which preserve the original engine/browser context (e.g. [Electron](https://www.electronjs.org/), [NW.js](https://nwjs.io/)) can be used.
 
-If your question isn't covered here, it may be in the general [Bitsy FAQ](https://docs.google.com/document/d/1jRz3wgkQU3kZN_LGChw4UlMWhVoc145J-euBtkr7NeE).
+If your question isn't covered here, it may be in the general [Bitsy documentation](https://make.bitsy.org/docs).
 
-For other issues, feel free to ping me, [open an issue](https://github.com/seleb/bitsy-hacks/issues/new), or ask for help on the [Bitsy discord](https://discordapp.com/invite/9rAjhtr)!
+For other issues, feel free to [open an issue](https://github.com/seleb/bitsy-hacks/issues/new), [contact me directly](https://seans.site#contact), or ask for help on the [Bitsy forum](https://ledoux.itch.io/bitsy/community)!
 
 ## Old Versions
 

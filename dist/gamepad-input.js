@@ -4,7 +4,7 @@
 @summary HTML5 gamepad support
 @license MIT
 @author Sean S. LeBlanc
-@version 21.2.1
+@version 21.3.0
 @requires Bitsy 8.4
 
 
@@ -485,7 +485,7 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 21.2.1
+@version 21.3.0
 @requires Bitsy 8.4
 
 */

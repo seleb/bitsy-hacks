@@ -4,7 +4,7 @@
 @summary animal crossing-style audio powered by the pink trombone vocal synth
 @license MIT
 @author Sean S. LeBlanc
-@version 21.2.1
+@version 21.3.0
 @requires Bitsy 8.4
 
 
@@ -880,7 +880,7 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 21.2.1
+@version 21.3.0
 @requires Bitsy 8.4
 
 */
@@ -993,7 +993,7 @@ function addDialogTag(tag, fn) {
 @summary animal crossing-style audio
 @license MIT
 @author Sean S. LeBlanc
-@version 21.2.1
+@version 21.3.0
 @requires Bitsy 8.4
 
 
@@ -1050,7 +1050,7 @@ before('dialogBuffer.DoNextChar', function () {
 @file utils
 @summary miscellaneous bitsy utilities
 @author Sean S. LeBlanc
-@version 21.2.1
+@version 21.3.0
 @requires Bitsy 8.4
 
 */
