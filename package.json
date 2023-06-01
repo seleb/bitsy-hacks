@@ -46,10 +46,9 @@
 		"jest-image-snapshot": "^6.0.0",
 		"lodash.kebabcase": "^4.1.1",
 		"prettier": "^2.4.1",
-		"puppeteer": "^19.0.0"
+		"puppeteer": "^20.5.0"
 	},
 	"jest": {
-		"testEnvironment": "jsdom",
 		"setupFilesAfterEnv": [
 			"<rootDir>/src/test/setupTests.js"
 		]

@@ -1,4 +1,4 @@
-import { convertDialogTags } from './kitsy-script-toolkit';
+import { convertDialogTags } from './convertDialogTags';
 
 describe('convertDialogTags', () => {
 	it('requires an input string and an input tag', () => {
