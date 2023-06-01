@@ -49,7 +49,6 @@
 		"puppeteer": "^20.5.0"
 	},
 	"jest": {
-		"testEnvironment": "jsdom",
 		"setupFilesAfterEnv": [
 			"<rootDir>/src/test/setupTests.js"
 		]
