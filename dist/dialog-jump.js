@@ -4,8 +4,8 @@
 @summary jump from one dialog entry to another
 @license MIT
 @author Sean S. LeBlanc
-@version 21.3.0
-@requires Bitsy 8.4
+@version 21.4.0
+@requires Bitsy 8.6
 
 
 @description
@@ -170,8 +170,8 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 21.3.0
-@requires Bitsy 8.4
+@version 21.4.0
+@requires Bitsy 8.6
 
 */
 var kitsy = (window.kitsy = window.kitsy || {
@@ -191,6 +191,17 @@ var kitsy = (window.kitsy = window.kitsy || {
     /** Apples all queued `before`/`after` calls. */
     applyHooks,
 });
+
+// Rewrite custom functions' parentheses to curly braces for Bitsy's
+// interpreter. Unescape escaped parentheticals, too.
+function convertDialogTags(input, tag) {
+	return input.replace(new RegExp('\\\\?\\((' + tag + '(\\s+(".*?"|.+?))?)\\\\?\\)', 'g'), function (match, group) {
+		if (match.substr(0, 1) === '\\') {
+			return '(' + group + ')'; // Rewrite \(tag "..."|...\) to (tag "..."|...)
+		}
+		return '{' + group + '}'; // Rewrite (tag "..."|...) to {tag "..."|...}
+	});
+}
 
 var hooked = kitsy.hooked;
 if (!hooked) {
@@ -228,17 +239,6 @@ var inject = kitsy.inject;
 var before = kitsy.before;
 /** @see kitsy.after */
 var after = kitsy.after;
-
-// Rewrite custom functions' parentheses to curly braces for Bitsy's
-// interpreter. Unescape escaped parentheticals, too.
-function convertDialogTags(input, tag) {
-	return input.replace(new RegExp('\\\\?\\((' + tag + '(\\s+(".*?"|.+?))?)\\\\?\\)', 'g'), function (match, group) {
-		if (match.substr(0, 1) === '\\') {
-			return '(' + group + ')'; // Rewrite \(tag "..."|...\) to (tag "..."|...)
-		}
-		return '{' + group + '}'; // Rewrite (tag "..."|...) to {tag "..."|...}
-	});
-}
 
 function addDialogFunction(tag, fn) {
 	kitsy.dialogFunctions = kitsy.dialogFunctions || {};
@@ -326,6 +326,7 @@ function addDualDialogTag(tag, fn) {
 	});
 	addDeferredDialogTag(tag, fn);
 }
+
 
 
 

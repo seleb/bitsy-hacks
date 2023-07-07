@@ -4,8 +4,8 @@
 @summary multiplayer bitsy
 @license MIT
 @author Sean S. LeBlanc
-@version 21.3.0
-@requires Bitsy 8.4
+@version 21.4.0
+@requires Bitsy 8.6
 
 @description
 Provides the groundwork for running a small online multiplayer bitsy game.
@@ -178,8 +178,8 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 21.3.0
-@requires Bitsy 8.4
+@version 21.4.0
+@requires Bitsy 8.6
 
 */
 var kitsy = (window.kitsy = window.kitsy || {
@@ -199,6 +199,17 @@ var kitsy = (window.kitsy = window.kitsy || {
     /** Apples all queued `before`/`after` calls. */
     applyHooks,
 });
+
+// Rewrite custom functions' parentheses to curly braces for Bitsy's
+// interpreter. Unescape escaped parentheticals, too.
+function convertDialogTags(input, tag) {
+	return input.replace(new RegExp('\\\\?\\((' + tag + '(\\s+(".*?"|.+?))?)\\\\?\\)', 'g'), function (match, group) {
+		if (match.substr(0, 1) === '\\') {
+			return '(' + group + ')'; // Rewrite \(tag "..."|...\) to (tag "..."|...)
+		}
+		return '{' + group + '}'; // Rewrite (tag "..."|...) to {tag "..."|...}
+	});
+}
 
 var hooked = kitsy.hooked;
 if (!hooked) {
@@ -236,17 +247,6 @@ var inject = kitsy.inject;
 var before = kitsy.before;
 /** @see kitsy.after */
 var after = kitsy.after;
-
-// Rewrite custom functions' parentheses to curly braces for Bitsy's
-// interpreter. Unescape escaped parentheticals, too.
-function convertDialogTags(input, tag) {
-	return input.replace(new RegExp('\\\\?\\((' + tag + '(\\s+(".*?"|.+?))?)\\\\?\\)', 'g'), function (match, group) {
-		if (match.substr(0, 1) === '\\') {
-			return '(' + group + ')'; // Rewrite \(tag "..."|...\) to (tag "..."|...)
-		}
-		return '{' + group + '}'; // Rewrite (tag "..."|...) to {tag "..."|...}
-	});
-}
 
 function addDialogFunction(tag, fn) {
 	kitsy.dialogFunctions = kitsy.dialogFunctions || {};
@@ -339,10 +339,11 @@ function addDualDialogTag(tag, fn) {
 @file utils
 @summary miscellaneous bitsy utilities
 @author Sean S. LeBlanc
-@version 21.3.0
-@requires Bitsy 8.4
+@version 21.4.0
+@requires Bitsy 8.6
 
 */
+
 
 /*
 Helper for getting image by name or id
@@ -368,8 +369,8 @@ function getImage(name, map) {
 @summary edit dialog from dialog (yes really)
 @license MIT
 @author Sean S. LeBlanc
-@version 21.3.0
-@requires Bitsy 8.4
+@version 21.4.0
+@requires Bitsy 8.6
 
 
 @description
@@ -435,8 +436,8 @@ addDeferredDialogTag('dialog', editDialog);
 @file edit image at runtime
 @summary API for updating image data at runtime.
 @author Sean S. LeBlanc
-@version 21.3.0
-@requires Bitsy 8.4
+@version 21.4.0
+@requires Bitsy 8.6
 
 @description
 Adds API for updating sprite, tile, and item data at runtime.
@@ -494,8 +495,8 @@ function setSpriteData(id, frame, newData) {
 @summary edit sprites, items, and tiles from dialog
 @license MIT
 @author Sean S. LeBlanc
-@version 21.3.0
-@requires Bitsy 8.4
+@version 21.4.0
+@requires Bitsy 8.6
 
 
 @description
@@ -641,8 +642,8 @@ addDualDialogTag('imagePal', editPalette);
 @summary execute arbitrary javascript from dialog
 @license MIT
 @author Sean S. LeBlanc
-@version 21.3.0
-@requires Bitsy 8.4
+@version 21.4.0
+@requires Bitsy 8.6
 
 
 @description
@@ -691,6 +692,7 @@ NOTE: This uses parentheses "()" instead of curly braces "{}" around function
       For full editor integration, you'd *probably* also need to paste this
       code at the end of the editor's `bitsy.js` file. Untested.
 */
+
 
 // eslint-disable-next-line no-eval
 var indirectEval = eval;

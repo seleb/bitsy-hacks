@@ -1,37 +1,4 @@
-/**
-➡
-@file push sprites
-@summary sokoban-style sprite pushing
-@license MIT
-@author jan0sc
-@version 21.3.0
-@requires Bitsy 8.4
-
-
-@description
-Hack to make sprites pushable.
-
-HOW TO USE:
-1. Copy-paste into a script tag after the bitsy source
-2. Edit hackOptions below to specify the push logic, exit handling, target states and whether to flip drawings
-
-PUSH LOGIC:
-functions to determine:
-	1. the sprites that the player can push
-	2. the sprites that a pushed sprite can push
-	3. the items that stop a sprite from moving
-	4. the tiles that stop a sprite from moving
-
-EXIT HANDLING:
-function to determine whether a sprite will be allowed to transit an exit
-
-TARGET STATES:
-object specifying which dialogs to trigger and under what conditions
-
-SPRITE FLIPPING:
-allow or disallow drawing flips when a sprite is pushed
-
-*/
+/* eslint-disable no-restricted-syntax */
 this.hacks = this.hacks || {};
 (function (exports, bitsy) {
 'use strict';
@@ -194,10 +161,11 @@ var hackOptions = {
 @file utils
 @summary miscellaneous bitsy utilities
 @author Sean S. LeBlanc
-@version 21.3.0
-@requires Bitsy 8.4
+@version 21.4.0
+@requires Bitsy 8.6
 
 */
+
 
 /*
 Helper for getting image by name or id
@@ -221,8 +189,8 @@ function getImage(name, map) {
 @file edit image at runtime
 @summary API for updating image data at runtime.
 @author Sean S. LeBlanc
-@version 21.3.0
-@requires Bitsy 8.4
+@version 21.4.0
+@requires Bitsy 8.6
 
 @description
 Adds API for updating sprite, tile, and item data at runtime.
@@ -413,8 +381,8 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 21.3.0
-@requires Bitsy 8.4
+@version 21.4.0
+@requires Bitsy 8.6
 
 */
 var kitsy = (window.kitsy = window.kitsy || {
@@ -527,6 +495,40 @@ function transformSpriteData(spriteData, v, h, rot) {
 	return s;
 }
 
+/**
+➡
+@file push sprites
+@summary sokoban-style sprite pushing
+@license MIT
+@author jan0sc
+@version 21.4.0
+@requires Bitsy 8.6
+
+
+@description
+Hack to make sprites pushable.
+
+HOW TO USE:
+1. Copy-paste into a script tag after the bitsy source
+2. Edit hackOptions below to specify the push logic, exit handling, target states and whether to flip drawings
+
+PUSH LOGIC:
+functions to determine:
+	1. the sprites that the player can push
+	2. the sprites that a pushed sprite can push
+	3. the items that stop a sprite from moving
+	4. the tiles that stop a sprite from moving
+
+EXIT HANDLING:
+function to determine whether a sprite will be allowed to transit an exit
+
+TARGET STATES:
+object specifying which dialogs to trigger and under what conditions
+
+SPRITE FLIPPING:
+allow or disallow drawing flips when a sprite is pushed
+
+*/
 
 
 
