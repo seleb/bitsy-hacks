@@ -6,7 +6,7 @@
 		"hacks"
 	],
 	"main": "index.mjs",
-	"version": "21.4.0",
+	"version": "21.5.0",
 	"bitsyVersion": "8.7",
 	"scripts": {
 		"build": "rollup -c --bundleConfigAsCjs",

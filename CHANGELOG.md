@@ -1,3 +1,10 @@
+# [21.5.0](https://github.com/seleb/bitsy-hacks/compare/v21.4.0...v21.5.0) (2023-07-27)
+
+
+### Features
+
+* update bitsy version to 8.7 ([#419](https://github.com/seleb/bitsy-hacks/issues/419)) ([7d23e56](https://github.com/seleb/bitsy-hacks/commit/7d23e566eb7bbc3ccacf4f69fddf55c6b6e5152b))
+
 # [21.4.0](https://github.com/seleb/bitsy-hacks/compare/v21.3.0...v21.4.0) (2023-07-07)
 
 
