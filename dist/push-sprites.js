@@ -161,8 +161,8 @@ var hackOptions = {
 @file utils
 @summary miscellaneous bitsy utilities
 @author Sean S. LeBlanc
-@version 21.5.0
-@requires Bitsy 8.7
+@version 22.0.0
+@requires Bitsy 8.8
 
 */
 
@@ -189,8 +189,8 @@ function getImage(name, map) {
 @file edit image at runtime
 @summary API for updating image data at runtime.
 @author Sean S. LeBlanc
-@version 21.5.0
-@requires Bitsy 8.7
+@version 22.0.0
+@requires Bitsy 8.8
 
 @description
 Adds API for updating sprite, tile, and item data at runtime.
@@ -381,8 +381,8 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 21.5.0
-@requires Bitsy 8.7
+@version 22.0.0
+@requires Bitsy 8.8
 
 */
 var kitsy = (window.kitsy = window.kitsy || {
@@ -501,8 +501,8 @@ function transformSpriteData(spriteData, v, h, rot) {
 @summary sokoban-style sprite pushing
 @license MIT
 @author jan0sc
-@version 21.5.0
-@requires Bitsy 8.7
+@version 22.0.0
+@requires Bitsy 8.8
 
 
 @description
