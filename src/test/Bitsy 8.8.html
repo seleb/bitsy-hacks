@@ -11,10 +11,10 @@
 <script type="text/bitsyGameData" id="exportedGameData">
 Write your game's title here
 
-# BITSY VERSION 8.7
+# BITSY VERSION 8.8
 
 ! VER_MAJ 8
-! VER_MIN 7
+! VER_MIN 8
 ! ROOM_FORMAT 1
 ! DLG_COMPAT 0
 ! TXT_MODE 0
@@ -1226,7 +1226,7 @@ function BitsySystem(name) {
 			count--;
 		}
 
-		if (memory.blocks[next] != undefined) {
+		if (count == 0) {
 			// couldn't find any available block
 			return null;
 		}
@@ -1432,6 +1432,15 @@ function BitsySystem(name) {
 		self._free(tile);
 	};
 
+	this.deleteAllTiles = function() {
+		if (tilePoolStart != null) {
+			for (var i = 0; i < tilePoolSize; i++) {
+				var tile = tilePoolStart + i;
+				this.delete(tile);
+			}
+		}
+	};
+
 	this.fill = function(block, value) {
 		var len = memory.blocks[block].length;
 		for (var i = 0; i < len; i++) {
@@ -1548,7 +1557,7 @@ var bitsy = mainProcess.system;
 // is this the right place for this to live?
 var version = {
 	major: 8, // major changes
-	minor: 7, // smaller changes
+	minor: 8, // smaller changes
 	devBuildPhase: "RELEASE",
 };
 function getEngineVersion() {
@@ -7781,12 +7790,7 @@ this.GetFrameCount = function(drawingId) {
 // todo : forceReset option is hacky?
 this.ClearCache = function(forceReset) {
 	if (forceReset === undefined || forceReset === true) {
-		for (var cacheId in drawingCache.render) {
-			var tiles = drawingCache.render[cacheId];
-			for (var i = 0; i < tiles.length; i++) {
-				bitsy.delete(tiles[i]);
-			}
-		}
+		bitsy.deleteAllTiles();
 	}
 
 	drawingCache.render = {};
