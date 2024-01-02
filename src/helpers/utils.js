@@ -55,7 +55,7 @@ export function getImage(name, map) {
 		? name
 		: Object.keys(map).find(function (e) {
 				return map[e].name === name;
-		  });
+			});
 	return map[id];
 }
 
