@@ -198,7 +198,7 @@ addDualDialogTag('enableBig', function (environment, parameters) {
 			? parameters.map(function (param) {
 					var props = param.split(/,\s*/);
 					return { x: parseInt(props[0], 10), y: parseInt(props[1], 10), spr: props[2] };
-			  })
+				})
 			: undefined
 	);
 });
