@@ -145,7 +145,7 @@ bitsy.saveHack = {
 };
 
 // use saved index to eval/calc next index if available
-inject(/(optionsShuffled\.push\()optionsUnshuffled\.splice\(i,1\)\[0\](\);)/, '$1 i $2 optionsUnshuffled.splice(i,1);');
+inject(/(optionsShuffled\.push\()optionsUnshuffled\.splice\(i,1\)\[0\](\);)/, '$1 options.indexOf(optionsUnshuffled[i]) $2 optionsUnshuffled.splice(i,1);');
 inject(
 	/(optionsShuffled\[index\])/,
 	`
@@ -153,8 +153,10 @@ var i = window.saveHack.loadSeqIdx(this);
 index = i === undefined ? index : i;
 optionsShuffled = window.saveHack.loadShuffle(this) || optionsShuffled;
 window.saveHack.saveShuffle(this, optionsShuffled);
-options[index]`
+options[optionsShuffled[index]]`
 );
+// save the second shuffle after exhausting options
+inject(/(\t\t\tshuffle\(this\.children\);)/, `$1 window.saveHack.saveShuffle(this, optionsShuffled);`);
 inject(/(\/\/ bitsy\.log\(".+" \+ index\);)/g, '$1\nvar i = window.saveHack.loadSeqIdx(this);index = i === undefined ? index : i;');
 // save index on changes
 inject(/(index = next;)/g, '$1window.saveHack.saveSeqIdx(this, index);');
