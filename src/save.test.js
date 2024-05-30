@@ -214,7 +214,7 @@ test('shuffle', async () => {
 	await walkToCat();
 	// deterministic rng
 	await evaluate(() => {
-		Math.random = () => 0;
+		Math.random = () => 0.5;
 	});
 	await press('ArrowRight'); // talk to cat
 	await waitForBlip();
