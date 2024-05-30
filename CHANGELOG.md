@@ -1,3 +1,15 @@
+# [22.1.0](https://github.com/seleb/bitsy-hacks/compare/v22.0.0...v22.1.0) (2024-05-30)
+
+
+### Bug Fixes
+
+* **save:** shuffle dialog not working as expected ([90ecd4d](https://github.com/seleb/bitsy-hacks/commit/90ecd4d4e88e6dbd6097b967254cc90967342b9a))
+
+
+### Features
+
+* update to bitsy v8.12 ([a84c283](https://github.com/seleb/bitsy-hacks/commit/a84c283ca7952628db3455194bcfe08d0c13928d))
+
 # [22.0.0](https://github.com/seleb/bitsy-hacks/compare/v21.5.0...v22.0.0) (2023-12-19)
 
 

@@ -4,8 +4,8 @@
 @summary put more words onscreen
 @license MIT
 @author Sean S. LeBlanc
-@version 22.0.0
-@requires Bitsy 8.8
+@version 22.1.0
+@requires Bitsy 8.12
 
 
 @description
@@ -180,8 +180,8 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 22.0.0
-@requires Bitsy 8.8
+@version 22.1.0
+@requires Bitsy 8.12
 
 */
 var kitsy = (window.kitsy = window.kitsy || {
@@ -350,8 +350,8 @@ inject(/(this\.AddLinebreak = )/, 'this.AddParagraphBreak = function() { buffer.
 @summary Adds paragraph breaks to the dialogue parser
 @license WTFPL (do WTF you want)
 @author Sean S. LeBlanc, David Mowatt
-@version 22.0.0
-@requires Bitsy 8.8
+@version 22.1.0
+@requires Bitsy 8.12
 
 
 @description
