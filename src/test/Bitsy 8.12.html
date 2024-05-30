@@ -11,10 +11,10 @@
 <script type="text/bitsyGameData" id="exportedGameData">
 Write your game's title here
 
-# BITSY VERSION 8.8
+# BITSY VERSION 8.12
 
 ! VER_MAJ 8
-! VER_MIN 8
+! VER_MIN 12
 ! ROOM_FORMAT 1
 ! DLG_COMPAT 0
 ! TXT_MODE 0
@@ -362,6 +362,8 @@ function InputSystem() {
 		// bitsyLog("KEYUP -- " + event.keyCode, "system");
 		pressed[event.keyCode] = false;
 		ignored[event.keyCode] = false;
+
+		isRestartComboPressed = false;
 	}
 
 	this.ontouchstart = function(event) {
@@ -1169,8 +1171,15 @@ function BitsySystem(name) {
 	};
 
 	this._exit = function() {
-		input.unlisten(graphics.getCanvas());
+		// disable graphics
+		var canvas = graphics.getCanvas();
+		if (canvas) {
+			input.unlisten(canvas);	
+		}
+
+		// disable sound
 		sound.mute();
+
 		self._active = false;
 	};
 
@@ -1432,15 +1441,6 @@ function BitsySystem(name) {
 		self._free(tile);
 	};
 
-	this.deleteAllTiles = function() {
-		if (tilePoolStart != null) {
-			for (var i = 0; i < tilePoolSize; i++) {
-				var tile = tilePoolStart + i;
-				this.delete(tile);
-			}
-		}
-	};
-
 	this.fill = function(block, value) {
 		var len = memory.blocks[block].length;
 		for (var i = 0; i < len; i++) {
@@ -1557,7 +1557,7 @@ var bitsy = mainProcess.system;
 // is this the right place for this to live?
 var version = {
 	major: 8, // major changes
-	minor: 8, // smaller changes
+	minor: 12, // smaller changes
 	devBuildPhase: "RELEASE",
 };
 function getEngineVersion() {
@@ -7653,8 +7653,8 @@ TextEffects["_debug_highlight"] = new DebugHighlightEffect();
 </script>
 
 <script>
-function TileRenderer() {
-bitsy.log("!!!!! NEW TILE RENDERER");
+function TileRenderer(debugName) {
+bitsy.log("!!!!! NEW TILE RENDERER: " + debugName);
 
 var drawingCache = {
 	source: {},
@@ -7790,7 +7790,13 @@ this.GetFrameCount = function(drawingId) {
 // todo : forceReset option is hacky?
 this.ClearCache = function(forceReset) {
 	if (forceReset === undefined || forceReset === true) {
-		bitsy.deleteAllTiles();
+		// delete all tiles from system memory before clearing the cache
+		for (var cacheId in drawingCache.render) {
+			var tiles = drawingCache.render[cacheId];
+			for (var i = 0; i < tiles.length; i++) {
+				bitsy.delete(tiles[i]);
+			}
+		}
 	}
 
 	drawingCache.render = {};
@@ -7927,7 +7933,7 @@ var isPlayerEmbeddedInEditor = false;
 
 var renderer;
 if (engineFeatureFlags.isRendererEnabled) {
-	renderer = new TileRenderer();
+	renderer = new TileRenderer("bitsy");
 }
 
 var curGameData = null;
@@ -8194,6 +8200,7 @@ function update(dt) {
 }
 
 var isAnyButtonHeld = false;
+var isMenuButtonHeld = false;
 var isIgnoringInput = false;
 
 function isAnyButtonDown() {
@@ -8260,13 +8267,14 @@ function updateInput() {
 		isIgnoringInput = false;
 	}
 
-	// quit if the user ever presses the restart button
+	// quit when the user releases the restart button
 	// todo : should I rename it bitsy.BTN_RESTART or bitsy.BTN_QUIT or bitsy.BTN_OFF?
-	if (bitsy.button(bitsy.BTN_MENU)) {
+	if (isMenuButtonHeld && !bitsy.button(bitsy.BTN_MENU)) {
 		isGameOver = true;
 	}
 
 	isAnyButtonHeld = isAnyButtonDown();
+	isMenuButtonHeld = bitsy.button(bitsy.BTN_MENU);
 }
 
 var animationCounter = 0;
