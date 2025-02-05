@@ -1,3 +1,15 @@
+# [23.0.0](https://github.com/seleb/bitsy-hacks/compare/v22.1.0...v23.0.0) (2025-02-05)
+
+
+### Features
+
+* update for Bitsy 8.13 ([320db0d](https://github.com/seleb/bitsy-hacks/commit/320db0d11181013ad40d65b34102574b03116f07))
+
+
+### BREAKING CHANGES
+
+* bitsy version updated to 8.13
+
 # [22.1.0](https://github.com/seleb/bitsy-hacks/compare/v22.0.0...v22.1.0) (2024-05-30)
 
 

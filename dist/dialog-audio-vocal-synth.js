@@ -4,8 +4,8 @@
 @summary animal crossing-style audio powered by the pink trombone vocal synth
 @license MIT
 @author Sean S. LeBlanc
-@version 22.1.0
-@requires Bitsy 8.12
+@version 23.0.0
+@requires Bitsy 8.13
 
 
 @description
@@ -445,7 +445,7 @@ var Glottis = {
 		this.oldTenseness = this.newTenseness;
 		this.newTenseness = this.UITenseness +
 			0.1 * module.simplex1(this.totalTime * 0.46) + 0.05 * module.simplex1(this.totalTime * 0.36);
-		if (!this.isTouched && alwaysVoice) this.newTenseness += (3 - this.UITenseness) * (1 - this.intensity);
+		if (!this.isTouched && alwaysVoice) ;
 
 		if (this.isTouched || alwaysVoice) this.intensity += 0.13;
 		else this.intensity -= 0.05;
@@ -880,8 +880,8 @@ function applyHook(root, functionName) {
 @summary Monkey-patching toolkit to make it easier and cleaner to run code before and after functions or to inject new code into script tags
 @license WTFPL (do WTF you want)
 @author Original by mildmojo; modified by Sean S. LeBlanc
-@version 22.1.0
-@requires Bitsy 8.12
+@version 23.0.0
+@requires Bitsy 8.13
 
 */
 var kitsy = (window.kitsy = window.kitsy || {
@@ -993,8 +993,8 @@ function addDialogTag(tag, fn) {
 @summary animal crossing-style audio
 @license MIT
 @author Sean S. LeBlanc
-@version 22.1.0
-@requires Bitsy 8.12
+@version 23.0.0
+@requires Bitsy 8.13
 
 
 @description
@@ -1050,8 +1050,8 @@ before('dialogBuffer.DoNextChar', function () {
 @file utils
 @summary miscellaneous bitsy utilities
 @author Sean S. LeBlanc
-@version 22.1.0
-@requires Bitsy 8.12
+@version 23.0.0
+@requires Bitsy 8.13
 
 */
 
