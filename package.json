@@ -7,7 +7,7 @@
 	],
 	"main": "index.mjs",
 	"version": "22.1.0",
-	"bitsyVersion": "8.12",
+	"bitsyVersion": "8.13",
 	"scripts": {
 		"build": "rollup -c --bundleConfigAsCjs",
 		"test": "jest --runInBand",
