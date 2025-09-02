@@ -16,7 +16,7 @@ jobs:
         with:
           node-version: 18
       - run: npm ci
-      - uses: cycjimmy/semantic-release-action@v3
+      - uses: cycjimmy/semantic-release-action@v5
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_READ_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
