@@ -41,7 +41,7 @@ HOW TO USE:
 6. Only one sequence can run at a time - new sequences cancel old ones
 */
 import bitsy from 'bitsy';
-import { addDeferredDialogTag, addDialogTag, after } from './helpers/kitsy-script-toolkit';
+import { addDialogTag, addDualDialogTag, after } from './helpers/kitsy-script-toolkit';
 import { getDialog, getRoom } from './helpers/utils';
 
 export var hackOptions = {
@@ -272,19 +272,8 @@ after('load_game', function () {
 });
 
 // Add dialog functions - Manual sequence control
-addDeferredDialogTag('startSequence', startSequence);
-addDeferredDialogTag('stopSequence', stopSequence);
-
-// Immediate versions
-addDialogTag('startSequenceNow', function (environment, parameters, onReturn) {
-	startSequence(environment, parameters);
-	onReturn(null);
-});
-
-addDialogTag('stopSequenceNow', function (environment, parameters, onReturn) {
-	stopSequence(environment, parameters);
-	onReturn(null);
-});
+addDualDialogTag('startSequence', startSequence);
+addDualDialogTag('stopSequence', stopSequence);
 
 // Room trigger dialog functions
 addDialogTag('setRoomTrigger', function (environment, parameters, onReturn) {
