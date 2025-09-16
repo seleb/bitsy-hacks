@@ -216,19 +216,10 @@ function clearAllRoomTriggers(environment, parameters) {
 
 // Handle room entry and check for triggers
 function handleRoomEntry(roomId) {
-	// Find room name from ID
-	var roomName = null;
-	for (var name in bitsy.names.room) {
-		if (bitsy.names.room[name] === roomId) {
-			roomName = name;
-			break;
-		}
-	}
-
+	// Find room from ID
+	var room = Object.entries(bitsy.names.room).find(([_name, id]) => id === roomId);
 	// If we couldn't find the name, use the ID
-	if (!roomName) {
-		roomName = roomId;
-	}
+	var roomName = room && room[0] ? room[0] : roomId;
 
 	// Check if this room has a trigger set up
 	if (roomTriggers[roomName]) {
