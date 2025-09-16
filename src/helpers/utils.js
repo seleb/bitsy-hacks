@@ -70,6 +70,16 @@ export function getRoom(name) {
 }
 
 /**
+ * Helper for getting dialogue by name or id
+ * @param {string} name id or name of dialogue to return
+ * @return {string} dialogue, or undefined if it doesn't exist
+ */
+export function getDialog(name) {
+	var id = Object.prototype.hasOwnProperty.call(bitsy.dialog, name) ? name : bitsy.names.dialog[name];
+	return bitsy.dialog[id];
+}
+
+/**
  * Helper for getting an array with unique elements
  * @param  {Array} array Original array
  * @return {Array}       Copy of array, excluding duplicates
