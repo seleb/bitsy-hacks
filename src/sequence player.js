@@ -66,10 +66,10 @@ export var triggeredRooms = new Set();
 
 function startSequence(environment, parameters) {
 	var roomList = parameters[0].split(',');
-	var interval = parseInt(parameters[1]) || 1000;
+	var interval = parseInt(parameters[1], 10) || 1000;
 	var finalDestination = parameters[2] || '';
 	var endDialog = parameters[3] || '';
-	var dialogDelay = parseInt(parameters[4]) || 200;
+	var dialogDelay = parseInt(parameters[4], 10) || 200;
 
 	// Stop any existing sequence
 	stopSequence();
@@ -143,8 +143,8 @@ function handleSequenceCompletion() {
 			var exitData = {
 				dest: {
 					room: finalRoom.id,
-					x: parseInt(x) || bitsy.player().x,
-					y: parseInt(y) || bitsy.player().y,
+					x: parseInt(x, 10) || bitsy.player().x,
+					y: parseInt(y, 10) || bitsy.player().y,
 				},
 			};
 
@@ -189,10 +189,10 @@ function stopSequence(environment, parameters) {
 function setRoomTrigger(environment, parameters) {
 	var roomName = parameters[0];
 	var rooms = parameters[1];
-	var interval = parseInt(parameters[2]) || 1000;
+	var interval = parseInt(parameters[2], 10) || 1000;
 	var finalDestination = parameters[3] || '';
 	var endDialog = parameters[4] || '';
-	var dialogDelay = parseInt(parameters[5]) || 200;
+	var dialogDelay = parseInt(parameters[5], 10) || 200;
 
 	roomTriggers[roomName] = {
 		rooms: rooms,
