@@ -70,10 +70,10 @@ function startSequence(environment, parameters) {
 	var finalDestination = parameters[2] || '';
 	var endDialog = parameters[3] || '';
 	var dialogDelay = parseInt(parameters[4]) || 200;
-	
+
 	// Stop any existing sequence
 	stopSequence();
-	
+
 	// Create new sequence object
 	currentSequence = {
 		rooms: roomList,
@@ -82,19 +82,19 @@ function startSequence(environment, parameters) {
 		endDialog: endDialog,
 		dialogDelay: dialogDelay,
 		currentIndex: 0,
-		active: true
+		active: true,
 	};
-	
+
 	// Start the sequence
 	executeSequenceStep();
 }
 
 function executeSequenceStep() {
 	if (!currentSequence || !currentSequence.active) return;
-	
+
 	var currentRoom = currentSequence.rooms[currentSequence.currentIndex];
 	var room = getRoom(currentRoom);
-	
+
 	if (room) {
 		// Move to current room in sequence
 		var p = bitsy.player();
@@ -106,18 +106,18 @@ function executeSequenceStep() {
 			},
 		});
 	}
-	
+
 	currentSequence.currentIndex++;
-	
+
 	// Schedule next step or handle completion
 	if (currentSequence.currentIndex < currentSequence.rooms.length) {
 		// Continue sequence
-		sequenceTimeout = setTimeout(function() {
+		sequenceTimeout = setTimeout(function () {
 			executeSequenceStep();
 		}, currentSequence.interval);
 	} else {
 		// Sequence complete - handle final destination and dialog
-		sequenceTimeout = setTimeout(function() {
+		sequenceTimeout = setTimeout(function () {
 			handleSequenceCompletion();
 		}, currentSequence.interval);
 	}
@@ -125,11 +125,11 @@ function executeSequenceStep() {
 
 function handleSequenceCompletion() {
 	if (!currentSequence) return;
-	
+
 	var finalDestination = currentSequence.finalDestination;
 	var endDialog = currentSequence.endDialog;
 	var dialogDelay = currentSequence.dialogDelay;
-	
+
 	// Move to final destination if specified
 	if (finalDestination) {
 		var params = finalDestination.split(',');
@@ -137,7 +137,7 @@ function handleSequenceCompletion() {
 		var x = params[1] || bitsy.player().x;
 		var y = params[2] || bitsy.player().y;
 		var transition = params[3] || '';
-		
+
 		var finalRoom = getRoom(roomName);
 		if (finalRoom) {
 			var exitData = {
@@ -145,29 +145,29 @@ function handleSequenceCompletion() {
 					room: finalRoom.id,
 					x: parseInt(x) || bitsy.player().x,
 					y: parseInt(y) || bitsy.player().y,
-				}
+				},
 			};
-			
+
 			// Add transition effect if specified
 			if (transition) {
 				exitData.transition_effect = transition;
 			}
-			
+
 			bitsy.movePlayerThroughExit(exitData);
 		}
 	}
-	
+
 	// Trigger end dialog if specified
 	if (endDialog) {
 		var dialog = getDialog(endDialog);
 		if (dialog) {
 			// Wait for the specified delay before showing dialog
-			setTimeout(function() {
+			setTimeout(function () {
 				bitsy.startDialog(dialog.src, dialog.id);
 			}, dialogDelay);
 		}
 	}
-	
+
 	// Clean up sequence
 	currentSequence = null;
 	sequenceTimeout = null;
@@ -178,7 +178,7 @@ function stopSequence(environment, parameters) {
 		currentSequence.active = false;
 		currentSequence = null;
 	}
-	
+
 	if (sequenceTimeout) {
 		clearTimeout(sequenceTimeout);
 		sequenceTimeout = null;
@@ -193,13 +193,13 @@ function setRoomTrigger(environment, parameters) {
 	var finalDestination = parameters[3] || '';
 	var endDialog = parameters[4] || '';
 	var dialogDelay = parseInt(parameters[5]) || 200;
-	
+
 	roomTriggers[roomName] = {
 		rooms: rooms,
 		interval: interval,
 		finalDestination: finalDestination,
 		endDialog: endDialog,
-		dialogDelay: dialogDelay
+		dialogDelay: dialogDelay,
 	};
 }
 
@@ -224,31 +224,25 @@ function handleRoomEntry(roomId) {
 			break;
 		}
 	}
-	
+
 	// If we couldn't find the name, use the ID
 	if (!roomName) {
 		roomName = roomId;
 	}
-	
+
 	// Check if this room has a trigger set up
 	if (roomTriggers[roomName]) {
 		// Check if we should retrigger or if this is the first time
 		var shouldTrigger = hackOptions.allowRetrigger || !triggeredRooms.has(roomName);
-		
+
 		if (shouldTrigger) {
 			// Mark room as triggered (for non-retrigger mode)
 			triggeredRooms.add(roomName);
-			
+
 			// Get trigger data and start sequence
 			var trigger = roomTriggers[roomName];
-			var sequenceParams = [
-				trigger.rooms,
-				trigger.interval.toString(),
-				trigger.finalDestination,
-				trigger.endDialog,
-				trigger.dialogDelay.toString()
-			];
-			
+			var sequenceParams = [trigger.rooms, trigger.interval.toString(), trigger.finalDestination, trigger.endDialog, trigger.dialogDelay.toString()];
+
 			// Start the sequence using our existing startSequence function
 			startSequence({}, sequenceParams);
 		}
@@ -256,12 +250,12 @@ function handleRoomEntry(roomId) {
 }
 
 // Hook into room transitions to detect room entry
-after('movePlayerThroughExit', function(exit) {
+after('movePlayerThroughExit', function (exit) {
 	if (exit && exit.dest && exit.dest.room) {
 		var newRoomId = exit.dest.room;
-		
+
 		// Give a brief delay to ensure room transition is complete
-		setTimeout(function() {
+		setTimeout(function () {
 			handleRoomEntry(newRoomId);
 		}, hackOptions.triggerDelay);
 	}
@@ -273,14 +267,14 @@ after('load_game', function () {
 	if (hackOptions.clearOnReset) {
 		stopSequence();
 	}
-	
+
 	if (hackOptions.clearTriggersOnReset) {
 		roomTriggers = {};
 		triggeredRooms.clear();
 	}
-	
+
 	// Check current room for triggers after load
-	setTimeout(function() {
+	setTimeout(function () {
 		if (bitsy.state.room) {
 			handleRoomEntry(bitsy.state.room);
 		}
