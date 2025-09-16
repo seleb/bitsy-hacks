@@ -4,7 +4,6 @@
 @summary creates visual countdown sequences by cycling through rooms + automatic room entry triggers
 @license WTFPL
 @author EZ plus his loyal companion Claude
-@requires Bitsy 8.13
 
 @description
 Creates animation sequences that automatically cycle through different
