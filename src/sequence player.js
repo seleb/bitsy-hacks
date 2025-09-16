@@ -41,11 +41,11 @@ HOW TO USE:
 5. When player enters trigger room, sequence starts automatically
 6. Only one sequence can run at a time - new sequences cancel old ones
 */
-this.hacks = this.hacks || {};
-(function (exports, bitsy) {
-'use strict';
+import bitsy from 'bitsy';
+import { addDeferredDialogTag, addDialogTag, after } from './helpers/kitsy-script-toolkit';
+import { getDialog, getRoom } from './helpers/utils';
 
-var hackOptions = {
+export var hackOptions = {
 	// Whether to clear sequence on game reset
 	clearOnReset: true,
 	// Whether to clear room triggers on game reset
@@ -56,209 +56,13 @@ var hackOptions = {
 	triggerDelay: 100,
 };
 
-/**
- * Helper used to replace code in a script tag based on a search regex.
- */
-function inject$1(searcher, replacer) {
-    var scriptTags = document.getElementsByTagName('script');
-    var scriptTag;
-    var code = '';
-    for (var i = 0; i < scriptTags.length; ++i) {
-        scriptTag = scriptTags[i];
-        if (!scriptTag.textContent) continue;
-        var matchesSearch = scriptTag.textContent.search(searcher) !== -1;
-        var isCurrentScript = scriptTag === document.currentScript;
-        if (matchesSearch && !isCurrentScript) {
-            code = scriptTag.textContent;
-            break;
-        }
-    }
-    if (!code || !scriptTag) {
-        throw new Error('Couldn\'t find "' + searcher + '" in script tags');
-    }
-    code = code.replace(searcher, replacer);
-    var newScriptTag = document.createElement('script');
-    newScriptTag.textContent = code;
-    scriptTag.insertAdjacentElement('afterend', newScriptTag);
-    scriptTag.remove();
-}
-
-function unique(array) {
-    return array.filter(function (item, idx) {
-        return array.indexOf(item) === idx;
-    });
-}
-
-function kitsyInject(searcher, replacer) {
-    if (!kitsy.queuedInjectScripts.some(function (script) {
-        return searcher.toString() === script.searcher.toString() && replacer === script.replacer;
-    })) {
-        kitsy.queuedInjectScripts.push({
-            searcher: searcher,
-            replacer: replacer,
-        });
-    } else {
-        console.warn('Ignored duplicate inject');
-    }
-}
-
-function before$1(targetFuncName, beforeFn) {
-    kitsy.queuedBeforeScripts[targetFuncName] = kitsy.queuedBeforeScripts[targetFuncName] || [];
-    kitsy.queuedBeforeScripts[targetFuncName].push(beforeFn);
-}
-
-function after$1(targetFuncName, afterFn) {
-    kitsy.queuedAfterScripts[targetFuncName] = kitsy.queuedAfterScripts[targetFuncName] || [];
-    kitsy.queuedAfterScripts[targetFuncName].push(afterFn);
-}
-
-function applyInjects() {
-    kitsy.queuedInjectScripts.forEach(function (injectScript) {
-        inject$1(injectScript.searcher, injectScript.replacer);
-    });
-}
-
-function applyHooks(root) {
-    var allHooks = unique(Object.keys(kitsy.queuedBeforeScripts).concat(Object.keys(kitsy.queuedAfterScripts)));
-    allHooks.forEach(applyHook.bind(this, root || window));
-}
-
-function applyHook(root, functionName) {
-    var functionNameSegments = functionName.split('.');
-    var obj = root;
-    while (functionNameSegments.length > 1) {
-        obj = obj[functionNameSegments.shift()];
-    }
-    var lastSegment = functionNameSegments[0];
-    var superFn = obj[lastSegment];
-    var superFnLength = superFn ? superFn.length : 0;
-    var functions = [];
-    functions = functions.concat(kitsy.queuedBeforeScripts[functionName] || []);
-    if (superFn) {
-        functions.push(superFn);
-    }
-    functions = functions.concat(kitsy.queuedAfterScripts[functionName] || []);
-    obj[lastSegment] = function () {
-        var returnVal;
-        var args = [].slice.call(arguments);
-        var i = 0;
-        function runBefore() {
-            if (i === functions.length) {
-                return returnVal;
-            }
-            if (arguments.length > 0) {
-                args = [].slice.call(arguments);
-            }
-            if (functions[i].length > superFnLength) {
-                return functions[i++].apply(this, args.concat(runBefore.bind(this)));
-            }
-            returnVal = functions[i++].apply(this, args);
-            if (returnVal && returnVal.length) {
-                args = returnVal;
-            }
-            return runBefore.apply(this, args);
-        }
-        return runBefore.apply(this, arguments);
-    };
-}
-
-var kitsy = (window.kitsy = window.kitsy || {
-    queuedInjectScripts: [],
-    queuedBeforeScripts: {},
-    queuedAfterScripts: {},
-    inject: kitsyInject,
-    before: before$1,
-    after: after$1,
-    applyInjects,
-    applyHooks,
-});
-
-function convertDialogTags(input, tag) {
-	return input.replace(new RegExp('\\\\?\\((' + tag + '(\\s+(".*?"|.+?))?)\\\\?\\)', 'g'), function (match, group) {
-		if (match.substr(0, 1) === '\\') {
-			return '(' + group + ')';
-		}
-		return '{' + group + '}';
-	});
-}
-
-var hooked = kitsy.hooked;
-if (!hooked) {
-	kitsy.hooked = true;
-	var oldStartFunc = bitsy.startExportedGame;
-	bitsy.startExportedGame = function doAllInjections() {
-		bitsy.startExportedGame = oldStartFunc;
-		kitsy.applyInjects();
-		bitsy.scriptModule = new bitsy.Script();
-		bitsy.scriptInterpreter = bitsy.scriptModule.CreateInterpreter();
-		bitsy.dialogModule = new bitsy.Dialog();
-		bitsy.dialogRenderer = bitsy.dialogModule.CreateRenderer();
-		bitsy.dialogBuffer = bitsy.dialogModule.CreateBuffer();
-		bitsy.renderer = new bitsy.TileRenderer(bitsy.tilesize);
-		bitsy.transition = new bitsy.TransitionManager();
-		kitsy.applyHooks();
-		bitsy.startExportedGame.apply(this, arguments);
-	};
-}
-
-var inject = kitsy.inject;
-var before = kitsy.before;
-var after = kitsy.after;
-
-function addDialogFunction(tag, fn) {
-	kitsy.dialogFunctions = kitsy.dialogFunctions || {};
-	if (kitsy.dialogFunctions[tag]) {
-		console.warn('The dialog function "' + tag + '" already exists.');
-		return;
-	}
-	before('parseWorld', function (gameData) {
-		return [convertDialogTags(gameData, tag)];
-	});
-	kitsy.dialogFunctions[tag] = fn;
-}
-
-function injectDialogTag(tag, code) {
-	inject(/(var functionMap = \{\};[^]*?)(this.HasFunction)/m, '$1\nfunctionMap["' + tag + '"] = ' + code + ';\n$2');
-}
-
-function addDialogTag(tag, fn) {
-	addDialogFunction(tag, fn);
-	injectDialogTag(tag, 'kitsy.dialogFunctions["' + tag + '"]');
-}
-
-function addDeferredDialogTag(tag, fn) {
-	addDialogFunction(tag, fn);
-	bitsy.kitsy.deferredDialogFunctions = bitsy.kitsy.deferredDialogFunctions || {};
-	var deferred = (bitsy.kitsy.deferredDialogFunctions[tag] = []);
-	injectDialogTag(tag, 'function(e, p, o){ kitsy.deferredDialogFunctions["' + tag + '"].push({e:e,p:p}); o(null); }');
-	after('onExitDialog', function () {
-		while (deferred.length) {
-			var args = deferred.shift();
-			bitsy.kitsy.dialogFunctions[tag](args.e, args.p, args.o);
-		}
-	});
-	after('clearGameData', function () {
-		deferred.length = 0;
-	});
-}
-
-function getRoom(name) {
-	var id = Object.prototype.hasOwnProperty.call(bitsy.room, name) ? name : bitsy.names.room[name];
-	return bitsy.room[id];
-}
-
-function getDialog(name) {
-	var id = Object.prototype.hasOwnProperty.call(bitsy.dialog, name) ? name : bitsy.names.dialog[name];
-	return bitsy.dialog[id];
-}
-
 // Single sequence functionality - only one sequence can run at a time
-var currentSequence = null;
-var sequenceTimeout = null;
+export var currentSequence = null;
+export var sequenceTimeout = null;
 
 // Room trigger functionality
-var roomTriggers = {};
-var triggeredRooms = new Set();
+export var roomTriggers = {};
+export var triggeredRooms = new Set();
 
 function startSequence(environment, parameters) {
 	var roomList = parameters[0].split(',');
@@ -513,11 +317,3 @@ addDialogTag('clearAllRoomTriggers', function (environment, parameters, onReturn
 	clearAllRoomTriggers(environment, parameters);
 	onReturn(null);
 });
-
-// Expose for debugging
-exports.currentSequence = currentSequence;
-exports.roomTriggers = roomTriggers;
-exports.triggeredRooms = triggeredRooms;
-exports.hackOptions = hackOptions;
-
-})(this.hacks.visualCountdown = this.hacks.visualCountdown || {}, window);
