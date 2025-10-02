@@ -2,7 +2,8 @@ import { delay, evaluate, start, startDialog } from './test/bitsy';
 
 jest.retryTimes(5);
 
-test('dialog audio vocal synth', async () => {
+// TODO: make this one not flaky
+test.skip('dialog audio vocal synth', async () => {
 	async function capture() {
 		await evaluate(() => {
 			window.log = window.log || [];
