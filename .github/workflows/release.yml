@@ -20,7 +20,7 @@ jobs:
           PACKAGE: dist
           VERSION: ${{ steps.package-version.outputs.current-version}}
       - name: update Borksy
-        uses: peter-evans/repository-dispatch@v3
+        uses: peter-evans/repository-dispatch@v4
         with:
           token: ${{ secrets.REPO_READ_TOKEN }}
           repository: Ayolland/borksy
